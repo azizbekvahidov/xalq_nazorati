@@ -69,7 +69,6 @@ class MyApp extends StatelessWidget {
         RegisterPersonalDataScreen.routeName: (ctx) =>
             RegisterPersonalDataScreen(),
         HomePage.routeName: (ctx) => HomePage(),
-        CategoryScreen.routeName: (ctx) => CategoryScreen(),
       },
     );
   }

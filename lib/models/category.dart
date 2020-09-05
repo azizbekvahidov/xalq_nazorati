@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class Category with ChangeNotifier {
+class Category {
   final String id;
   final String imgName;
   final String txt;

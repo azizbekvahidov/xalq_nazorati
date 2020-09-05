@@ -1,68 +1,36 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:custom_navigator/custom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'chat/main_chat.dart';
 import 'package:xalq_nazorati/screen/main_page/navigator.dart';
-import './main_page/main_page.dart';
+import 'profile/main_profile.dart';
+import 'support/main_support.dart';
+import 'main_page/main_page.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = "/home-page";
+  HomePage({Key key}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<Widget> _children = [
+    MainPage(),
+    MainChat(),
+    MainSupport(),
+    MainProfile(),
+  ];
+  Widget _page = MainPage();
   int _currentIndex = 0;
-  PageController _pageController;
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    Color _selectColor = Color(0xff66676C);
     return Scaffold(
-      body: SizedBox.expand(
-        child: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() => _currentIndex = index);
-          },
-          children: <Widget>[
-            MainPage(),
-            Container(
-              child: Center(
-                child: Text("Чат"),
-              ),
-            ),
-            Container(
-              child: Center(
-                child: Text("Помошь"),
-              ),
-            ),
-            Container(
-              child: Center(
-                child: Text("Прифиль"),
-              ),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: BottomNavyBar(
-        selectedIndex: _currentIndex,
-        onItemSelected: (index) {
-          setState(() => _currentIndex = index);
-          _pageController.jumpToPage(index);
-        },
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
             inactiveColor: Color(0xffFF8F27),
@@ -73,7 +41,6 @@ class _HomePageState extends State<HomePage> {
             ),
             icon: SvgPicture.asset(
               "assets/img/home.svg",
-              color: _selectColor,
             ),
           ),
           BottomNavyBarItem(
@@ -101,6 +68,17 @@ class _HomePageState extends State<HomePage> {
             icon: SvgPicture.asset("assets/img/profile.svg"),
           ),
         ],
+        onItemSelected: (index) {
+          navigatorKey.currentState.maybePop();
+          setState(() => _page = _children[index]);
+          _currentIndex = index;
+        },
+        selectedIndex: _currentIndex,
+      ),
+      body: CustomNavigator(
+        navigatorKey: navigatorKey,
+        home: _page,
+        pageRoute: PageRoutes.materialPageRoute,
       ),
     );
   }

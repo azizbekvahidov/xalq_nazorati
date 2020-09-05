@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xalq_nazorati/widget/idea-widget/list_view.dart';
+import '../../widget/idea-widget/list_view.dart';
 import '../../widget/search_input.dart';
-import '../../widget/category_card.dart';
+import '../../widget/category/category_card.dart';
 
 class MainPage extends StatefulWidget {
   @override

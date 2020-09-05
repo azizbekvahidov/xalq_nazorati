@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class NavigatorPage extends StatefulWidget {
-  const NavigatorPage({Key key, this.child}) : super(key: key);
+  NavigatorPage({Key key, this.child}) : super(key: key);
 
   final Widget child;
 
@@ -10,14 +10,9 @@ class NavigatorPage extends StatefulWidget {
 }
 
 class _NavigatorPageState extends State<NavigatorPage> {
-  TextEditingController _textController;
-
   @override
   void initState() {
     super.initState();
-    // _textController = TextEditingController(
-    //   text: 'sample text: ${widget.child}',
-    // );
   }
 
   @override

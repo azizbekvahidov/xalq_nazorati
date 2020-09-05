@@ -1,129 +1,64 @@
 import 'package:flutter/material.dart';
-import '../home_page.dart';
-import '../../widget/default_button.dart';
-import '../../widget/default_input.dart';
-import '../../widget/main_text.dart';
+import '../../widget/category/category_card_list.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
+  final String title;
+  final String id;
+
+  CategoryScreen({this.title, this.id, Key key}) : super(key: key);
 
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
-  bool _value = false;
-
+class _CategoryScreenState extends State<CategoryScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    return Scaffold(
-      backgroundColor: Color(0xffF5F6F9),
-      appBar: AppBar(
-        title: Text(
-          "Подтверждение данных",
-          style: Theme.of(context).textTheme.display2,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Color(0xffF5F6F9),
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+            style: Theme.of(context).textTheme.display2,
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
+        body: SingleChildScrollView(
+          child: Container(
+            height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CategoryCardList("subcat1", "Благоустройство"),
+                      CategoryCardList("subcat2", "Деревья"),
+                      CategoryCardList("subcat3", "Дворная инфраструктура"),
+                      CategoryCardList("subcat4", "Благоустройство"),
+                      CategoryCardList("subcat5", "Уборка и мусор"),
+                    ],
+                  ),
                 ),
-                width: double.infinity,
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MainText("Адрес фактического проживания"),
-                    DefaultInput("Введите адрес"),
-                    MainText("Электронная почта"),
-                    DefaultInput("Введите адрес почты"),
-                    MainText("Пароль"),
-                    DefaultInput("Придумайте пароль"),
-                    MainText("Подтвердите пароль"),
-                    DefaultInput("Подтвердите пароль"),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _value = !_value;
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                    color: Theme.of(context).primaryColor),
-                                shape: BoxShape.circle,
-                                color: _value
-                                    ? Theme.of(context).primaryColor
-                                    : Colors.transparent),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: _value
-                                  ? Icon(
-                                      Icons.check,
-                                      size: 15.0,
-                                      color: Colors.white,
-                                    )
-                                  : Icon(
-                                      Icons.check_box_outline_blank,
-                                      size: 15.0,
-                                      color: Colors.transparent,
-                                    ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(left: 10),
-                          width: mediaQuery.size.width * 0.8,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Я принимаю условия ",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                              GestureDetector(
-                                child: Text(
-                                  "пользовательского соглашения",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
