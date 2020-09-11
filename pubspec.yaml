@@ -29,6 +29,8 @@ dependencies:
   flutter_svg: ^0.18.1
   awesome_dialog: ^1.2.0
   bottom_navy_bar: ^5.4.0
+  group_radio_button: ^1.0.1
+  dotted_border: ^1.0.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -70,6 +72,21 @@ flutter:
     - assets/img/house.svg
     - assets/img/test.png
     - assets/img/location.svg
+    - assets/img/call.svg
+
+    - assets/img/profile_icon.svg
+    - assets/img/lang_icon.svg
+    - assets/img/info_icon.svg
+    - assets/img/quit_icon.svg
+
+    - assets/img/share_icon.svg
+    - assets/img/rate_icon.svg
+    - assets/img/support_icon.svg
+    - assets/img/rule_icon.svg
+    - assets/img/warning.svg
+    - assets/img/plus_icon.svg
+    - assets/img/finish.svg
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../screen/register/pass_recognize_screen.dart';
-import '../../widget/default_input.dart';
+import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
-import '../../widget/main_text.dart';
+import '../../widget/text/main_text.dart';
 
 class RegisterVerifyScreen extends StatefulWidget {
   static const routeName = "/register-phone-verify";
@@ -19,6 +19,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final dWith = mediaQuery.size.width;
     final PreferredSizeWidget appBar = Platform.isIOS
         ? CupertinoNavigationBar()
         : AppBar(
@@ -41,6 +42,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
         appBar: appBar,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               Container(
@@ -158,7 +160,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                       "Не получили код?",
                                       style: TextStyle(
                                         fontFamily: "Gilroy",
-                                        fontSize: 14,
+                                        fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -169,7 +171,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                         "Отправить снова",
                                         style: TextStyle(
                                           fontFamily: "Gilroy",
-                                          fontSize: 14,
+                                          fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

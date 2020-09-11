@@ -6,8 +6,8 @@ import '../../widget/checkbox_custom.dart';
 import '../login_screen.dart';
 import './register_verify_screen.dart';
 import '../../widget/default_button.dart';
-import '../../widget/main_text.dart';
-import '../../widget/phone_input.dart';
+import '../../widget/text/main_text.dart';
+import '../../widget/input/phone_input.dart';
 
 class RegisterPhoneScreen extends StatefulWidget {
   static const routeName = "/register-phone";
@@ -21,6 +21,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final dWith = mediaQuery.size.width;
     final PreferredSizeWidget appBar = Platform.isIOS
         ? CupertinoNavigationBar()
         : AppBar(
@@ -43,6 +44,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
         appBar: appBar,
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               Container(
@@ -175,7 +177,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                       "У вас уже есть аккаунт?",
                                       style: TextStyle(
                                         fontFamily: "Gilroy",
-                                        fontSize: 14,
+                                        fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -183,14 +185,16 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                     FlatButton(
                                       onPressed: () {
                                         Navigator.of(context)
-                                            .pushReplacementNamed(
-                                                LoginScreen.routeName);
+                                            .pushNamedAndRemoveUntil(
+                                                LoginScreen.routeName,
+                                                (Route<dynamic> route) =>
+                                                    false);
                                       },
                                       child: Text(
                                         "Войти",
                                         style: TextStyle(
                                           fontFamily: "Gilroy",
-                                          fontSize: 14,
+                                          fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../screen/main_page/sub_category_screen.dart';
+import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import '../../widget/category/category_card_list.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -20,11 +22,8 @@ class _CategoryScreenState extends State<CategoryScreen>
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xffF5F6F9),
-        appBar: AppBar(
-          title: Text(
-            widget.title,
-            style: Theme.of(context).textTheme.display2,
-          ),
+        appBar: CustomAppBar(
+          title: widget.title,
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -37,17 +36,43 @@ class _CategoryScreenState extends State<CategoryScreen>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        spreadRadius: 0,
+                        blurRadius: 10,
+                        offset: Offset(4, 6), // changes position of shadow
+                      ),
+                    ],
                   ),
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CategoryCardList("subcat1", "Благоустройство"),
-                      CategoryCardList("subcat2", "Деревья"),
-                      CategoryCardList("subcat3", "Дворная инфраструктура"),
-                      CategoryCardList("subcat4", "Благоустройство"),
-                      CategoryCardList("subcat5", "Уборка и мусор"),
+                      CategoryCardList(
+                          "subcat1",
+                          "Благоустройство",
+                          SubCategoryScreen("Благоустройство", "subcat1"),
+                          true),
+                      CategoryCardList("subcat2", "Деревья",
+                          SubCategoryScreen("Деревья", "subcat1"), true),
+                      CategoryCardList(
+                          "subcat3",
+                          "Дворная инфраструктура",
+                          SubCategoryScreen(
+                              "Дворная инфраструктура", "subcat1"),
+                          true),
+                      CategoryCardList(
+                          "subcat4",
+                          "Благоустройство",
+                          SubCategoryScreen("Благоустройство", "subcat1"),
+                          true),
+                      CategoryCardList(
+                          "subcat5",
+                          "Уборка и мусор",
+                          SubCategoryScreen("Уборка и мусор", "subcat1"),
+                          false),
                     ],
                   ),
                 ),

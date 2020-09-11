@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/screen/home_page.dart';
+import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 
 class SubCategoryCardList extends StatelessWidget {
   final String title;
-  SubCategoryCardList(this.title);
+  final String id;
+  final bool divider;
+
+  SubCategoryCardList(this.id, this.title, this.divider);
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -11,7 +16,7 @@ class SubCategoryCardList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
+          InkWell(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
@@ -22,7 +27,7 @@ class SubCategoryCardList extends StatelessWidget {
                       width: (mediaQuery.size.width -
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
-                          0.85,
+                          0.84,
                       child: Container(
                           child: RichText(
                         text: TextSpan(
@@ -44,9 +49,18 @@ class SubCategoryCardList extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return ProblemDesc(id, title);
+                  },
+                ),
+                // ModalRoute.withName(HomePage.routeName),
+              );
+            },
           ),
-          Divider(),
+          if (divider) Divider(),
         ],
       ),
     );

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../widget/idea-widget/list_view.dart';
-import '../../widget/search_input.dart';
+import '../../widget/input/search_input.dart';
 import '../../widget/category/category_card.dart';
 
 class MainPage extends StatefulWidget {
+  static const routeName = "/main-page";
   @override
   _MainPageState createState() => _MainPageState();
 }

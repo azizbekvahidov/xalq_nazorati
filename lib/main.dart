@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import './screen/rule_page.dart';
 import './screen/home_page.dart';
-import './screen/main_page/category_screen.dart';
 import './screen/register/pas_recognized_screen.dart';
 import './screen/register/register_personaldata_screen.dart';
 import './screen/register/pass_recognize_screen.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
               display2: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Color(0xff313B6C),
               ),
 
               button: TextStyle(
@@ -69,6 +70,8 @@ class MyApp extends StatelessWidget {
         RegisterPersonalDataScreen.routeName: (ctx) =>
             RegisterPersonalDataScreen(),
         HomePage.routeName: (ctx) => HomePage(),
+        RulePage.routeName: (ctx) => RulePage(),
+        MainPage.routeName: (ctx) => MainPage(),
       },
     );
   }

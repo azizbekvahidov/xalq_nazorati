@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:xalq_nazorati/widget/category/sub_category_list.dart';
-import '../../widget/category/category_card_list.dart';
+import '../../widget/app_bar/custom_appBar.dart';
+import '../../widget/category/sub_category_list.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
@@ -19,11 +19,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: Theme.of(context).textTheme.display2,
-        ),
+      appBar: CustomAppBar(
+        title: widget.title,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -36,6 +33,14 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                      offset: Offset(4, 6), // changes position of shadow
+                    ),
+                  ],
                 ),
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(vertical: 20),
@@ -43,12 +48,16 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SubCategoryCardList(
-                        "Несвоевременное восстановление благоустройства территории после разрытий"),
+                        "id1",
+                        "Несвоевременное восстановление благоустройства территории после разрытий",
+                        true),
+                    SubCategoryCardList("id1",
+                        "Наличие опасно выступающих элементов во дворе", true),
                     SubCategoryCardList(
-                        "Наличие опасно выступающих элементов во дворе"),
-                    SubCategoryCardList(
-                        "Неисправность элементов уличного освещения во дворе"),
-                    SubCategoryCardList("Повреждение бордюров"),
+                        "id1",
+                        "Неисправность элементов уличного освещения во дворе",
+                        true),
+                    SubCategoryCardList("id1", "Повреждение бордюров", false),
                   ],
                 ),
               ),

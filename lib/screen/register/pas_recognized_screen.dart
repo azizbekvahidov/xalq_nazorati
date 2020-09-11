@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widget/app_bar/custom_appBar.dart';
 import './register_personaldata_screen.dart';
 import '../../widget/card_list.dart';
 import '../../widget/default_button.dart';
@@ -16,13 +17,9 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
-      appBar: AppBar(
-        title: Text(
-          "Подтверждение данных",
-          style: Theme.of(context).textTheme.display2,
-        ),
-      ),
+      appBar: CustomAppBar(title: "Подтверждение данных"),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
           child: Column(

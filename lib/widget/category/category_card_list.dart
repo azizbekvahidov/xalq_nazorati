@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:xalq_nazorati/screen/main_page/sub_category_screen.dart';
 
 class CategoryCardList extends StatelessWidget {
   final String title;
   final String id;
+  final Widget route;
+  bool divider = false;
 
-  CategoryCardList(this.id, this.title);
+  CategoryCardList(this.id, this.title, this.route, this.divider);
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -14,7 +15,7 @@ class CategoryCardList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
+          InkWell(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
@@ -25,7 +26,7 @@ class CategoryCardList extends StatelessWidget {
                       width: (mediaQuery.size.width -
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
-                          0.85,
+                          0.84,
                       child: Container(
                           child: RichText(
                         text: TextSpan(
@@ -51,13 +52,13 @@ class CategoryCardList extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return SubCategoryScreen(title, id);
+                    return route;
                   },
                 ),
               );
             },
           ),
-          Divider(),
+          if (divider) Divider(),
         ],
       ),
     );

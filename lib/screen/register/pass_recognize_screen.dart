@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../widget/app_bar/custom_appBar.dart';
 import './pas_recognized_screen.dart';
 import '../../widget/default_button.dart';
-import '../../widget/default_input.dart';
-import '../../widget/main_text.dart';
+import '../../widget/input/default_input.dart';
+import '../../widget/text/main_text.dart';
 
 class PassRecognizeScreen extends StatefulWidget {
   static const routeName = "/register-pass-recognize";
@@ -65,15 +66,13 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final PreferredSizeWidget appBar =
+        CustomAppBar(title: "Идентификация пользователя");
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
-      appBar: AppBar(
-        title: Text(
-          "Идентификация пользователя",
-          style: Theme.of(context).textTheme.display2,
-        ),
-      ),
+      appBar: appBar,
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
           child: Column(
@@ -112,7 +111,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             width: (mediaQuery.size.width -
                                     mediaQuery.padding.left -
                                     mediaQuery.padding.right) *
-                                0.79,
+                                0.77,
                             child: TextField(
                               maxLines: 1,
                               decoration: InputDecoration(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DefaultButton extends StatefulWidget {
   final String txt;
   final Function routeFunc;
-  Color color;
+  final Color color;
   DefaultButton(this.txt, this.routeFunc, this.color);
   @override
   _DefaultButtonState createState() => _DefaultButtonState();

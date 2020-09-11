@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'register/register_phone_screen.dart';
-import '../widget/pass_input.dart';
+import '../widget/input/pass_input.dart';
 import '../widget/default_button.dart';
-import '../widget/main_text.dart';
-import '../widget/phone_input.dart';
+import '../widget/text/main_text.dart';
+import '../widget/input/phone_input.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = "/login-page";
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final dWith = mediaQuery.size.width;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -78,7 +79,7 @@ class LoginScreen extends StatelessWidget {
                                       "У вас еще нет аккаунта?",
                                       style: TextStyle(
                                         fontFamily: "Gilroy",
-                                        fontSize: 14,
+                                        fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -92,7 +93,7 @@ class LoginScreen extends StatelessWidget {
                                         "Зарегистрируйтесь",
                                         style: TextStyle(
                                           fontFamily: "Gilroy",
-                                          fontSize: 14,
+                                          fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),
