@@ -31,12 +31,15 @@ dependencies:
   bottom_navy_bar: ^5.4.0
   group_radio_button: ^1.0.1
   dotted_border: ^1.0.6
+  custom_navigator: ^0.2.0
+  
+
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
   
-  custom_navigator: ^0.2.0
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +89,9 @@ flutter:
     - assets/img/warning.svg
     - assets/img/plus_icon.svg
     - assets/img/finish.svg
+    - assets/img/men_icon.svg
+    - assets/img/image.svg
+    - assets/img/camera.svg
 
   #   - images/a_dot_ham.jpeg
 

@@ -21,6 +21,12 @@ class _HomePageState extends State<HomePage> {
     MainSupport(),
     MainProfile(),
   ];
+  List<Color> _colors = [
+    Color(0xff1abc9c),
+    Color(0xff66676C),
+    Color(0xff66676C),
+    Color(0xff66676C),
+  ];
   Widget _page = MainPage();
   int _currentIndex = 0;
 
@@ -38,9 +44,7 @@ class _HomePageState extends State<HomePage> {
               'Главная',
               textAlign: TextAlign.center,
             ),
-            icon: SvgPicture.asset(
-              "assets/img/home.svg",
-            ),
+            icon: SvgPicture.asset("assets/img/home.svg", color: _colors[0]),
           ),
           BottomNavyBarItem(
             activeColor: Theme.of(context).primaryColor,
@@ -48,7 +52,7 @@ class _HomePageState extends State<HomePage> {
               'Чат',
               textAlign: TextAlign.center,
             ),
-            icon: SvgPicture.asset("assets/img/chat.svg"),
+            icon: SvgPicture.asset("assets/img/chat.svg", color: _colors[1]),
           ),
           BottomNavyBarItem(
             activeColor: Theme.of(context).primaryColor,
@@ -56,7 +60,10 @@ class _HomePageState extends State<HomePage> {
               'Помощь',
               textAlign: TextAlign.center,
             ),
-            icon: SvgPicture.asset("assets/img/support.svg"),
+            icon: SvgPicture.asset(
+              "assets/img/support.svg",
+              color: _colors[2],
+            ),
           ),
           BottomNavyBarItem(
             activeColor: Theme.of(context).primaryColor,
@@ -64,11 +71,19 @@ class _HomePageState extends State<HomePage> {
               'Профиль',
               textAlign: TextAlign.center,
             ),
-            icon: SvgPicture.asset("assets/img/profile.svg"),
+            icon: SvgPicture.asset("assets/img/profile.svg", color: _colors[3]),
           ),
         ],
         onItemSelected: (index) {
-          setState(() => _page = _children[index]);
+          setState(() {
+            _colors[0] = Color(0xff66676C);
+            _colors[1] = Color(0xff66676C);
+            _colors[2] = Color(0xff66676C);
+            _colors[3] = Color(0xff66676C);
+            _page = _children[index];
+            _colors[index] = Theme.of(context).primaryColor;
+            print(_colors);
+          });
           navigatorKey.currentState.popUntil((route) => route.isFirst);
           _currentIndex = index;
         },

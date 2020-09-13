@@ -25,15 +25,21 @@ class IdeaViewItem extends StatelessWidget {
     return InkWell(
       onTap: () => null,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
         child: Row(
           children: [
             Container(
+              width: 104,
+              height: 84,
               child: Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(22),
-                    child: Image.asset("assets/img/${img}"),
+                  Container(
+                    width: 100,
+                    height: 80,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22),
+                      child: Image.asset("assets/img/${img}"),
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -83,7 +89,7 @@ class IdeaViewItem extends StatelessWidget {
             ),
             Container(
               height: 90,
-              padding: EdgeInsets.only(left: 15, top: 5, bottom: 5),
+              padding: EdgeInsets.only(left: 15, top: 5, bottom: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,

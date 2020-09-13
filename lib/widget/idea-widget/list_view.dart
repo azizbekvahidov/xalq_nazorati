@@ -31,15 +31,6 @@ class IdeaList extends StatelessWidget {
       700,
       "Алмазарский район",
     ),
-    Ideas(
-      "id4",
-      "test.png",
-      "15.06.2020",
-      "Махбуба Адылова",
-      "Детская плошадка",
-      650,
-      "Алмазарский район",
-    ),
   ];
   @override
   Widget build(BuildContext context) {

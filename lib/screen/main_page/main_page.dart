@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/widget/adv_widget.dart';
 import '../../widget/idea-widget/list_view.dart';
 import '../../widget/input/search_input.dart';
 import '../../widget/category/category_card.dart';
@@ -72,33 +74,41 @@ class _MainPageState extends State<MainPage> {
                     fontWeight: FontWeight.w600),
               ),
             ),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    CategoryCard("cat1", "Мой дом", 'assets/img/house.svg'),
-                    CategoryCard("cat2", "Мой двор", 'assets/img/field.svg'),
-                    CategoryCard("cat3", "Моя дорога", 'assets/img/road.svg'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    CategoryCard("cat4", "Городское пространство",
-                        'assets/img/citySpace.svg'),
-                    CategoryCard("cat5", "Общественный транспорт",
-                        'assets/img/transport.svg'),
-                    CategoryCard(
-                        "cat6", "Торовля и реклама", 'assets/img/selling.svg'),
-                  ],
-                ),
-              ],
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      CategoryCard("cat1", "Мой дом", 'assets/img/house.svg'),
+                      CategoryCard("cat2", "Мой двор", 'assets/img/field.svg'),
+                      CategoryCard("cat3", "Моя дорога", 'assets/img/road.svg'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CategoryCard("cat4", "Городское пространство",
+                          'assets/img/citySpace.svg'),
+                      CategoryCard("cat5", "Общественный транспорт",
+                          'assets/img/transport.svg'),
+                      CategoryCard("cat6", "Торовля и реклама",
+                          'assets/img/selling.svg'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              child: AdvWidget(),
             ),
             Container(
               padding: EdgeInsets.symmetric(
-                vertical: 30,
+                vertical: 20,
                 horizontal: 20,
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,7 +131,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  Container(height: 360, child: IdeaList()),
+                  Container(height: 350, child: IdeaList()),
                 ],
               ),
             ),

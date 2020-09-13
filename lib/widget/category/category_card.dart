@@ -20,7 +20,7 @@ class _CategoryCardState extends State<CategoryCard> {
     final double cWidth = (mediaQuery.size.width -
             mediaQuery.padding.left -
             mediaQuery.padding.right) *
-        0.3;
+        0.275;
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
