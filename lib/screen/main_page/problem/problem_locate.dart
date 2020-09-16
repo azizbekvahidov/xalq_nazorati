@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../main_page/problem/problem_finish.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/checkbox_custom.dart';
@@ -66,6 +67,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                               178, 183, 208, 0.5),
                                           width: 1),
                                       borderRadius: BorderRadius.circular(10)),
+                                  child: YandexMap(),
                                 ),
                                 Padding(
                                   padding:

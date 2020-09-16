@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import '../../widget/idea-widget/list_view.dart';
 import '../../widget/input/search_input.dart';
@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage> {
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
-                    "Добро пожаловать",
+                    "welcome".tr().toString(),
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,

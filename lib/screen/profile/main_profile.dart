@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:group_radio_button/group_radio_button.dart';
-import '../../screen/profile/delete_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../widget/select_lang.dart';
 import '../../screen/profile/info_page.dart';
 import '../../screen/profile/profile_page.dart';
 import '../../widget/custom_card_list.dart';
@@ -15,7 +16,36 @@ class MainProfile extends StatefulWidget {
 }
 
 class _MainProfileState extends State<MainProfile> {
-  String _singleValue = "Text alignment right";
+  String _lang;
+  String _country;
+  Future<void> getStringValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+
+    String stringValue = prefs.getString('lang');
+    String stringC = prefs.getString('country');
+    setState(() {
+      _lang = stringValue;
+      _country = stringC;
+    });
+  }
+
+  Future<void> addStringToSF(String lang, String country) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lang', lang);
+    prefs.setString('country', _country);
+    setState(() {
+      _lang = lang;
+      _country = country;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getStringValuesSF();
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -110,8 +140,13 @@ class _MainProfileState extends State<MainProfile> {
               ShadowBox(
                 child: Column(
                   children: [
-                    IconCardList("id", "assets/img/profile_icon.svg", "Профиль",
-                        ProfilePage(), true, Icons.arrow_forward_ios),
+                    IconCardList(
+                        "id",
+                        "assets/img/profile_icon.svg",
+                        "Профиль $_lang",
+                        ProfilePage(),
+                        true,
+                        Icons.arrow_forward_ios),
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,56 +199,8 @@ class _MainProfileState extends State<MainProfile> {
                               showModalBottomSheet(
                                   backgroundColor: Colors.transparent,
                                   context: context,
-                                  builder: (context) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(15),
-                                          topRight: Radius.circular(15),
-                                        ),
-                                      ),
-                                      height: 260,
-                                      padding: const EdgeInsets.all(25),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Выберите язык",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .display2,
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.only(top: 15),
-                                            child: RadioButton(
-                                              description: "Русский",
-                                              value: "Русский",
-                                              groupValue: _singleValue,
-                                              onChanged: (value) => setState(
-                                                () => _singleValue = value,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            padding:
-                                                EdgeInsets.only(bottom: 15),
-                                            child: RadioButton(
-                                              description: "O‘zbek",
-                                              value: "O‘zbek",
-                                              groupValue: _singleValue,
-                                              onChanged: (value) => setState(
-                                                () => _singleValue = value,
-                                              ),
-                                            ),
-                                          ),
-                                          DefaultButton("Применять", () {},
-                                              Theme.of(context).primaryColor),
-                                        ],
-                                      ),
-                                    );
-                                  });
+                                  builder: (context) => SelectLang(
+                                      lang: _lang, callBack: addStringToSF));
                             },
                           ),
                           Divider(),

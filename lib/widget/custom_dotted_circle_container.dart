@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xalq_nazorati/widget/default_button.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../widget/default_button.dart';
 
 class CustomDottedCircleContainer extends StatefulWidget {
   final double boxSize;
@@ -14,10 +19,48 @@ class CustomDottedCircleContainer extends StatefulWidget {
 
 class _CustomDottedCircleContainerState
     extends State<CustomDottedCircleContainer> {
-  // File image;
-  // pickerCam() async{
-  //   File img = await
-  // }
+  File image;
+  bool accessDenied;
+
+  Future<PermissionStatus> _getPermission(perm) async {
+    PermissionStatus permission =
+        await PermissionHandler().checkPermissionStatus(perm);
+    if (permission != PermissionStatus.granted) {
+      Map<PermissionGroup, PermissionStatus> permisionStatus =
+          await PermissionHandler().requestPermissions([perm]);
+      return permisionStatus[perm] ?? PermissionStatus.unknown;
+    } else {
+      print(permission);
+      return permission;
+    }
+  }
+
+  pickerCam() async {
+    // ignore: deprecated_member_use
+    File img = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (img != null && validate(img)) {
+      image = img;
+      setState(() {});
+    }
+  }
+
+  pickGallery() async {
+    File img = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (img != null && validate(img)) {
+      image = img;
+      print(img.lengthSync());
+      setState(() {});
+    }
+  }
+
+  bool validate(File img) {
+    if (img.lengthSync() > 10485760) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -49,7 +92,11 @@ class _CustomDottedCircleContainerState
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 20),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          pickGallery();
+                          Navigator.of(context).pop();
+                          print("click to gallery");
+                        },
                         child: Row(
                           children: [
                             SvgPicture.asset("assets/img/image.svg"),
@@ -72,6 +119,11 @@ class _CustomDottedCircleContainerState
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 20),
                       child: InkWell(
+                        onTap: () {
+                          pickerCam();
+                          Navigator.of(context).pop();
+                          print("click to camera");
+                        },
                         child: Row(
                           children: [
                             SvgPicture.asset("assets/img/camera.svg"),
@@ -102,25 +154,39 @@ class _CustomDottedCircleContainerState
               );
             });
       },
-      child: DottedBorder(
-        borderType: BorderType.RRect,
-        radius: Radius.circular(widget.boxSize / 2),
-        dashPattern: [12, 7],
-        color: Color.fromRGBO(103, 105, 108, 0.5),
-        strokeWidth: 2,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(widget.boxSize / 2)),
-          child: Container(
-            padding: EdgeInsets.all(22),
-            child: SvgPicture.asset(
-              "assets/img/plus_icon.svg",
-              color: Color.fromRGBO(49, 59, 108, 0.5),
+      child: image == null
+          ? DottedBorder(
+              borderType: BorderType.RRect,
+              radius: Radius.circular(widget.boxSize / 2),
+              dashPattern: [12, 7],
+              color: Color.fromRGBO(103, 105, 108, 0.5),
+              strokeWidth: 2,
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(widget.boxSize / 2)),
+                child: Container(
+                  padding: EdgeInsets.all(22),
+                  child: SvgPicture.asset(
+                    "assets/img/plus_icon.svg",
+                    color: Color.fromRGBO(49, 59, 108, 0.5),
+                  ),
+                  width: widget.boxSize,
+                  height: widget.boxSize,
+                ),
+              ),
+            )
+          : ClipRRect(
+              borderRadius:
+                  BorderRadius.all(Radius.circular(widget.boxSize / 2)),
+              child: Container(
+                child: FittedBox(
+                  child: Image.file(image),
+                  fit: BoxFit.fill,
+                ),
+                width: widget.boxSize,
+                height: widget.boxSize,
+              ),
             ),
-            width: widget.boxSize,
-            height: widget.boxSize,
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,8 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xalq_nazorati/screen/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './login_screen.dart';
 
-class LangScreen extends StatelessWidget {
+class LangScreen extends StatefulWidget {
+  @override
+  _LangScreenState createState() => _LangScreenState();
+}
+
+class _LangScreenState extends State<LangScreen> {
+  int btn = 0;
+  addStringToSF(String lang, String country) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('lang', lang);
+    prefs.setString('country', country);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,20 +37,27 @@ class LangScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 68,
                   child: FlatButton(
-                    color: Theme.of(context).primaryColor,
+                    color: btn == 0
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(34),
                     ),
                     onPressed: () {
+                      btn = 0;
+                      setState(() {});
+                      addStringToSF("ru", "RU");
+                      EasyLocalization.of(context).locale = Locale("ru", "RU");
                       Navigator.of(context)
                           .pushReplacementNamed(LoginScreen.routeName);
                     },
                     child: Text(
                       "Русский",
                       style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white),
+                        fontSize: 24,
+                        fontWeight: FontWeight.normal,
+                        color: btn == 0 ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -47,11 +68,17 @@ class LangScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 68,
                   child: FlatButton(
-                    color: Colors.transparent,
+                    color: btn == 1
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(34),
                     ),
                     onPressed: () {
+                      btn = 1;
+                      setState(() {});
+                      addStringToSF("uz", "UZ");
+                      EasyLocalization.of(context).locale = Locale("uz", "UZ");
                       Navigator.of(context)
                           .pushReplacementNamed(LoginScreen.routeName);
                     },
@@ -60,7 +87,38 @@ class LangScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.normal,
-                        color: Colors.black,
+                        color: btn == 1 ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 68,
+                  child: FlatButton(
+                    color: btn == 2
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(34),
+                    ),
+                    onPressed: () {
+                      btn = 2;
+                      setState(() {});
+                      addStringToSF("en", "US");
+                      EasyLocalization.of(context).locale = Locale("en", "US");
+                      Navigator.of(context)
+                          .pushReplacementNamed(LoginScreen.routeName);
+                    },
+                    child: Text(
+                      "Ўзбекча",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.normal,
+                        color: btn == 2 ? Colors.white : Colors.black,
                       ),
                     ),
                   ),

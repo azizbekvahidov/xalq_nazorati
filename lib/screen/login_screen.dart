@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'register/register_phone_screen.dart';
 import '../widget/input/pass_input.dart';
@@ -54,7 +55,7 @@ class LoginScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MainText("Номер мобильного телефона"),
+                          MainText("tel_number_hint".tr().toString()),
                           PhoneInput(),
                           MainText("Пароль"),
                           PassInput("Введите пароль"),

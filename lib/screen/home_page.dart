@@ -82,7 +82,6 @@ class _HomePageState extends State<HomePage> {
             _colors[3] = Color(0xff66676C);
             _page = _children[index];
             _colors[index] = Theme.of(context).primaryColor;
-            print(_colors);
           });
           navigatorKey.currentState.popUntil((route) => route.isFirst);
           _currentIndex = index;

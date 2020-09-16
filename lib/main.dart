@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './screen/main_page/main_page.dart';
 import './screen/rule_page.dart';
 import './screen/home_page.dart';
 import './screen/register/pas_recognized_screen.dart';
@@ -14,11 +16,27 @@ import './screen/register/register_phone_screen.dart';
 import './screen/login_screen.dart';
 import './screen/lang_screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // AppLanguage appLanguage = AppLanguage();
+  // await appLanguage.fetchLocale();
+  runApp(EasyLocalization(
+    child: MyApp(),
+    path: "lang",
+    saveLocale: true,
+    supportedLocales: [
+      Locale('uz', 'UZ'),
+      Locale('ru', 'RU'),
+      Locale('en', 'US'),
+    ],
+  ));
 }
 
 class MyApp extends StatelessWidget {
+  // final AppLanguage appLanguage;
+
+  // MyApp({this.appLanguage});
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -26,6 +44,9 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       title: 'Xalq Nazorati',
       theme: ThemeData(
         primaryColor: Color(0xff1ABC9C),
@@ -83,13 +104,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String _lang = null;
+  Future<void> getStringValuesSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+
+    String stringValue = prefs.getString('lang');
+    setState(() {
+      _lang = stringValue;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getStringValuesSF();
     Timer(
-        Duration(seconds: 3),
-        () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LangScreen())));
+      Duration(seconds: 2),
+      () => _lang == null
+          ? Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => LangScreen()))
+          : Navigator.pushReplacementNamed(context, LoginScreen.routeName),
+    );
   }
 
   @override

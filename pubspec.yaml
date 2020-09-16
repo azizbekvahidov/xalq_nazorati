@@ -23,7 +23,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   get_it: ^4.0.4
+  image_picker: ^0.6.7+7
   http: ^0.12.2
   provider: ^4.3.2+1
   flutter_svg: ^0.18.1
@@ -31,8 +34,11 @@ dependencies:
   bottom_navy_bar: ^5.4.0
   group_radio_button: ^1.0.1
   dotted_border: ^1.0.6
-  custom_navigator: ^0.2.0
-  
+  custom_navigator: ^0.2.0  
+  permission_handler: "^4.0.0"
+  shared_preferences: ^0.5.10
+  easy_localization: ^2.3.3
+  yandex_mapkit: ^0.3.11
 
 
 
@@ -44,6 +50,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  intl_translation: ^0.17.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -58,6 +65,11 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    #localozation files
+    - lang/uz-UZ.json
+    - lang/ru-RU.json
+    - lang/en-US.json
+    # image in app
     - assets/img/logo.svg
     - assets/img/Frame.svg
     - assets/img/FrameW.svg
