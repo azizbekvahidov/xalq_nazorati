@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../main_page/problem/problem_finish.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/checkbox_custom.dart';
@@ -16,6 +18,17 @@ class ProblemLocate extends StatefulWidget {
 }
 
 class _ProblemLocateState extends State<ProblemLocate> {
+  Completer<GoogleMapController> _controller = Completer();
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+  static final CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
   bool _value = false;
   @override
   Widget build(BuildContext context) {
@@ -67,7 +80,17 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                               178, 183, 208, 0.5),
                                           width: 1),
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: YandexMap(),
+                                  child: GoogleMap(
+                                      mapType: MapType.hybrid,
+                                      initialCameraPosition: CameraPosition(
+                                        target: LatLng(37.42796133580664,
+                                            -122.085749655962),
+                                        zoom: 14.4746,
+                                      ),
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                        _controller.complete(controller);
+                                      }),
                                 ),
                                 Padding(
                                   padding:
