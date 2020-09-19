@@ -20,6 +20,7 @@ void main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // AppLanguage appLanguage = AppLanguage();
   // await appLanguage.fetchLocale();
+
   runApp(EasyLocalization(
     child: MyApp(),
     path: "lang",

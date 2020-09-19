@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 import '../../main_page/problem/problem_finish.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
@@ -18,17 +21,59 @@ class ProblemLocate extends StatefulWidget {
 }
 
 class _ProblemLocateState extends State<ProblemLocate> {
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController controller1;
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
+  static LatLng _initialPosition = LatLng(41.313014, 69.241047);
+
+  static LatLng _lastMapPosition;
+  final Map<String, Marker> _markers = {};
+  void _getLocation() async {
+    var currentLocation =
+        await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+
+    setState(() {
+      _markers.clear();
+      final marker = Marker(
+        markerId: MarkerId("curr_loc"),
+        position: LatLng(currentLocation.latitude, currentLocation.longitude),
+        infoWindow: InfoWindow(title: 'Your Location'),
+      );
+      _markers["Current Location"] = marker;
+
+      final p = CameraPosition(
+          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+          zoom: 14.4746);
+
+      controller1.animateCamera(CameraUpdate.newCameraPosition(p));
+    });
+  }
+
+  _onMapCreated(GoogleMapController controller) {
+    setState(() {
+      controller1 = controller;
+    });
+  }
+
+  MapType _currentMapType = MapType.normal;
+
+  _onCameraMove(CameraPosition position) {
+    _lastMapPosition = position.target;
+  }
+
+  Widget mapButton(Function function, Icon icon, Color color) {
+    return RawMaterialButton(
+      onPressed: function,
+      child: icon,
+      shape: new CircleBorder(),
+      elevation: 2.0,
+      fillColor: color,
+      padding: const EdgeInsets.all(7.0),
+    );
+  }
+
+  // final _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final _key = GlobalKey<GoogleMapStateBase>();
   bool _value = false;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +81,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
     return Scaffold(
       appBar: CustomAppBar(title: "Где обнаружена проблема?"),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Container(
@@ -80,17 +125,83 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                               178, 183, 208, 0.5),
                                           width: 1),
                                       borderRadius: BorderRadius.circular(10)),
-                                  child: GoogleMap(
-                                      mapType: MapType.hybrid,
-                                      initialCameraPosition: CameraPosition(
-                                        target: LatLng(37.42796133580664,
-                                            -122.085749655962),
-                                        zoom: 14.4746,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        child: GoogleMap(
+                                          markers: _markers.values.toSet(),
+                                          mapType: _currentMapType,
+                                          initialCameraPosition: CameraPosition(
+                                            target: _initialPosition,
+                                            zoom: 10,
+                                          ),
+                                          onMapCreated: _onMapCreated,
+                                          zoomGesturesEnabled: true,
+                                          onCameraMove: _onCameraMove,
+                                          myLocationEnabled: true,
+                                          compassEnabled: true,
+                                          myLocationButtonEnabled: false,
+                                          zoomControlsEnabled: false,
+                                        ),
+                                        // child: GoogleMap(
+                                        //   key: _key,
+                                        //   markers: {
+                                        //     Marker(
+                                        //       GeoCoord(
+                                        //           34.0469058, -118.3503948),
+                                        //     ),
+                                        //   },
+                                        //   minZoom: 14,
+                                        //   initialZoom: 12,
+                                        //   initialPosition: GeoCoord(34.0469058,
+                                        //       -118.3503948), // Los Angeles, CA
+                                        //   mapType: MapType.terrain,
+                                        //   interactive: true,
+
+                                        //   mobilePreferences:
+                                        //       const MobileMapPreferences(
+                                        //     trafficEnabled: false,
+                                        //     zoomControlsEnabled: true,
+
+                                        //   ),
+
+                                        // ),
                                       ),
-                                      onMapCreated:
-                                          (GoogleMapController controller) {
-                                        _controller.complete(controller);
-                                      }),
+                                      Positioned(
+                                        bottom: 10,
+                                        right: 10,
+                                        child: FloatingActionButton(
+                                          backgroundColor:
+                                              Theme.of(context).primaryColor,
+                                          child: SvgPicture.asset(
+                                              "assets/img/locate.svg"),
+                                          onPressed: _getLocation,
+                                          // onPressed: () {
+                                          // final bounds = GeoCoordBounds(
+                                          //   northeast: GeoCoord(
+                                          //       41.250407, 69.240417),
+                                          //   southwest: GeoCoord(
+                                          //       41.250407, 69.240417),
+                                          // );
+                                          // GoogleMap.of(_key)
+                                          //     .moveCameraBounds(bounds);
+                                          // GoogleMap.of(_key).addMarkerRaw(
+                                          //   GeoCoord(
+                                          //     (bounds.northeast.latitude +
+                                          //             bounds.southwest
+                                          //                 .latitude) /
+                                          //         2,
+                                          //     (bounds.northeast.longitude +
+                                          //             bounds.southwest
+                                          //                 .longitude) /
+                                          //         2,
+                                          //   ),
+                                          // );
+                                          // },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Padding(
                                   padding:

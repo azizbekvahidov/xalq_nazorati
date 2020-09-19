@@ -39,6 +39,8 @@ dependencies:
   shared_preferences: ^0.5.10
   easy_localization: ^2.3.3
   google_maps_flutter: ^0.5.32
+  # flutter_google_maps: ^4.0.0
+  geolocator: ^6.0.0+4
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -103,6 +105,7 @@ flutter:
     - assets/img/men_icon.svg
     - assets/img/image.svg
     - assets/img/camera.svg
+    - assets/img/locate.svg
 
   #   - images/a_dot_ham.jpeg
 
