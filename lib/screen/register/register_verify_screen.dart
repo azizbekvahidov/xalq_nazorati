@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../../screen/register/pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
@@ -9,6 +12,9 @@ import '../../widget/text/main_text.dart';
 
 class RegisterVerifyScreen extends StatefulWidget {
   static const routeName = "/register-phone-verify";
+  final phoneView;
+  final phone;
+  RegisterVerifyScreen({this.phoneView, this.phone});
 
   @override
   _RegisterVerifyScreenState createState() => _RegisterVerifyScreenState();
@@ -16,6 +22,81 @@ class RegisterVerifyScreen extends StatefulWidget {
 
 class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   bool _value = false;
+  String _showTime = "03:00";
+  Timer _timer;
+  final codeController = TextEditingController();
+  int _start = 180;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_start < 1) {
+            timer.cancel();
+          } else {
+            _start = _start - 1;
+            // _showTime = "$_start";
+            int min = (_start / 60).toInt();
+            int sec = _start - (min * 60);
+            String secs = "$sec";
+            if (sec < 10) secs = "0$sec";
+            _showTime = "0$min:$secs";
+          }
+        },
+      ),
+    );
+  }
+
+  void resendCode() async {
+    if (_start == 0) {
+      var url = 'https://new.xalqnazorati.uz/ru/api/users/signup-code';
+      var response = await http.post(url, body: {'phone': widget.phone});
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes));
+
+      _start = 180;
+      startTimer();
+      // print(responseBody["detail"]);
+    }
+  }
+
+  bool isSend = false;
+  void verify() async {
+    String code = codeController.text;
+
+    if (!isSend && code != "") {
+      var url = 'https://new.xalqnazorati.uz/ru/api/users/signup-confirm';
+      var response = await http.post(url, body: {'code': code});
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      Map<String, dynamic> responseBody =
+          json.decode(utf8.decode(response.bodyBytes));
+      print(responseBody);
+      if (response.statusCode == 200) isSend = true;
+      if (isSend) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            settings: const RouteSettings(name: PassRecognizeScreen.routeName),
+            builder: (context) => PassRecognizeScreen()));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -74,7 +155,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "Введите 5 значный код, который мы отправили на номер **** ** *** 2007",
+                                "Введите 5 значный код, который мы отправили на номер ${widget.phoneView}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -108,7 +189,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("Код подтверждения"),
-                          DefaultInput("Введите код"),
+                          DefaultInput("Введите код", codeController),
                           Padding(
                             padding: EdgeInsets.only(top: 10),
                           ),
@@ -122,7 +203,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "03:00 ",
+                                      _showTime,
                                       style: TextStyle(
                                         fontFamily: "Gilroy",
                                         fontSize: 18,
@@ -148,8 +229,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 DefaultButton(
                                   "Продолжить",
                                   () {
-                                    Navigator.of(context).pushNamed(
-                                        PassRecognizeScreen.routeName);
+                                    verify();
                                   },
                                   Theme.of(context).primaryColor,
                                 ),
@@ -166,7 +246,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                       ),
                                     ),
                                     FlatButton(
-                                      onPressed: null,
+                                      onPressed: () {
+                                        resendCode();
+                                      },
                                       child: Text(
                                         "Отправить снова",
                                         style: TextStyle(

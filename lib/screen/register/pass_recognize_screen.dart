@@ -14,6 +14,7 @@ class PassRecognizeScreen extends StatefulWidget {
 }
 
 class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
+  final codeController = TextEditingController();
   bool _value = false;
   createAlertDialog(BuildContext context) {
     return showDialog(
@@ -154,7 +155,8 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                       ),
                     ),
                     MainText("Серия и номер паспорта"),
-                    DefaultInput("Введите серию и номер паспорта"),
+                    DefaultInput(
+                        "Введите серию и номер паспорта", codeController),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                     ),

@@ -27,6 +27,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   static LatLng _initialPosition = LatLng(41.313014, 69.241047);
 
   static LatLng _lastMapPosition;
+  final codeController = TextEditingController();
   final Map<String, Marker> _markers = {};
   void _getLocation() async {
     var currentLocation =
@@ -37,7 +38,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
       final marker = Marker(
         markerId: MarkerId("curr_loc"),
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
-        infoWindow: InfoWindow(title: 'Your Location'),
+        // infoWindow: InfoWindow(title: 'Your Location'),
       );
       _markers["Current Location"] = marker;
 
@@ -99,9 +100,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 MainText("Укажите место на карте или адрес"),
-                                DefaultInput("Например: улица Фархадская 65"),
+                                DefaultInput("Например: улица Фархадская 65",
+                                    codeController),
                                 MainText("Примечания"),
-                                DefaultInput("Ориентир: № подъезд"),
+                                DefaultInput(
+                                    "Ориентир: № подъезд", codeController),
                                 Container(
                                   width: double.infinity,
                                   alignment: Alignment.centerRight,

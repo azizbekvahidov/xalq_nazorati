@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class PassInput extends StatefulWidget {
   final String hint;
-  PassInput(this.hint);
+  final passController;
+  PassInput(this.hint, this.passController);
 
   @override
   _PassInputState createState() => _PassInputState();
@@ -36,6 +37,7 @@ class _PassInputState extends State<PassInput> {
                     mediaQuery.padding.right) *
                 0.7,
             child: TextField(
+              controller: widget.passController,
               obscureText: !_passShow,
               maxLines: 1,
               decoration: InputDecoration.collapsed(

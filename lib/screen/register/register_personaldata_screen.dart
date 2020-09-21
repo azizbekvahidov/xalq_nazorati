@@ -17,6 +17,7 @@ class RegisterPersonalDataScreen extends StatefulWidget {
 
 class _RegisterPersonalDataScreenState
     extends State<RegisterPersonalDataScreen> {
+  final codeController = TextEditingController();
   bool _value = false;
 
   @override
@@ -49,13 +50,15 @@ class _RegisterPersonalDataScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               MainText("Адрес фактического проживания"),
-                              DefaultInput("Введите адрес"),
+                              DefaultInput("Введите адрес", codeController),
                               MainText("Электронная почта"),
-                              DefaultInput("Введите адрес почты"),
+                              DefaultInput(
+                                  "Введите адрес почты", codeController),
                               MainText("Пароль"),
-                              DefaultInput("Придумайте пароль"),
+                              DefaultInput("Придумайте пароль", codeController),
                               MainText("Подтвердите пароль"),
-                              DefaultInput("Подтвердите пароль"),
+                              DefaultInput(
+                                  "Подтвердите пароль", codeController),
                               Padding(
                                 padding: EdgeInsets.only(top: 10),
                               ),

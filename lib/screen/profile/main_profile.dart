@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/screen/login_screen.dart';
 import '../../widget/select_lang.dart';
 import '../../screen/profile/info_page.dart';
 import '../../screen/profile/profile_page.dart';
@@ -44,6 +45,14 @@ class _MainProfileState extends State<MainProfile> {
   void initState() {
     super.initState();
     getStringValuesSF();
+  }
+
+  void quitProfile(BuildContext ctx) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userToken', null);
+
+    Navigator.of(ctx).pushNamedAndRemoveUntil(
+        LoginScreen.routeName, (Route<dynamic> route) => false);
   }
 
   @override
@@ -214,13 +223,56 @@ class _MainProfileState extends State<MainProfile> {
                         InfoPage(),
                         true,
                         Icons.arrow_forward_ios),
-                    IconCardList(
-                        "id",
-                        "assets/img/quit_icon.svg",
-                        "Выйти из аккаунта",
-                        Container(),
-                        false,
-                        Icons.arrow_forward_ios),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        width: (mediaQuery.size.width -
+                                                mediaQuery.padding.left -
+                                                mediaQuery.padding.right) *
+                                            0.84,
+                                        child: Container(
+                                            child: Row(
+                                          children: [
+                                            Container(
+                                              padding:
+                                                  EdgeInsets.only(right: 13),
+                                              child: SvgPicture.asset(
+                                                  "assets/img/quit_icon.svg"),
+                                            ),
+                                            RichText(
+                                              text: TextSpan(
+                                                text: "Выйти из аккаунта",
+                                                style: TextStyle(
+                                                  fontFamily: "Gilroy",
+                                                  color: Color(0xff050505),
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ))),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                quitProfile(context);
+                              }),
+                          Divider(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

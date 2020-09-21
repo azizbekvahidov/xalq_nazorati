@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'register/register_phone_screen.dart';
 import '../widget/input/pass_input.dart';
@@ -8,8 +13,42 @@ import '../widget/default_button.dart';
 import '../widget/text/main_text.dart';
 import '../widget/input/phone_input.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const routeName = "/login-page";
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final phoneController = TextEditingController();
+  final passController = TextEditingController();
+  bool isLogin = false;
+  void getLogin() async {
+    String phone = "+998${phoneController.text}";
+    String pass = passController.text;
+    var url = 'https://new.xalqnazorati.uz/ru/api/users/signin';
+    var response =
+        await http.post(url, body: {'phone': phone, 'password': pass});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    Map<String, dynamic> responseBody = json.decode(response.body);
+    print(responseBody);
+    if (response.statusCode == 200) {
+      addStringToSF(responseBody["token"]);
+      isLogin = true;
+    }
+
+// print(await http.read('https://example.com/foobar.txt'));
+
+    if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+  }
+
+  addStringToSF(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userToken', token);
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -56,9 +95,9 @@ class LoginScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("tel_number_hint".tr().toString()),
-                          PhoneInput(),
+                          PhoneInput(phoneController),
                           MainText("Пароль"),
-                          PassInput("Введите пароль"),
+                          PassInput("Введите пароль", passController),
                         ],
                       ),
                       Positioned(
@@ -69,8 +108,7 @@ class LoginScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 DefaultButton("Войти", () {
-                                  Navigator.of(context)
-                                      .pushReplacementNamed(HomePage.routeName);
+                                  getLogin();
                                 }, Theme.of(context).primaryColor),
                                 Row(
                                   mainAxisAlignment:

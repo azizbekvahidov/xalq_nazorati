@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../../widget/checkbox_custom.dart';
 import '../login_screen.dart';
 import './register_verify_screen.dart';
@@ -17,7 +19,41 @@ class RegisterPhoneScreen extends StatefulWidget {
 }
 
 class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
+  final phoneController = TextEditingController();
   bool _value = false;
+  String phoneWiew = "";
+  bool isRegister = false;
+  void getCode() async {
+    String phone = "+998${phoneController.text}";
+    if (phoneController.text == "") phone = "";
+
+    if (!isRegister && phone != "") {
+      var url = 'https://new.xalqnazorati.uz/ru/api/users/signup-code';
+      var response = await http.post(url, body: {'phone': phone});
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      Map<String, dynamic> responseBody = json.decode(response.body);
+      if (response.statusCode == 200) isRegister = true;
+      print(responseBody);
+      phoneWiew = responseBody["phone_view"];
+    }
+// print(await http.read('https://example.com/foobar.txt'));
+
+    if (isRegister && _value) {
+      setState(() {
+        phoneController.text = "";
+        _value = !_value;
+      });
+      isRegister = false;
+      Navigator.of(context).push(MaterialPageRoute(
+          settings: const RouteSettings(name: RegisterVerifyScreen.routeName),
+          builder: (context) => RegisterVerifyScreen(
+                phoneView: phoneWiew,
+                phone: phone,
+              )));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -110,14 +146,46 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("Номер мобильного телефона"),
-                          PhoneInput(),
+                          PhoneInput(phoneController),
                           Padding(
                             padding: EdgeInsets.only(top: 10),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              CheckboxCustom(_value),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _value = !_value;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2,
+                                          style: BorderStyle.solid,
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      shape: BoxShape.circle,
+                                      color: _value
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.transparent),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: _value
+                                        ? Icon(
+                                            Icons.check,
+                                            size: 15.0,
+                                            color: Colors.white,
+                                          )
+                                        : Icon(
+                                            Icons.check_box_outline_blank,
+                                            size: 15.0,
+                                            color: Colors.transparent,
+                                          ),
+                                  ),
+                                ),
+                              ),
                               Container(
                                 padding: EdgeInsets.only(left: 20),
                                 width: mediaQuery.size.width * 0.75,
@@ -164,8 +232,9 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                 DefaultButton(
                                   "Зарегистрироваться",
                                   () {
-                                    Navigator.of(context).pushNamed(
-                                        RegisterVerifyScreen.routeName);
+                                    getCode();
+                                    // Navigator.of(context).pushNamed(
+                                    //     RegisterVerifyScreen.routeName);
                                   },
                                   Theme.of(context).primaryColor,
                                 ),

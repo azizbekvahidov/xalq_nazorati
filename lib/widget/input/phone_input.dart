@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
-class PhoneInput extends StatelessWidget {
+class PhoneInput extends StatefulWidget {
+  final myController;
+  PhoneInput(this.myController);
+
+  @override
+  _PhoneInputState createState() => _PhoneInputState();
+}
+
+class _PhoneInputState extends State<PhoneInput> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -34,6 +42,7 @@ class PhoneInput extends StatelessWidget {
                     mediaQuery.padding.right) *
                 0.6,
             child: TextField(
+              controller: widget.myController,
               maxLines: 1,
               keyboardType: TextInputType.number,
               decoration: InputDecoration.collapsed(

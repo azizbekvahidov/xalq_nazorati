@@ -8,6 +8,7 @@ import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ChangePersonalData extends StatelessWidget {
+  final codeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -36,13 +37,13 @@ class ChangePersonalData extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Адрес фактического проживания"),
-                            DefaultInput("Введите адрес"),
+                            DefaultInput("Введите адрес", codeController),
                             MainText("Электронная почта"),
-                            DefaultInput("Введите адрес почты"),
+                            DefaultInput("Введите адрес почты", codeController),
                             MainText("Номер мобильного телефона"),
                             PhoneIconInput(),
                             MainText("Код подтверждения"),
-                            DefaultInput("Введите код"),
+                            DefaultInput("Введите код", codeController),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

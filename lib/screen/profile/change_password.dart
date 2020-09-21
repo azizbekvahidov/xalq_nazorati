@@ -7,6 +7,7 @@ import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ChangePassword extends StatelessWidget {
+  final codeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -35,11 +36,11 @@ class ChangePassword extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Старый пароль"),
-                            DefaultInput("Введите пароль"),
+                            DefaultInput("Введите пароль", codeController),
                             MainText("Пароль"),
-                            DefaultInput("Придумайте пароль"),
+                            DefaultInput("Придумайте пароль", codeController),
                             MainText("Подтвердите пароль"),
-                            DefaultInput("Подтвердите пароль"),
+                            DefaultInput("Подтвердите пароль", codeController),
                           ],
                         ),
                       ),

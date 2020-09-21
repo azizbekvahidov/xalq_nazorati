@@ -102,13 +102,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _lang = null;
+  String _token = null;
   Future<void> getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
-
     String stringValue = prefs.getString('lang');
+    String token = prefs.getString('userToken');
     setState(() {
       _lang = stringValue;
+      _token = token;
     });
   }
 
@@ -116,13 +118,18 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     getStringValuesSF();
-    Timer(
-      Duration(seconds: 2),
-      () => _lang == null
-          ? Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => LangScreen()))
-          : Navigator.pushReplacementNamed(context, LoginScreen.routeName),
-    );
+    Timer(Duration(seconds: 2), () {
+      if (_lang == null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LangScreen()));
+      } else {
+        if (_token == null) {
+          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+        } else {
+          Navigator.pushReplacementNamed(context, HomePage.routeName);
+        }
+      }
+    });
   }
 
   @override

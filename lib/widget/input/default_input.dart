@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DefaultInput extends StatelessWidget {
+  final textController;
   final String hint;
-  DefaultInput(this.hint);
+  DefaultInput(this.hint, this.textController);
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -28,6 +29,7 @@ class DefaultInput extends StatelessWidget {
                     mediaQuery.padding.right) *
                 0.74,
             child: TextField(
+              controller: textController,
               maxLines: 1,
               decoration: InputDecoration.collapsed(
                 hintText: hint,
