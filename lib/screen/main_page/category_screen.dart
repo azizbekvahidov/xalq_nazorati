@@ -1,4 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/models/sub_category.dart';
+import 'package:xalq_nazorati/widget/category/sub_categories_list.dart';
 import '../../screen/main_page/sub_category_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import '../../widget/category/category_card_list.dart';
@@ -6,7 +11,7 @@ import '../../widget/category/category_card_list.dart';
 class CategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
   final String title;
-  final String id;
+  final int id;
 
   CategoryScreen({this.title, this.id, Key key}) : super(key: key);
 
@@ -16,6 +21,23 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with AutomaticKeepAliveClientMixin {
+  Future<List<SubCategories>> getCategory() async {
+    var url =
+        'https://new.xalqnazorati.uz/ru/api/problems/subcategories/${widget.id}';
+    var response = await http
+        .get(url, headers: {"Authorization": "token ${globals.token}"});
+    print(response);
+    return parseCategory(utf8.decode(response.bodyBytes));
+  }
+
+  List<SubCategories> parseCategory(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed
+        .map<SubCategories>((json) => SubCategories.fromJson(json))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -50,29 +72,16 @@ class _CategoryScreenState extends State<CategoryScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CategoryCardList(
-                          "subcat1",
-                          "Благоустройство",
-                          SubCategoryScreen("Благоустройство", "subcat1"),
-                          true),
-                      CategoryCardList("subcat2", "Деревья",
-                          SubCategoryScreen("Деревья", "subcat1"), true),
-                      CategoryCardList(
-                          "subcat3",
-                          "Дворная инфраструктура",
-                          SubCategoryScreen(
-                              "Дворная инфраструктура", "subcat1"),
-                          true),
-                      CategoryCardList(
-                          "subcat4",
-                          "Благоустройство",
-                          SubCategoryScreen("Благоустройство", "subcat1"),
-                          true),
-                      CategoryCardList(
-                          "subcat5",
-                          "Уборка и мусор",
-                          SubCategoryScreen("Уборка и мусор", "subcat1"),
-                          false),
+                      FutureBuilder(
+                          future: getCategory(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? SubCategoriesList(categories: snapshot.data)
+                                : Center(
+                                    child: Text("Loading"),
+                                  );
+                          }),
                     ],
                   ),
                 ),

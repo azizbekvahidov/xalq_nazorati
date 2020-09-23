@@ -149,13 +149,8 @@ class _MainProfileState extends State<MainProfile> {
               ShadowBox(
                 child: Column(
                   children: [
-                    IconCardList(
-                        "id",
-                        "assets/img/profile_icon.svg",
-                        "Профиль $_lang",
-                        ProfilePage(),
-                        true,
-                        Icons.arrow_forward_ios),
+                    IconCardList("id", "assets/img/profile_icon.svg", "Профиль",
+                        ProfilePage(), true, Icons.arrow_forward_ios),
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

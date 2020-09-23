@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CategoryCardList extends StatelessWidget {
   final String title;
-  final String id;
+  final int id;
   final Widget route;
   bool divider = false;
 

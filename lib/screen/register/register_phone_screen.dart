@@ -58,13 +58,11 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar()
-        : AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            iconTheme: IconThemeData(color: Colors.white),
-          );
+    final PreferredSizeWidget appBar = AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      iconTheme: IconThemeData(color: Colors.white),
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

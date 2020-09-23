@@ -4,7 +4,7 @@ import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 
 class SubCategoryCardList extends StatelessWidget {
   final String title;
-  final String id;
+  final int id;
   final bool divider;
 
   SubCategoryCardList(this.id, this.title, this.divider);
@@ -50,7 +50,7 @@ class SubCategoryCardList extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.of(context).push(
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) {
                     return ProblemDesc(id, title);

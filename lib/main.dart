@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -103,14 +104,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _lang = null;
   String _token = null;
+  String _country = null;
   Future<void> getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
     String stringValue = prefs.getString('lang');
+    String countryValue = prefs.getString('country');
     String token = prefs.getString('userToken');
     setState(() {
       _lang = stringValue;
       _token = token;
+      _country = countryValue;
     });
   }
 
@@ -120,12 +124,17 @@ class _MyHomePageState extends State<MyHomePage> {
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
+        globals.lang = _lang;
+        globals.country = _country;
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LangScreen()));
       } else {
         if (_token == null) {
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         } else {
+          globals.lang = _lang;
+          globals.country = _country;
+          globals.token = _token;
           Navigator.pushReplacementNamed(context, HomePage.routeName);
         }
       }

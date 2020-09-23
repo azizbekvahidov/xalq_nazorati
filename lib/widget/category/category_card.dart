@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../screen/main_page/category_screen.dart';
 
 class CategoryCard extends StatefulWidget {
-  final String id;
+  final int id;
   final String title;
   final String img;
 
@@ -53,8 +53,8 @@ class _CategoryCardState extends State<CategoryCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              widget.img,
+            SvgPicture.network(
+              "https://new.xalqnazorati.uz${widget.img}",
               width: 45,
               height: 45,
             ),

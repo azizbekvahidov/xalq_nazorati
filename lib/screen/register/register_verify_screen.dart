@@ -63,13 +63,13 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
 
   void resendCode() async {
     if (_start == 0) {
-      var url = 'https://new.xalqnazorati.uz/ru/api/users/signup-code';
-      var response = await http.post(url, body: {'phone': widget.phone});
+      var url = 'https://new.xalqnazorati.uz/ru/api/users/retry-signup-code';
+      var response = await http.post(url); //, body: {'phone': widget.phone});
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
       Map<String, dynamic> responseBody =
           json.decode(utf8.decode(response.bodyBytes));
-
+      print(responseBody);
       _start = 180;
       startTimer();
       // print(responseBody["detail"]);
@@ -101,13 +101,11 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
-    final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar()
-        : AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            iconTheme: IconThemeData(color: Colors.white),
-          );
+    final PreferredSizeWidget appBar = AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      iconTheme: IconThemeData(color: Colors.white),
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(

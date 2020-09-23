@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../main_page/problem/problem_locate.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/custom_dotted_circle_container.dart';
@@ -9,8 +10,9 @@ import '../../../widget/text/main_text.dart';
 import '../../../widget/shadow_box.dart';
 
 class ProblemDesc extends StatefulWidget {
+  final navKey = new GlobalKey<NavigatorState>();
   static const routeName = "/problem-desc";
-  final String id;
+  final int id;
   final String title;
   ProblemDesc(this.id, this.title);
   @override
@@ -20,6 +22,8 @@ class ProblemDesc extends StatefulWidget {
 class _ProblemDescState extends State<ProblemDesc> {
   @override
   Widget build(BuildContext context) {
+    print("this navKey ${globals.navKey}");
+    print("this navKey ${widget.navKey}");
     final mediaQuery = MediaQuery.of(context);
     final size = (mediaQuery.size.width -
                 mediaQuery.padding.left -

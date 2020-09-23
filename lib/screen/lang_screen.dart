@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './login_screen.dart';
@@ -12,6 +13,8 @@ class LangScreen extends StatefulWidget {
 class _LangScreenState extends State<LangScreen> {
   int btn = 0;
   addStringToSF(String lang, String country) async {
+    globals.lang = lang;
+    globals.country = country;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);
     prefs.setString('country', country);

@@ -1,4 +1,5 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    globals.navKey = navigatorKey;
     return Scaffold(
       bottomNavigationBar: BottomNavyBar(
         items: <BottomNavyBarItem>[

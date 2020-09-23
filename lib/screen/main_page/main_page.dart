@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/models/category.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
+import 'package:xalq_nazorati/widget/category/category_list.dart';
 import '../../widget/idea-widget/list_view.dart';
 import '../../widget/input/search_input.dart';
-import '../../widget/category/category_card.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main-page";
@@ -12,6 +16,21 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  Future<List<Categories>> getCategory() async {
+    print(globals.token);
+    var url = 'https://new.xalqnazorati.uz/ru/api/problems/categories';
+    var response = await http
+        .get(url, headers: {"Authorization": "token ${globals.token}"});
+    print(response);
+    return parseCategory(utf8.decode(response.bodyBytes));
+  }
+
+  List<Categories> parseCategory(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Categories>((json) => Categories.fromJson(json)).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -75,26 +94,41 @@ class _MainPageState extends State<MainPage> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.only(left: 5, right: 15),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CategoryCard("cat1", "Мой дом", 'assets/img/house.svg'),
-                      CategoryCard("cat2", "Мой двор", 'assets/img/field.svg'),
-                      CategoryCard("cat3", "Моя дорога", 'assets/img/road.svg'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      CategoryCard("cat4", "Городское пространство",
-                          'assets/img/citySpace.svg'),
-                      CategoryCard("cat5", "Общественный транспорт",
-                          'assets/img/transport.svg'),
-                      CategoryCard("cat6", "Торовля и реклама",
-                          'assets/img/selling.svg'),
-                    ],
-                  ),
+                  FutureBuilder(
+                      future: getCategory(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) print(snapshot.error);
+                        return snapshot.hasData
+                            ? CategoryList(categories: snapshot.data)
+                            : Center(
+                                child: Text("Loading"),
+                              );
+                      }),
+                  // Row(
+                  //   children: [
+                  //     CategoryCard(2, "Мой дом",
+                  //         '/upload/problems/categories/moy_dvor.svg'),
+                  //     CategoryCard(3, "Мой двор",
+                  //         '/upload/problems/categories/moy_dvor.svg'),
+                  //     CategoryCard(4, "Моя дорога",
+                  //         '/upload/problems/categories/moy_dvor.svg'),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     CategoryCard("cat4", "Городское пространство",
+                  //         'assets/img/citySpace.svg'),
+                  //     CategoryCard("cat5", "Общественный транспорт",
+                  //         'assets/img/transport.svg'),
+                  //     CategoryCard("cat6", "Торовля и реклама",
+                  //         'assets/img/selling.svg'),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
