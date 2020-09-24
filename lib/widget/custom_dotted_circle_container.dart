@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,8 +9,9 @@ import '../widget/default_button.dart';
 
 class CustomDottedCircleContainer extends StatefulWidget {
   final double boxSize;
+  File image;
 
-  CustomDottedCircleContainer(this.boxSize);
+  CustomDottedCircleContainer(this.boxSize, this.image);
   @override
   _CustomDottedCircleContainerState createState() =>
       _CustomDottedCircleContainerState();
@@ -19,7 +19,6 @@ class CustomDottedCircleContainer extends StatefulWidget {
 
 class _CustomDottedCircleContainerState
     extends State<CustomDottedCircleContainer> {
-  File image;
   bool accessDenied;
 
   Future<PermissionStatus> _getPermission(perm) async {
@@ -39,7 +38,7 @@ class _CustomDottedCircleContainerState
     // ignore: deprecated_member_use
     File img = await ImagePicker.pickImage(source: ImageSource.camera);
     if (img != null && validate(img)) {
-      image = img;
+      widget.image = img;
       setState(() {});
     }
   }
@@ -47,7 +46,7 @@ class _CustomDottedCircleContainerState
   pickGallery() async {
     File img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (img != null && validate(img)) {
-      image = img;
+      widget.image = img;
       print(img.lengthSync());
       setState(() {});
     }
@@ -154,7 +153,7 @@ class _CustomDottedCircleContainerState
               );
             });
       },
-      child: image == null
+      child: widget.image == null
           ? DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(widget.boxSize / 2),
@@ -180,7 +179,7 @@ class _CustomDottedCircleContainerState
                   BorderRadius.all(Radius.circular(widget.boxSize / 2)),
               child: Container(
                 child: FittedBox(
-                  child: Image.file(image),
+                  child: Image.file(widget.image),
                   fit: BoxFit.fill,
                 ),
                 width: widget.boxSize,

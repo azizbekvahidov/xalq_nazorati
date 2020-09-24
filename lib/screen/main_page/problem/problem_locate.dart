@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
@@ -16,23 +20,52 @@ import '../../../widget/text/main_text.dart';
 import '../../../widget/shadow_box.dart';
 
 class ProblemLocate extends StatefulWidget {
+  final String desc;
+  final int subSubCategoryId;
+
+  ProblemLocate(this.desc, this.subSubCategoryId);
+
   @override
   _ProblemLocateState createState() => _ProblemLocateState();
 }
 
 class _ProblemLocateState extends State<ProblemLocate> {
-  GoogleMapController controller1;
+  GoogleMapController mapController;
 
   //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
   static LatLng _initialPosition = LatLng(41.313014, 69.241047);
 
   static LatLng _lastMapPosition;
-  final codeController = TextEditingController();
+  final addressController = TextEditingController();
+  final extraController = TextEditingController();
+  double _latitude;
+  double _longitude;
   final Map<String, Marker> _markers = {};
+
+  Future insertData() async {
+    final sendData = json.encode(<String, String>{
+      "subsubcategory:": "${widget.subSubCategoryId}",
+      "content": widget.desc,
+      "address": addressController.text,
+      "latitude": "$_latitude",
+      "longitude": "$_longitude",
+      "note": extraController.text,
+    });
+    var url = 'https://new.xalqnazorati.uz/ru/api/problems/problem';
+    var response = await http.post(url, body: sendData, headers: {
+      "Authorization": "token ${globals.token}",
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+    // print(json.encode(response.request));
+    print(utf8.decode(response.bodyBytes));
+    print(response.request.headers);
+  }
+
   void _getLocation() async {
     var currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-
+    _latitude = currentLocation.latitude;
+    _longitude = currentLocation.longitude;
     setState(() {
       _markers.clear();
       final marker = Marker(
@@ -46,13 +79,13 @@ class _ProblemLocateState extends State<ProblemLocate> {
           target: LatLng(currentLocation.latitude, currentLocation.longitude),
           zoom: 14.4746);
 
-      controller1.animateCamera(CameraUpdate.newCameraPosition(p));
+      mapController.animateCamera(CameraUpdate.newCameraPosition(p));
     });
   }
 
   _onMapCreated(GoogleMapController controller) {
     setState(() {
-      controller1 = controller;
+      mapController = controller;
     });
   }
 
@@ -82,7 +115,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
     return Scaffold(
       appBar: CustomAppBar(title: "Где обнаружена проблема?"),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        // physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Container(
@@ -101,10 +134,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
                               children: [
                                 MainText("Укажите место на карте или адрес"),
                                 DefaultInput("Например: улица Фархадская 65",
-                                    codeController),
+                                    addressController),
                                 MainText("Примечания"),
                                 DefaultInput(
-                                    "Ориентир: № подъезд", codeController),
+                                    "Ориентир: № подъезд", extraController),
                                 Container(
                                   width: double.infinity,
                                   alignment: Alignment.centerRight,
@@ -146,29 +179,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                           myLocationButtonEnabled: false,
                                           zoomControlsEnabled: false,
                                         ),
-                                        // child: GoogleMap(
-                                        //   key: _key,
-                                        //   markers: {
-                                        //     Marker(
-                                        //       GeoCoord(
-                                        //           34.0469058, -118.3503948),
-                                        //     ),
-                                        //   },
-                                        //   minZoom: 14,
-                                        //   initialZoom: 12,
-                                        //   initialPosition: GeoCoord(34.0469058,
-                                        //       -118.3503948), // Los Angeles, CA
-                                        //   mapType: MapType.terrain,
-                                        //   interactive: true,
-
-                                        //   mobilePreferences:
-                                        //       const MobileMapPreferences(
-                                        //     trafficEnabled: false,
-                                        //     zoomControlsEnabled: true,
-
-                                        //   ),
-
-                                        // ),
                                       ),
                                       Positioned(
                                         bottom: 10,
@@ -179,28 +189,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                           child: SvgPicture.asset(
                                               "assets/img/locate.svg"),
                                           onPressed: _getLocation,
-                                          // onPressed: () {
-                                          // final bounds = GeoCoordBounds(
-                                          //   northeast: GeoCoord(
-                                          //       41.250407, 69.240417),
-                                          //   southwest: GeoCoord(
-                                          //       41.250407, 69.240417),
-                                          // );
-                                          // GoogleMap.of(_key)
-                                          //     .moveCameraBounds(bounds);
-                                          // GoogleMap.of(_key).addMarkerRaw(
-                                          //   GeoCoord(
-                                          //     (bounds.northeast.latitude +
-                                          //             bounds.southwest
-                                          //                 .latitude) /
-                                          //         2,
-                                          //     (bounds.northeast.longitude +
-                                          //             bounds.southwest
-                                          //                 .longitude) /
-                                          //         2,
-                                          //   ),
-                                          // );
-                                          // },
                                         ),
                                       ),
                                     ],
@@ -305,14 +293,16 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     )
                                   : */
                             DefaultButton("Продолжить", () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return ProblemFinish();
-                              },
-                            ),
-                            ModalRoute.withName(MainPage.routeName),
-                          );
+                          insertData().then((value) {
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //   MaterialPageRoute(
+                            //     builder: (BuildContext context) {
+                            //       return ProblemFinish();
+                            //     },
+                            //   ),
+                            //   ModalRoute.withName(MainPage.routeName),
+                            // );
+                          });
                         }, Theme.of(context).primaryColor),
                       ),
                     ),

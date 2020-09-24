@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/profile/change_password.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/delete_profile.dart';
@@ -25,11 +26,16 @@ class ProfilePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      CardList("Имя", "Мавлонбек"),
-                      CardList("Фамилия", "Пулатов"),
-                      CardList("Отчество", "Мухтаровичь"),
-                      CardList("Дата рождения", "01.02.1980"),
-                      CardList("Пол", "Мужчина"),
+                      CardList("Имя", "${globals.userData['first_name']}"),
+                      CardList("Фамилия", "${globals.userData['last_name']}"),
+                      CardList("Отчество", "${globals.userData['patronymic']}"),
+                      CardList(
+                          "Дата рождения", "${globals.userData['birth_date']}"),
+                      CardList(
+                          "Пол",
+                          globals.userData['gender'] == "male"
+                              ? "Мужчина"
+                              : "Женшина"),
                       CardList("Адрес фактического проживания",
                           "Файзиобод мфй, Файзиобод кучаси, 796"),
                     ],

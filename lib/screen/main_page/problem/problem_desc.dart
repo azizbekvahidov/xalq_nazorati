@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -10,7 +12,6 @@ import '../../../widget/text/main_text.dart';
 import '../../../widget/shadow_box.dart';
 
 class ProblemDesc extends StatefulWidget {
-  final navKey = new GlobalKey<NavigatorState>();
   static const routeName = "/problem-desc";
   final int id;
   final String title;
@@ -20,11 +21,15 @@ class ProblemDesc extends StatefulWidget {
 }
 
 class _ProblemDescState extends State<ProblemDesc> {
+  File image1;
+  File image2;
+  File image3;
+  File image4;
+  var descController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    print("this navKey ${globals.navKey}");
-    print("this navKey ${widget.navKey}");
     final mediaQuery = MediaQuery.of(context);
+
     final size = (mediaQuery.size.width -
                 mediaQuery.padding.left -
                 mediaQuery.padding.right) /
@@ -50,7 +55,8 @@ class _ProblemDescState extends State<ProblemDesc> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Описать проблему"),
-                            TextareaInput("Напишите о проблеме"),
+                            TextareaInput(
+                                "Напишите о проблеме", descController),
                             Container(
                               width: double.infinity,
                               alignment: Alignment.centerRight,
@@ -70,19 +76,19 @@ class _ProblemDescState extends State<ProblemDesc> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CustomDottedCircleContainer(size),
+                                  CustomDottedCircleContainer(size, image1),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size),
+                                  CustomDottedCircleContainer(size, image2),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size),
+                                  CustomDottedCircleContainer(size, image3),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size),
+                                  CustomDottedCircleContainer(size, image4),
                                 ],
                               ),
                             ),
@@ -131,13 +137,11 @@ class _ProblemDescState extends State<ProblemDesc> {
                                 )
                               : */
                               DefaultButton("Продолжить", () {
-                            // Navigator.of(context).pop();
-                            // setState(() {
-                            //   _value = !_value;
-                            // });
+                            print("this image $image1");
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) {
-                              return ProblemLocate();
+                              return ProblemLocate(
+                                  descController.text, widget.id);
                             }));
                           }, Theme.of(context).primaryColor),
                         ),

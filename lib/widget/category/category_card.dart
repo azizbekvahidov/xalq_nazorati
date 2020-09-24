@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../screen/main_page/category_screen.dart';
 
@@ -54,7 +55,7 @@ class _CategoryCardState extends State<CategoryCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.network(
-              "https://new.xalqnazorati.uz${widget.img}",
+              "${globals.site_link}${widget.img}",
               width: 45,
               height: 45,
             ),

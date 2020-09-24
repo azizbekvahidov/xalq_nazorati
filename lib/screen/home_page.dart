@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    globals.navKey = navigatorKey;
     return Scaffold(
       bottomNavigationBar: BottomNavyBar(
         items: <BottomNavyBarItem>[

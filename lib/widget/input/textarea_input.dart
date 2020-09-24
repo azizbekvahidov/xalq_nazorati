@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class TextareaInput extends StatelessWidget {
   final String hint;
-  TextareaInput(this.hint);
+  final textareaController;
+  TextareaInput(this.hint, this.textareaController);
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -28,6 +29,7 @@ class TextareaInput extends StatelessWidget {
                     mediaQuery.padding.right) *
                 0.77,
             child: TextField(
+              controller: textareaController,
               maxLines: 7,
               decoration: InputDecoration.collapsed(
                 hintText: "Введите причину",

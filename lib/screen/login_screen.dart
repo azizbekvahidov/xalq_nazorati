@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void getLogin() async {
     String phone = "+998${phoneController.text}";
     String pass = passController.text;
-    var url = 'https://new.xalqnazorati.uz/ru/api/users/signin';
+    var url = '${globals.api_link}/users/signin';
     var response =
         await http.post(url, body: {'phone': phone, 'password': pass});
     print('Response status: ${response.statusCode}');

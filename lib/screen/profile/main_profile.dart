@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
@@ -47,12 +48,9 @@ class _MainProfileState extends State<MainProfile> {
     getStringValuesSF();
   }
 
-  void quitProfile(BuildContext ctx) async {
+  Future quitProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', null);
-
-    Navigator.of(ctx).pushNamedAndRemoveUntil(
-        LoginScreen.routeName, (Route<dynamic> route) => false);
   }
 
   @override
@@ -81,11 +79,11 @@ class _MainProfileState extends State<MainProfile> {
               child: Column(
                 children: [
                   Text(
-                    "Пулатов Мавлонбек",
+                    "${globals.userData['last_name']} ${globals.userData['first_name']}",
                     style: Theme.of(context).textTheme.display2,
                   ),
                   Text(
-                    "+998 97 904 5005",
+                    "${globals.userData['phone']}",
                     style: TextStyle(
                         color: Color(0xff66676C),
                         fontSize: 14,
@@ -262,7 +260,12 @@ class _MainProfileState extends State<MainProfile> {
                                 ),
                               ),
                               onTap: () {
-                                quitProfile(context);
+                                quitProfile().then((value) {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushNamedAndRemoveUntil(
+                                          LoginScreen.routeName,
+                                          (Route<dynamic> route) => false);
+                                });
                               }),
                           Divider(),
                         ],

@@ -4,6 +4,7 @@ import 'package:xalq_nazorati/widget/input/default_input.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 
 class SupportFeedback extends StatelessWidget {
+  var descController = TextEditingController();
   final codeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class SupportFeedback extends StatelessWidget {
         children: [
           DefaultInput("Введите тема", codeController),
           DefaultInput("Введите адрес почты", codeController),
-          TextareaInput("Введите ваше сообщение...")
+          TextareaInput("Введите ваше сообщение...", descController)
         ],
       ),
     );

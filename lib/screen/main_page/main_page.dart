@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:xalq_nazorati/models/category.dart';
+import 'package:xalq_nazorati/models/user.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import '../../widget/idea-widget/list_view.dart';
@@ -18,7 +19,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   Future<List<Categories>> getCategory() async {
     print(globals.token);
-    var url = 'https://new.xalqnazorati.uz/ru/api/problems/categories';
+    var url = '${globals.api_link}/problems/categories';
     var response = await http
         .get(url, headers: {"Authorization": "token ${globals.token}"});
     print(response);
@@ -63,7 +64,7 @@ class _MainPageState extends State<MainPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Привет, Мавлонбек",
+                    "Привет, ${globals.userData['first_name']}",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 26,
@@ -109,26 +110,6 @@ class _MainPageState extends State<MainPage> {
                                 child: Text("Loading"),
                               );
                       }),
-                  // Row(
-                  //   children: [
-                  //     CategoryCard(2, "Мой дом",
-                  //         '/upload/problems/categories/moy_dvor.svg'),
-                  //     CategoryCard(3, "Мой двор",
-                  //         '/upload/problems/categories/moy_dvor.svg'),
-                  //     CategoryCard(4, "Моя дорога",
-                  //         '/upload/problems/categories/moy_dvor.svg'),
-                  //   ],
-                  // ),
-                  // Row(
-                  //   children: [
-                  //     CategoryCard("cat4", "Городское пространство",
-                  //         'assets/img/citySpace.svg'),
-                  //     CategoryCard("cat5", "Общественный транспорт",
-                  //         'assets/img/transport.svg'),
-                  //     CategoryCard("cat6", "Торовля и реклама",
-                  //         'assets/img/selling.svg'),
-                  //   ],
-                  // ),
                 ],
               ),
             ),

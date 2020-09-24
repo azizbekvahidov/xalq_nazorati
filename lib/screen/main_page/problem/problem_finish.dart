@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 
@@ -72,7 +73,7 @@ class ProblemFinish extends StatelessWidget {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (BuildContext context) {
-                            return MainPage();
+                            return HomePage();
                           }), (Route<dynamic> route) => false);
                         }, Theme.of(context).primaryColor),
                       ),

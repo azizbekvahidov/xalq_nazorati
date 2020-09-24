@@ -7,6 +7,7 @@ import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class DeleteProfile extends StatelessWidget {
+  var descController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -58,7 +59,7 @@ class DeleteProfile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Почему вы удаляете аккаунт?"),
-                            TextareaInput("hint"),
+                            TextareaInput("hint", descController),
                           ],
                         ),
                       ),

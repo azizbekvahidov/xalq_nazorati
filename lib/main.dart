@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:xalq_nazorati/models/user.dart';
+import 'package:http/http.dart' as http;
+
 import 'globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<User> getUser() async {
+    var url = '${globals.api_link}/users/profile';
+    var response = await http
+        .get(url, headers: {"Authorization": "token ${globals.token}"});
+    print(response);
+    globals.userData = json.decode(utf8.decode(response.bodyBytes));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -135,7 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.lang = _lang;
           globals.country = _country;
           globals.token = _token;
-          Navigator.pushReplacementNamed(context, HomePage.routeName);
+          getUser().then((value) {
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
+          });
         }
       }
     });
