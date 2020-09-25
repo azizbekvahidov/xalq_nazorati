@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/profile/change_password.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
@@ -12,6 +13,10 @@ class ProfilePage extends StatelessWidget {
   static const routeName = "/profile-page";
   @override
   Widget build(BuildContext context) {
+    DateFormat formatter = DateFormat('dd.MM.yyyy');
+    String birthDate =
+        formatter.format(DateTime.parse(globals.userData['birth_date']));
+    print(birthDate);
     return Scaffold(
       appBar: CustomAppBar(title: "Профиль"),
       body: SingleChildScrollView(
@@ -29,8 +34,7 @@ class ProfilePage extends StatelessWidget {
                       CardList("Имя", "${globals.userData['first_name']}"),
                       CardList("Фамилия", "${globals.userData['last_name']}"),
                       CardList("Отчество", "${globals.userData['patronymic']}"),
-                      CardList(
-                          "Дата рождения", "${globals.userData['birth_date']}"),
+                      CardList("Дата рождения", "${birthDate}"),
                       CardList(
                           "Пол",
                           globals.userData['gender'] == "male"

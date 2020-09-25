@@ -5,7 +5,7 @@ class User {
   final String email;
   final String username;
   final String phone;
-  final String birth_date;
+  final DateTime birth_date;
   final String gender;
   final String avatar;
   final String patronymic;
@@ -31,7 +31,7 @@ class User {
       email: json['email'] as String,
       username: json['username'] as String,
       phone: json['phone'] as String,
-      birth_date: json['birth_date'] as String,
+      birth_date: json['birth_date'] as DateTime,
       gender: json['gender'] as String,
       avatar: json['avatar'] as String,
       patronymic: json['patronymic'] as String,
