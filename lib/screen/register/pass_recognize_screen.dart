@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../widget/app_bar/custom_appBar.dart';
 import './pas_recognized_screen.dart';
 import '../../widget/default_button.dart';
@@ -14,8 +18,40 @@ class PassRecognizeScreen extends StatefulWidget {
 }
 
 class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
-  final codeController = TextEditingController();
+  final pnflController = TextEditingController();
+  final seriesController = TextEditingController();
+
   bool _value = false;
+
+  Future sendData() async {
+    String pnfl = pnflController.text;
+    String series = seriesController.text;
+    if (_value && pnfl != "" && series != "") {
+      String url = '${globals.api_link}/users/data-from-cep';
+      Map map = {"pinpp": pnfl, 'document': series};
+      // String url = '${globals.api_link}/users/get-phone';
+      var r1 = await Requests.post(url,
+          body: map, verify: false, persistCookies: true);
+      // print(json.encode(utf8.decode(r1.bytes())));
+
+      if (r1.statusCode == 200) {
+        r1.raiseForStatus();
+
+        print("${r1.statusCode} ${r1.content().runtimeType}");
+        dynamic json = r1.json();
+        // print(json["detail"]);
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          settings: const RouteSettings(name: PasRecognizedScreen.routeName),
+          builder: (context) => PasRecognizedScreen(
+            data: json,
+          ),
+        ));
+      } else {
+        print("${r1.statusCode} ${r1.content()}");
+      }
+    }
+  }
+
   createAlertDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -114,6 +150,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                     mediaQuery.padding.right) *
                                 0.77,
                             child: TextField(
+                              controller: pnflController,
                               maxLines: 1,
                               decoration: InputDecoration(
                                 contentPadding:
@@ -156,7 +193,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                     ),
                     MainText("Серия и номер паспорта"),
                     DefaultInput(
-                        "Введите серию и номер паспорта", codeController),
+                        "Введите серию и номер паспорта", seriesController),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                     ),
@@ -233,11 +270,11 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                   Color(0xffB2B7D0),
                                 )
                               : DefaultButton("Продолжить", () {
-                                  setState(() {
-                                    _value = !_value;
+                                  sendData().then((value) {
+                                    setState(() {
+                                      _value = !_value;
+                                    });
                                   });
-                                  Navigator.of(context)
-                                      .pushNamed(PasRecognizedScreen.routeName);
                                 }, Theme.of(context).primaryColor),
                         ),
                       ),

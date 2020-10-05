@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/login_screen.dart';
 import '../rule_page.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import '../../widget/shadow_box.dart';
@@ -17,8 +20,37 @@ class RegisterPersonalDataScreen extends StatefulWidget {
 
 class _RegisterPersonalDataScreenState
     extends State<RegisterPersonalDataScreen> {
-  final codeController = TextEditingController();
+  final emailController = TextEditingController();
+  final addressController = TextEditingController();
+  final passController = TextEditingController();
+  final repassController = TextEditingController();
   bool _value = false;
+  Future sendData() async {
+    String email = emailController.text;
+    String address = addressController.text;
+    String pass = passController.text;
+    String repass = repassController.text;
+    if (_value && email != "" && address != "") {
+      String url = '${globals.api_link}/users/signup';
+      Map map = {
+        "email": email,
+        'address_str': address,
+        'password': address,
+        'password2': address,
+        'agreement': address,
+      };
+      // String url = '${globals.api_link}/users/get-phone';
+      var r1 = await Requests.post(url,
+          body: map, verify: false, persistCookies: true);
+
+      if (r1.statusCode == 201) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            LoginScreen.routeName, (Route<dynamic> route) => false);
+      } else {
+        print("${r1.statusCode} ${r1.content()}");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +82,15 @@ class _RegisterPersonalDataScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               MainText("Адрес фактического проживания"),
-                              DefaultInput("Введите адрес", codeController),
+                              DefaultInput("Введите адрес", addressController),
                               MainText("Электронная почта"),
                               DefaultInput(
-                                  "Введите адрес почты", codeController),
+                                  "Введите адрес почты", emailController),
                               MainText("Пароль"),
-                              DefaultInput("Придумайте пароль", codeController),
+                              DefaultInput("Придумайте пароль", passController),
                               MainText("Подтвердите пароль"),
                               DefaultInput(
-                                  "Подтвердите пароль", codeController),
+                                  "Подтвердите пароль", repassController),
                               Padding(
                                 padding: EdgeInsets.only(top: 10),
                               ),
@@ -159,12 +191,11 @@ class _RegisterPersonalDataScreenState
                                   Color(0xffB2B7D0),
                                 )
                               : DefaultButton("Продолжить", () {
-                                  setState(() {
-                                    _value = !_value;
+                                  sendData().then((value) {
+                                    setState(() {
+                                      _value = !_value;
+                                    });
                                   });
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      HomePage.routeName,
-                                      (Route<dynamic> route) => false);
                                 }, Theme.of(context).primaryColor),
                         ),
                       ),

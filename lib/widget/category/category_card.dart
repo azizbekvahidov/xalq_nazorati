@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +17,14 @@ class CategoryCard extends StatefulWidget {
 }
 
 class _CategoryCardState extends State<CategoryCard> {
+  @override
+  void initState() {
+    super.initState();
+    HttpClient client = new HttpClient();
+    client.badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -54,8 +64,9 @@ class _CategoryCardState extends State<CategoryCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.network(
-              "${globals.site_link}${widget.img}",
+            SvgPicture.asset(
+              "assets/img/road.svg",
+              // "${globals.site_link}${widget.img}",
               width: 45,
               height: 45,
             ),

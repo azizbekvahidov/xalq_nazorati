@@ -4,7 +4,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/http_get.dart';
 import '../../screen/register/pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
@@ -64,12 +67,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   void resendCode() async {
     if (_start == 0) {
       var url = 'https://new.xalqnazorati.uz/ru/api/users/retry-signup-code';
-      var response = await http.post(url); //, body: {'phone': widget.phone});
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      Map<String, dynamic> responseBody =
-          json.decode(utf8.decode(response.bodyBytes));
-      print(responseBody);
+      var r1 = await Requests.post(url, verify: false, persistCookies: true);
+      r1.raiseForStatus();
+
       _start = 180;
       startTimer();
       // print(responseBody["detail"]);
@@ -81,14 +81,16 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
     String code = codeController.text;
 
     if (!isSend && code != "") {
-      var url = 'https://new.xalqnazorati.uz/ru/api/users/signup-confirm';
-      var response = await http.post(url, body: {'code': code});
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      Map<String, dynamic> responseBody =
-          json.decode(utf8.decode(response.bodyBytes));
-      print(responseBody);
-      if (response.statusCode == 200) isSend = true;
+      String url = '${globals.api_link}/users/signup-confirm';
+      Map map = {"code": int.parse(code)};
+      // String url = '${globals.api_link}/users/get-phone';
+      var r1 = await Requests.post(url,
+          body: map, verify: false, persistCookies: true);
+      r1.raiseForStatus();
+
+      // dynamic json = r1.json();
+      // print(json["detail"]);
+      if (r1.statusCode == 200) isSend = true;
       if (isSend) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
             settings: const RouteSettings(name: PassRecognizeScreen.routeName),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/sub_category.dart';
 import 'package:xalq_nazorati/widget/category/sub_categories_list.dart';
 import '../../screen/main_page/sub_category_screen.dart';
@@ -24,10 +25,12 @@ class _CategoryScreenState extends State<CategoryScreen>
   Future<List<SubCategories>> getCategory() async {
     var url =
         'https://new.xalqnazorati.uz/ru/api/problems/subcategories/${widget.id}';
-    var response = await http
-        .get(url, headers: {"Authorization": "token ${globals.token}"});
+    HttpGet request = HttpGet();
+    var response = await request.methodGet(url);
+
+    String reply = await response.transform(utf8.decoder).join();
     print(response);
-    return parseCategory(utf8.decode(response.bodyBytes));
+    return parseCategory(reply);
   }
 
   List<SubCategories> parseCategory(String responseBody) {

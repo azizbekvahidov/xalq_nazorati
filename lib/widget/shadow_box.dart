@@ -8,6 +8,7 @@ class ShadowBox extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 15),
       decoration: BoxDecoration(
+        border: Border.all(color: Color(0xffD5D8E5), width: 0.5),
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
         boxShadow: [

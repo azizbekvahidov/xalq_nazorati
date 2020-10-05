@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PhoneInput extends StatefulWidget {
   final myController;
@@ -11,6 +12,8 @@ class PhoneInput extends StatefulWidget {
 class _PhoneInputState extends State<PhoneInput> {
   @override
   Widget build(BuildContext context) {
+    var maskFormatter = new MaskTextInputFormatter(
+        mask: '__ ___ __ __', filter: {"_": RegExp(r'[0-9]')});
     final mediaQuery = MediaQuery.of(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -42,6 +45,7 @@ class _PhoneInputState extends State<PhoneInput> {
                     mediaQuery.padding.right) *
                 0.6,
             child: TextField(
+              inputFormatters: [maskFormatter],
               controller: widget.myController,
               maxLines: 1,
               keyboardType: TextInputType.number,

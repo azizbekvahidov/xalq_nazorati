@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'register/register_phone_screen.dart';
 import '../widget/input/pass_input.dart';
@@ -26,20 +29,23 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLogin = false;
   void getLogin() async {
     String phone = "+998${phoneController.text}";
+    phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String pass = passController.text;
     var url = '${globals.api_link}/users/signin';
-    var response =
-        await http.post(url, body: {'phone': phone, 'password': pass});
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    Map<String, dynamic> responseBody = json.decode(response.body);
-    print(responseBody);
+    HttpGet request = HttpGet();
+    Map map = {"phone": phone, "password": pass};
+    HttpClientResponse response = await request.methodPost(map, url);
+
+    String reply = await response.transform(utf8.decoder).join();
+
+    Map<String, dynamic> responseBody = json.decode(reply);
     if (response.statusCode == 200) {
       addStringToSF(responseBody["token"]);
+      globals.token = responseBody["token"];
       isLogin = true;
+    } else {
+      print(responseBody["message"]);
     }
-
-// print(await http.read('https://example.com/foobar.txt'));
 
     if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);
   }

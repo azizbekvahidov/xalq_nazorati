@@ -4,6 +4,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import '../../widget/select_lang.dart';
 import '../../screen/profile/info_page.dart';
 import '../../screen/profile/profile_page.dart';
@@ -51,6 +52,8 @@ class _MainProfileState extends State<MainProfile> {
   Future quitProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', null);
+    globals.userData = null;
+    print(globals.userData);
   }
 
   @override
@@ -121,11 +124,12 @@ class _MainProfileState extends State<MainProfile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomCardList(
-                        "subcat1", "Нерешенные проблемы", null, true),
-                    CustomCardList("subcat2", "Решенные проблемы", null, true),
-                    CustomCardList(
-                        "subcat3", "Отклоненные проблемы", null, false),
+                    CustomCardList("subcat1", "Нерешенные проблемы",
+                        ProblemScreen("Нерешенные проблемы", "warning"), true),
+                    CustomCardList("subcat2", "Решенные проблемы",
+                        ProblemScreen("Решенные проблемы", "success"), true),
+                    CustomCardList("subcat3", "Отклоненные проблемы",
+                        ProblemScreen("Отклоненные проблемы", "danger"), false),
                   ],
                 ),
               ),

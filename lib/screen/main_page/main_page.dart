@@ -1,13 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/category.dart';
-import 'package:xalq_nazorati/models/user.dart';
+import 'package:xalq_nazorati/models/news.dart';
+import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
-import '../../widget/idea-widget/list_view.dart';
+import 'package:xalq_nazorati/widget/news/news_list.dart';
 import '../../widget/input/search_input.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,22 +20,41 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   Future<List<Categories>> getCategory() async {
-    print(globals.token);
     var url = '${globals.api_link}/problems/categories';
-    var response = await http
-        .get(url, headers: {"Authorization": "token ${globals.token}"});
-    print(response);
-    return parseCategory(utf8.decode(response.bodyBytes));
+    HttpGet request = HttpGet();
+    var response = await request.methodGet(url);
+
+    String reply = await response.transform(utf8.decoder).join();
+
+    return parseCategory(reply);
+  }
+
+  Future<List<News>> getNews() async {
+    var url = '${globals.api_link}/news?limit=3';
+    HttpGet request = HttpGet();
+    var response = await request.methodGet(url);
+
+    String reply = await response.transform(utf8.decoder).join();
+    var temp = json.decode(reply);
+    var some = temp.values.toList();
+    return parseNews(json.encode(some[3]));
   }
 
   List<Categories> parseCategory(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    final parsed = (json.decode(responseBody).cast<Map<String, dynamic>>());
 
     return parsed.map<Categories>((json) => Categories.fromJson(json)).toList();
   }
 
+  List<News> parseNews(var responseBody) {
+    final parsed = json.decode(responseBody).cast<dynamic>();
+    var res = parsed.map<News>((json) => News.fromJson(json)).toList();
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(globals.userData);
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       body: SingleChildScrollView(
@@ -129,13 +150,22 @@ class _MainPageState extends State<MainPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Предложенные идеи",
+                        "Срочные новости",
                         style: TextStyle(
                             color: Color(0xff313B6C),
                             fontSize: 18,
                             fontWeight: FontWeight.w600),
                       ),
                       GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return NewsScreen();
+                              },
+                            ),
+                          );
+                        },
                         child: Text(
                           "Смотреть все",
                           style: TextStyle(
@@ -146,7 +176,22 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                  Container(height: 350, child: IdeaList()),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: FutureBuilder(
+                        future: getNews(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) print(snapshot.error);
+                          return snapshot.hasData
+                              ? NewsList(
+                                  news: snapshot.data,
+                                  breaking: true,
+                                )
+                              : Center(
+                                  child: Text("Loading"),
+                                );
+                        }),
+                  ),
                 ],
               ),
             ),
@@ -155,4 +200,25 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+}
+
+class NewsFeed {
+  final int count;
+  final String prev;
+  final String next;
+  final List<Map<String, dynamic>> result;
+
+  NewsFeed({
+    this.result,
+    this.count,
+    this.next,
+    this.prev,
+  });
+
+  factory NewsFeed.fromJson(Map<String, dynamic> json) => NewsFeed(
+        count: json["count"],
+        next: json["next"],
+        prev: json["prev"],
+        result: json["result"],
+      );
 }

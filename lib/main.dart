@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:xalq_nazorati/models/user.dart';
-import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/methods/http_get.dart';
 
 import 'globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -122,19 +121,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Future<User> getUser() async {
+  Future getUser() async {
     var url = '${globals.api_link}/users/profile';
-    var response = await http
-        .get(url, headers: {"Authorization": "token ${globals.token}"});
-    print(response);
-    globals.userData = json.decode(utf8.decode(response.bodyBytes));
+    HttpGet request = HttpGet();
+    var response = await request.methodGet(url);
+
+    String reply = await response.transform(utf8.decoder).join();
+
+    globals.userData = json.decode(reply);
   }
 
   @override
   void initState() {
     super.initState();
+
     getStringValuesSF();
-    Timer(Duration(seconds: 2), () {
+    Timer(Duration(seconds: 0), () {
       if (_lang == null) {
         globals.lang = _lang;
         globals.country = _country;
@@ -147,9 +149,8 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.lang = _lang;
           globals.country = _country;
           globals.token = _token;
-          getUser().then((value) {
-            Navigator.pushReplacementNamed(context, HomePage.routeName);
-          });
+
+          Navigator.pushReplacementNamed(context, HomePage.routeName);
         }
       }
     });

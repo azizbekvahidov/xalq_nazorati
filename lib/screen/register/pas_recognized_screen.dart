@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import './register_personaldata_screen.dart';
@@ -6,6 +9,9 @@ import '../../widget/default_button.dart';
 
 class PasRecognizedScreen extends StatefulWidget {
   static const routeName = "/register-pas-recognized";
+  final dynamic data;
+
+  PasRecognizedScreen({this.data, Key key}) : super(key: key);
 
   @override
   _PasRecognizedScreenState createState() => _PasRecognizedScreenState();
@@ -14,6 +20,9 @@ class PasRecognizedScreen extends StatefulWidget {
 class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
   @override
   Widget build(BuildContext context) {
+    var user = widget.data["data"]["user_data"];
+    DateFormat formatter = DateFormat('dd.MM.yyyy');
+
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
@@ -36,10 +45,11 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CardList("Имя", "Мавлонбек"),
-                    CardList("Фамилия", "Пулатов"),
-                    CardList("Отчество", "Мухтаровичь"),
-                    CardList("Дата рождения", "01.02.1980"),
+                    CardList("Имя", user["first_name"]),
+                    CardList("Фамилия", user["last_name"]),
+                    CardList("Отчество", user["patronymic"]),
+                    CardList("Дата рождения",
+                        formatter.format(DateTime.parse(user["birth_date"]))),
                   ],
                 ),
               ),

@@ -23,12 +23,12 @@ class CategoryCardList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                      width: (mediaQuery.size.width -
-                              mediaQuery.padding.left -
-                              mediaQuery.padding.right) *
-                          0.84,
-                      child: Container(
-                          child: RichText(
+                    width: (mediaQuery.size.width -
+                            mediaQuery.padding.left -
+                            mediaQuery.padding.right) *
+                        0.84,
+                    child: Container(
+                      child: RichText(
                         text: TextSpan(
                           text: title,
                           style: TextStyle(
@@ -38,7 +38,9 @@ class CategoryCardList extends StatelessWidget {
                             fontSize: 18,
                           ),
                         ),
-                      ))),
+                      ),
+                    ),
+                  ),
                   Container(
                     child: Icon(
                       Icons.arrow_forward_ios,

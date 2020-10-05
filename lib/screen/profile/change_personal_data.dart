@@ -1,5 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/input/default_input.dart';
@@ -7,8 +13,46 @@ import 'package:xalq_nazorati/widget/input/phone_icon_input.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
-class ChangePersonalData extends StatelessWidget {
+class ChangePersonalData extends StatefulWidget {
+  @override
+  _ChangePersonalDataState createState() => _ChangePersonalDataState();
+}
+
+class _ChangePersonalDataState extends State<ChangePersonalData> {
+  final addressController = TextEditingController();
+  final emailController = TextEditingController();
   final codeController = TextEditingController();
+
+  Future changeProfile() async {
+    // try {
+    String address = addressController.text;
+    String email = emailController.text;
+    String code = codeController.text;
+    var url = '${globals.api_link}/users/profile';
+
+    Map map = {
+      "address": address,
+      "email": email,
+    };
+    Map<String, String> headers = {
+      "Authorization": "token ${globals.token}",
+    };
+
+    var r1 =
+        await Requests.put(url, body: map, headers: headers, verify: false);
+
+    dynamic json = r1.json();
+    if (r1.statusCode == 200) {
+      r1.raiseForStatus();
+      // Navigator.of(context).pop();
+    } else {
+      print(json);
+    }
+    // } catch (e) {
+    //   print(e);
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -37,9 +81,10 @@ class ChangePersonalData extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Адрес фактического проживания"),
-                            DefaultInput("Введите адрес", codeController),
+                            DefaultInput("Введите адрес", addressController),
                             MainText("Электронная почта"),
-                            DefaultInput("Введите адрес почты", codeController),
+                            DefaultInput(
+                                "Введите адрес почты", emailController),
                             MainText("Номер мобильного телефона"),
                             PhoneIconInput(),
                             MainText("Код подтверждения"),
@@ -91,7 +136,7 @@ class ChangePersonalData extends StatelessWidget {
                                 )
                               : */
                               DefaultButton("Изменить контактные данные", () {
-                            Navigator.of(context).pop();
+                            changeProfile();
                             // setState(() {
                             //   _value = !_value;
                             // });
