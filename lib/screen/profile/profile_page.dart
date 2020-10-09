@@ -13,7 +13,6 @@ class ProfilePage extends StatelessWidget {
   static const routeName = "/profile-page";
   @override
   Widget build(BuildContext context) {
-    print(globals.userData["email"]);
     DateFormat formatter = DateFormat('dd.MM.yyyy');
     String birthDate =
         formatter.format(DateTime.parse(globals.userData['birth_date']));

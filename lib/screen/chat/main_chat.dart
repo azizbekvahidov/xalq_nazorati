@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../widget/app_bar/custom_icon_appbar.dart';
+import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 
 class MainChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomIconAppBar(
+      appBar: CustomAppBar(
         title: "Служба поддержки",
-        icon: "assets/img/chat.svg",
+        centerTitle: true,
       ),
       body: Container(
         decoration: BoxDecoration(

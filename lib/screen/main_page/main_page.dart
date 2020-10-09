@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';

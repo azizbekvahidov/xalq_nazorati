@@ -293,16 +293,16 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     )
                                   : */
                             DefaultButton("Продолжить", () {
-                          insertData().then((value) {
-                            // Navigator.of(context).pushAndRemoveUntil(
-                            //   MaterialPageRoute(
-                            //     builder: (BuildContext context) {
-                            //       return ProblemFinish();
-                            //     },
-                            //   ),
-                            //   ModalRoute.withName(MainPage.routeName),
-                            // );
-                          });
+                          // insertData().then((value) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return ProblemFinish();
+                              },
+                            ),
+                            ModalRoute.withName(MainPage.routeName),
+                          );
+                          // });
                         }, Theme.of(context).primaryColor),
                       ),
                     ),

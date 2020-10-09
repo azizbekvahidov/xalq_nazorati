@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/solve_problem_screen.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
@@ -24,7 +25,20 @@ class _ProblemCardState extends State<ProblemCard> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return ProblemContentScreen(widget.title, widget.status);
+              var route;
+              switch (widget.status) {
+                case "warning":
+                  route = ProblemContentScreen(widget.title, widget.status);
+                  break;
+                case "success":
+                  route = SolveProblemScreen(status: false);
+                  break;
+                case "danger":
+                  route = SolveProblemScreen(status: false);
+                  break;
+              }
+              if (widget.status == "warning") {}
+              return route;
             },
           ),
         );

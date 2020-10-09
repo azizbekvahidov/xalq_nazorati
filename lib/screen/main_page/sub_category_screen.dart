@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/sub_category.dart';
 import 'package:xalq_nazorati/widget/category/sub_sub_categories_list.dart';
 import '../../widget/app_bar/custom_appBar.dart';
@@ -20,12 +21,13 @@ class SubCategoryScreen extends StatefulWidget {
 
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
   Future<List<SubCategories>> getCategory() async {
-    var url =
-        'https://new.xalqnazorati.uz/ru/api/problems/subsubcategories/${widget.id}';
-    var response = await http
-        .get(url, headers: {"Authorization": "token ${globals.token}"});
+    var url = '${globals.api_link}/problems/subsubcategories/${widget.id}';
+    HttpGet request = HttpGet();
+    var response = await request.methodGet(url);
+
+    String reply = await response.transform(utf8.decoder).join();
     print(response);
-    return parseCategory(utf8.decode(response.bodyBytes));
+    return parseCategory(reply);
   }
 
   List<SubCategories> parseCategory(String responseBody) {
@@ -44,6 +46,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       backgroundColor: Color(0xffF5F6F9),
       appBar: CustomAppBar(
         title: widget.title,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(

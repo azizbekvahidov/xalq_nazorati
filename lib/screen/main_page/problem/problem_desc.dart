@@ -26,6 +26,17 @@ class _ProblemDescState extends State<ProblemDesc> {
   File image3;
   File image4;
   var descController = TextEditingController();
+
+  Future sendData() async {}
+  void clearImages() {
+    setState(() {
+      image1 = null;
+      image2 = null;
+      image3 = null;
+      image4 = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -36,7 +47,10 @@ class _ProblemDescState extends State<ProblemDesc> {
             4 -
         25;
     return Scaffold(
-      appBar: CustomAppBar(title: "Опишите проблему"),
+      appBar: CustomAppBar(
+        title: "Опишите проблему",
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -57,20 +71,27 @@ class _ProblemDescState extends State<ProblemDesc> {
                             MainText("Описать проблему"),
                             TextareaInput(
                                 "Напишите о проблеме", descController),
-                            Container(
-                              width: double.infinity,
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "Не более 1200 символов",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(102, 103, 108, 0.6),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "Gilroy",
-                                ),
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                MainText("Загрузите фото"),
+                                InkWell(
+                                  onTap: () {
+                                    clearImages();
+                                  },
+                                  child: Text(
+                                    "Очистить",
+                                    style: TextStyle(
+                                      color: Color(0xffB2B7D0),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "Gilroy",
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                            MainText("Загрузите фото"),
                             Container(
                               padding: EdgeInsets.only(top: 20, bottom: 15),
                               child: Row(

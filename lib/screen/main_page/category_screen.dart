@@ -23,8 +23,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen>
     with AutomaticKeepAliveClientMixin {
   Future<List<SubCategories>> getCategory() async {
-    var url =
-        'https://new.xalqnazorati.uz/ru/api/problems/subcategories/${widget.id}';
+    var url = '${globals.api_link}/problems/subcategories/${widget.id}';
     HttpGet request = HttpGet();
     var response = await request.methodGet(url);
 
@@ -49,6 +48,7 @@ class _CategoryScreenState extends State<CategoryScreen>
         backgroundColor: Color(0xffF5F6F9),
         appBar: CustomAppBar(
           title: widget.title,
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Container(

@@ -140,7 +140,6 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                 )
                               : */
                               DefaultButton("Продолжить", () {
-                            print("this image $image1");
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) {
                               return ProblemLocate(

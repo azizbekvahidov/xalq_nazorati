@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/screen/chat/main_chat.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_not_relevant_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_status_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/solve_problem_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/custom_card_list.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
@@ -216,10 +218,11 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                   children: [
                     CustomCardList(
                         "subcat2", "Статус", ProblemStatusScreen(), true),
-                    CustomCardList("subcat2", "Сообщение", null, true),
+                    CustomCardList("subcat2", "Сообщение", MainChat(), true),
                     CustomCardList("subcat2", "Проблема не актуально",
                         ProblemNotRelevantScreen(2), true),
-                    CustomCardList("subcat2", "Проблема решена", null, false),
+                    CustomCardList("subcat2", "Проблема решена",
+                        SolveProblemScreen(status: false), false),
                   ],
                 ),
               ),
