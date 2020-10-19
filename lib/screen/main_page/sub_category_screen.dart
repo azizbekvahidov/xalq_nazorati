@@ -40,7 +40,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.id);
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),

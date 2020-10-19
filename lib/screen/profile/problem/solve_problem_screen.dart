@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_rate_screen.dart';
 import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
 import 'package:xalq_nazorati/widget/problems/problem_solve_desc.dart';
@@ -10,7 +11,8 @@ import '../../../widget/shadow_box.dart';
 
 class SolveProblemScreen extends StatefulWidget {
   bool status = false;
-  SolveProblemScreen({this.status});
+  final Problems data;
+  SolveProblemScreen({this.status, this.data});
   @override
   _SolveProblemScreenState createState() => _SolveProblemScreenState();
 }

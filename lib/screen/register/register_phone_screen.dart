@@ -35,16 +35,16 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
       try {
         String url = '${globals.api_link}/users/signup-code';
         Map map = {"phone": phone};
-        var r1 = await Requests.post(url,
-            body: map, verify: false, persistCookies: true);
+        var r1 = await Requests.post(url, body: map);
 
         dynamic json = r1.json();
         if (r1.statusCode == 200) {
           r1.raiseForStatus();
+          print(r1.content());
           isRegister = true;
           phoneWiew = json["phone_view"];
         } else {
-          print(json[0]);
+          print(json);
         }
       } catch (e) {
         print(e);

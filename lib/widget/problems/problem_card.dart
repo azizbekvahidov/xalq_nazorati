@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/solve_problem_screen.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
@@ -7,17 +11,33 @@ import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ProblemCard extends StatefulWidget {
-  final bool alert;
+  bool alert = false;
   final String status;
   final String title;
-  ProblemCard({this.alert, this.status, this.title});
+  final Problems data;
+  ProblemCard({this.alert, this.status, this.title, this.data});
   @override
   _ProblemCardState createState() => _ProblemCardState();
 }
 
 class _ProblemCardState extends State<ProblemCard> {
+  String _showTime;
+
   @override
   Widget build(BuildContext context) {
+    var deadline = DateTime.parse(widget.data.deadline).millisecondsSinceEpoch;
+    int days = DateTime.fromMillisecondsSinceEpoch(deadline)
+        .difference(DateTime.now())
+        .inDays;
+    if (days >= 0) deadline -= (86400 * days) * 1000;
+    int hours = DateTime.fromMillisecondsSinceEpoch(deadline)
+        .difference(DateTime.now())
+        .inHours;
+    if (hours >= 0) deadline -= (hours * 3600) * 1000;
+    int minutes = DateTime.fromMillisecondsSinceEpoch(deadline)
+        .difference(DateTime.now())
+        .inMinutes;
+    _showTime = "${days}д : ${hours}ч : ${minutes}м";
     bool _alert = widget.alert == null ? false : widget.alert;
     var mediaQuery = MediaQuery.of(context);
     return InkWell(
@@ -28,13 +48,14 @@ class _ProblemCardState extends State<ProblemCard> {
               var route;
               switch (widget.status) {
                 case "warning":
-                  route = ProblemContentScreen(widget.title, widget.status);
+                  route = ProblemContentScreen(
+                      widget.title, widget.status, widget.data);
                   break;
                 case "success":
-                  route = SolveProblemScreen(status: false);
+                  route = SolveProblemScreen(status: false, data: widget.data);
                   break;
                 case "danger":
-                  route = SolveProblemScreen(status: false);
+                  route = SolveProblemScreen(status: false, data: widget.data);
                   break;
               }
               if (widget.status == "warning") {}
@@ -55,7 +76,7 @@ class _ProblemCardState extends State<ProblemCard> {
                   Container(
                     width: mediaQuery.size.width * 0.7,
                     child: Text(
-                      "Неубранная контейнерная площадка",
+                      widget.data.subsubcategory["title_ru"],
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: "Gilroy",
@@ -98,9 +119,9 @@ class _ProblemCardState extends State<ProblemCard> {
               Row(
                 children: [
                   BoxTextWarning(
-                      "Проблема решена и ждёт подтверждения", widget.status),
-                  BoxTextDefault("9д : 23ч : 45м"),
-                  BoxTextDefault("№15000"),
+                      widget.data.status.tr().toString(), widget.status),
+                  BoxTextDefault("${_showTime}"),
+                  BoxTextDefault("№${widget.data.id}"),
                 ],
               ),
             ],

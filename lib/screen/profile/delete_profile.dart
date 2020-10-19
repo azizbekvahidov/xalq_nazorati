@@ -1,5 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
@@ -8,6 +14,34 @@ import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class DeleteProfile extends StatelessWidget {
   var descController = TextEditingController();
+
+  Future deleteProfile() async {
+    String desc = descController.text;
+    if (desc != "") {
+      try {
+        var url = '${globals.api_link}/users/profile';
+
+        Map<String, String> map = {"reason": desc};
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}",
+        };
+        // var req = await http.put(Uri.parse(url), headers: headers, body: map);
+        var r1 = await Requests.delete(url,
+            body: map, headers: headers, verify: false);
+        if (r1.statusCode == 204) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          r1.raiseForStatus();
+          prefs.setString('userToken', null);
+          globals.userData = null;
+        } else {
+          print(r1);
+        }
+      } catch (ex) {
+        print(ex);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -84,7 +118,12 @@ class DeleteProfile extends StatelessWidget {
                                 )
                               : */
                               DefaultButton("Удалите мой аккаунт", () {
-                            Navigator.of(context).pop();
+                            deleteProfile().then((value) {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamedAndRemoveUntil(
+                                      LoginScreen.routeName,
+                                      (Route<dynamic> route) => false);
+                            });
                             // setState(() {
                             //   _value = !_value;
                             // });

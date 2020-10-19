@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
 import 'package:flutter/material.dart';
@@ -28,23 +29,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final passController = TextEditingController();
   bool isLogin = false;
   void getLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userToken', null);
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String pass = passController.text;
     var url = '${globals.api_link}/users/signin';
-    HttpGet request = HttpGet();
     Map map = {"phone": phone, "password": pass};
-    HttpClientResponse response = await request.methodPost(map, url);
-
-    String reply = await response.transform(utf8.decoder).join();
-
-    Map<String, dynamic> responseBody = json.decode(reply);
+    var response = await Requests.post(
+      url,
+      body: map,
+    );
+    // request.methodPost(map, url);
     if (response.statusCode == 200) {
+      // Map<String,dynamic> reply = response.json();
+
+      Map<String, dynamic> responseBody = response.json();
       addStringToSF(responseBody["token"]);
       globals.token = responseBody["token"];
       isLogin = true;
     } else {
-      print(responseBody["message"]);
+      print(response.json());
     }
 
     if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);

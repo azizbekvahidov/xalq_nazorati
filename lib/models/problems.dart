@@ -14,23 +14,26 @@ class Problems {
   final String file_4;
   final String file_5;
   final String deadline;
-  final User user;
+  final Map<String, dynamic> user;
+  final Map<String, dynamic> subsubcategory;
 
-  Problems(
-      {this.id,
-      this.address,
-      this.content,
-      this.deadline,
-      this.file_1,
-      this.file_2,
-      this.file_3,
-      this.file_4,
-      this.file_5,
-      this.is_active,
-      this.latitude,
-      this.longitude,
-      this.status,
-      this.user});
+  Problems({
+    this.id,
+    this.address,
+    this.content,
+    this.deadline,
+    this.file_1,
+    this.file_2,
+    this.file_3,
+    this.file_4,
+    this.file_5,
+    this.is_active,
+    this.latitude,
+    this.longitude,
+    this.status,
+    this.user,
+    this.subsubcategory,
+  });
 
   factory Problems.fromJson(Map<String, dynamic> json) {
     return Problems(
@@ -47,7 +50,8 @@ class Problems {
       latitude: json['latitude'] as String,
       longitude: json['longitude'] as String,
       status: json['status'] as String,
-      user: json['user'] as User,
+      user: json['user'] as Map<String, dynamic>,
+      subsubcategory: json['subsubcategory'] as Map<String, dynamic>,
     );
   }
 }

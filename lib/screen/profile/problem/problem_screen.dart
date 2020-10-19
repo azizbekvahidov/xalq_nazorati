@@ -18,28 +18,34 @@ class ProblemScreen extends StatefulWidget {
 
 class _ProblemScreenState extends State<ProblemScreen> {
   Future<List<Problems>> getProblems() async {
+    String _type = "processing";
+    switch (widget.status) {
+      case "warning":
+        _type = "processing";
+        break;
+      case "success":
+        _type = "confirmed";
+        break;
+      case "danger":
+        _type = "denied";
+        break;
+    }
     try {
-      var url = '${globals.api_link}/problems/processing';
-      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      // Map map = {"phone": "processing"};
-      var r1 = await Requests.get(url,
-          headers: headers, verify: false, persistCookies: true);
+      var url = '${globals.api_link}/problems/list/$_type';
+      HttpGet request = HttpGet();
+      var response = await request.methodGet(url);
 
-      if (r1.statusCode == 200) {
-        r1.raiseForStatus();
-      } else {
-        dynamic json = r1.json();
-        print(json);
-      }
+      String reply = await response.transform(utf8.decoder).join();
+      var temp = json.decode(reply);
+      var some = temp.values.toList();
 
-      return parseProblems(r1.content());
+      return parseProblems(json.encode(some[3]));
     } catch (e) {
       print(e);
     }
   }
 
   List<Problems> parseProblems(String responseBody) {
-    print(responseBody);
     final parsed = (json.decode(responseBody).cast<Map<String, dynamic>>());
 
     return parsed.map<Problems>((json) => Problems.fromJson(json)).toList();
@@ -57,7 +63,17 @@ class _ProblemScreenState extends State<ProblemScreen> {
         child: FutureBuilder(
           future: getProblems(),
           builder: (context, snapshot) {
-            return ProblemList(widget.title, widget.status);
+            if (snapshot.hasError) print(snapshot.error);
+
+            return snapshot.hasData
+                ? ProblemList(
+                    data: snapshot.data,
+                    title: widget.title,
+                    status: widget.status,
+                  )
+                : Center(
+                    child: Text("Loading"),
+                  );
           },
         ),
       ),

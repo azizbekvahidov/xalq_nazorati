@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:xalq_nazorati/methods/http_get.dart';
 
 import 'globals.dart' as globals;
@@ -25,6 +26,7 @@ void main() async {
   // AppLanguage appLanguage = AppLanguage();
   // await appLanguage.fetchLocale();
 
+  // HttpOverrides.global = new MyHttpOverrides();
   runApp(EasyLocalization(
     child: MyApp(),
     path: "lang",
@@ -165,5 +167,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

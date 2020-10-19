@@ -47,6 +47,8 @@ dependencies:
   mask_text_input_formatter: ^1.1.0
   scroll_to_index: ^1.0.6
   smooth_star_rating: 1.1.1
+  file_picker: ^2.0.7
+  url_launcher: ^5.7.5
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -58,10 +60,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   intl_translation: ^0.17.1
+  flutter_launcher_icons: "^0.7.0"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/launcher/launcher.png"
+  image_path_android: "assets/launcher/launcher.png"
 # The following section is specific to Flutter.
 flutter:
 
@@ -84,7 +91,7 @@ flutter:
     - assets/img/home.svg
     - assets/img/profile.svg
     - assets/img/support.svg
-    - assets/img/chat.svg
+    - assets/img/problem.svg
     
     - assets/img/field.svg
     - assets/img/road.svg
@@ -94,7 +101,7 @@ flutter:
     - assets/img/house.svg
     - assets/img/test.png
     - assets/img/location.svg
-    - assets/img/call.svg
+    - assets/img/support.png
 
     - assets/img/profile_icon.svg
     - assets/img/lang_icon.svg
@@ -123,6 +130,15 @@ flutter:
     
     - assets/img/bell.svg
     - assets/img/pdf.png
+
+    - assets/img/likeBtn.svg
+    - assets/img/dislikeBtn.svg
+    - assets/img/user.svg
+    - assets/img/calendar.svg
+    - assets/img/pin.svg
+    
+    - assets/img/send_icon.svg
+    - assets/img/file_icon.svg
 
   #   - images/a_dot_ham.jpeg
 

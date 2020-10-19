@@ -5,8 +5,6 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 class HttpGet {
   Future methodPost(Map map, String url) async {
     HttpClient client = new HttpClient();
-    client.badCertificateCallback =
-        ((X509Certificate cert, String host, int port) => true);
     HttpClientRequest request = await client.postUrl(Uri.parse(url));
 
     request.headers.set('Content-type', 'application/json');
@@ -23,8 +21,6 @@ class HttpGet {
   Future methodGet(String url) async {
     HttpClient client = new HttpClient();
 
-    client.badCertificateCallback =
-        ((X509Certificate cert, String host, int port) => true);
     HttpClientRequest request = await client.getUrl(Uri.parse(url));
 
     request.headers.set('content-type', 'application/json');

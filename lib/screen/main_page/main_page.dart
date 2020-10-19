@@ -65,12 +65,12 @@ class _MainPageState extends State<MainPage> {
           children: [
             Container(
               padding: EdgeInsets.only(bottom: 40, left: 20, right: 20),
-              height: 253,
+              height: 188,
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
                     Color(0xff12B79B),
                     Color(0xff00AC8A),
@@ -99,10 +99,6 @@ class _MainPageState extends State<MainPage> {
                         fontSize: 26,
                         fontWeight: FontWeight.w600),
                   ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: SearchtInput("Поиск категории"),
-                  )
                 ],
               ),
             ),

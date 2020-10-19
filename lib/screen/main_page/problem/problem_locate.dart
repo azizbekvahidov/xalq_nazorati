@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 import '../../main_page/problem/problem_finish.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
@@ -40,25 +41,92 @@ class _ProblemLocateState extends State<ProblemLocate> {
   final extraController = TextEditingController();
   double _latitude;
   double _longitude;
+  bool _value = false;
   final Map<String, Marker> _markers = {};
 
   Future insertData() async {
-    final sendData = json.encode(<String, String>{
-      "subsubcategory:": "${widget.subSubCategoryId}",
-      "content": widget.desc,
-      "address": addressController.text,
-      "latitude": "$_latitude",
-      "longitude": "$_longitude",
-      "note": extraController.text,
-    });
-    var url = 'https://new.xalqnazorati.uz/ru/api/problems/problem';
-    var response = await http.post(url, body: sendData, headers: {
-      "Authorization": "token ${globals.token}",
-      HttpHeaders.contentTypeHeader: "application/json",
-    });
-    // print(json.encode(response.request));
-    print(utf8.decode(response.bodyBytes));
-    print(response.request.headers);
+    if (_value) {
+      try {
+        Map<String, String> sendData = {
+          "subsubcategory": "${widget.subSubCategoryId}",
+          "content": widget.desc,
+          "address": addressController.text,
+          "latitude": "$_latitude".substring(0, 10),
+          "longitude": "$_longitude".substring(0, 10),
+          "note": extraController.text,
+        };
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}",
+        };
+        var url = 'https://new.xalqnazorati.uz/ru/api/problems/problem';
+        HttpGet request = HttpGet();
+        HttpClientResponse response = await request.methodPost(sendData, url);
+
+        String reply = await response.transform(utf8.decoder).join();
+
+        Map<String, dynamic> responseBody = json.decode(reply);
+
+        if (response.statusCode == 201) {
+          var url2 = 'https://new.xalqnazorati.uz/ru/api/problems/upload';
+
+          var req = http.MultipartRequest("POST", Uri.parse(url2));
+          req.headers.addAll({"Authorization": "token ${globals.token}"});
+          req.fields.addAll({"problem_id": "${responseBody["problem"]['id']}"});
+          if (globals.images['file1'] != null) {
+            String _fileName = globals.images['file1'].path;
+            req.files.add(http.MultipartFile(
+                "file1",
+                globals.images['file1'].readAsBytes().asStream(),
+                globals.images['file1'].lengthSync(),
+                filename: _fileName.split('/').last));
+          }
+          if (globals.images['file2'] != null) {
+            String _fileName = globals.images['file2'].path;
+            req.files.add(http.MultipartFile(
+                "file2",
+                globals.images['file2'].readAsBytes().asStream(),
+                globals.images['file2'].lengthSync(),
+                filename: _fileName.split('/').last));
+          }
+          if (globals.images['file3'] != null) {
+            String _fileName = globals.images['file3'].path;
+            req.files.add(http.MultipartFile(
+                "file3",
+                globals.images['file3'].readAsBytes().asStream(),
+                globals.images['file3'].lengthSync(),
+                filename: _fileName.split('/').last));
+          }
+          if (globals.images['file4'] != null) {
+            String _fileName = globals.images['file4'].path;
+            req.files.add(http.MultipartFile(
+                "file4",
+                globals.images['file4'].readAsBytes().asStream(),
+                globals.images['file4'].lengthSync(),
+                filename: _fileName.split('/').last));
+          }
+          var res = await req.send();
+
+          if (res.statusCode == 201) {
+            globals.images['file1'] = null;
+            globals.images['file2'] = null;
+            globals.images['file3'] = null;
+            globals.images['file4'] = null;
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ProblemFinish();
+                },
+              ),
+              ModalRoute.withName(MainPage.routeName),
+            );
+          }
+        } else {
+          print(responseBody["detail"]);
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   void _getLocation() async {
@@ -78,6 +146,27 @@ class _ProblemLocateState extends State<ProblemLocate> {
       final p = CameraPosition(
           target: LatLng(currentLocation.latitude, currentLocation.longitude),
           zoom: 14.4746);
+
+      mapController.animateCamera(CameraUpdate.newCameraPosition(p));
+    });
+  }
+
+  void _setLocation(var coords) async {
+    var currentLocation =
+        await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    _latitude = coords.latitude;
+    _longitude = coords.longitude;
+    setState(() {
+      _markers.clear();
+      final marker = Marker(
+        markerId: MarkerId("curr_loc"),
+        position: LatLng(coords.latitude, coords.longitude),
+        // infoWindow: InfoWindow(title: 'Your Location'),
+      );
+      _markers["Current Location"] = marker;
+
+      final p = CameraPosition(
+          target: LatLng(coords.latitude, coords.longitude), zoom: 14.4746);
 
       mapController.animateCamera(CameraUpdate.newCameraPosition(p));
     });
@@ -108,7 +197,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
 
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
   // final _key = GlobalKey<GoogleMapStateBase>();
-  bool _value = false;
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -171,6 +259,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                             target: _initialPosition,
                                             zoom: 10,
                                           ),
+                                          onTap: (coord) {
+                                            _setLocation(coord);
+                                            print(coord);
+                                          },
                                           onMapCreated: _onMapCreated,
                                           zoomGesturesEnabled: true,
                                           onCameraMove: _onCameraMove,
@@ -201,7 +293,41 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      CheckboxCustom(_value),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _value = !_value;
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  style: BorderStyle.solid,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              shape: BoxShape.circle,
+                                              color: _value
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : Colors.transparent),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: _value
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 15.0,
+                                                    color: Colors.white,
+                                                  )
+                                                : Icon(
+                                                    Icons
+                                                        .check_box_outline_blank,
+                                                    size: 15.0,
+                                                    color: Colors.transparent,
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
                                       Container(
                                         padding: EdgeInsets.only(left: 20),
                                         width: mediaQuery.size.width * 0.8,
@@ -293,16 +419,17 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     )
                                   : */
                             DefaultButton("Продолжить", () {
-                          // insertData().then((value) {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return ProblemFinish();
-                              },
-                            ),
-                            ModalRoute.withName(MainPage.routeName),
-                          );
-                          // });
+                          insertData().then((value) {
+                            // print("sended");
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //   MaterialPageRoute(
+                            //     builder: (BuildContext context) {
+                            //       return ProblemFinish();
+                            //     },
+                            //   ),
+                            //   ModalRoute.withName(MainPage.routeName),
+                            // );
+                          });
                         }, Theme.of(context).primaryColor),
                       ),
                     ),

@@ -12,7 +12,7 @@ class NewsBreakingScreen extends StatefulWidget {
 
 class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
   Future<List<News>> getNews() async {
-    var url = '${globals.api_link}/news?category=planned';
+    var url = '${globals.api_link}/news?category=breaking';
     HttpGet request = HttpGet();
     var response = await request.methodGet(url);
 

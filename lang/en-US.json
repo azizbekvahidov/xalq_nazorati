@@ -1,5 +1,13 @@
 {
     "welcome": "Xush kelibsiz cyrillic",
-    "tel_number_hint": "Номер мобильного телефона kiril"
+    "tel_number_hint": "Номер мобильного телефона kiril",
+    "processing":"на рассмотрении",
+    "completed":"рассмотрено",
+    "canceled":"неактуально",
+    "moderating":"на модерации",
+    "confirmed":"подтверждено",
+    "not confirmed": "решение неудовлетворительно",
+    "denied": "отказано",
+    "closed": "закрыто модератором"
 
   }

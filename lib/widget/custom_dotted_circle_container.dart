@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../widget/default_button.dart';
@@ -10,8 +11,9 @@ import '../widget/default_button.dart';
 class CustomDottedCircleContainer extends StatefulWidget {
   final double boxSize;
   File image;
+  final String img;
 
-  CustomDottedCircleContainer(this.boxSize, this.image);
+  CustomDottedCircleContainer(this.boxSize, this.image, this.img);
   @override
   _CustomDottedCircleContainerState createState() =>
       _CustomDottedCircleContainerState();
@@ -36,18 +38,19 @@ class _CustomDottedCircleContainerState
 
   pickerCam() async {
     // ignore: deprecated_member_use
-    File img = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (img != null && validate(img)) {
-      widget.image = img;
+    File _img = await ImagePicker.pickImage(source: ImageSource.camera);
+    if (_img != null && validate(_img)) {
+      widget.image = _img;
+      globals.images.addAll({widget.img: _img});
       setState(() {});
     }
   }
 
   pickGallery() async {
-    File img = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (img != null && validate(img)) {
-      widget.image = img;
-      print(img.lengthSync());
+    File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (_img != null && validate(_img)) {
+      widget.image = _img;
+      globals.images.addAll({widget.img: _img});
       setState(() {});
     }
   }

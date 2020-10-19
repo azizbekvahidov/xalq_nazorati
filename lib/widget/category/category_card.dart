@@ -64,8 +64,9 @@ class _CategoryCardState extends State<CategoryCard> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              "assets/img/road.svg",
+            SvgPicture.network(
+              "${globals.site_link}${widget.img}",
+              // "assets/img/road.svg",
               // "${globals.site_link}${widget.img}",
               width: 45,
               height: 45,

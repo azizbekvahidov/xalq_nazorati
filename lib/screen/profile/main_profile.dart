@@ -53,7 +53,6 @@ class _MainProfileState extends State<MainProfile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', null);
     globals.userData = null;
-    print(globals.userData);
   }
 
   @override
@@ -278,46 +277,46 @@ class _MainProfileState extends State<MainProfile> {
                   ],
                 ),
               ),
-              ShadowBox(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "У тебя есть идея?",
-                        style: TextStyle(
-                          color: Color(0xff313B6C),
-                          fontFamily: "Gilroy",
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Text(
-                          "Перейти на сайт, в разделе «Идеи» Вы можете отправить свои предложения по улучшению городской инфраструктуры, а также оценить идеи, поданные другими пользователями.",
-                          style: TextStyle(
-                            color: Color(0xff050505),
-                            fontFamily: "Gilroy",
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: DefaultButton(
-                          "Перейти на сайт",
-                          () {},
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // ShadowBox(
+              //   child: Padding(
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Text(
+              //           "У тебя есть идея?",
+              //           style: TextStyle(
+              //             color: Color(0xff313B6C),
+              //             fontFamily: "Gilroy",
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 15),
+              //           child: Text(
+              //             "Перейти на сайт, в разделе «Идеи» Вы можете отправить свои предложения по улучшению городской инфраструктуры, а также оценить идеи, поданные другими пользователями.",
+              //             style: TextStyle(
+              //               color: Color(0xff050505),
+              //               fontFamily: "Gilroy",
+              //               fontSize: 12,
+              //               fontWeight: FontWeight.normal,
+              //             ),
+              //           ),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 30),
+              //           child: DefaultButton(
+              //             "Перейти на сайт",
+              //             () {},
+              //             Theme.of(context).primaryColor,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsets.all(7),
               )

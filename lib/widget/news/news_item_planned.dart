@@ -50,10 +50,11 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
             Container(
               height: 121,
               width: 100,
-              decoration: BoxDecoration(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
+                child: FittedBox(
+                    fit: BoxFit.cover, child: Image.network(widget.img)),
               ),
-              child: Image.asset("assets/img/test.png"),
             ),
             Container(
               padding: EdgeInsets.only(left: 15),

@@ -44,10 +44,11 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
             Container(
               height: 121,
               width: 100,
-              decoration: BoxDecoration(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
+                child: FittedBox(
+                    fit: BoxFit.cover, child: Image.network(widget.img)),
               ),
-              child: Image.asset("assets/img/test.png"),
               // child: Image.network(widget.img),
             ),
             Container(

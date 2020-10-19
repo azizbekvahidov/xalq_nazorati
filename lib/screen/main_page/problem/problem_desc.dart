@@ -97,19 +97,23 @@ class _ProblemDescState extends State<ProblemDesc> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CustomDottedCircleContainer(size, image1),
+                                  CustomDottedCircleContainer(
+                                      size, image1, "file1"),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size, image2),
+                                  CustomDottedCircleContainer(
+                                      size, image2, "file2"),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size, image3),
+                                  CustomDottedCircleContainer(
+                                      size, image3, "file3"),
                                   Padding(
                                     padding: EdgeInsets.only(left: 10),
                                   ),
-                                  CustomDottedCircleContainer(size, image4),
+                                  CustomDottedCircleContainer(
+                                      size, image4, "file4"),
                                 ],
                               ),
                             ),
@@ -158,7 +162,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                                 )
                               : */
                               DefaultButton("Продолжить", () {
-                            print("this image $image1");
+                            print(globals.images);
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (BuildContext context) {
                               return ProblemLocate(
