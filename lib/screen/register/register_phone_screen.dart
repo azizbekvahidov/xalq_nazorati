@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:xalq_nazorati/screen/rule_page.dart';
 import '../../widget/checkbox_custom.dart';
 import '../login_screen.dart';
 import './register_verify_screen.dart';
@@ -33,36 +35,47 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
 
     if (!isRegister && phone != "") {
       try {
-        String url = '${globals.api_link}/users/signup-code';
+        String url =
+            '${globals.site_link}/${globals.lang}/api/users/signup-code';
         Map map = {"phone": phone};
         var r1 = await Requests.post(url, body: map);
 
-        dynamic json = r1.json();
         if (r1.statusCode == 200) {
+          dynamic json = r1.json();
           r1.raiseForStatus();
           print(r1.content());
           isRegister = true;
           phoneWiew = json["phone_view"];
+          if (isRegister && _value) {
+            setState(() {
+              phoneController.text = "";
+              _value = !_value;
+            });
+            isRegister = false;
+            Navigator.of(context).push(MaterialPageRoute(
+                settings:
+                    const RouteSettings(name: RegisterVerifyScreen.routeName),
+                builder: (context) => RegisterVerifyScreen(
+                      phoneView: phoneWiew,
+                      phone: phone,
+                    )));
+          }
         } else {
+          dynamic json = r1.json();
+          print(json['detail']);
+          Fluttertoast.showToast(
+              msg: json['detail'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 15.0);
           print(json);
         }
       } catch (e) {
         print(e);
       }
-    }
-
-    if (isRegister && _value) {
-      setState(() {
-        phoneController.text = "";
-        _value = !_value;
-      });
-      isRegister = false;
-      Navigator.of(context).push(MaterialPageRoute(
-          settings: const RouteSettings(name: RegisterVerifyScreen.routeName),
-          builder: (context) => RegisterVerifyScreen(
-                phoneView: phoneWiew,
-                phone: phone,
-              )));
     }
   }
 
@@ -212,7 +225,10 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                            context, RulePage.routeName);
+                                      },
                                       child: new Text(
                                         "публичной оферты",
                                         style: TextStyle(
@@ -239,15 +255,21 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                DefaultButton(
-                                  "Зарегистрироваться",
-                                  () {
-                                    getCode();
-                                    // Navigator.of(context).pushNamed(
-                                    //     RegisterVerifyScreen.routeName);
-                                  },
-                                  Theme.of(context).primaryColor,
-                                ),
+                                !_value
+                                    ? DefaultButton(
+                                        "Зарегистрироваться",
+                                        () {},
+                                        Color(0xffB2B7D0),
+                                      )
+                                    : DefaultButton(
+                                        "Зарегистрироваться",
+                                        () {
+                                          getCode();
+                                          // Navigator.of(context).pushNamed(
+                                          //     RegisterVerifyScreen.routeName);
+                                        },
+                                        Theme.of(context).primaryColor,
+                                      ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

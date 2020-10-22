@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../widget/app_bar/custom_appBar.dart';
@@ -27,7 +28,8 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
     String pnfl = pnflController.text;
     String series = seriesController.text;
     if (_value && pnfl != "" && series != "") {
-      String url = '${globals.api_link}/users/data-from-cep';
+      String url =
+          '${globals.site_link}/${globals.lang}/api/users/data-from-cep';
       Map map = {"pinpp": pnfl, 'document': series};
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,
@@ -37,7 +39,6 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
       if (r1.statusCode == 200) {
         r1.raiseForStatus();
 
-        print("${r1.statusCode} ${r1.content().runtimeType}");
         dynamic json = r1.json();
         // print(json["detail"]);
         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -47,7 +48,16 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
           ),
         ));
       } else {
-        print("${r1.statusCode} ${r1.content()}");
+        var json = r1.json();
+        print(json);
+        Fluttertoast.showToast(
+            msg: json['data']['detail'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 15.0);
       }
     }
   }
@@ -143,6 +153,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                         ),
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             width: (mediaQuery.size.width -
@@ -152,6 +163,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             child: TextField(
                               controller: pnflController,
                               maxLines: 1,
+                              keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 contentPadding:
                                     EdgeInsets.only(top: 0, bottom: 9),
@@ -193,7 +205,10 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                     ),
                     MainText("Серия и номер паспорта"),
                     DefaultInput(
-                        "Введите серию и номер паспорта", seriesController),
+                      hint: "Введите серию и номер паспорта",
+                      textController: seriesController,
+                      notifyParent: () {},
+                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                     ),

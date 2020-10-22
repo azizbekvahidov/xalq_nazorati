@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 class TextareaInput extends StatefulWidget {
   final String hint;
   final textareaController;
-  TextareaInput(this.hint, this.textareaController);
+  Function notifyParent;
+  TextareaInput(
+      {Key key, this.hint, this.textareaController, this.notifyParent})
+      : super(key: key);
 
   @override
   _TextareaInputState createState() => _TextareaInputState();
@@ -13,6 +16,7 @@ class _TextareaInputState extends State<TextareaInput> {
   var cnt = 1200;
   void changeTxt(String value) {
     setState(() {
+      widget.notifyParent();
       cnt = 1200 - value.length;
     });
   }

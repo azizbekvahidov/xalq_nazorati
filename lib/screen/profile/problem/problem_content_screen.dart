@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/models/problems.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/chat/main_chat.dart';
@@ -24,8 +28,50 @@ class ProblemContentScreen extends StatefulWidget {
 }
 
 class _ProblemContentScreenState extends State<ProblemContentScreen> {
-  bool _alert = true;
+  bool _alert = false;
   String _showTime;
+  Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      refreshBells();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void refreshBells() async {
+    try {
+      _alert = false;
+      String _list = "${widget.data.id}";
+      var url =
+          '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var res = response.json();
+        if (res['result'].length != 0) {
+          for (var i = 0; i < res['result'].length; i++) {
+            var problem_id = res['result'][i];
+            if (problem_id == widget.data.id) _alert = true;
+          }
+        }
+      }
+      setState(() {});
+      // String reply = await response.transform(utf8.decoder).join();
+
+      // var temp = parseProblems(reply);
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var deadline = DateTime.parse(widget.data.deadline).millisecondsSinceEpoch;
@@ -348,10 +394,68 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                         ProblemStatusScreen(widget.data.id), true),
                     CustomCardList(
                         "subcat2", "Сообщение", MainChat(widget.data.id), true),
-                    CustomCardList("subcat2", "Проблема не актуально",
-                        ProblemNotRelevantScreen(widget.data.id), true),
-                    CustomCardList("subcat2", "Проблема решена",
-                        SolveProblemScreen(status: false), false),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          0.84,
+                                      child: Container(
+                                          child: RichText(
+                                        text: TextSpan(
+                                          text: "Проблема не актуально",
+                                          style: TextStyle(
+                                            fontFamily: "Gilroy",
+                                            color: Color(0xff050505),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ))),
+                                  Container(
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return ProblemNotRelevantScreen(
+                                        widget.data.id);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                    ),
+                    CustomCardList(
+                        "subcat2",
+                        "Проблема решена",
+                        SolveProblemScreen(
+                          status: widget.status,
+                          id: widget.data.id,
+                        ),
+                        false),
                   ],
                 ),
               ),

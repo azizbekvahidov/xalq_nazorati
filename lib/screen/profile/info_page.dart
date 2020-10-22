@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/screen/rule_page.dart';
 import 'package:xalq_nazorati/screen/support/main_support.dart';
 import '../../widget/icon_card_list.dart';
 import '../../widget/app_bar/custom_appBar.dart';
@@ -50,7 +51,7 @@ class InfoPage extends StatelessWidget {
                     IconCardList("id", "assets/img/support_icon.svg",
                         "Техническая поддержка", MainSupport(), true, null),
                     IconCardList("id", "assets/img/rule_icon.svg",
-                        "Правила модерации", null, false, null),
+                        "Правила модерации", RulePage(), false, null),
                   ],
                 ),
               ),

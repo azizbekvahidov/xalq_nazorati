@@ -6,12 +6,14 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:xalq_nazorati/screen/rule_page.dart';
 import '../../main_page/problem/problem_finish.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/checkbox_custom.dart';
@@ -39,10 +41,17 @@ class _ProblemLocateState extends State<ProblemLocate> {
   static LatLng _lastMapPosition;
   final addressController = TextEditingController();
   final extraController = TextEditingController();
-  double _latitude;
-  double _longitude;
+  double _latitude = 0;
+  double _longitude = 0;
   bool _value = false;
+  bool _valid = false;
+  int _cnt = 40;
   final Map<String, Marker> _markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future insertData() async {
     if (_value) {
@@ -130,6 +139,12 @@ class _ProblemLocateState extends State<ProblemLocate> {
   }
 
   void _getLocation() async {
+    var status = await Permission.location.status;
+    print(status);
+    if (status.isUndetermined || status.isDenied) {
+      Permission.location.request();
+      // We didn't ask for permission yet.
+    }
     var currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     _latitude = currentLocation.latitude;
@@ -148,10 +163,16 @@ class _ProblemLocateState extends State<ProblemLocate> {
           zoom: 14.4746);
 
       mapController.animateCamera(CameraUpdate.newCameraPosition(p));
+      checkChange();
     });
   }
 
   void _setLocation(var coords) async {
+    var status = await Permission.location.status;
+    if (status.isUndetermined || status.isDenied) {
+      Permission.location.request();
+      // We didn't ask for permission yet.
+    }
     var currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     _latitude = coords.latitude;
@@ -169,6 +190,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
           target: LatLng(coords.latitude, coords.longitude), zoom: 14.4746);
 
       mapController.animateCamera(CameraUpdate.newCameraPosition(p));
+      checkChange();
     });
   }
 
@@ -193,6 +215,22 @@ class _ProblemLocateState extends State<ProblemLocate> {
       fillColor: color,
       padding: const EdgeInsets.all(7.0),
     );
+  }
+
+  checkChange() {
+    String descValue = addressController.text;
+    setState(() {
+      if (descValue != "" && _value && _latitude != 0 && _longitude != 0)
+        _valid = true;
+      else
+        _valid = false;
+    });
+  }
+
+  void changeTxt(String value) {
+    setState(() {
+      _cnt = 40 - value.length;
+    });
   }
 
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -221,16 +259,62 @@ class _ProblemLocateState extends State<ProblemLocate> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 MainText("Укажите место на карте или адрес"),
-                                DefaultInput("Например: улица Фархадская 65",
-                                    addressController),
-                                MainText("Примечания"),
                                 DefaultInput(
-                                    "Ориентир: № подъезд", extraController),
+                                  hint: "Например: улица Фархадская 65",
+                                  textController: addressController,
+                                  notifyParent: checkChange,
+                                ),
+                                MainText("Примечания"),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width: double.infinity,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffF5F6F9),
+                                    borderRadius: BorderRadius.circular(22.5),
+                                    border: Border.all(
+                                      color: Color.fromRGBO(178, 183, 208, 0.5),
+                                      style: BorderStyle.solid,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: (mediaQuery.size.width -
+                                                mediaQuery.padding.left -
+                                                mediaQuery.padding.right) *
+                                            0.74,
+                                        child: TextField(
+                                          maxLength: 40,
+                                          buildCounter: (BuildContext context,
+                                                  {int currentLength,
+                                                  int maxLength,
+                                                  bool isFocused}) =>
+                                              null,
+                                          onChanged: (value) {
+                                            changeTxt(value);
+                                          },
+                                          controller: extraController,
+                                          maxLines: 1,
+                                          decoration: InputDecoration.collapsed(
+                                            hintText: "Ориентир: № подъезд",
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .display1,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Container(
                                   width: double.infinity,
                                   alignment: Alignment.centerRight,
                                   child: Text(
-                                    "Не более 40 символов",
+                                    "Не более $_cnt символов",
                                     style: TextStyle(
                                       color: Color.fromRGBO(102, 103, 108, 0.6),
                                       fontSize: 10,
@@ -298,6 +382,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                           setState(() {
                                             _value = !_value;
                                           });
+                                          checkChange();
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -347,7 +432,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                               TextSpan(
                                                 recognizer:
                                                     TapGestureRecognizer()
-                                                      ..onTap = () {},
+                                                      ..onTap = () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            RulePage.routeName);
+                                                      },
                                                 text:
                                                     "пользовательским соглашением",
                                                 style: TextStyle(
@@ -372,7 +461,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                               TextSpan(
                                                 recognizer:
                                                     TapGestureRecognizer()
-                                                      ..onTap = () {},
+                                                      ..onTap = () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            RulePage.routeName);
+                                                      },
                                                 text:
                                                     "правилами модерации проблем ",
                                                 style: TextStyle(
@@ -410,27 +503,25 @@ class _ProblemLocateState extends State<ProblemLocate> {
                     Positioned(
                       child: Align(
                         alignment: FractionalOffset.bottomCenter,
-                        child:
-                            /*!_value
-                                  ? DefaultButton(
-                                      "Продолжить",
-                                      () {},
-                                      Color(0xffB2B7D0),
-                                    )
-                                  : */
-                            DefaultButton("Продолжить", () {
-                          insertData().then((value) {
-                            // print("sended");
-                            // Navigator.of(context).pushAndRemoveUntil(
-                            //   MaterialPageRoute(
-                            //     builder: (BuildContext context) {
-                            //       return ProblemFinish();
-                            //     },
-                            //   ),
-                            //   ModalRoute.withName(MainPage.routeName),
-                            // );
-                          });
-                        }, Theme.of(context).primaryColor),
+                        child: !_valid
+                            ? DefaultButton(
+                                "Продолжить",
+                                () {},
+                                Color(0xffB2B7D0),
+                              )
+                            : DefaultButton("Продолжить", () {
+                                insertData().then((value) {
+                                  // print("sended");
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //   MaterialPageRoute(
+                                  //     builder: (BuildContext context) {
+                                  //       return ProblemFinish();
+                                  //     },
+                                  //   ),
+                                  //   ModalRoute.withName(MainPage.routeName),
+                                  // );
+                                });
+                              }, Theme.of(context).primaryColor),
                       ),
                     ),
                   ],

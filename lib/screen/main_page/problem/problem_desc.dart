@@ -26,6 +26,7 @@ class _ProblemDescState extends State<ProblemDesc> {
   File image3;
   File image4;
   var descController = TextEditingController();
+  bool _value = false;
 
   Future sendData() async {}
   void clearImages() {
@@ -34,6 +35,16 @@ class _ProblemDescState extends State<ProblemDesc> {
       image2 = null;
       image3 = null;
       image4 = null;
+    });
+  }
+
+  checkChange() {
+    String descValue = descController.text;
+    setState(() {
+      if (descValue != "")
+        _value = true;
+      else
+        _value = false;
     });
   }
 
@@ -70,7 +81,10 @@ class _ProblemDescState extends State<ProblemDesc> {
                           children: [
                             MainText("Описать проблему"),
                             TextareaInput(
-                                "Напишите о проблеме", descController),
+                              hint: "Напишите о проблеме",
+                              textareaController: descController,
+                              notifyParent: checkChange,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
@@ -153,22 +167,19 @@ class _ProblemDescState extends State<ProblemDesc> {
                       Positioned(
                         child: Align(
                           alignment: FractionalOffset.bottomCenter,
-                          child:
-                              /*!_value
+                          child: !_value
                               ? DefaultButton(
                                   "Продолжить",
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : */
-                              DefaultButton("Продолжить", () {
-                            print(globals.images);
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) {
-                              return ProblemLocate(
-                                  descController.text, widget.id);
-                            }));
-                          }, Theme.of(context).primaryColor),
+                              : DefaultButton("Продолжить", () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return ProblemLocate(
+                                        descController.text, widget.id);
+                                  }));
+                                }, Theme.of(context).primaryColor),
                         ),
                       ),
                     ],

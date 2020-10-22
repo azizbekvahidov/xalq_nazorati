@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String pass = passController.text;
-    var url = '${globals.api_link}/users/signin';
+    var url = '${globals.site_link}/${globals.lang}/api/users/signin';
     Map map = {"phone": phone, "password": pass};
     var response = await Requests.post(
       url,
@@ -49,7 +50,15 @@ class _LoginScreenState extends State<LoginScreen> {
       globals.token = responseBody["token"];
       isLogin = true;
     } else {
-      print(response.json());
+      Map<String, dynamic> responseBody = response.json();
+      Fluttertoast.showToast(
+          msg: responseBody['message'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
     }
 
     if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);

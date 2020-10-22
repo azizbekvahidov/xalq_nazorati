@@ -30,7 +30,7 @@ class _MainChatState extends State<MainChat> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 100), (Timer t) {
       refreshChat();
     });
   }
@@ -83,7 +83,7 @@ class _MainChatState extends State<MainChat> {
     }
   }
 
-  Future<List<ChatMessage>> checkMessage(int id) async {
+  Future checkMessage(int id) async {
     try {
       var url = '${globals.api_link}/problems/check-message?message_id=${id}';
       HttpGet request = HttpGet();

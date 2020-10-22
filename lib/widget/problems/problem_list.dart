@@ -6,7 +6,9 @@ class ProblemList extends StatefulWidget {
   final List<Problems> data;
   final String title;
   final String status;
-  ProblemList({this.data, this.title, this.status, Key key}) : super(key: key);
+  final Map<int, bool> alertList;
+  ProblemList({this.data, this.title, this.status, this.alertList, Key key})
+      : super(key: key);
   @override
   _ProblemListState createState() => _ProblemListState();
 }
@@ -18,10 +20,13 @@ class _ProblemListState extends State<ProblemList> {
       physics: BouncingScrollPhysics(),
       itemCount: widget.data.length,
       itemBuilder: (BuildContext ctx, index) {
+        var _list = widget.alertList;
+        // print(_list);
         return ProblemCard(
           status: widget.status,
           title: widget.title,
           data: widget.data[index],
+          alert: _list[widget.data[index].id],
         );
       },
     );

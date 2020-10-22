@@ -12,8 +12,14 @@ import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
-class DeleteProfile extends StatelessWidget {
+class DeleteProfile extends StatefulWidget {
+  @override
+  _DeleteProfileState createState() => _DeleteProfileState();
+}
+
+class _DeleteProfileState extends State<DeleteProfile> {
   var descController = TextEditingController();
+  bool _value = false;
 
   Future deleteProfile() async {
     String desc = descController.text;
@@ -40,6 +46,16 @@ class DeleteProfile extends StatelessWidget {
         print(ex);
       }
     }
+  }
+
+  checkChange() {
+    String descValue = descController.text;
+    setState(() {
+      if (descValue != "")
+        _value = true;
+      else
+        _value = false;
+    });
   }
 
   @override
@@ -93,7 +109,11 @@ class DeleteProfile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Почему вы удаляете аккаунт?"),
-                            TextareaInput("hint", descController),
+                            TextareaInput(
+                              hint: "hint",
+                              textareaController: descController,
+                              notifyParent: checkChange,
+                            ),
                           ],
                         ),
                       ),

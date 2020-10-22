@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
 class ImageCarousel extends StatefulWidget {
   final String title;
-  ImageCarousel(this.title);
+  final List<dynamic> files;
+  ImageCarousel(this.title, this.files);
   @override
   _ImageCarouselState createState() => _ImageCarouselState();
 }
@@ -103,20 +106,25 @@ class _ImageCarouselState extends State<ImageCarousel> {
               controller: _scrollControllertop,
               physics: BouncingScrollPhysics(),
               scrollDirection: scrollDirection,
-              itemCount: 5,
+              itemCount: widget.files.length,
               itemBuilder: (BuildContext ctx, index) {
+                var src = widget.files[index];
+                print("${widget.title} $src");
                 return AutoScrollTag(
                   key: ValueKey(index),
                   controller: _scrollControllertop,
                   index: index,
                   child: Container(
                     margin: EdgeInsets.only(
-                        left: index == 0 ? 19 : 10, right: index == 4 ? 19 : 0),
+                        left: index == 0 ? 19 : 10,
+                        right: index == widget.files.length - 1 ? 19 : 0),
                     width: 100,
                     height: 100,
                     child: FittedBox(
                       fit: BoxFit.cover,
-                      child: Image.asset("assets/img/newsPic.jpg"),
+                      child: (src != null || src != "null")
+                          ? Image.network("${globals.site_link}$src")
+                          : Container(),
                     ),
                   ),
                 );

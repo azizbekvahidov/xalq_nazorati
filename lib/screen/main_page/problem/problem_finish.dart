@@ -74,7 +74,7 @@ class ProblemFinish extends StatelessWidget {
                               MaterialPageRoute(
                                   builder: (BuildContext context) {
                             return HomePage();
-                          }), (Route<dynamic> route) => true);
+                          }), (Route<dynamic> route) => false);
                         }, Theme.of(context).primaryColor),
                       ),
                     ),

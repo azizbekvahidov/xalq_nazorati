@@ -150,6 +150,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
     }
   }
 
+  checkChange() {}
+
   @override
   Widget build(BuildContext context) {
     var maskFormatter = new MaskTextInputFormatter(
@@ -180,10 +182,17 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("Адрес фактического проживания"),
-                            DefaultInput("Введите адрес", addressController),
+                            DefaultInput(
+                              hint: "Введите адрес",
+                              textController: addressController,
+                              notifyParent: checkChange,
+                            ),
                             MainText("Электронная почта"),
                             DefaultInput(
-                                "Введите адрес почты", emailController),
+                              hint: "Введите адрес почты",
+                              textController: emailController,
+                              notifyParent: checkChange,
+                            ),
                             MainText("Номер мобильного телефона"),
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -242,7 +251,11 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                               ),
                             ),
                             MainText("Код подтверждения"),
-                            DefaultInput("Введите код", codeController),
+                            DefaultInput(
+                              hint: "Введите код",
+                              textController: codeController,
+                              notifyParent: () {},
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

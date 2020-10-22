@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/profile/main_profile.dart';
@@ -9,6 +10,13 @@ import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ProblemSolvedRateScreen extends StatefulWidget {
+  final int id;
+  final String executorName;
+  final String executorAvatar;
+  final int executorId;
+  final String position;
+  ProblemSolvedRateScreen(this.id, this.executorName, this.executorAvatar,
+      this.executorId, this.position);
   @override
   _ProblemSolvedRateScreenState createState() =>
       _ProblemSolvedRateScreenState();
@@ -17,11 +25,48 @@ class ProblemSolvedRateScreen extends StatefulWidget {
 class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
   var descController = TextEditingController();
   var rating = 0.0;
+  var rated = 0;
   var dataSended = false;
+  bool _value = false;
 
   Future sendData() async {
+    String desc = descController.text;
+    if (desc != "" && rated != 0) {
+      var url = '${globals.api_link}/problems/confirm';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      Map<String, dynamic> data = {
+        "problem_id": widget.id,
+        "executor_id": widget.executorId,
+        "message": "$desc",
+        "rating": rating,
+      };
+      var response = await Requests.post(url, body: data, headers: headers);
+
+      // String reply = await response.transform(utf8.decoder).join();
+      // var temp = response.json();
+      if (response.statusCode == 200) {
+        var res = response.json(); //parseProblems(response.content());
+
+        setState(() {
+          dataSended = true;
+        });
+        Timer(Duration(seconds: 3), () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) {
+            return MainProfile();
+          }), (Route<dynamic> route) => true);
+        });
+      }
+    }
+  }
+
+  checkChange() {
+    String descValue = descController.text;
     setState(() {
-      dataSended = true;
+      if (descValue != "")
+        _value = true;
+      else
+        _value = false;
     });
   }
 
@@ -46,12 +91,16 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                   borderRadius: BorderRadius.circular(40),
                   child: FittedBox(
                     fit: BoxFit.cover,
-                    child: Image.asset("assets/img/newsPic.jpg"),
+                    child: widget.executorAvatar != null
+                        ? Image.asset("assets/img/newsPic.jpg")
+                        : Container(
+                            color: Colors.grey,
+                          ),
                   ),
                 ),
               ),
               Text(
-                "Пулатов Мавлонбек",
+                widget.executorName,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: globals.font,
@@ -63,7 +112,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                 padding: EdgeInsets.only(top: 7),
               ),
               Text(
-                "Веб дизайнер",
+                widget.position,
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w400,
@@ -98,7 +147,12 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                         ),
                         SmoothStarRating(
                           allowHalfRating: false,
-                          onRated: (v) {},
+                          onRated: (v) {
+                            setState(() {
+                              rated = v.toInt();
+                              print(rated);
+                            });
+                          },
                           starCount: 5,
                           rating: rating,
                           size: 40.0,
@@ -109,7 +163,11 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                         Container(
                             padding: EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 19),
-                            child: TextareaInput("", descController)),
+                            child: TextareaInput(
+                              hint: "",
+                              textareaController: descController,
+                              notifyParent: checkChange,
+                            )),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 19),
                           child: SizedBox(
@@ -121,15 +179,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                                 borderRadius: BorderRadius.circular(34),
                               ),
                               onPressed: () {
-                                sendData().then((value) {
-                                  Timer(Duration(seconds: 2), () {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                      return MainProfile();
-                                    }), (Route<dynamic> route) => true);
-                                  });
-                                });
+                                sendData();
                               },
                               child: Text(
                                 "Подтвердить",

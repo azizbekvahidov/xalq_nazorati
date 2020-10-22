@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/screen/home_page.dart';
+import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 import 'package:xalq_nazorati/screen/profile/main_profile.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import '../../main_page/problem/problem_locate.dart';
@@ -80,7 +82,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         globals.images['file4'] = null;
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) {
-          return ProblemScreen("Нерешенные проблемы", "warning");
+          return HomePage();
         }), (Route<dynamic> route) => true);
       } else {
         print(res);
@@ -88,6 +90,16 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  checkChange() {
+    String descValue = descController.text;
+    setState(() {
+      if (descValue != "")
+        _value = true;
+      else
+        _value = false;
+    });
   }
 
   @override
@@ -170,7 +182,10 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                             ),
                             MainText("Описать проблему"),
                             TextareaInput(
-                                "Напишите о проблеме", descController),
+                              hint: "Напишите о проблеме",
+                              textareaController: descController,
+                              notifyParent: checkChange,
+                            ),
                           ],
                         ),
                       ),

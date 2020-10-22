@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     getStringValuesSF();
-    Timer(Duration(seconds: 0), () {
+    Timer(Duration(seconds: 2), () {
       if (_lang == null) {
         globals.lang = _lang;
         globals.country = _country;

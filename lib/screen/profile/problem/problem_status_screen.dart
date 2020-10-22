@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -16,6 +17,23 @@ class ProblemStatusScreen extends StatefulWidget {
 }
 
 class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
+  Timer timer;
+  List<ProblemInfo> _data;
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 100), (Timer t) {
+      refreshChat();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   Future<List<ProblemInfo>> getStatus() async {
     try {
       var url = '${globals.api_link}/problems/event-log/${widget.id}';
@@ -23,8 +41,46 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
       var response = await request.methodGet(url);
 
       String reply = await response.transform(utf8.decoder).join();
+      var temp = parseProblems(reply);
+      temp.firstWhere((element) {
+        checkMessage(element.id);
+        return true;
+      });
+      return temp;
+    } catch (e) {
+      print(e);
+    }
+  }
 
-      return parseProblems(reply);
+  void refreshChat() async {
+    try {
+      var url =
+          '${globals.api_link}/problems/refresh-event-log?problem_id=${widget.id}';
+      HttpGet request = HttpGet();
+      var response = await request.methodGet(url);
+
+      String reply = await response.transform(utf8.decoder).join();
+
+      var temp = parseProblems(reply);
+      temp.lastWhere((element) {
+        checkMessage(element.id);
+        return true;
+      });
+      setState(() {
+        _data.add(temp[0]);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void checkMessage(int id) async {
+    try {
+      var url = '${globals.api_link}/problems/check-event?event_id=$id';
+      HttpGet request = HttpGet();
+      var response = await request.methodGet(url);
+
+      String reply = await response.transform(utf8.decoder).join();
     } catch (e) {
       print(e);
     }
@@ -70,9 +126,9 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
                       future: getStatus(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) print(snapshot.error);
-
+                        _data = snapshot.data;
                         return snapshot.hasData
-                            ? ProblemStatusCard(snapshot.data)
+                            ? ProblemStatusCard(_data)
                             : Center(
                                 child: Text("Loading"),
                               );

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,58 @@ class ProblemScreen extends StatefulWidget {
 }
 
 class _ProblemScreenState extends State<ProblemScreen> {
+  Timer timer;
+  bool isRequest = false;
+  Map<int, bool> _problems = {};
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      refreshBells();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void refreshBells() async {
+    try {
+      String _list = "";
+      int i = 0;
+      _problems.forEach((key, value) {
+        i++;
+        _problems[key] = false;
+        _list += "$key";
+        if (i != _problems.length) _list += ",";
+      });
+
+      var url =
+          '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
+      HttpGet request = HttpGet();
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var res = response.json();
+        if (res['result'].length != 0) {
+          for (var i = 0; i < res['result'].length; i++) {
+            var problem_id = res['result'][i];
+            _problems[problem_id] = true;
+          }
+        }
+      }
+      setState(() {});
+      // String reply = await response.transform(utf8.decoder).join();
+
+      // var temp = parseProblems(reply);
+
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<List<Problems>> getProblems() async {
     String _type = "processing";
     switch (widget.status) {
@@ -30,6 +83,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
         _type = "denied";
         break;
     }
+
     try {
       var url = '${globals.api_link}/problems/list/$_type';
       HttpGet request = HttpGet();
@@ -38,8 +92,17 @@ class _ProblemScreenState extends State<ProblemScreen> {
       String reply = await response.transform(utf8.decoder).join();
       var temp = json.decode(reply);
       var some = temp.values.toList();
+      var res = parseProblems(json.encode(some[3]));
+      if (!isRequest) {
+        for (var i = 0; i < res.length; i++) {
+          Map<int, bool> elem = {res[i].id: false};
+          _problems.addAll(elem);
+        }
+        refreshBells();
+        isRequest = true;
+      }
 
-      return parseProblems(json.encode(some[3]));
+      return res;
     } catch (e) {
       print(e);
     }
@@ -64,12 +127,12 @@ class _ProblemScreenState extends State<ProblemScreen> {
           future: getProblems(),
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
-
             return snapshot.hasData
                 ? ProblemList(
                     data: snapshot.data,
                     title: widget.title,
                     status: widget.status,
+                    alertList: _problems,
                   )
                 : Center(
                     child: Text("Loading"),

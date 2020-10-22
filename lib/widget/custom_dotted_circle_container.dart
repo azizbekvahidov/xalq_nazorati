@@ -23,18 +23,18 @@ class _CustomDottedCircleContainerState
     extends State<CustomDottedCircleContainer> {
   bool accessDenied;
 
-  Future<PermissionStatus> _getPermission(perm) async {
-    PermissionStatus permission =
-        await PermissionHandler().checkPermissionStatus(perm);
-    if (permission != PermissionStatus.granted) {
-      Map<PermissionGroup, PermissionStatus> permisionStatus =
-          await PermissionHandler().requestPermissions([perm]);
-      return permisionStatus[perm] ?? PermissionStatus.unknown;
-    } else {
-      print(permission);
-      return permission;
-    }
-  }
+  // Future<PermissionStatus> _getPermission(perm) async {
+  //   PermissionStatus permission =
+  //       await PermissionHandler().checkPermissionStatus(perm);
+  //   if (permission != PermissionStatus.granted) {
+  //     Map<PermissionGroup, PermissionStatus> permisionStatus =
+  //         await PermissionHandler().requestPermissions([perm]);
+  //     return permisionStatus[perm] ?? PermissionStatus.unknown;
+  //   } else {
+  //     print(permission);
+  //     return permission;
+  //   }
+  // }
 
   pickerCam() async {
     // ignore: deprecated_member_use

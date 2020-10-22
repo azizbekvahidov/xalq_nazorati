@@ -11,11 +11,15 @@ class ProblemStatusCard extends StatelessWidget {
     return Container(
       height: 88.0 * data.length,
       child: ListView.builder(
+          reverse: true,
           physics: NeverScrollableScrollPhysics(),
           itemCount: data.length,
           itemBuilder: (BuildContext ctx, index) {
-            String statDate =
-                formatter.format(DateTime.parse(data[index].datetime));
+            String statDate = formatter.format(DateTime.parse(
+                DateFormat("yyyy-MM-ddTHH:mm:ssZ")
+                    .parseUTC(data[index].datetime)
+                    .toString()));
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

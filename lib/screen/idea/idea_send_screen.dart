@@ -139,11 +139,13 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 MainText("Укажите место на карте или адрес"),
-                                DefaultInput("Например: улица Фархадская 65",
-                                    addressController),
+                                DefaultInput(
+                                    hint: "Например: улица Фархадская 65",
+                                    textController: addressController),
                                 MainText("Примечания"),
                                 DefaultInput(
-                                    "Ориентир: № подъезд", extraController),
+                                    hint: "Ориентир: № подъезд",
+                                    textController: extraController),
                                 Container(
                                   width: double.infinity,
                                   alignment: Alignment.centerRight,

@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 
-class DefaultInput extends StatelessWidget {
+class DefaultInput extends StatefulWidget {
   final textController;
   final String hint;
-  DefaultInput(this.hint, this.textController);
+  Function notifyParent;
+  var inputType = TextInputType.text;
+  DefaultInput(
+      {Key key,
+      this.hint,
+      this.textController,
+      this.notifyParent,
+      this.inputType})
+      : super(key: key);
+
+  @override
+  _DefaultInputState createState() => _DefaultInputState();
+}
+
+class _DefaultInputState extends State<DefaultInput> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -29,10 +43,14 @@ class DefaultInput extends StatelessWidget {
                     mediaQuery.padding.right) *
                 0.74,
             child: TextField(
-              controller: textController,
+              keyboardType: widget.inputType,
+              onChanged: (value) {
+                widget.notifyParent();
+              },
+              controller: widget.textController,
               maxLines: 1,
               decoration: InputDecoration.collapsed(
-                hintText: hint,
+                hintText: widget.hint,
                 hintStyle: Theme.of(context).textTheme.display1,
               ),
             ),

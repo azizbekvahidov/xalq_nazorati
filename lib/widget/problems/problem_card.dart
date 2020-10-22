@@ -46,19 +46,21 @@ class _ProblemCardState extends State<ProblemCard> {
           MaterialPageRoute(
             builder: (BuildContext context) {
               var route;
-              switch (widget.status) {
-                case "warning":
-                  route = ProblemContentScreen(
-                      widget.title, widget.status, widget.data);
-                  break;
-                case "success":
-                  route = SolveProblemScreen(status: false, data: widget.data);
-                  break;
-                case "danger":
-                  route = SolveProblemScreen(status: false, data: widget.data);
-                  break;
-              }
-              if (widget.status == "warning") {}
+              route = ProblemContentScreen(
+                  widget.title, widget.status, widget.data);
+              // switch (widget.status) {
+              //   case "warning":
+
+              //     break;
+              //   case "success":
+              //     route = SolveProblemScreen(
+              //         status: widget.status, id: widget.data.id);
+              //     break;
+              //   case "danger":
+              //     route = SolveProblemScreen(
+              //         status: widget.status, id: widget.data.id);
+              //     break;
+              // }
               return route;
             },
           ),

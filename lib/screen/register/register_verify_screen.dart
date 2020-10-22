@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:http/http.dart' as http;
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -81,20 +82,34 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
     String code = codeController.text;
 
     if (!isSend && code != "") {
-      String url = '${globals.api_link}/users/signup-confirm';
-      Map map = {"code": int.parse(code)};
-      // String url = '${globals.api_link}/users/get-phone';
-      var r1 = await Requests.post(url,
-          body: map, verify: false, persistCookies: true);
-      r1.raiseForStatus();
+      try {
+        String url =
+            '${globals.site_link}/${globals.lang}/api/users/signup-confirm';
+        Map map = {"code": int.parse(code)};
+        // String url = '${globals.api_link}/users/get-phone';
+        var r1 = await Requests.post(url,
+            body: map, verify: false, persistCookies: true);
 
-      // dynamic json = r1.json();
-      // print(json["detail"]);
-      if (r1.statusCode == 200) isSend = true;
-      if (isSend) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            settings: const RouteSettings(name: PassRecognizeScreen.routeName),
-            builder: (context) => PassRecognizeScreen()));
+        if (r1.statusCode == 200) isSend = true;
+        if (isSend) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              settings:
+                  const RouteSettings(name: PassRecognizeScreen.routeName),
+              builder: (context) => PassRecognizeScreen()));
+        } else {
+          dynamic json = r1.json();
+          print(json["detail"]);
+          Fluttertoast.showToast(
+              msg: json['detail'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 15.0);
+        }
+      } catch (e) {
+        print(e);
       }
     }
   }
@@ -189,7 +204,12 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("Код подтверждения"),
-                          DefaultInput("Введите код", codeController),
+                          DefaultInput(
+                            hint: "Введите код",
+                            textController: codeController,
+                            notifyParent: () {},
+                            inputType: TextInputType.number,
+                          ),
                           Padding(
                             padding: EdgeInsets.only(top: 10),
                           ),

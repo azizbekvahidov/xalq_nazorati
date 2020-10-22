@@ -36,7 +36,7 @@ class SupportFeedback extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            launchUrl("tel:1005");
+            launchUrl("tel:1055");
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 72, vertical: 30),

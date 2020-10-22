@@ -78,9 +78,16 @@ class _IdeaAddScreenState extends State<IdeaAddScreen> {
                           children: [
                             MainText("Заголовок предлагаемой идеи"),
                             DefaultInput(
-                                "Предложить идею", ideaTitleController),
+                              hint: "Предложить идею",
+                              textController: ideaTitleController,
+                              notifyParent: () {},
+                            ),
                             MainText("Описать идею"),
-                            TextareaInput("Было бы лучше", descController),
+                            TextareaInput(
+                              hint: "Было бы лучше",
+                              textareaController: descController,
+                              notifyParent: () {},
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,

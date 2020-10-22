@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/login_screen.dart';
@@ -32,23 +33,39 @@ class _RegisterPersonalDataScreenState
     String pass = passController.text;
     String repass = repassController.text;
     if (_value && email != "" && address != "") {
-      String url = '${globals.api_link}/users/signup';
-      Map map = {
-        "email": email,
-        'address_str': address,
-        'password': address,
-        'password2': address,
-        'agreement': address,
-      };
-      // String url = '${globals.api_link}/users/get-phone';
-      var r1 = await Requests.post(url,
-          body: map, verify: false, persistCookies: true);
+      try {
+        String url = '${globals.api_link}/users/signup';
+        Map map = {
+          "email": email,
+          'address_str': address,
+          'password': pass,
+          'password2': repass,
+          'agreement': _value,
+        };
+        // String url = '${globals.api_link}/users/get-phone';
+        var r1 = await Requests.post(url,
+            body: map, verify: false, persistCookies: true);
 
-      if (r1.statusCode == 201) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            LoginScreen.routeName, (Route<dynamic> route) => false);
-      } else {
-        print("${r1.statusCode} ${r1.content()}");
+        if (r1.statusCode == 201) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              LoginScreen.routeName, (Route<dynamic> route) => false);
+        } else {
+          var json = r1.json();
+          Map<String, dynamic> res = json['detail'];
+          print(json);
+          res.forEach((key, value) {
+            Fluttertoast.showToast(
+                msg: res[key][0],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 15.0);
+          });
+        }
+      } catch (e) {
+        print(e);
       }
     }
   }
@@ -80,9 +97,18 @@ class _RegisterPersonalDataScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MainText("Адрес фактического проживания"),
-                        DefaultInput("Введите адрес", addressController),
+                        DefaultInput(
+                          hint: "Введите адрес",
+                          textController: addressController,
+                          notifyParent: () {},
+                        ),
                         MainText("Электронная почта"),
-                        DefaultInput("Введите адрес почты", emailController),
+                        DefaultInput(
+                          hint: "Введите адрес почты",
+                          textController: emailController,
+                          notifyParent: () {},
+                          inputType: TextInputType.emailAddress,
+                        ),
                         MainText("Пароль"),
                         PassInput("Придумайте пароль", passController),
                         MainText("Подтвердите пароль"),
