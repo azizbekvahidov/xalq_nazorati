@@ -146,7 +146,7 @@ class _MainPageState extends State<MainPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Срочные новости",
+                        "Новости Сегодня",
                         style: TextStyle(
                             color: Color(0xff313B6C),
                             fontSize: 18,

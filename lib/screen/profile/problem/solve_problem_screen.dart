@@ -260,7 +260,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       padding: EdgeInsets.only(top: 10),
                                     ),
                                     Text(
-                                      "${res['problem']['content']}",
+                                      "${result['content']}",
                                       style: TextStyle(
                                         fontFamily: globals.font,
                                         fontSize: 14,
@@ -314,11 +314,11 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                 child: ImageCarousel(
                                   "Было",
                                   [
-                                    "${res['problem']['file1']}",
-                                    "${res['problem']['file2']}",
-                                    "${res['problem']['file3']}",
-                                    "${res['problem']['file4']}",
-                                    "${res['problem']['file5']}",
+                                    "${res['problem']['file_1']}",
+                                    "${res['problem']['file_2']}",
+                                    "${res['problem']['file_3']}",
+                                    "${res['problem']['file_4']}",
+                                    "${res['problem']['file_5']}",
                                   ],
                                 ),
                               ),

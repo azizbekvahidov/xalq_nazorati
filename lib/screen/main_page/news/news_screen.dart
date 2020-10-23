@@ -75,7 +75,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Срочные",
+                      "Сегодня",
                       style: TextStyle(
                         color: _txt1,
                         fontFamily: "Gilroy",

@@ -92,6 +92,17 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
     }
   }
 
+  void clearImages() {
+    setState(() {
+      globals.images.addAll({
+        "file1": null,
+        "file2": null,
+        "file3": null,
+        "file4": null,
+      });
+    });
+  }
+
   checkChange() {
     String descValue = descController.text;
     setState(() {
@@ -133,7 +144,27 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("Загрузите фото"),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                MainText("Загрузите фото"),
+                                InkWell(
+                                  onTap: () {
+                                    clearImages();
+                                  },
+                                  child: Text(
+                                    "Очистить",
+                                    style: TextStyle(
+                                      color: Color(0xffB2B7D0),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: "Gilroy",
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                             Container(
                               padding: EdgeInsets.only(top: 20, bottom: 15),
                               child: Row(

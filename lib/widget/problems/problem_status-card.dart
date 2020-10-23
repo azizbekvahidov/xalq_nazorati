@@ -9,7 +9,7 @@ class ProblemStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     DateFormat formatter = DateFormat('dd.MM.yyyy, hh:mm');
     return Container(
-      height: 88.0 * data.length,
+      height: 100.0 * data.length,
       child: ListView.builder(
           reverse: true,
           physics: NeverScrollableScrollPhysics(),
@@ -24,7 +24,7 @@ class ProblemStatusCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 15, left: 19, right: 19),
+                  padding: EdgeInsets.only(top: 12, left: 19, right: 19),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -50,7 +50,7 @@ class ProblemStatusCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(bottom: 15),
+                        padding: EdgeInsets.only(bottom: 12),
                       ),
                     ],
                   ),

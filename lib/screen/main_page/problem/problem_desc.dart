@@ -31,10 +31,12 @@ class _ProblemDescState extends State<ProblemDesc> {
   Future sendData() async {}
   void clearImages() {
     setState(() {
-      image1 = null;
-      image2 = null;
-      image3 = null;
-      image4 = null;
+      globals.images.addAll({
+        "file1": null,
+        "file2": null,
+        "file3": null,
+        "file4": null,
+      });
     });
   }
 

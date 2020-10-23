@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:xalq_nazorati/screen/support/support_feedback.dart';
-import 'package:xalq_nazorati/screen/support/support_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_icon_appbar.dart';
 
 class MainSupport extends StatefulWidget {
@@ -10,115 +8,79 @@ class MainSupport extends StatefulWidget {
 }
 
 class _MainSupportState extends State<MainSupport> {
-  int _index = 0;
-  Color _bg1;
-  Color _txt1;
-  Color _bg2;
-  Color _txt2;
-  final List<Widget> _children = [
-    SupportInfo(),
-    SupportFeedback(),
-  ];
-
-  void _selectTab(index) {
-    setState(() {
-      _index = index;
-      if (index == 0) {
-        _bg1 = Theme.of(context).primaryColor;
-        _bg2 = Color.fromRGBO(49, 59, 108, 0.05);
-        _txt1 = Colors.white;
-        _txt2 = Color(0xff66676C);
-      } else {
-        _bg1 = Color.fromRGBO(49, 59, 108, 0.05);
-        _bg2 = Theme.of(context).primaryColor;
-        _txt1 = Color(0xff66676C);
-        _txt2 = Colors.white;
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _selectTab(_index));
+  void launchUrl(String url) async {
+    if (await canLaunch(url)) {
+      launch(url);
+    } else {
+      throw "Could not launch $url";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomIconAppBar(
-        title: "Связаться с нами",
+        title: "Сообщить о баге",
         icon: "assets/img/support.svg",
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        child: Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 30),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 15),
+            ),
+            Container(
+              width: 220,
+              height: 241,
+              child: Image.asset("assets/img/support.png"),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
+              child: Text(
+                "У вас есть проблема с приложением напишите нам в телеграм бот",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xff313B6C),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Gilroy",
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _selectTab(0);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: _bg1,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Позвоните",
-                        style: TextStyle(
-                          color: _txt1,
-                          fontFamily: "Gilroy",
-                          fontSize: 18,
-                        ),
-                      ),
+            ),
+            InkWell(
+              onTap: () {
+                launchUrl("https://t.me/xalqnazorati_bot");
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 72, vertical: 30),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  height: 50,
+                  child: Text(
+                    "Сообщить о проблеме",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "Gilroy",
+                        color: Colors.white),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xff12B79B),
+                        Color(0xff00AC8A),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _selectTab(1);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: _bg2,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Напишите",
-                        style: TextStyle(
-                          color: _txt2,
-                          fontFamily: "Gilroy",
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              Padding(padding: EdgeInsets.only(top: 30)),
-              Container(
-                child: _children[_index],
-              ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

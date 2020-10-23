@@ -36,13 +36,13 @@ class SupportFeedback extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            launchUrl("tel:1055");
+            launchUrl("https://t.me/xalqnazorati_bot");
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 72, vertical: 30),
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 19),
+              padding: EdgeInsets.symmetric(horizontal: 18),
               height: 50,
               child: Text(
                 "Сообщить о проблеме",

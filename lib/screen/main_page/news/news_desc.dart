@@ -117,79 +117,79 @@ class _NewsDescState extends State<NewsDesc> {
                             ),
                           ),
                           Html(data: data.content_ru),
-                          Center(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: 15, top: 30),
-                              child: Text("Поделиться с друзьями:"),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  alignment: Alignment.center,
-                                  child: SvgPicture.asset(
-                                      "assets/img/facebook.svg"),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  alignment: Alignment.center,
-                                  child: SvgPicture.asset(
-                                      "assets/img/twitter.svg"),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  alignment: Alignment.center,
-                                  child: SvgPicture.asset(
-                                      "assets/img/instagram.svg"),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  alignment: Alignment.center,
-                                  child: SvgPicture.asset(
-                                      "assets/img/telegram.svg"),
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Center(
+                          //   child: Padding(
+                          //     padding:
+                          //         const EdgeInsets.only(bottom: 15, top: 30),
+                          //     child: Text("Поделиться с друзьями:"),
+                          //   ),
+                          // ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     GestureDetector(
+                          //       onTap: () {},
+                          //       child: Container(
+                          //         width: 50,
+                          //         height: 50,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(25)),
+                          //         alignment: Alignment.center,
+                          //         child: SvgPicture.asset(
+                          //             "assets/img/facebook.svg"),
+                          //       ),
+                          //     ),
+                          //     Padding(
+                          //       padding: EdgeInsets.only(left: 20),
+                          //     ),
+                          //     GestureDetector(
+                          //       onTap: () {},
+                          //       child: Container(
+                          //         width: 50,
+                          //         height: 50,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(25)),
+                          //         alignment: Alignment.center,
+                          //         child: SvgPicture.asset(
+                          //             "assets/img/twitter.svg"),
+                          //       ),
+                          //     ),
+                          //     Padding(
+                          //       padding: EdgeInsets.only(left: 20),
+                          //     ),
+                          //     GestureDetector(
+                          //       onTap: () {},
+                          //       child: Container(
+                          //         width: 50,
+                          //         height: 50,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(25)),
+                          //         alignment: Alignment.center,
+                          //         child: SvgPicture.asset(
+                          //             "assets/img/instagram.svg"),
+                          //       ),
+                          //     ),
+                          //     Padding(
+                          //       padding: EdgeInsets.only(left: 20),
+                          //     ),
+                          //     GestureDetector(
+                          //       onTap: () {},
+                          //       child: Container(
+                          //         width: 50,
+                          //         height: 50,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(25)),
+                          //         alignment: Alignment.center,
+                          //         child: SvgPicture.asset(
+                          //             "assets/img/telegram.svg"),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 30),
                           )

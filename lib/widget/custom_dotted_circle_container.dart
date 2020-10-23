@@ -40,7 +40,7 @@ class _CustomDottedCircleContainerState
     // ignore: deprecated_member_use
     File _img = await ImagePicker.pickImage(source: ImageSource.camera);
     if (_img != null && validate(_img)) {
-      widget.image = _img;
+      // widget.image = _img;
       globals.images.addAll({widget.img: _img});
       setState(() {});
     }
@@ -49,7 +49,7 @@ class _CustomDottedCircleContainerState
   pickGallery() async {
     File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (_img != null && validate(_img)) {
-      widget.image = _img;
+      // widget.image = _img;
       globals.images.addAll({widget.img: _img});
       setState(() {});
     }
@@ -65,6 +65,8 @@ class _CustomDottedCircleContainerState
 
   @override
   Widget build(BuildContext context) {
+    File _file = globals.images[widget.img];
+    print("${widget.img} => ${globals.images[widget.img]}");
     return InkWell(
       onTap: () {
         showModalBottomSheet(
@@ -156,7 +158,7 @@ class _CustomDottedCircleContainerState
               );
             });
       },
-      child: widget.image == null
+      child: _file == null
           ? DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(widget.boxSize / 2),
@@ -182,8 +184,8 @@ class _CustomDottedCircleContainerState
                   BorderRadius.all(Radius.circular(widget.boxSize / 2)),
               child: Container(
                 child: FittedBox(
-                  child: Image.file(widget.image),
-                  fit: BoxFit.fill,
+                  child: Image.file(_file),
+                  fit: BoxFit.cover,
                 ),
                 width: widget.boxSize,
                 height: widget.boxSize,

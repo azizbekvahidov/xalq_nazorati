@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 
@@ -6,6 +9,18 @@ class SubCategoryCardList extends StatelessWidget {
   final String title;
   final int id;
   final bool divider;
+  FutureOr onGoBack(dynamic value) {
+    clearImages();
+  }
+
+  void clearImages() {
+    globals.images.addAll({
+      "file1": null,
+      "file2": null,
+      "file3": null,
+      "file4": null,
+    });
+  }
 
   SubCategoryCardList(this.id, this.title, this.divider);
   @override
@@ -57,7 +72,7 @@ class SubCategoryCardList extends StatelessWidget {
                   },
                 ),
                 // ModalRoute.withName(HomePage.routeName),
-              );
+              ).then(onGoBack);
             },
           ),
           if (divider) Divider(),

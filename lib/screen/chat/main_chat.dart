@@ -117,7 +117,6 @@ class _MainChatState extends State<MainChat> {
           req.files.add(http.MultipartFile(
               "file", _file.readAsBytes().asStream(), _file.lengthSync(),
               filename: _fileName.split('/').last));
-          req.fields.addAll({"message": "."});
         }
         var res = await req.send();
         if (res.statusCode == 200) {

@@ -51,6 +51,7 @@ class _CategoryScreenState extends State<CategoryScreen>
           centerTitle: true,
         ),
         body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Container(
             height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
             child: Column(

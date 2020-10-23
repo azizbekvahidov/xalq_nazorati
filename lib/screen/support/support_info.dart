@@ -53,13 +53,13 @@ class _SupportInfoState extends State<SupportInfo> {
         ),
         InkWell(
           onTap: () {
-            launchUrl("tel:1005");
+            launchUrl("tel:1055");
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 98),
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 46),
+              padding: EdgeInsets.symmetric(horizontal: 45),
               height: 50,
               child: Text(
                 "Позвонить",

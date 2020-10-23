@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
-import 'package:xalq_nazorati/screen/support/main_support.dart';
+import 'package:xalq_nazorati/screen/support/support.dart';
 import '../../widget/icon_card_list.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import '../../widget/shadow_box.dart';
@@ -49,7 +49,7 @@ class InfoPage extends StatelessWidget {
                     IconCardList("id", "assets/img/rate_icon.svg",
                         "Оценить приложение", null, true, null),
                     IconCardList("id", "assets/img/support_icon.svg",
-                        "Техническая поддержка", MainSupport(), true, null),
+                        "Техническая поддержка", Support(), true, null),
                     IconCardList("id", "assets/img/rule_icon.svg",
                         "Правила модерации", RulePage(), false, null),
                   ],

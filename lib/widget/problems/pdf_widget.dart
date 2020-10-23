@@ -40,7 +40,7 @@ class _PdfWidgetState extends State<PdfWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _fileName,
+                "Паспорт проблемы",
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontSize: 12,
