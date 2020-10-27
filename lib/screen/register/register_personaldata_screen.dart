@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/models/addresses.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/input/pass_input.dart';
 import '../rule_page.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import '../../widget/shadow_box.dart';
-import '../home_page.dart';
 import '../../widget/default_button.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/text/main_text.dart';
@@ -27,6 +29,7 @@ class _RegisterPersonalDataScreenState
   final passController = TextEditingController();
   final repassController = TextEditingController();
   bool _value = false;
+
   Future sendData() async {
     String email = emailController.text;
     String address = addressController.text;
@@ -34,7 +37,8 @@ class _RegisterPersonalDataScreenState
     String repass = repassController.text;
     if (_value && email != "" && address != "") {
       try {
-        String url = '${globals.api_link}/users/signup';
+        String url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup';
         Map map = {
           "email": email,
           'address_str': address,
@@ -70,6 +74,34 @@ class _RegisterPersonalDataScreenState
     }
   }
 
+  static List<Addresses> _address;
+  changeAddress(String value) async {
+    try {
+      String address = addressController.text;
+      Map<String, String> headers = {
+        "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002"
+      };
+      var url =
+          'https://data.xalqnazorati.uz/api/v1/addresses/suggestions?q=$value';
+      var r1 = await Requests.get(url, headers: headers);
+      if (r1.statusCode == 200) {
+        var json = r1.json();
+
+        List<Addresses> addresses = parseAddress(json["data"]);
+        return addresses;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  List<Addresses> parseAddress(var responseBody) {
+    var res = responseBody
+        .map<Addresses>((json) => Addresses.fromJson(json))
+        .toList();
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     var appbar = CustomAppBar(
@@ -97,10 +129,57 @@ class _RegisterPersonalDataScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MainText("Адрес фактического проживания"),
-                        DefaultInput(
-                          hint: "Введите адрес",
-                          textController: addressController,
-                          notifyParent: () {},
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          width: double.infinity,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            color: Color(0xffF5F6F9),
+                            borderRadius: BorderRadius.circular(22.5),
+                            border: Border.all(
+                              color: Color.fromRGBO(178, 183, 208, 0.5),
+                              style: BorderStyle.solid,
+                              width: 0.5,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                  width: (mediaQuery.size.width -
+                                          mediaQuery.padding.left -
+                                          mediaQuery.padding.right) *
+                                      0.74,
+                                  child: TypeAheadField(
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      controller: addressController,
+                                      autofocus: true,
+                                      decoration: InputDecoration.collapsed(
+                                        hintText: "Введите адрес",
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .display1,
+                                      ),
+                                    ),
+                                    hideOnEmpty: true,
+                                    suggestionsCallback: (pattern) async {
+                                      return await changeAddress(pattern);
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        title: Text(suggestion.address),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      print(suggestion.address);
+                                      addressController.text =
+                                          suggestion.address;
+                                    },
+                                  )),
+                            ],
+                          ),
                         ),
                         MainText("Электронная почта"),
                         DefaultInput(

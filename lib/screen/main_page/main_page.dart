@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,25 +19,27 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  Future<List<Categories>> getCategory() async {
+  Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/categories';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
-    String reply = await response.transform(utf8.decoder).join();
+    var response = await Requests.get(url, headers: headers);
 
-    return parseCategory(reply);
+    var reply = response.json();
+
+    return reply;
   }
 
-  Future<List<News>> getNews() async {
+  Future<List> getNews() async {
     var url = '${globals.api_link}/news?limit=3';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
-    var temp = json.decode(reply);
-    var some = temp.values.toList();
-    return parseNews(json.encode(some[3]));
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+
+    var reply = response.json();
+
+    return reply["result"];
   }
 
   List<Categories> parseCategory(String responseBody) {
@@ -57,164 +58,162 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: EdgeInsets.only(bottom: 40, left: 20, right: 20),
-              height: 188,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xff12B79B),
-                    Color(0xff00AC8A),
-                  ],
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(25),
-                  bottomRight: Radius.circular(25),
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Привет, ${globals.userData['first_name']}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w600),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(bottom: 40, left: 20, right: 20),
+                  height: 188,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xff12B79B),
+                        Color(0xff00AC8A),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25),
+                    ),
                   ),
-                  Text(
-                    "welcome".tr().toString(),
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
-              child: Text(
-                "Сообщить о проблемы",
-                style: TextStyle(
-                    color: Color(0xff313B6C),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 5, right: 15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FutureBuilder(
-                      future: getCategory(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) print(snapshot.error);
-                        return snapshot.hasData
-                            ? CategoryList(categories: snapshot.data)
-                            : Center(
-                                child: Text("Loading"),
-                              );
-                      }),
-                ],
-              ),
-            ),
-            Container(
-              child: AdvWidget(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 20,
-                horizontal: 20,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Новости Сегодня",
+                        "Привет, ${globals.userData['first_name']}",
                         style: TextStyle(
-                            color: Color(0xff313B6C),
-                            fontSize: 18,
+                            color: Colors.white,
+                            fontSize: 26,
                             fontWeight: FontWeight.w600),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return NewsScreen();
-                              },
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Смотреть все",
-                          style: TextStyle(
-                              color: Color(0xff66676C),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
+                      Text(
+                        "welcome".tr().toString(),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 26,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: FutureBuilder(
-                        future: getNews(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) print(snapshot.error);
-                          return snapshot.hasData
-                              ? NewsList(
-                                  news: snapshot.data,
-                                  breaking: true,
-                                )
-                              : Center(
-                                  child: Text("Loading"),
-                                );
-                        }),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
+                  child: Text(
+                    "Сообщить о проблемы",
+                    style: TextStyle(
+                        color: Color(0xff313B6C),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 5, right: 15),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FutureBuilder(
+                          future: getCategory(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? CategoryList(categories: snapshot.data)
+                                : Center(
+                                    child: Text("Loading"),
+                                  );
+                          }),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: AdvWidget(),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Новости Сегодня",
+                            style: TextStyle(
+                                color: Color(0xff313B6C),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return NewsScreen();
+                                  },
+                                ),
+                              );
+                            },
+                            child: Text(
+                              "Смотреть все",
+                              style: TextStyle(
+                                  color: Color(0xff66676C),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 20),
+                        child: FutureBuilder(
+                            future: getNews(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) print(snapshot.error);
+                              return snapshot.hasData
+                                  ? NewsList(
+                                      news: snapshot.data,
+                                      breaking: true,
+                                    )
+                                  : Center(
+                                      child: Text("Нет новостей"),
+                                    );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+              bottom: 0,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                color: Theme.of(context).primaryColor,
+                height: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  "Приложения работает в тестовом режиме",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
+              )),
+        ],
       ),
     );
   }
-}
-
-class NewsFeed {
-  final int count;
-  final String prev;
-  final String next;
-  final List<Map<String, dynamic>> result;
-
-  NewsFeed({
-    this.result,
-    this.count,
-    this.next,
-    this.prev,
-  });
-
-  factory NewsFeed.fromJson(Map<String, dynamic> json) => NewsFeed(
-        count: json["count"],
-        next: json["next"],
-        prev: json["prev"],
-        result: json["result"],
-      );
 }

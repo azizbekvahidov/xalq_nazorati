@@ -34,7 +34,9 @@ dependencies:
   bottom_navy_bar: ^5.4.0
   group_radio_button: ^1.0.1
   dotted_border: ^1.0.6
-  custom_navigator: ^0.2.0  
+  custom_navigator: 
+    git:
+        url: https://github.com/kjawadDeveloper/Custom-navigator.git 
   permission_handler: ^5.0.1+1
   shared_preferences: ^0.5.10
   easy_localization: ^2.3.3
@@ -51,6 +53,15 @@ dependencies:
   url_launcher: ^5.7.5
   path_provider: ^1.6.7
   fluttertoast: ^7.1.1
+  # library for scanner
+  flutter_mrz_scanner: ^1.0.0+3
+  camera: ^0.5.8+9
+  image: ^2.1.18
+  firebase_ml_vision: ^0.9.7
+  firebase_core: ^0.5.0+1
+  flutter_typeahead: ^1.8.8
+  yandex_mapkit: 
+    path: ./yandex_mapkit
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -63,6 +74,7 @@ dev_dependencies:
     sdk: flutter
   intl_translation: ^0.17.1
   flutter_launcher_icons: "^0.7.0"
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -141,6 +153,8 @@ flutter:
     
     - assets/img/send_icon.svg
     - assets/img/file_icon.svg
+    - assets/img/qr-code-scan.svg
+    - flutter_assets/placemark.png
 
   #   - images/a_dot_ham.jpeg
 

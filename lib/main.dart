@@ -20,8 +20,11 @@ import './screen/register/register_phone_screen.dart';
 
 import './screen/login_screen.dart';
 import './screen/lang_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   // WidgetsFlutterBinding.ensureInitialized();
   // AppLanguage appLanguage = AppLanguage();
   // await appLanguage.fetchLocale();
@@ -116,11 +119,11 @@ class _MyHomePageState extends State<MyHomePage> {
     String stringValue = prefs.getString('lang');
     String countryValue = prefs.getString('country');
     String token = prefs.getString('userToken');
-    setState(() {
-      _lang = stringValue;
-      _token = token;
-      _country = countryValue;
-    });
+    // setState(() {
+    _lang = stringValue;
+    _token = token;
+    _country = countryValue;
+    // });
   }
 
   Future getUser() async {
@@ -145,11 +148,11 @@ class _MyHomePageState extends State<MyHomePage> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LangScreen()));
       } else {
+        globals.lang = _lang;
+        globals.country = _country;
         if (_token == null) {
           Navigator.pushReplacementNamed(context, LoginScreen.routeName);
         } else {
-          globals.lang = _lang;
-          globals.country = _country;
           globals.token = _token;
 
           Navigator.pushReplacementNamed(context, HomePage.routeName);

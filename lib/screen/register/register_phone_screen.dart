@@ -4,12 +4,10 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
-import '../../widget/checkbox_custom.dart';
 import '../login_screen.dart';
 import './register_verify_screen.dart';
 import '../../widget/default_button.dart';
@@ -36,7 +34,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     if (!isRegister && phone != "") {
       try {
         String url =
-            '${globals.site_link}/${globals.lang}/api/users/signup-code';
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-code';
         Map map = {"phone": phone};
         var r1 = await Requests.post(url, body: map);
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1085883665581-bel5c2l5tnae36hgbfujgmcnfopgh03o.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1085883665581-bel5c2l5tnae36hgbfujgmcnfopgh03o</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAGbgYm0ls1FE5Z_Z3vkWAnMV521eVK9QM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1085883665581</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.xalq-nazorati</string>
+	<key>PROJECT_ID</key>
+	<string>xalq-nazorati</string>
+	<key>STORAGE_BUCKET</key>
+	<string>xalq-nazorati.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1085883665581:ios:1eb967b1d2377ea100ca24</string>
+	<key>DATABASE_URL</key>
+	<string>https://xalq-nazorati.firebaseio.com</string>
+</dict>
+</plist>

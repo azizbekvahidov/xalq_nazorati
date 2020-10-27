@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -8,9 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'register/register_phone_screen.dart';
 import '../widget/input/pass_input.dart';
@@ -35,7 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     String pass = passController.text;
-    var url = '${globals.site_link}/${globals.lang}/api/users/signin';
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signin';
     Map map = {"phone": phone, "password": pass};
     var response = await Requests.post(
       url,

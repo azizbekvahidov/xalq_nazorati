@@ -37,6 +37,7 @@ class _MainProfileState extends State<MainProfile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);
     prefs.setString('country', _country);
+    globals.lang = lang;
     setState(() {
       _lang = lang;
       _country = country;

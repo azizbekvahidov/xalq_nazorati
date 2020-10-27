@@ -74,7 +74,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SvgPicture.asset("assets/img/newsLocate.svg"),
+                        SvgPicture.network(widget.img),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(

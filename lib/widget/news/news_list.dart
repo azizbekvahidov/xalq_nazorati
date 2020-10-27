@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/widget/news/news_item_planned.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/news/news_item_urgent.dart';
 
 class NewsList extends StatefulWidget {
-  final List<News> news;
+  final List news;
   final bool breaking;
   NewsList({Key key, this.news, this.breaking}) : super(key: key);
   @override
@@ -21,21 +21,21 @@ class _NewsListState extends State<NewsList> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: widget.news.length,
         itemBuilder: (content, index) {
-          String title = widget.news[index].title_ru;
+          String title = widget.news[index]["api_title".tr().toString()];
           return widget.breaking
               ? NewsItemUrgent(
-                  widget.news[index].id,
+                  widget.news[index]["id"],
                   title,
-                  widget.news[index].location,
-                  widget.news[index].publishDate,
-                  widget.news[index].img)
+                  widget.news[index]["location"],
+                  widget.news[index]["publishDate"],
+                  widget.news[index]["img"])
               : NewsItemPlanned(
-                  widget.news[index].id,
+                  widget.news[index]["id"],
                   title,
-                  widget.news[index].location,
-                  widget.news[index].publishDate,
-                  widget.news[index].img,
-                  widget.news[index].content_ru);
+                  widget.news[index]["location"],
+                  widget.news[index]["publishDate"],
+                  widget.news[index]["img"],
+                  widget.news[index]["api_content".tr().toString()]);
         },
       ),
     );

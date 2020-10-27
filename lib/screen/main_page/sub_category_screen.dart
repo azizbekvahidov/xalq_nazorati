@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import 'dart:convert';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:http/http.dart' as http;
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/sub_category.dart';
 import 'package:xalq_nazorati/widget/category/sub_sub_categories_list.dart';
 import '../../widget/app_bar/custom_appBar.dart';
-import '../../widget/category/sub_category_list.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
   final String title;
   final int id;
+  final int categoryId;
 
-  SubCategoryScreen(this.title, this.id);
+  SubCategoryScreen(this.title, this.id, this.categoryId);
 
   @override
   _SubCategoryScreenState createState() => _SubCategoryScreenState();
 }
 
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
-  Future<List<SubCategories>> getCategory() async {
+  Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/subsubcategories/${widget.id}';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
-    print(response);
-    return parseCategory(reply);
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+
+    var reply = response.json();
+
+    return reply;
   }
 
   List<SubCategories> parseCategory(String responseBody) {
@@ -79,7 +80,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.hasError) print(snapshot.error);
                           return snapshot.hasData
-                              ? SubSubCategoriesList(categories: snapshot.data)
+                              ? SubSubCategoriesList(
+                                  categories: snapshot.data,
+                                  categoryId: widget.categoryId)
                               : Center(
                                   child: Text("Loading"),
                                 );

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1085883665581",
+    "firebase_url": "https://xalq-nazorati.firebaseio.com",
+    "project_id": "xalq-nazorati",
+    "storage_bucket": "xalq-nazorati.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085883665581:android:988e8cb4248b23e500ca24",
+        "android_client_info": {
+          "package_name": "com.example.xalq_nazorati"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085883665581-mjifvl67t9lfmdljmpcotau1ebdbsci5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCywIxd0fRenX4jAHTmgo8jSS4zrFhijfo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085883665581-mjifvl67t9lfmdljmpcotau1ebdbsci5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

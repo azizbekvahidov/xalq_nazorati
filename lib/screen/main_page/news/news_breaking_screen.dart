@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/news.dart';
@@ -13,13 +14,14 @@ class NewsBreakingScreen extends StatefulWidget {
 class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
   Future<List<News>> getNews() async {
     var url = '${globals.api_link}/news?category=breaking';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
-    var temp = json.decode(reply);
-    var some = temp.values.toList();
-    return parseNews(json.encode(some[3]));
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+
+    var reply = response.json();
+
+    return reply["result"];
   }
 
   List<News> parseNews(var responseBody) {
@@ -38,7 +40,7 @@ class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
             return snapshot.hasData
                 ? NewsList(news: snapshot.data, breaking: true)
                 : Center(
-                    child: Text("Loading"),
+                    child: Text("Нет новостей"),
                   );
           }),
     );

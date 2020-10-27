@@ -9,6 +9,7 @@ class SubCategoryCardList extends StatelessWidget {
   final String title;
   final int id;
   final bool divider;
+  final int categoryId;
   FutureOr onGoBack(dynamic value) {
     clearImages();
   }
@@ -22,7 +23,7 @@ class SubCategoryCardList extends StatelessWidget {
     });
   }
 
-  SubCategoryCardList(this.id, this.title, this.divider);
+  SubCategoryCardList(this.id, this.title, this.categoryId, this.divider);
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -68,7 +69,7 @@ class SubCategoryCardList extends StatelessWidget {
               Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return ProblemDesc(id, title);
+                    return ProblemDesc(id, title, categoryId);
                   },
                 ),
                 // ModalRoute.withName(HomePage.routeName),

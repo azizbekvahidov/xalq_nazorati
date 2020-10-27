@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
-import 'package:http/http.dart' as http;
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/methods/http_get.dart';
 import '../../screen/register/pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
@@ -84,7 +81,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
     if (!isSend && code != "") {
       try {
         String url =
-            '${globals.site_link}/${globals.lang}/api/users/signup-confirm';
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
         Map map = {"code": int.parse(code)};
         // String url = '${globals.api_link}/users/get-phone';
         var r1 = await Requests.post(url,
@@ -170,7 +167,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "Введите 5 значный код, который мы отправили на номер ${widget.phoneView}",
+                                "Введите 6 значный код, который мы отправили на номер ${widget.phoneView}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,

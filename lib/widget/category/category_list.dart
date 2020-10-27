@@ -1,13 +1,11 @@
 import 'dart:convert' show utf8;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/parser.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:xalq_nazorati/models/category.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/category/category_card.dart';
 
 class CategoryList extends StatefulWidget {
-  final List<Categories> categories;
+  final List categories;
   CategoryList({Key key, this.categories}) : super(key: key);
 
   @override
@@ -31,9 +29,10 @@ class _CategoryListState extends State<CategoryList> {
         ),
         itemCount: widget.categories.length,
         itemBuilder: (context, index) {
-          var encode = utf8.encode(widget.categories[index].title_ru);
-          return CategoryCard(widget.categories[index].id, utf8.decode(encode),
-              "${widget.categories[index].svg}");
+          var encode = utf8
+              .encode(widget.categories[index]["api_title".tr().toString()]);
+          return CategoryCard(widget.categories[index]["id"],
+              utf8.decode(encode), "${widget.categories[index]["svg"]}");
         },
       ),
     );

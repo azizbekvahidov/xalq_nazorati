@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/screen/register/android_camera.dart';
+import 'package:xalq_nazorati/screen/register/camera_page.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import './pas_recognized_screen.dart';
 import '../../widget/default_button.dart';
@@ -29,7 +33,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
     String series = seriesController.text;
     if (_value && pnfl != "" && series != "") {
       String url =
-          '${globals.site_link}/${globals.lang}/api/users/data-from-cep';
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
       Map map = {"pinpp": pnfl, 'document': series};
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,
@@ -153,51 +157,76 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                         ),
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             width: (mediaQuery.size.width -
                                     mediaQuery.padding.left -
                                     mediaQuery.padding.right) *
-                                0.77,
-                            child: TextField(
-                              controller: pnflController,
-                              maxLines: 1,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                contentPadding:
-                                    EdgeInsets.only(top: 0, bottom: 9),
-                                suffix: GestureDetector(
-                                  onTap: () {
-                                    createAlertDialog(context);
-                                  },
-                                  child: Container(
-                                    width: 19,
-                                    height: 19,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(19),
-                                      border: Border.all(
-                                          color:
-                                              Color.fromRGBO(49, 59, 108, 0.5),
-                                          style: BorderStyle.solid,
-                                          width: 2),
-                                    ),
-                                    child: Text(
-                                      "?",
-                                      style: TextStyle(
-                                        fontFamily: "Gilroy",
-                                        fontSize: 13,
-                                        color: Color.fromRGBO(49, 59, 108, 0.5),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                0.789,
+                            child: Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                TextField(
+                                  controller: pnflController,
+                                  maxLines: 1,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.only(top: 0, bottom: 9),
+                                    border: InputBorder.none,
+                                    hintText: "Введите ПНФЛ",
+                                    hintStyle:
+                                        Theme.of(context).textTheme.display1,
                                   ),
                                 ),
-                                border: InputBorder.none,
-                                hintText: "Введите ПНФЛ",
-                                hintStyle: Theme.of(context).textTheme.display1,
-                              ),
+                                InkWell(
+                                  onTap: () async {
+                                    // createAlertDialog(context);
+                                    final res = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Platform.isAndroid
+                                                    ? AndroidCameraPage()
+                                                    : CameraScreen()));
+                                    if (res != null) {
+                                      setState(() {
+                                        pnflController.text =
+                                            res.personalNumber;
+                                        seriesController.text =
+                                            res.documentNumber;
+                                      });
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                      "assets/img/qr-code-scan.svg"),
+                                  // Container(
+                                  //     width: 19,
+                                  //     height: 19,
+                                  //     alignment: Alignment.center,
+                                  //     decoration: BoxDecoration(
+                                  //       borderRadius: BorderRadius.circular(19),
+                                  //       border: Border.all(
+                                  //           color: Color.fromRGBO(
+                                  //               49, 59, 108, 0.5),
+                                  //           style: BorderStyle.solid,
+                                  //           width: 2),
+                                  //     ),
+                                  //     child:
+                                  // Text(
+                                  //   "?",
+                                  //   style: TextStyle(
+                                  //     fontFamily: "Gilroy",
+                                  //     fontSize: 13,
+                                  //     color: Color.fromRGBO(49, 59, 108, 0.5),
+                                  //     fontWeight: FontWeight.bold,
+                                  //   ),
+                                  // ),
+                                  // ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

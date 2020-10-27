@@ -15,7 +15,8 @@ class ProblemDesc extends StatefulWidget {
   static const routeName = "/problem-desc";
   final int id;
   final String title;
-  ProblemDesc(this.id, this.title);
+  final int categoryId;
+  ProblemDesc(this.id, this.title, this.categoryId);
   @override
   _ProblemDescState createState() => _ProblemDescState();
 }
@@ -178,8 +179,8 @@ class _ProblemDescState extends State<ProblemDesc> {
                               : DefaultButton("Продолжить", () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) {
-                                    return ProblemLocate(
-                                        descController.text, widget.id);
+                                    return ProblemLocate(descController.text,
+                                        widget.id, widget.categoryId);
                                   }));
                                 }, Theme.of(context).primaryColor),
                         ),

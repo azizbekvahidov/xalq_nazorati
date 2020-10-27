@@ -20,6 +20,112 @@ class _LangScreenState extends State<LangScreen> {
     prefs.setString('country', country);
   }
 
+  createAlertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Builder(builder: (context) {
+            // Get available height and width of the build area of this widget. Make a choice depending on the size.
+            var height = MediaQuery.of(context).size.height;
+            var width = MediaQuery.of(context).size.width;
+
+            return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                height: height,
+                width: width,
+                child: Column(
+                  children: [
+                    Text(
+                      "Портал Xalq Nazorati",
+                      style: TextStyle(
+                        fontFamily: "Gilroy",
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff313B6C),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
+                        style: TextStyle(
+                          fontFamily: "Gilroy",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Улучшим город вместе",
+                        style: TextStyle(
+                          fontFamily: "Gilroy",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff313B6C),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
+                        style: TextStyle(
+                          fontFamily: "Gilroy",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
+                        style: TextStyle(
+                          fontFamily: "Gilroy",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
+                        style: TextStyle(
+                          fontFamily: "Gilroy",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 50),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: Container(
+                          child: SvgPicture.asset("assets/img/Frame.svg")),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,18 +244,23 @@ class _LangScreenState extends State<LangScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        height: 30,
-                        width: 30,
-                        margin: EdgeInsets.only(bottom: 10),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xff66676C),
-                        ),
-                        child: Text(
-                          "?",
-                          style: TextStyle(color: Colors.white),
+                      InkWell(
+                        onTap: () {
+                          createAlertDialog(context);
+                        },
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          margin: EdgeInsets.only(bottom: 10),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Color(0xff66676C),
+                          ),
+                          child: Text(
+                            "?",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                       Text("О приложении"),

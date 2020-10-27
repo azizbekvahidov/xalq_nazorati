@@ -8,6 +8,12 @@
     "confirmed":"подтверждено",
     "not confirmed": "решение неудовлетворительно",
     "denied": "отказано",
-    "closed": "закрыто модератором"
+    "closed": "закрыто модератором",
+    "ru": "ru",
+    "uz": "uz",
+    "en": "oz",
+    "api_title": "title_oz",
+    "api_content": "content_oz"
+
 
   }

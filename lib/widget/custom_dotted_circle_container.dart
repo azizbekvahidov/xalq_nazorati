@@ -66,7 +66,6 @@ class _CustomDottedCircleContainerState
   @override
   Widget build(BuildContext context) {
     File _file = globals.images[widget.img];
-    print("${widget.img} => ${globals.images[widget.img]}");
     return InkWell(
       onTap: () {
         showModalBottomSheet(

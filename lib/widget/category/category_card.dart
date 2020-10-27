@@ -20,9 +20,6 @@ class _CategoryCardState extends State<CategoryCard> {
   @override
   void initState() {
     super.initState();
-    HttpClient client = new HttpClient();
-    client.badCertificateCallback =
-        ((X509Certificate cert, String host, int port) => true);
   }
 
   @override

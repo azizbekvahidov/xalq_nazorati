@@ -1,15 +1,11 @@
 import 'dart:convert';
 
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
-import 'package:xalq_nazorati/models/user.dart';
-import 'package:xalq_nazorati/screen/idea/main_idea_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
-import 'chat/main_chat.dart';
 import 'profile/main_profile.dart';
 import 'support/main_support.dart';
 import 'main_page/main_page.dart';

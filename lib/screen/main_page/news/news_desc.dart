@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/news.dart';
@@ -19,12 +20,14 @@ class NewsDesc extends StatefulWidget {
 class _NewsDescState extends State<NewsDesc> {
   Future<News> getNews() async {
     var url = '${globals.api_link}/news/${widget.id}';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
-    Map<String, dynamic> news = jsonDecode(reply);
-    return News.fromJson(news);
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+
+    var reply = response.json();
+
+    return reply;
   }
 
   @override
@@ -51,9 +54,9 @@ class _NewsDescState extends State<NewsDesc> {
               String dayOfWeek;
               if (snapshot.hasData) {
                 _publishDate =
-                    formatter.format(DateTime.parse(data.publishDate));
-                dayOfWeek =
-                    DateFormat('EEEE').format(DateTime.parse(data.publishDate));
+                    formatter.format(DateTime.parse(data["publishDate"]));
+                dayOfWeek = DateFormat('EEEE')
+                    .format(DateTime.parse(data["publishDate"]));
               }
               return snapshot.hasData
                   ? Container(
@@ -88,7 +91,7 @@ class _NewsDescState extends State<NewsDesc> {
                                   padding: EdgeInsets.only(left: 10),
                                   width: cWidth - 75,
                                   child: Text(
-                                    data.title_ru,
+                                    data["api_title".tr().toString()],
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -113,10 +116,10 @@ class _NewsDescState extends State<NewsDesc> {
                             width: cWidth,
                             child: FittedBox(
                               fit: BoxFit.contain,
-                              child: Image.asset("assets/img/newsPic.jpg"),
+                              child: Image.network(data.img),
                             ),
                           ),
-                          Html(data: data.content_ru),
+                          Html(data: data["api_content".tr().toString()]),
                           // Center(
                           //   child: Padding(
                           //     padding:

@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/sub_category.dart';
 import 'package:xalq_nazorati/widget/category/sub_categories_list.dart';
-import '../../screen/main_page/sub_category_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
-import '../../widget/category/category_card_list.dart';
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
@@ -22,14 +19,16 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with AutomaticKeepAliveClientMixin {
-  Future<List<SubCategories>> getCategory() async {
+  Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/subcategories/${widget.id}';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
-    print(response);
-    return parseCategory(reply);
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+
+    var reply = response.json();
+
+    return reply;
   }
 
   List<SubCategories> parseCategory(String responseBody) {
