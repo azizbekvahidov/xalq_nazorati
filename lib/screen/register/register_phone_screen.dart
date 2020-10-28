@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
+import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/rule_page.dart';
 import '../login_screen.dart';
@@ -36,40 +38,50 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
         String url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-code';
         Map map = {"phone": phone};
-        var r1 = await Requests.post(url, body: map);
 
-        if (r1.statusCode == 200) {
-          dynamic json = r1.json();
-          r1.raiseForStatus();
-          print(r1.content());
-          isRegister = true;
-          phoneWiew = json["phone_view"];
-          if (isRegister && _value) {
-            setState(() {
-              phoneController.text = "";
-              _value = !_value;
-            });
-            isRegister = false;
-            Navigator.of(context).push(MaterialPageRoute(
-                settings:
-                    const RouteSettings(name: RegisterVerifyScreen.routeName),
-                builder: (context) => RegisterVerifyScreen(
-                      phoneView: phoneWiew,
-                      phone: phone,
-                    )));
-          }
-        } else {
-          dynamic json = r1.json();
-          print(json['detail']);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
-          print(json);
+        var status = await Permission.sms.status;
+        if (status.isUndetermined || status.isDenied) {
+          Permission.sms.request().then((value) async {
+            status = await Permission.sms.status;
+            if (status.isGranted) {
+              var r1 = await Requests.post(url, body: map);
+
+              if (r1.statusCode == 200) {
+                dynamic json = r1.json();
+                r1.raiseForStatus();
+                print(r1.content());
+                isRegister = true;
+                phoneWiew = json["phone_view"];
+                if (isRegister && _value) {
+                  setState(() {
+                    phoneController.text = "";
+                    _value = !_value;
+                  });
+                  isRegister = false;
+                  Navigator.of(context).push(MaterialPageRoute(
+                      settings: const RouteSettings(
+                          name: RegisterVerifyScreen.routeName),
+                      builder: (context) => RegisterVerifyScreen(
+                            phoneView: phoneWiew,
+                            phone: phone,
+                          )));
+                }
+              } else {
+                dynamic json = r1.json();
+                print(json['detail']);
+                Fluttertoast.showToast(
+                    msg: json['detail'],
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Colors.grey,
+                    textColor: Colors.white,
+                    fontSize: 15.0);
+                print(json);
+              }
+            }
+          });
+          // We didn't ask for permission yet.
         }
       } catch (e) {
         print(e);

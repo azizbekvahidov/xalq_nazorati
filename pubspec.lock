@@ -763,6 +763,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  sms:
+    dependency: "direct main"
+    description:
+      name: sms
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.4"
   source_span:
     dependency: transitive
     description:
@@ -955,9 +962,9 @@ packages:
   yandex_mapkit:
     dependency: "direct main"
     description:
-      path: yandex_mapkit
-      relative: true
-    source: path
+      name: yandex_mapkit
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.4.0"
 sdks:
   dart: ">=2.10.0-110 <2.11.0"
