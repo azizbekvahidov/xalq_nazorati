@@ -107,7 +107,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
     }
   }
 
-  getAddressFromLatLng(Point val) async {
+  getAddressFromLatLng(var val) async {
     try {
       String lat = "${val.latitude}".substring(0, 9);
       String long = "${val.longitude}".substring(0, 9);
@@ -256,6 +256,8 @@ class _ProblemLocateState extends State<ProblemLocate> {
     var currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
     _setLocation(LatLng(currentLocation.latitude, currentLocation.longitude));
+    getAddressFromLatLng(
+        LatLng(currentLocation.latitude, currentLocation.longitude));
   }
 
   void _setLocation(var coords) async {

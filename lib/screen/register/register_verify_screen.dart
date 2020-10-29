@@ -29,13 +29,6 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   final codeController = TextEditingController();
   int _start = 180;
 
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-    getSMS();
-  }
-
   void getSMS() async {
     // Create SMS Receiver Listener
     SmsReceiver receiver = new SmsReceiver();
@@ -50,6 +43,13 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
       print(msg.state);
       codeController.text = msg.body;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+    getSMS();
   }
 
   @override
@@ -88,6 +88,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
 
       _start = 180;
       startTimer();
+      // _startListening();
       // print(responseBody["detail"]);
     }
   }
