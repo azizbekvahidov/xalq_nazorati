@@ -3,7 +3,7 @@ import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/widget/problems/problem_card.dart';
 
 class ProblemList extends StatefulWidget {
-  final List<Problems> data;
+  final List data;
   final String title;
   final String status;
   final Map<int, bool> alertList;
@@ -26,7 +26,7 @@ class _ProblemListState extends State<ProblemList> {
           status: widget.status,
           title: widget.title,
           data: widget.data[index],
-          alert: _list[widget.data[index].id],
+          alert: _list[widget.data[index]["id"]],
         );
       },
     );

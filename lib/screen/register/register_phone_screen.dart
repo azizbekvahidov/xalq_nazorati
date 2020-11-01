@@ -168,7 +168,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Регистрация",
+                                "sign_ups".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -180,7 +180,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "Зарегистрируйтесь чтобы получить онлайн консультацию",
+                                "reg_title_desc".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -213,7 +213,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MainText("Номер мобильного телефона"),
+                          MainText("tel_number_title".tr().toString()),
                           PhoneInput(phoneController),
                           Padding(
                             padding: EdgeInsets.only(top: 10),
@@ -261,9 +261,11 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Я ознакомился и согласен с условиями ",
+                                      "reg_offer_aggreement_start"
+                                          .tr()
+                                          .toString(),
                                       style: TextStyle(
-                                        fontFamily: "Gilroy",
+                                        fontFamily: globals.font,
                                         fontSize: 13,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -275,14 +277,25 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                             context, RulePage.routeName);
                                       },
                                       child: new Text(
-                                        "публичной оферты",
+                                        "offer".tr().toString(),
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
-                                          fontFamily: "Gilroy",
+                                          fontFamily: globals.font,
                                           fontSize: 13,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.normal,
                                         ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "reg_offer_aggreement_end"
+                                          .tr()
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
                                       ),
                                     ),
                                   ],
@@ -302,12 +315,12 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                               children: [
                                 !_value
                                     ? DefaultButton(
-                                        "Зарегистрироваться",
+                                        "sign_up".tr().toString(),
                                         () {},
                                         Color(0xffB2B7D0),
                                       )
                                     : DefaultButton(
-                                        "Зарегистрироваться",
+                                        "sign_up".tr().toString(),
                                         () {
                                           getCode();
                                           // Navigator.of(context).pushNamed(
@@ -320,9 +333,9 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "У вас уже есть аккаунт?",
+                                      "accaunt_question2".tr().toString(),
                                       style: TextStyle(
-                                        fontFamily: "Gilroy",
+                                        fontFamily: globals.font,
                                         fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -337,9 +350,9 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                                     false);
                                       },
                                       child: Text(
-                                        "Войти",
+                                        "log_in".tr().toString(),
                                         style: TextStyle(
-                                          fontFamily: "Gilroy",
+                                          fontFamily: globals.font,
                                           fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,

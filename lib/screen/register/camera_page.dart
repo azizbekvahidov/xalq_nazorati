@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mrz_scanner/flutter_mrz_scanner.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -15,6 +18,54 @@ class _CameraScreenState extends State<CameraScreen> {
   MRZController controller;
 
   bool isParsed = false;
+
+  createAlertDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Column(
+              children: [
+                Text(
+                  "How_to_know_pnfl".tr().toString(),
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  width: double.infinity,
+                  child: Container(
+                      child: SvgPicture.asset("assets/img/Passport.svg")),
+                ),
+                FlatButton(
+                  child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(
+                          style: BorderStyle.solid,
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        "clese".tr().toString(),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      )),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                )
+              ],
+            ),
+          );
+        });
+  }
 
   void _onControllerCreated(MRZController controller) {
     this.controller = controller;
@@ -63,7 +114,7 @@ class _CameraScreenState extends State<CameraScreen> {
           ),
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             CustomAppBar(
-              title: 'Сканирование ПИНФЛ',
+              title: 'pnfl_scan'.tr().toString(),
               textColor: Colors.white,
               backgroundColor: Colors.transparent,
             ),
@@ -77,8 +128,7 @@ class _CameraScreenState extends State<CameraScreen> {
             ),
             Padding(
               padding: const EdgeInsets.all(38),
-              child: Text(
-                  'Поместите ваш документ в рамку.\nУбедитесь, что все данные четко видны',
+              child: Text("camera_put_data_right".tr().toString(),
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme

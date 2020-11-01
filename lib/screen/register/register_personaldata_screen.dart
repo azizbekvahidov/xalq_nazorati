@@ -105,7 +105,7 @@ class _RegisterPersonalDataScreenState
   @override
   Widget build(BuildContext context) {
     var appbar = CustomAppBar(
-      title: "Подтверждение данных",
+      title: "confirm_data".tr().toString(),
     );
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
@@ -128,7 +128,7 @@ class _RegisterPersonalDataScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        MainText("Адрес фактического проживания"),
+                        MainText("address_title".tr().toString()),
                         Container(
                           padding: EdgeInsets.symmetric(
                               vertical: 10, horizontal: 20),
@@ -157,7 +157,8 @@ class _RegisterPersonalDataScreenState
                                       controller: addressController,
                                       autofocus: true,
                                       decoration: InputDecoration.collapsed(
-                                        hintText: "Введите адрес",
+                                        hintText:
+                                            "address_hint".tr().toString(),
                                         hintStyle: Theme.of(context)
                                             .textTheme
                                             .display1,
@@ -181,17 +182,19 @@ class _RegisterPersonalDataScreenState
                             ],
                           ),
                         ),
-                        MainText("Электронная почта"),
+                        MainText("email_title".tr().toString()),
                         DefaultInput(
-                          hint: "Введите адрес почты",
+                          hint: "email_hint".tr().toString(),
                           textController: emailController,
                           notifyParent: () {},
                           inputType: TextInputType.emailAddress,
                         ),
-                        MainText("Пароль"),
-                        PassInput("Придумайте пароль", passController),
-                        MainText("Подтвердите пароль"),
-                        PassInput("Подтвердите пароль", repassController),
+                        MainText("pass_title".tr().toString()),
+                        PassInput("come_up_pass_hint".tr().toString(),
+                            passController),
+                        MainText("confirm_pass_title".tr().toString()),
+                        PassInput("confirm_pass_hint".tr().toString(),
+                            repassController),
                         Padding(
                           padding: EdgeInsets.only(top: 10),
                         ),
@@ -237,7 +240,7 @@ class _RegisterPersonalDataScreenState
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Я принимаю условия ",
+                                    "agree_agreements_start".tr().toString(),
                                     style: TextStyle(
                                       fontSize: dWith < 392 ? 10 : 12,
                                       color: Colors.black,
@@ -250,14 +253,22 @@ class _RegisterPersonalDataScreenState
                                           .pushNamed(RulePage.routeName);
                                     },
                                     child: Text(
-                                      "пользовательского соглашения",
+                                      "agreement".tr().toString(),
                                       style: TextStyle(
                                         fontSize: dWith < 392 ? 10 : 12,
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  Text(
+                                    "agree_agreements_end".tr().toString(),
+                                    style: TextStyle(
+                                      fontSize: dWith < 392 ? 10 : 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -277,11 +288,11 @@ class _RegisterPersonalDataScreenState
                             alignment: FractionalOffset.bottomCenter,
                             child: !_value
                                 ? DefaultButton(
-                                    "Продолжить",
+                                    "continue".tr().toString(),
                                     () {},
                                     Color(0xffB2B7D0),
                                   )
-                                : DefaultButton("Продолжить", () {
+                                : DefaultButton("continue".tr().toString(), () {
                                     sendData().then((value) {
                                       setState(() {
                                         _value = !_value;

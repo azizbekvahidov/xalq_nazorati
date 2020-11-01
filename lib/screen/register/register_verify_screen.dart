@@ -82,7 +82,8 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
 
   void resendCode() async {
     if (_start == 0) {
-      var url = 'https://new.xalqnazorati.uz/ru/api/users/retry-signup-code';
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/retry-signup-code';
       var r1 = await Requests.post(url, verify: false, persistCookies: true);
       r1.raiseForStatus();
 
@@ -174,7 +175,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "Проверка",
+                                "check".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -186,7 +187,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "Введите 6 значный код, который мы отправили на номер ${widget.phoneView}",
+                                "${"sended_code_desc_start".tr().toString()}${widget.phoneView}${"sended_code_desc_end".tr().toString()}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -219,9 +220,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MainText("Код подтверждения"),
+                          MainText("check_code_title".tr().toString()),
                           DefaultInput(
-                            hint: "Введите код",
+                            hint: "check_code_hint".tr().toString(),
                             textController: codeController,
                             notifyParent: () {},
                             inputType: TextInputType.number,
@@ -241,7 +242,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                     Text(
                                       _showTime,
                                       style: TextStyle(
-                                        fontFamily: "Gilroy",
+                                        fontFamily: globals.font,
                                         fontSize: 18,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -263,7 +264,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 DefaultButton(
-                                  "Продолжить",
+                                  "continue".tr().toString(),
                                   () {
                                     verify();
                                   },
@@ -273,9 +274,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "Не получили код?",
+                                      "dont_get_code".tr().toString(),
                                       style: TextStyle(
-                                        fontFamily: "Gilroy",
+                                        fontFamily: globals.font,
                                         fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -286,9 +287,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                         resendCode();
                                       },
                                       child: Text(
-                                        "Отправить снова",
+                                        "resend".tr().toString(),
                                         style: TextStyle(
-                                          fontFamily: "Gilroy",
+                                          fontFamily: globals.font,
                                           fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,

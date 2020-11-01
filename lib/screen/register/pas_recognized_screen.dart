@@ -26,7 +26,7 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
-      appBar: CustomAppBar(title: "Подтверждение данных"),
+      appBar: CustomAppBar(title: "proof_data".tr().toString()),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Container(
@@ -45,11 +45,13 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CardList("Имя", user["first_name"]),
-                    CardList("Фамилия", user["last_name"]),
-                    CardList("Отчество", user["patronymic"]),
-                    CardList("Дата рождения",
+                    CardList("name".tr().toString(), user["first_name"]),
+                    CardList("surname".tr().toString(), user["last_name"]),
+                    CardList("lastname".tr().toString(), user["patronymic"]),
+                    CardList("birthday".tr().toString(),
                         formatter.format(DateTime.parse(user["birth_date"]))),
+                    CardList("gender".tr().toString(),
+                        "${user["gender"]}".tr().toString()),
                   ],
                 ),
               ),
@@ -61,7 +63,7 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
                       Positioned(
                         child: Align(
                           alignment: FractionalOffset.bottomCenter,
-                          child: DefaultButton("Продолжить", () {
+                          child: DefaultButton("continue".tr().toString(), () {
                             Navigator.of(context).pushNamed(
                                 RegisterPersonalDataScreen.routeName);
                           }, Theme.of(context).primaryColor),

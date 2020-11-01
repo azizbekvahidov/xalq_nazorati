@@ -75,7 +75,7 @@ class _IdeaCardWidgetState extends State<IdeaCardWidget> {
                       "${widget.data.id} ${widget.data.title_ru}",
                       style: TextStyle(
                         color: Color(0xff323F4B),
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
@@ -87,7 +87,7 @@ class _IdeaCardWidgetState extends State<IdeaCardWidget> {
                         maxLines: 2,
                         style: TextStyle(
                           color: Color(0xff7B8794),
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
                         ),
@@ -99,7 +99,7 @@ class _IdeaCardWidgetState extends State<IdeaCardWidget> {
                           text: "${widget.data.count_related_ideas}",
                           style: TextStyle(
                             color: Color(0xff323F4B),
-                            fontFamily: "Gilroy",
+                            fontFamily: globals.font,
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),
@@ -108,7 +108,7 @@ class _IdeaCardWidgetState extends State<IdeaCardWidget> {
                           text: " идей",
                           style: TextStyle(
                             color: Color(0xff323F4B),
-                            fontFamily: "Gilroy",
+                            fontFamily: globals.font,
                             fontSize: 13,
                             fontWeight: FontWeight.w300,
                           ),

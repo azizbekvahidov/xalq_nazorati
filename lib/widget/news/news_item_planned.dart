@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:html/parser.dart' show parse;
 import 'package:xalq_nazorati/screen/main_page/news/news_desc.dart';
 
@@ -69,7 +68,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                     maxLines: 3,
                     style: TextStyle(
                       color: Color(0xff313B6C),
-                      fontFamily: "Gilroy",
+                      fontFamily: globals.font,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -80,7 +79,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                       "${data[0]}",
                       maxLines: 3,
                       style: TextStyle(
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
@@ -94,7 +93,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                         Text(
                           "${_publishDate}",
                           style: TextStyle(
-                            fontFamily: "Gilroy",
+                            fontFamily: globals.font,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: Color(0xffB2B7D0),

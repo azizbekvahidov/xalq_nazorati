@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/problem_info.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/problems/problem_status-card.dart';
@@ -18,7 +20,7 @@ class ProblemStatusScreen extends StatefulWidget {
 
 class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
   Timer timer;
-  List<ProblemInfo> _data;
+  List _data;
 
   @override
   void initState() {
@@ -34,19 +36,19 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
     super.dispose();
   }
 
-  Future<List<ProblemInfo>> getStatus() async {
+  Future<List> getStatus() async {
     try {
       var url = '${globals.api_link}/problems/event-log/${widget.id}';
       HttpGet request = HttpGet();
-      var response = await request.methodGet(url);
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
 
-      String reply = await response.transform(utf8.decoder).join();
-      var temp = parseProblems(reply);
-      temp.firstWhere((element) {
-        checkMessage(element.id);
+      var reply = response.json();
+      reply.firstWhere((element) {
+        checkMessage(element["id"]);
         return true;
       });
-      return temp;
+      return reply;
     } catch (e) {
       print(e);
     }
@@ -57,17 +59,17 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
       var url =
           '${globals.api_link}/problems/refresh-event-log?problem_id=${widget.id}';
       HttpGet request = HttpGet();
-      var response = await request.methodGet(url);
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
 
-      String reply = await response.transform(utf8.decoder).join();
+      var reply = response.json();
 
-      var temp = parseProblems(reply);
-      temp.lastWhere((element) {
-        checkMessage(element.id);
+      reply.lastWhere((element) {
+        checkMessage(element["id"]);
         return true;
       });
       setState(() {
-        _data.add(temp[0]);
+        _data.add(reply[0]);
       });
     } catch (e) {
       print(e);
@@ -98,7 +100,7 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Статус проблемы",
+        title: "problem_status".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -111,9 +113,9 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
               Container(
                   padding: EdgeInsets.only(top: 25, left: 19),
                   child: Text(
-                    "Статус проблемы",
+                    "problem_status".tr().toString(),
                     style: TextStyle(
-                      fontFamily: "Gilroy",
+                      fontFamily: globals.font,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -130,7 +132,7 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
                         return snapshot.hasData
                             ? ProblemStatusCard(_data)
                             : Center(
-                                child: Text("Loading"),
+                                child: Text("Loading".tr().toString()),
                               );
                       },
                     )),

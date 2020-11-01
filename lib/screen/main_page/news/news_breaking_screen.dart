@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
 
@@ -40,7 +40,7 @@ class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
             return snapshot.hasData
                 ? NewsList(news: snapshot.data, breaking: true)
                 : Center(
-                    child: Text("Нет новостей"),
+                    child: Text("no_news".tr().toString()),
                   );
           }),
     );

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,7 +49,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   final extraController = TextEditingController();
   double _latitude = 0;
   double _longitude = 0;
-  bool _value = false;
+  bool _value = true;
   bool _valid = false;
   int _cnt = 40;
 
@@ -121,6 +121,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
           var res = temp[0]['GeoObject']['name'];
           addressController.text = res;
         }
+        checkChange();
         // List<Addresses> addresses = parseAddress(json["data"]);
         // return addresses;
       }
@@ -162,87 +163,88 @@ class _ProblemLocateState extends State<ProblemLocate> {
   }
 
   Future insertData() async {
-    if (_value) {
-      try {
-        Map<String, String> sendData = {
-          "subsubcategory": "${widget.subSubCategoryId}",
-          "content": widget.desc,
-          "address": addressController.text,
-          "latitude": "$_latitude".substring(0, 10),
-          "longitude": "$_longitude".substring(0, 10),
-          "note": extraController.text,
-        };
-        Map<String, String> headers = {
-          "Authorization": "token ${globals.token}",
-        };
-        var url = 'https://new.xalqnazorati.uz/ru/api/problems/problem';
-        HttpGet request = HttpGet();
-        HttpClientResponse response = await request.methodPost(sendData, url);
+    try {
+      Map<String, String> sendData = {
+        "subsubcategory": "${widget.subSubCategoryId}",
+        "content": widget.desc,
+        "address": addressController.text,
+        "latitude": "$_latitude".substring(0, 10),
+        "longitude": "$_longitude".substring(0, 10),
+        "note": extraController.text,
+      };
+      print(json.encode(sendData));
+      Map<String, String> headers = {
+        "Authorization": "token ${globals.token}",
+      };
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/problem';
+      HttpGet request = HttpGet();
+      var response = await Requests.post(url, headers: headers, body: sendData);
 
-        String reply = await response.transform(utf8.decoder).join();
+      if (response.statusCode == 201) {
+        var reply = response.json();
 
-        Map<String, dynamic> responseBody = json.decode(reply);
+        var url2 =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/upload';
 
-        if (response.statusCode == 201) {
-          var url2 = 'https://new.xalqnazorati.uz/ru/api/problems/upload';
-
-          var req = http.MultipartRequest("POST", Uri.parse(url2));
-          req.headers.addAll({"Authorization": "token ${globals.token}"});
-          req.fields.addAll({"problem_id": "${responseBody["problem"]['id']}"});
-          if (globals.images['file1'] != null) {
-            String _fileName = globals.images['file1'].path;
-            req.files.add(http.MultipartFile(
-                "file1",
-                globals.images['file1'].readAsBytes().asStream(),
-                globals.images['file1'].lengthSync(),
-                filename: _fileName.split('/').last));
-          }
-          if (globals.images['file2'] != null) {
-            String _fileName = globals.images['file2'].path;
-            req.files.add(http.MultipartFile(
-                "file2",
-                globals.images['file2'].readAsBytes().asStream(),
-                globals.images['file2'].lengthSync(),
-                filename: _fileName.split('/').last));
-          }
-          if (globals.images['file3'] != null) {
-            String _fileName = globals.images['file3'].path;
-            req.files.add(http.MultipartFile(
-                "file3",
-                globals.images['file3'].readAsBytes().asStream(),
-                globals.images['file3'].lengthSync(),
-                filename: _fileName.split('/').last));
-          }
-          if (globals.images['file4'] != null) {
-            String _fileName = globals.images['file4'].path;
-            req.files.add(http.MultipartFile(
-                "file4",
-                globals.images['file4'].readAsBytes().asStream(),
-                globals.images['file4'].lengthSync(),
-                filename: _fileName.split('/').last));
-          }
-          var res = await req.send();
-
-          if (res.statusCode == 201) {
-            globals.images['file1'] = null;
-            globals.images['file2'] = null;
-            globals.images['file3'] = null;
-            globals.images['file4'] = null;
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return ProblemFinish();
-                },
-              ),
-              ModalRoute.withName(MainPage.routeName),
-            );
-          }
-        } else {
-          print(responseBody["detail"]);
+        var req = http.MultipartRequest("POST", Uri.parse(url2));
+        req.headers.addAll({"Authorization": "token ${globals.token}"});
+        req.fields.addAll({"problem_id": "${reply["problem"]['id']}"});
+        if (globals.images['file1'] != null) {
+          String _fileName = globals.images['file1'].path;
+          req.files.add(http.MultipartFile(
+              "file1",
+              globals.images['file1'].readAsBytes().asStream(),
+              globals.images['file1'].lengthSync(),
+              filename: _fileName.split('/').last));
         }
-      } catch (e) {
-        print(e);
+        if (globals.images['file2'] != null) {
+          String _fileName = globals.images['file2'].path;
+          req.files.add(http.MultipartFile(
+              "file2",
+              globals.images['file2'].readAsBytes().asStream(),
+              globals.images['file2'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        if (globals.images['file3'] != null) {
+          String _fileName = globals.images['file3'].path;
+          req.files.add(http.MultipartFile(
+              "file3",
+              globals.images['file3'].readAsBytes().asStream(),
+              globals.images['file3'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        if (globals.images['file4'] != null) {
+          String _fileName = globals.images['file4'].path;
+          req.files.add(http.MultipartFile(
+              "file4",
+              globals.images['file4'].readAsBytes().asStream(),
+              globals.images['file4'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        var res = await req.send();
+
+        if (res.statusCode == 201) {
+          globals.images['file1'] = null;
+          globals.images['file2'] = null;
+          globals.images['file3'] = null;
+          globals.images['file4'] = null;
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return ProblemFinish();
+              },
+            ),
+            ModalRoute.withName(MainPage.routeName),
+          );
+        }
+      } else {
+        String reply = response.json();
+
+        print(reply);
       }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -329,7 +331,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   checkChange() {
     String descValue = addressController.text;
     setState(() {
-      if (descValue != "" && _value && _latitude != 0 && _longitude != 0)
+      if (descValue != "" && _latitude != 0 && _longitude != 0)
         _valid = true;
       else
         _valid = false;
@@ -348,7 +350,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      appBar: CustomAppBar(title: "Где обнаружена проблема?"),
+      appBar: CustomAppBar(title: "where_is_problem".tr().toString()),
       body: SingleChildScrollView(
         // physics: NeverScrollableScrollPhysics(),
         child: Column(
@@ -367,7 +369,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MainText("Укажите место на карте или адрес"),
+                                MainText("set_address".tr().toString()),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 20),
@@ -398,7 +400,9 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                   autofocus: true,
                                                   decoration:
                                                       InputDecoration.collapsed(
-                                                    hintText: "Введите адрес",
+                                                    hintText: "address_example"
+                                                        .tr()
+                                                        .toString(),
                                                     hintStyle: Theme.of(context)
                                                         .textTheme
                                                         .display1,
@@ -433,7 +437,9 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                   autofocus: true,
                                                   decoration:
                                                       InputDecoration.collapsed(
-                                                    hintText: "Введите адрес",
+                                                    hintText: "address_example"
+                                                        .tr()
+                                                        .toString(),
                                                     hintStyle: Theme.of(context)
                                                         .textTheme
                                                         .display1,
@@ -470,7 +476,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     ],
                                   ),
                                 ),
-                                MainText("Примечания"),
+                                MainText("notes".tr().toString()),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 10, horizontal: 20),
@@ -506,7 +512,8 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                           controller: extraController,
                                           maxLines: 1,
                                           decoration: InputDecoration.collapsed(
-                                            hintText: "Ориентир: № подъезд",
+                                            hintText:
+                                                "note_example".tr().toString(),
                                             hintStyle: Theme.of(context)
                                                 .textTheme
                                                 .display1,
@@ -520,12 +527,12 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                   width: double.infinity,
                                   alignment: Alignment.centerRight,
                                   child: Text(
-                                    "Не более $_cnt символов",
+                                    "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
                                     style: TextStyle(
                                       color: Color.fromRGBO(102, 103, 108, 0.6),
                                       fontSize: 10,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                     ),
                                   ),
                                 ),
@@ -601,121 +608,135 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            _value = !_value;
-                                          });
-                                          checkChange();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 2,
-                                                  style: BorderStyle.solid,
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              shape: BoxShape.circle,
-                                              color: _value
-                                                  ? Theme.of(context)
-                                                      .primaryColor
-                                                  : Colors.transparent),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: _value
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 15.0,
-                                                    color: Colors.white,
-                                                  )
-                                                : Icon(
-                                                    Icons
-                                                        .check_box_outline_blank,
-                                                    size: 15.0,
-                                                    color: Colors.transparent,
-                                                  ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 20),
-                                        width: mediaQuery.size.width * 0.8,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    "Ознакомлен и согласен с ",
-                                                style: TextStyle(
-                                                  fontFamily: "Gilroy",
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            RulePage.routeName);
-                                                      },
-                                                text:
-                                                    "пользовательским соглашением",
-                                                style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  fontFamily: "Gilroy",
-                                                  fontSize: 12,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: " и ",
-                                                style: TextStyle(
-                                                  fontFamily: "Gilroy",
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        Navigator.pushNamed(
-                                                            context,
-                                                            RulePage.routeName);
-                                                      },
-                                                text:
-                                                    "правилами модерации проблем ",
-                                                style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  fontFamily: "Gilroy",
-                                                  fontSize: 12,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                // Padding(
+                                //   padding:
+                                //       const EdgeInsets.symmetric(vertical: 15),
+                                //   child: Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceBetween,
+                                //     children: [
+                                //       InkWell(
+                                //         onTap: () {
+                                //           setState(() {
+                                //             _value = !_value;
+                                //           });
+                                //           checkChange();
+                                //         },
+                                //         child: Container(
+                                //           decoration: BoxDecoration(
+                                //               border: Border.all(
+                                //                   width: 2,
+                                //                   style: BorderStyle.solid,
+                                //                   color: Theme.of(context)
+                                //                       .primaryColor),
+                                //               shape: BoxShape.circle,
+                                //               color: _value
+                                //                   ? Theme.of(context)
+                                //                       .primaryColor
+                                //                   : Colors.transparent),
+                                //           child: Padding(
+                                //             padding: const EdgeInsets.all(5.0),
+                                //             child: _value
+                                //                 ? Icon(
+                                //                     Icons.check,
+                                //                     size: 15.0,
+                                //                     color: Colors.white,
+                                //                   )
+                                //                 : Icon(
+                                //                     Icons
+                                //                         .check_box_outline_blank,
+                                //                     size: 15.0,
+                                //                     color: Colors.transparent,
+                                //                   ),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //       Container(
+                                //         padding: EdgeInsets.only(left: 20),
+                                //         width: mediaQuery.size.width * 0.8,
+                                //         child: RichText(
+                                //           text: TextSpan(
+                                //             children: [
+                                //               TextSpan(
+                                //                 text: "problem_aggreement_start"
+                                //                     .tr()
+                                //                     .toString(),
+                                //                 style: TextStyle(
+                                //                   fontFamily: globals.font,
+                                //                   fontSize: 12,
+                                //                   color: Colors.black,
+                                //                   fontWeight: FontWeight.normal,
+                                //                 ),
+                                //               ),
+                                //               TextSpan(
+                                //                 recognizer:
+                                //                     TapGestureRecognizer()
+                                //                       ..onTap = () {
+                                //                         Navigator.pushNamed(
+                                //                             context,
+                                //                             RulePage.routeName);
+                                //                       },
+                                //                 text: "user_aggreement"
+                                //                     .tr()
+                                //                     .toString(),
+                                //                 style: TextStyle(
+                                //                   decoration:
+                                //                       TextDecoration.underline,
+                                //                   fontFamily: globals.font,
+                                //                   fontSize: 12,
+                                //                   color: Theme.of(context)
+                                //                       .primaryColor,
+                                //                   fontWeight: FontWeight.normal,
+                                //                 ),
+                                //               ),
+                                //               TextSpan(
+                                //                 text: "and".tr().toString(),
+                                //                 style: TextStyle(
+                                //                   fontFamily: globals.font,
+                                //                   fontSize: 12,
+                                //                   color: Colors.black,
+                                //                   fontWeight: FontWeight.normal,
+                                //                 ),
+                                //               ),
+                                //               TextSpan(
+                                //                 recognizer:
+                                //                     TapGestureRecognizer()
+                                //                       ..onTap = () {
+                                //                         Navigator.pushNamed(
+                                //                             context,
+                                //                             RulePage.routeName);
+                                //                       },
+                                //                 text: "moderator_rule"
+                                //                     .tr()
+                                //                     .toString(),
+                                //                 style: TextStyle(
+                                //                   decoration:
+                                //                       TextDecoration.underline,
+                                //                   fontFamily: globals.font,
+                                //                   fontSize: 12,
+                                //                   color: Theme.of(context)
+                                //                       .primaryColor,
+                                //                   fontWeight: FontWeight.normal,
+                                //                 ),
+                                //               ),
+                                //               TextSpan(
+                                //                 text: "problem_aggreement_end"
+                                //                     .tr()
+                                //                     .toString(),
+                                //                 style: TextStyle(
+                                //                   fontFamily: globals.font,
+                                //                   fontSize: 12,
+                                //                   color: Colors.black,
+                                //                   fontWeight: FontWeight.normal,
+                                //                 ),
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // )
                               ],
                             ),
                           ),
@@ -736,11 +757,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                         alignment: FractionalOffset.bottomCenter,
                         child: !_valid
                             ? DefaultButton(
-                                "Продолжить",
+                                "continue".tr().toString(),
                                 () {},
                                 Color(0xffB2B7D0),
                               )
-                            : DefaultButton("Продолжить", () {
+                            : DefaultButton("continue".tr().toString(), () {
                                 insertData().then((value) {
                                   // print("sended");
                                   // Navigator.of(context).pushAndRemoveUntil(

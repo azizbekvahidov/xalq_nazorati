@@ -1,11 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
@@ -41,7 +39,8 @@ class _ChangePasswordState extends State<ChangePassword> {
     String oldPass = oldPassController.text;
     String newPass = newPassController.text;
     String rePass = rePassController.text;
-    var url = '${globals.api_link}/users/change-password';
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/change-password';
 
     Map map = {
       "old_password": oldPass,
@@ -62,7 +61,19 @@ class _ChangePasswordState extends State<ChangePassword> {
       // addStringToSF(responseBody["token"]);
       // globals.token = responseBody["token"];
     } else {
+      var json = r1.json();
+      Map<String, dynamic> res = json['detail'];
       print(json);
+      res.forEach((key, value) {
+        Fluttertoast.showToast(
+            msg: res[key][0],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 15.0);
+      });
     }
   }
 
@@ -75,7 +86,8 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final appbar = CustomAppBar(
-      title: "Изменить пароль",
+      title: "change_pass".tr().toString(),
+      centerTitle: true,
     );
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
@@ -98,7 +110,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("Старый пароль"),
+                            MainText("old_pass".tr().toString()),
                             // PassInput("Введите пароль", oldPassController),
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -130,7 +142,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       obscureText: !_passShow,
                                       maxLines: 1,
                                       decoration: InputDecoration.collapsed(
-                                          hintText: "Введите пароль",
+                                          hintText: "pass_hint".tr().toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .display1),
@@ -139,7 +151,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 ],
                               ),
                             ),
-                            MainText("Пароль"),
+                            MainText("pass_title".tr().toString()),
                             // PassInput("Придумайте пароль", newPassController),
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -171,7 +183,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       obscureText: !_passShow,
                                       maxLines: 1,
                                       decoration: InputDecoration.collapsed(
-                                          hintText: "Придумайте пароль",
+                                          hintText: "come_up_pass_hint"
+                                              .tr()
+                                              .toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .display1),
@@ -180,7 +194,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 ],
                               ),
                             ),
-                            MainText("Подтвердите пароль"),
+                            MainText("confirm_pass_title".tr().toString()),
                             // PassInput("Подтвердите пароль", rePassController),
                             Container(
                               padding: EdgeInsets.symmetric(
@@ -212,7 +226,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       obscureText: !_passShow,
                                       maxLines: 1,
                                       decoration: InputDecoration.collapsed(
-                                          hintText: "Подтвердите пароль",
+                                          hintText: "confirm_pass_hint"
+                                              .tr()
+                                              .toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .display1),
@@ -238,11 +254,12 @@ class _ChangePasswordState extends State<ChangePassword> {
                           alignment: FractionalOffset.bottomCenter,
                           child: !_value
                               ? DefaultButton(
-                                  "Продолжить",
+                                  "change_pass".tr().toString(),
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : DefaultButton("Изменить пароль", () {
+                              : DefaultButton("change_pass".tr().toString(),
+                                  () {
                                   changePass();
                                   // setState(() {
                                   //   _value = !_value;

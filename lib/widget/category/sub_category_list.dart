@@ -49,7 +49,7 @@ class SubCategoryCardList extends StatelessWidget {
                         text: TextSpan(
                           text: title,
                           style: TextStyle(
-                            fontFamily: "Gilroy",
+                            fontFamily: globals.font,
                             color: Color(0xff000000),
                             fontWeight: FontWeight.w600,
                             fontSize: 18,

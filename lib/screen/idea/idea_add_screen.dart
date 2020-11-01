@@ -103,7 +103,7 @@ class _IdeaAddScreenState extends State<IdeaAddScreen> {
                                       color: Color(0xffB2B7D0),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                     ),
                                   ),
                                 )
@@ -150,7 +150,7 @@ class _IdeaAddScreenState extends State<IdeaAddScreen> {
                                     style: TextStyle(
                                         color: Color(0xffFF8F27),
                                         fontSize: 12,
-                                        fontFamily: "Gilroy"),
+                                        fontFamily: globals.font),
                                   ),
                                 ),
                               ],

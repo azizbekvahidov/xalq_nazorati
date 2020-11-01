@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/main_page/news/news_desc.dart';
 
 class NewsItemUrgent extends StatefulWidget {
@@ -64,7 +65,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                     maxLines: 3,
                     style: TextStyle(
                       color: Color(0xff313B6C),
-                      fontFamily: "Gilroy",
+                      fontFamily: globals.font,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -81,7 +82,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                             widget.location,
                             maxLines: 3,
                             style: TextStyle(
-                                fontFamily: "Gilroy",
+                                fontFamily: globals.font,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),
@@ -101,7 +102,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                           child: Text(
                             "Время аварии: ${_publishDate}",
                             style: TextStyle(
-                              fontFamily: "Gilroy",
+                              fontFamily: globals.font,
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,

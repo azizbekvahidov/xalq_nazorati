@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +26,8 @@ class _DeleteProfileState extends State<DeleteProfile> {
     String desc = descController.text;
     if (desc != "") {
       try {
-        var url = '${globals.api_link}/users/profile';
+        var url =
+            '${globals.site_link}${(globals.lang).tr().toString()}/users/profile';
 
         Map<String, String> map = {"reason": desc};
         Map<String, String> headers = {
@@ -62,7 +64,8 @@ class _DeleteProfileState extends State<DeleteProfile> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final appbar = CustomAppBar(
-      title: "Удалить учетную запись",
+      title: "delete_profile".tr().toString(),
+      centerTitle: true,
     );
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
@@ -92,11 +95,11 @@ class _DeleteProfileState extends State<DeleteProfile> {
                           Expanded(
                             flex: 9,
                             child: Text(
-                              "Внимание! Пожалуйста, удаляйте свою учетную запись, только если вы больше не хотите использовать Xalq Nazorati. Если вы удалите свою учетную запись сейчас, регистрация может быть невозможна в течение нескольких дней.",
+                              "delete_accaunt_warning".tr().toString(),
                               style: TextStyle(
                                   color: Color(0xffFF8F27),
                                   fontSize: 12,
-                                  fontFamily: "Gilroy"),
+                                  fontFamily: globals.font),
                             ),
                           ),
                         ],
@@ -108,9 +111,9 @@ class _DeleteProfileState extends State<DeleteProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("Почему вы удаляете аккаунт?"),
+                            MainText("why_delete_accaunt".tr().toString()),
                             TextareaInput(
-                              hint: "hint",
+                              hint: "why_delete_accaunt_hint".tr().toString(),
                               textareaController: descController,
                               notifyParent: checkChange,
                             ),
@@ -137,7 +140,8 @@ class _DeleteProfileState extends State<DeleteProfile> {
                                   Color(0xffB2B7D0),
                                 )
                               : */
-                              DefaultButton("Удалите мой аккаунт", () {
+                              DefaultButton("delete_accaunt".tr().toString(),
+                                  () {
                             deleteProfile().then((value) {
                               Navigator.of(context, rootNavigator: true)
                                   .pushNamedAndRemoveUntil(

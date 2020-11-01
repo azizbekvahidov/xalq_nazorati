@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class CategoryCardList extends StatelessWidget {
   final String title;
@@ -32,7 +33,7 @@ class CategoryCardList extends StatelessWidget {
                         text: TextSpan(
                           text: title,
                           style: TextStyle(
-                            fontFamily: "Gilroy",
+                            fontFamily: globals.font,
                             color: Color(0xff000000),
                             fontWeight: FontWeight.w600,
                             fontSize: 18,

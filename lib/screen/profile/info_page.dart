@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:share/share.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/support/support.dart';
 import '../../widget/icon_card_list.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import '../../widget/shadow_box.dart';
 
-class InfoPage extends StatelessWidget {
+class InfoPage extends StatefulWidget {
   static const routeName = "/info-page";
+
+  @override
+  _InfoPageState createState() => _InfoPageState();
+}
+
+class _InfoPageState extends State<InfoPage> {
+  _share_app(BuildContext context) async {
+    final RenderBox box = context.findRenderObject();
+    await Share.share(
+        "https://play.google.com/store/apps/details?id=com.apple.android.music&hl=ru&gl=US",
+        subject: "",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      appBar: CustomAppBar(title: "Профиль"),
+      appBar: CustomAppBar(
+        title: "about_app".tr().toString(),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -29,12 +50,12 @@ class InfoPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
                       child: Text(
-                        "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с сообщениями о проблемах.",
+                        "about_desc".tr().toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14,
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                         ),
                       ),
                     ),
@@ -44,14 +65,78 @@ class InfoPage extends StatelessWidget {
               ShadowBox(
                 child: Column(
                   children: [
-                    IconCardList("id", "assets/img/share_icon.svg",
-                        "Поделиться с друзьями", null, true, null),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          0.84,
+                                      child: Container(
+                                          child: Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.only(right: 13),
+                                            child: SvgPicture.asset(
+                                                "assets/img/share_icon.svg"),
+                                          ),
+                                          RichText(
+                                            text: TextSpan(
+                                              text: "share_app".tr().toString(),
+                                              style: TextStyle(
+                                                fontFamily: "Gilroy",
+                                                color: Color(0xff050505),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ))),
+                                  Container(
+                                    child: Icon(
+                                      null,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () async {
+                              _share_app(context);
+                            },
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                    ),
                     IconCardList("id", "assets/img/rate_icon.svg",
-                        "Оценить приложение", null, true, null),
-                    IconCardList("id", "assets/img/support_icon.svg",
-                        "Техническая поддержка", Support(), true, null),
-                    IconCardList("id", "assets/img/rule_icon.svg",
-                        "Правила модерации", RulePage(), false, null),
+                        "rate_app".tr().toString(), null, true, null),
+                    IconCardList(
+                        "id",
+                        "assets/img/support_icon.svg",
+                        "technical_support".tr().toString(),
+                        Support(),
+                        true,
+                        null),
+                    IconCardList(
+                        "id",
+                        "assets/img/rule_icon.svg",
+                        "rule_of_moderation".tr().toString(),
+                        RulePage(),
+                        false,
+                        null),
                   ],
                 ),
               ),
@@ -63,7 +148,7 @@ class InfoPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xff66676C),
-                      fontFamily: "Gilroy",
+                      fontFamily: globals.font,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),

@@ -4,6 +4,7 @@ import '../widget/app_bar/custom_appBar.dart';
 import '../widget/text/big_parag_text.dart';
 import '../widget/text/little_parag_text.dart';
 import '../widget/text/rule_head_text.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class RulePage extends StatelessWidget {
   static const routeName = "/rule-page";
@@ -53,7 +54,7 @@ class RulePage extends StatelessWidget {
               Text(
                 "Вместе с тем фотоматериалы, направленные Пользователем, могут быть удалены или скрыты Единой редакцией с публичной части Портала в случае направления Пользователем фотоматериалов, не имеющих прямого отношения к заявленной проблеме, а также в случаях указанных в пункте 2.3 настоящих Единых правил модерации.",
                 style: TextStyle(
-                  fontFamily: "Gilroy",
+                  fontFamily: globals.font,
                   fontSize: 14,
                 ),
               ),

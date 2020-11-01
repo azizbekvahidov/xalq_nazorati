@@ -95,7 +95,7 @@ class _NewsDescState extends State<NewsDesc> {
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -107,7 +107,7 @@ class _NewsDescState extends State<NewsDesc> {
                             "$_publishDate, $dayOfWeek",
                             style: TextStyle(
                                 color: Color(0xffB2B7D0),
-                                fontFamily: "Gilroy",
+                                fontFamily: globals.font,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400),
                           ),

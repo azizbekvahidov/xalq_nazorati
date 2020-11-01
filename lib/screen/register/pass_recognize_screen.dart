@@ -66,59 +66,11 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
     }
   }
 
-  createAlertDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Column(
-              children: [
-                Text(
-                  "Как найти ПНФЛ в паспорте?",
-                  style: TextStyle(
-                    fontFamily: "Gilroy",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  child: Container(
-                      child: SvgPicture.asset("assets/img/Passport.svg")),
-                ),
-                FlatButton(
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(
-                          style: BorderStyle.solid,
-                          color: Theme.of(context).primaryColor,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        "Закрыть",
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      )),
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                )
-              ],
-            ),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final PreferredSizeWidget appBar =
-        CustomAppBar(title: "Идентификация пользователя");
+        CustomAppBar(title: "identity_user".tr().toString());
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
       appBar: appBar,
@@ -140,7 +92,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MainText("ПНФЛ"),
+                    MainText("pnfl".tr().toString()),
                     Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -176,7 +128,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                     contentPadding:
                                         EdgeInsets.only(top: 0, bottom: 9),
                                     border: InputBorder.none,
-                                    hintText: "Введите ПНФЛ",
+                                    hintText: "enter_pnfl".tr().toString(),
                                     hintStyle:
                                         Theme.of(context).textTheme.display1,
                                   ),
@@ -218,7 +170,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                   // Text(
                                   //   "?",
                                   //   style: TextStyle(
-                                  //     fontFamily: "Gilroy",
+                                  //     fontFamily: globals.font,
                                   //     fontSize: 13,
                                   //     color: Color.fromRGBO(49, 59, 108, 0.5),
                                   //     fontWeight: FontWeight.bold,
@@ -232,9 +184,9 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                         ],
                       ),
                     ),
-                    MainText("Серия и номер паспорта"),
+                    MainText("pas_series_title".tr().toString()),
                     DefaultInput(
-                      hint: "Введите серию и номер паспорта",
+                      hint: "pas_series_hint".tr().toString(),
                       textController: seriesController,
                       notifyParent: () {},
                     ),
@@ -283,9 +235,9 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Я согласен на использование моей личной информации",
+                                "personal_data_use_agree".tr().toString(),
                                 style: TextStyle(
-                                  fontFamily: "Gilroy",
+                                  fontFamily: globals.font,
                                   fontSize: 13,
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
@@ -309,11 +261,11 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                           alignment: FractionalOffset.bottomCenter,
                           child: !_value
                               ? DefaultButton(
-                                  "Продолжить",
+                                  "continue".tr().toString(),
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : DefaultButton("Продолжить", () {
+                              : DefaultButton("continue".tr().toString(), () {
                                   sendData().then((value) {
                                     setState(() {
                                       _value = !_value;

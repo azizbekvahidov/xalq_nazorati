@@ -90,7 +90,7 @@ class _MainProfileState extends State<MainProfile> {
                     style: TextStyle(
                         color: Color(0xff66676C),
                         fontSize: 14,
-                        fontFamily: "Gilroy"),
+                        fontFamily: globals.font),
                   ),
                 ],
               ),
@@ -111,10 +111,10 @@ class _MainProfileState extends State<MainProfile> {
                   top: 20,
                 ),
                 child: Text(
-                  "Мои сообщения",
+                  "profile_messages".tr().toString(),
                   style: TextStyle(
                     color: Color(0xff66676C),
-                    fontFamily: "Gilroy",
+                    fontFamily: globals.font,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -124,12 +124,26 @@ class _MainProfileState extends State<MainProfile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomCardList("subcat1", "Нерешенные проблемы",
-                        ProblemScreen("Нерешенные проблемы", "warning"), true),
-                    CustomCardList("subcat2", "Решенные проблемы",
-                        ProblemScreen("Решенные проблемы", "success"), true),
-                    CustomCardList("subcat3", "Отклоненные проблемы",
-                        ProblemScreen("Отклоненные проблемы", "danger"), false),
+                    CustomCardList(
+                        "subcat1",
+                        "unresolved".tr().toString(),
+                        ProblemScreen(
+                            title: "unresolved".tr().toString(),
+                            status: "warning"),
+                        true),
+                    CustomCardList(
+                        "subcat2",
+                        "solved".tr().toString(),
+                        ProblemScreen(
+                            title: "solved".tr().toString(), status: "success"),
+                        true),
+                    CustomCardList(
+                        "subcat3",
+                        "take_off_problems".tr().toString(),
+                        ProblemScreen(
+                            title: "take_off_problems".tr().toString(),
+                            status: "danger"),
+                        false),
                   ],
                 ),
               ),
@@ -139,10 +153,10 @@ class _MainProfileState extends State<MainProfile> {
                   top: 20,
                 ),
                 child: Text(
-                  "Общие",
+                  "common".tr().toString(),
                   style: TextStyle(
                     color: Color(0xff66676C),
-                    fontFamily: "Gilroy",
+                    fontFamily: globals.font,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -151,8 +165,13 @@ class _MainProfileState extends State<MainProfile> {
               ShadowBox(
                 child: Column(
                   children: [
-                    IconCardList("id", "assets/img/profile_icon.svg", "Профиль",
-                        ProfilePage(), true, Icons.arrow_forward_ios),
+                    IconCardList(
+                        "id",
+                        "assets/img/profile_icon.svg",
+                        "profile".tr().toString(),
+                        ProfilePage(),
+                        true,
+                        Icons.arrow_forward_ios),
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,9 +200,10 @@ class _MainProfileState extends State<MainProfile> {
                                           ),
                                           RichText(
                                             text: TextSpan(
-                                              text: "Изменить язык",
+                                              text:
+                                                  "change_lang".tr().toString(),
                                               style: TextStyle(
-                                                fontFamily: "Gilroy",
+                                                fontFamily: globals.font,
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 18,
@@ -216,7 +236,7 @@ class _MainProfileState extends State<MainProfile> {
                     IconCardList(
                         "id",
                         "assets/img/info_icon.svg",
-                        "О приложении",
+                        "about_app".tr().toString(),
                         InfoPage(),
                         true,
                         Icons.arrow_forward_ios),
@@ -249,9 +269,9 @@ class _MainProfileState extends State<MainProfile> {
                                             ),
                                             RichText(
                                               text: TextSpan(
-                                                text: "Выйти из аккаунта",
+                                                text: "log_out".tr().toString(),
                                                 style: TextStyle(
-                                                  fontFamily: "Gilroy",
+                                                  fontFamily: globals.font,
                                                   color: Color(0xff050505),
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 18,
@@ -289,7 +309,7 @@ class _MainProfileState extends State<MainProfile> {
               //           "У тебя есть идея?",
               //           style: TextStyle(
               //             color: Color(0xff313B6C),
-              //             fontFamily: "Gilroy",
+              //             fontFamily: globals.font,
               //             fontSize: 16,
               //             fontWeight: FontWeight.bold,
               //           ),
@@ -300,7 +320,7 @@ class _MainProfileState extends State<MainProfile> {
               //             "Перейти на сайт, в разделе «Идеи» Вы можете отправить свои предложения по улучшению городской инфраструктуры, а также оценить идеи, поданные другими пользователями.",
               //             style: TextStyle(
               //               color: Color(0xff050505),
-              //               fontFamily: "Gilroy",
+              //               fontFamily: globals.font,
               //               fontSize: 12,
               //               fontWeight: FontWeight.normal,
               //             ),

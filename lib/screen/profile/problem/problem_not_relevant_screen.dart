@@ -3,12 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:xalq_nazorati/screen/home_page.dart';
-import 'package:xalq_nazorati/screen/main_page/main_page.dart';
-import 'package:xalq_nazorati/screen/profile/main_profile.dart';
-import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
-import '../../main_page/problem/problem_locate.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/custom_dotted_circle_container.dart';
 import '../../../widget/default_button.dart';
@@ -83,7 +80,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) {
           return HomePage();
-        }), (Route<dynamic> route) => true);
+        }), (Route<dynamic> route) => false);
       } else {
         print(res);
       }
@@ -124,7 +121,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         25;
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Проблема не актуальна",
+        title: "problem_not_actual".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -148,18 +145,18 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                MainText("Загрузите фото"),
+                                MainText("upload_photo".tr().toString()),
                                 InkWell(
                                   onTap: () {
                                     clearImages();
                                   },
                                   child: Text(
-                                    "Очистить",
+                                    "clear".tr().toString(),
                                     style: TextStyle(
                                       color: Color(0xffB2B7D0),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                     ),
                                   ),
                                 )
@@ -202,18 +199,18 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                 Expanded(
                                   flex: 9,
                                   child: Text(
-                                    "Размер одного файла не должен превышать 10 Мб, в количестве не более 4 файлов",
+                                    "upload_warning".tr().toString(),
                                     style: TextStyle(
                                         color: Color(0xffFF8F27),
                                         fontSize: 12,
-                                        fontFamily: "Gilroy"),
+                                        fontFamily: globals.font),
                                   ),
                                 ),
                               ],
                             ),
-                            MainText("Описать проблему"),
+                            MainText("problem_describe".tr().toString()),
                             TextareaInput(
-                              hint: "Напишите о проблеме",
+                              hint: "problem_describe_hint".tr().toString(),
                               textareaController: descController,
                               notifyParent: checkChange,
                             ),
@@ -240,7 +237,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                   Color(0xffB2B7D0),
                                 )
                               : */
-                              DefaultButton("Снять с контроля", () {
+                              DefaultButton("take_off".tr().toString(), () {
                             insertData();
                             // Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (BuildContext context) {

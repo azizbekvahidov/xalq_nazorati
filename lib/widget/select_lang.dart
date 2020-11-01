@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../widget/default_button.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 typedef void MyFormCallback(String result, String result2);
 
@@ -39,7 +40,7 @@ class _SelectLangState extends State<SelectLang> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Text(
-              "Выберите язык",
+              "choose_lang".tr().toString(),
               style: Theme.of(context).textTheme.display2,
             ),
           ),
@@ -108,7 +109,7 @@ class _SelectLangState extends State<SelectLang> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: DefaultButton("Применять", () {
+            child: DefaultButton("use".tr().toString(), () {
               String country;
               switch (_lang) {
                 case 'uz':

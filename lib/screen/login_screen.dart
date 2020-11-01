@@ -111,10 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MainText("tel_number_hint".tr().toString()),
+                          MainText("tel_number_title".tr().toString()),
                           PhoneInput(phoneController),
-                          MainText("Пароль"),
-                          PassInput("Введите пароль", passController),
+                          MainText("pass_title".tr().toString()),
+                          PassInput(
+                              "pass_hint".tr().toString(), passController),
                         ],
                       ),
                       Positioned(
@@ -124,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                DefaultButton("Войти", () {
+                                DefaultButton("log_in".tr().toString(), () {
                                   getLogin();
                                 }, Theme.of(context).primaryColor),
                                 Row(
@@ -132,9 +133,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "У вас еще нет аккаунта?",
+                                      "accaunt_question".tr().toString(),
                                       style: TextStyle(
-                                        fontFamily: "Gilroy",
+                                        fontFamily: globals.font,
                                         fontSize: dWith < 400 ? 13 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -146,9 +147,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             RegisterPhoneScreen.routeName);
                                       },
                                       child: Text(
-                                        "Зарегистрируйтесь",
+                                        "sign_ups".tr().toString(),
                                         style: TextStyle(
-                                          fontFamily: "Gilroy",
+                                          fontFamily: globals.font,
                                           fontSize: dWith < 400 ? 13 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,

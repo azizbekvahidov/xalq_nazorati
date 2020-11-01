@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class RuleHeadText extends StatelessWidget {
   final String txt;
@@ -11,7 +12,7 @@ class RuleHeadText extends StatelessWidget {
         txt,
         style: TextStyle(
           color: Colors.black,
-          fontFamily: "Gilroy",
+          fontFamily: globals.font,
           fontWeight: FontWeight.w600,
           fontSize: 14,
         ),

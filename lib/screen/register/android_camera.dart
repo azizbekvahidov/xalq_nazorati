@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import '../../widget/app_bar/custom_appBar.dart';
@@ -200,7 +201,7 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
               Container(),
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             CustomAppBar(
-              title: 'Сканирование ПИНФЛ',
+              title: "pnfl_scan".tr().toString(),
               textColor: Colors.white,
               backgroundColor: Colors.transparent,
             ),
@@ -214,8 +215,7 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(38),
-              child: Text(
-                  'Поместите ваш документ в рамку.\nУбедитесь, что все данные четко видны',
+              child: Text("camera_put_data_right".tr().toString(),
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme

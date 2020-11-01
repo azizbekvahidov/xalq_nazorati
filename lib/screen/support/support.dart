@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/support/support_feedback.dart';
 import 'package:xalq_nazorati/screen/support/support_info.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
-import 'package:xalq_nazorati/widget/app_bar/custom_icon_appbar.dart';
 
 class Support extends StatefulWidget {
   @override
@@ -48,7 +48,7 @@ class _SupportState extends State<Support> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Техническая поддержка",
+        title: "technical_support".tr().toString(),
         // icon: "assets/img/support.svg",
       ),
       body: SingleChildScrollView(
@@ -78,10 +78,10 @@ class _SupportState extends State<Support> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        "Позвоните",
+                        "call".tr().toString(),
                         style: TextStyle(
                           color: _txt1,
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 18,
                         ),
                       ),
@@ -103,10 +103,10 @@ class _SupportState extends State<Support> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        "Напишите",
+                        "send_message".tr().toString(),
                         style: TextStyle(
                           color: _txt2,
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 18,
                         ),
                       ),

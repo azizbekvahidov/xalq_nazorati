@@ -3,17 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:sms/sms.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:http/http.dart' as http;
-import 'package:xalq_nazorati/methods/http_get.dart';
-import 'package:xalq_nazorati/models/user.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/input/default_input.dart';
-import 'package:xalq_nazorati/widget/input/phone_icon_input.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
@@ -29,8 +27,30 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
   String _showTime = "03:00";
   Timer _timer;
   int _start = 180;
+  bool _isSend = false;
 
   final codeController = TextEditingController();
+  void getSMS() async {
+    // Create SMS Receiver Listener
+    SmsReceiver receiver = new SmsReceiver();
+    // msg has New Incoming Message
+    receiver.onSmsReceived.listen((SmsMessage msg) {
+      print(msg.address);
+      print(msg.body);
+      print(msg.date);
+      print(msg.isRead);
+      print(msg.sender);
+      print(msg.threadId);
+      print(msg.state);
+      codeController.text = msg.body;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSMS();
+  }
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -40,6 +60,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         () {
           if (_start < 1) {
             timer.cancel();
+            _isSend = false;
           } else {
             _start = _start - 1;
             // _showTime = "$_start";
@@ -63,7 +84,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         changePhone(code);
       }
       if (address != "" || email != "") {
-        var url = '${globals.api_link}/users/profile';
+        var url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/profile';
 
         Map<String, String> map = {};
         if (address != '') map.addAll({"address_str": address});
@@ -99,7 +121,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
       try {
         String phone = "+998${phoneController.text}";
         phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
-        var url = '${globals.api_link}/users/change-phone';
+        var url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/change-phone';
 
         Map map = {
           "phone": phone,
@@ -109,14 +132,27 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         };
         var r1 = await Requests.post(url,
             body: map, headers: headers, verify: false);
-        print(r1.content());
 
         if (r1.statusCode == 200) {
+          var responseBody = r1.json();
           r1.raiseForStatus();
           startTimer();
+          _isSend = true;
           // Navigator.of(context).pop();
         } else {
+          var json = r1.json();
+          Map<String, dynamic> res = json['detail'];
           print(json);
+          res.forEach((key, value) {
+            Fluttertoast.showToast(
+                msg: res[key][0],
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 15.0);
+          });
         }
       } catch (e) {
         print(e);
@@ -126,7 +162,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
 
   Future changePhone(String code) async {
     try {
-      var url = '${globals.api_link}/users/code-validation';
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/code-validation';
 
       Map map = {
         "code": code,
@@ -136,14 +173,23 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
       };
       var r1 =
           await Requests.post(url, body: map, headers: headers, verify: false);
-      print(r1.content());
 
       if (r1.statusCode == 200) {
+        print(r1.content());
         r1.raiseForStatus();
         _timer.cancel();
         Navigator.of(context).pop();
       } else {
-        print(json);
+        print(r1.content());
+        Map<String, dynamic> responseBody = r1.json();
+        Fluttertoast.showToast(
+            msg: responseBody['detail'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 15.0);
       }
     } catch (e) {
       print(e);
@@ -158,7 +204,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         mask: '__ ___ __ __', filter: {"_": RegExp(r'[0-9]')});
     final mediaQuery = MediaQuery.of(context);
     final appbar = CustomAppBar(
-      title: "Изменить пароль",
+      title: "change_profile".tr().toString(),
+      centerTitle: true,
     );
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
@@ -181,19 +228,19 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("Адрес фактического проживания"),
+                            MainText("fact_accress".tr().toString()),
                             DefaultInput(
-                              hint: "Введите адрес",
+                              hint: "address_hint".tr().toString(),
                               textController: addressController,
                               notifyParent: checkChange,
                             ),
-                            MainText("Электронная почта"),
+                            MainText("email_title".tr().toString()),
                             DefaultInput(
-                              hint: "Введите адрес почты",
+                              hint: "email_hint".tr().toString(),
                               textController: emailController,
                               notifyParent: checkChange,
                             ),
-                            MainText("Номер мобильного телефона"),
+                            MainText("tel_number_title".tr().toString()),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 20),
@@ -232,7 +279,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                                       maxLines: 1,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration.collapsed(
-                                          hintText: "Мобильный номер",
+                                          hintText:
+                                              "tel_number_hint".tr().toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .display1),
@@ -244,15 +292,17 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                                     },
                                     child: Icon(
                                       Icons.check_circle,
-                                      color: Color(0xffB2B7D0),
+                                      color: _isSend
+                                          ? Color(0xffB2B7D0)
+                                          : Theme.of(context).primaryColor,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            MainText("Код подтверждения"),
+                            MainText("check_code_title".tr().toString()),
                             DefaultInput(
-                              hint: "Введите код",
+                              hint: "check_code_hint".tr().toString(),
                               textController: codeController,
                               notifyParent: () {},
                             ),
@@ -268,7 +318,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                                       Text(
                                         _showTime,
                                         style: TextStyle(
-                                          fontFamily: "Gilroy",
+                                          fontFamily: globals.font,
                                           fontSize: 18,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500,
@@ -302,7 +352,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                                   Color(0xffB2B7D0),
                                 )
                               : */
-                              DefaultButton("Изменить контактные данные", () {
+                              DefaultButton("change".tr().toString(), () {
                             changeProfile();
                             // setState(() {
                             //   _value = !_value;

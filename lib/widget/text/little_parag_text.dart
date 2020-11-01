@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class LittleParagText extends StatelessWidget {
   final String txt;
@@ -11,7 +12,7 @@ class LittleParagText extends StatelessWidget {
         txt,
         style: TextStyle(
           color: Colors.black,
-          fontFamily: "Gilroy",
+          fontFamily: globals.font,
           fontWeight: FontWeight.w300,
           fontSize: 10,
         ),

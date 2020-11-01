@@ -42,7 +42,7 @@ class _LangScreenState extends State<LangScreen> {
                     Text(
                       "Портал Xalq Nazorati",
                       style: TextStyle(
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: Color(0xff313B6C),
@@ -53,7 +53,7 @@ class _LangScreenState extends State<LangScreen> {
                       child: Text(
                         "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
                         style: TextStyle(
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
@@ -66,7 +66,7 @@ class _LangScreenState extends State<LangScreen> {
                       child: Text(
                         "Улучшим город вместе",
                         style: TextStyle(
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff313B6C),
@@ -78,7 +78,7 @@ class _LangScreenState extends State<LangScreen> {
                       child: Text(
                         "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
                         style: TextStyle(
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
@@ -90,7 +90,7 @@ class _LangScreenState extends State<LangScreen> {
                       child: Text(
                         "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
                         style: TextStyle(
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
@@ -102,7 +102,7 @@ class _LangScreenState extends State<LangScreen> {
                       child: Text(
                         "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
                         style: TextStyle(
-                          fontFamily: "Gilroy",
+                          fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
@@ -263,7 +263,7 @@ class _LangScreenState extends State<LangScreen> {
                           ),
                         ),
                       ),
-                      Text("О приложении"),
+                      Text("about".tr().toString()),
                     ],
                   ),
                   color: Colors.transparent,

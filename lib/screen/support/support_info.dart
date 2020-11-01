@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 
 class SupportInfo extends StatefulWidget {
   @override
@@ -30,13 +32,13 @@ class _SupportInfoState extends State<SupportInfo> {
         Padding(
           padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
           child: Text(
-            "Сообщите о проблеме по телефону на городскую диспетчерскую службу по вопросам ЖКХ",
+            "call_message".tr().toString(),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff313B6C),
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              fontFamily: "Gilroy",
+              fontFamily: globals.font,
             ),
           ),
         ),
@@ -47,7 +49,7 @@ class _SupportInfoState extends State<SupportInfo> {
             style: TextStyle(
                 fontSize: 42,
                 fontWeight: FontWeight.w700,
-                fontFamily: "Gilroy",
+                fontFamily: globals.font,
                 foreground: Paint()..shader = linearGradient),
           ),
         ),
@@ -59,14 +61,14 @@ class _SupportInfoState extends State<SupportInfo> {
             padding: EdgeInsets.symmetric(horizontal: 98),
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 45),
+              padding: EdgeInsets.symmetric(horizontal: 30),
               height: 50,
               child: Text(
-                "Позвонить",
+                "call".tr().toString(),
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
-                    fontFamily: "Gilroy",
+                    fontFamily: globals.font,
                     color: Colors.white),
               ),
               decoration: BoxDecoration(

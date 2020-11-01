@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 
 class AdvWidget extends StatelessWidget {
   @override
@@ -82,23 +84,23 @@ class AdvWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Вы нужны Ташкенту",
+                    "adv_title".tr().toString(),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      fontFamily: "Gilroy",
+                      fontFamily: globals.font,
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Text(
-                      "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения. ",
+                      "adv_desc".tr().toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                       ),
                     ),
                   ),

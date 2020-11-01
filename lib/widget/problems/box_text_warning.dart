@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class BoxTextWarning extends StatelessWidget {
   final String txt;
@@ -35,7 +36,7 @@ class BoxTextWarning extends StatelessWidget {
         txt,
         style: TextStyle(
           color: _txtColor,
-          fontFamily: "Gilroy",
+          fontFamily: globals.font,
           fontSize: 10,
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PhoneInput extends StatefulWidget {
   final myController;
@@ -50,7 +51,7 @@ class _PhoneInputState extends State<PhoneInput> {
               maxLines: 1,
               keyboardType: TextInputType.number,
               decoration: InputDecoration.collapsed(
-                  hintText: "Мобильный номер",
+                  hintText: "tel_number_hint".tr().toString(),
                   hintStyle: Theme.of(context).textTheme.display1),
             ),
           ),

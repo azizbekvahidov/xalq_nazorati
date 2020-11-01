@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/profile/change_password.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/delete_profile.dart';
@@ -17,7 +18,10 @@ class ProfilePage extends StatelessWidget {
     String birthDate =
         formatter.format(DateTime.parse(globals.userData['birth_date']));
     return Scaffold(
-      appBar: CustomAppBar(title: "Профиль"),
+      appBar: CustomAppBar(
+        title: "profile".tr().toString(),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -30,16 +34,16 @@ class ProfilePage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      CardList("Имя", "${globals.userData['first_name']}"),
-                      CardList("Фамилия", "${globals.userData['last_name']}"),
-                      CardList("Отчество", "${globals.userData['patronymic']}"),
-                      CardList("Дата рождения", "${birthDate}"),
-                      CardList(
-                          "Пол",
-                          globals.userData['gender'] == "male"
-                              ? "Мужчина"
-                              : "Женшина"),
-                      CardList("Адрес фактического проживания",
+                      CardList("name".tr().toString(),
+                          "${globals.userData['first_name']}"),
+                      CardList("surname".tr().toString(),
+                          "${globals.userData['last_name']}"),
+                      CardList("lastname".tr().toString(),
+                          "${globals.userData['patronymic']}"),
+                      CardList("birthday".tr().toString(), "${birthDate}"),
+                      CardList("gender".tr().toString(),
+                          "${globals.userData['gender']}".tr().toString()),
+                      CardList("fact_accress".tr().toString(),
                           "${globals.userData['address_str']}"),
                     ],
                   ),
@@ -49,12 +53,12 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   children: [
                     // CustomCardList("id", "Изменить личные данные", null, true),
-                    CustomCardList(
-                        "id", "Изменить пароль", ChangePassword(), true),
-                    CustomCardList("id", "Изменить контактные данные",
+                    CustomCardList("id", "change_pass".tr().toString(),
+                        ChangePassword(), true),
+                    CustomCardList("id", "change_profile".tr().toString(),
                         ChangePersonalData(), true),
-                    CustomCardList(
-                        "id", "Удалить учетную запись", DeleteProfile(), false),
+                    CustomCardList("id", "delete_profile".tr().toString(),
+                        DeleteProfile(), false),
                   ],
                 ),
               ),

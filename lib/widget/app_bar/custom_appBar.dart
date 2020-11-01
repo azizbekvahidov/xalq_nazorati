@@ -33,8 +33,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         )
       ]),
       child: AppBar(
-        backgroundColor:
-            widget.backgroundColor ?? Color.fromRGBO(0, 0, 0, 0.03),
+        backgroundColor: widget.backgroundColor ?? Colors.white,
         centerTitle: widget.centerTitle,
         elevation: 0.0,
         title: Text(

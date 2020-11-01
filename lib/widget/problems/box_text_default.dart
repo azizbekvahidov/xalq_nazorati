@@ -1,3 +1,4 @@
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 
 class BoxTextDefault extends StatelessWidget {
@@ -18,7 +19,7 @@ class BoxTextDefault extends StatelessWidget {
         txt,
         style: TextStyle(
           color: Colors.black,
-          fontFamily: "Gilroy",
+          fontFamily: globals.font,
           fontSize: 10,
         ),
       ),

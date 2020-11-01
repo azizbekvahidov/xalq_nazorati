@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -12,7 +13,7 @@ import 'package:xalq_nazorati/widget/problems/problem_list.dart';
 class ProblemScreen extends StatefulWidget {
   final String title;
   final String status;
-  ProblemScreen(this.title, this.status);
+  ProblemScreen({this.title, this.status});
   @override
   _ProblemScreenState createState() => _ProblemScreenState();
 }
@@ -70,7 +71,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
     }
   }
 
-  Future<List<Problems>> getProblems() async {
+  Future<List> getProblems() async {
     String _type = "processing";
     switch (widget.status) {
       case "warning":
@@ -87,15 +88,15 @@ class _ProblemScreenState extends State<ProblemScreen> {
     try {
       var url = '${globals.api_link}/problems/list/$_type';
       HttpGet request = HttpGet();
-      var response = await request.methodGet(url);
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
 
-      String reply = await response.transform(utf8.decoder).join();
-      var temp = json.decode(reply);
-      var some = temp.values.toList();
-      var res = parseProblems(json.encode(some[3]));
+      var reply = response.json();
+      // var some = temp.values.toList();
+      var res = reply["results"];
       if (!isRequest) {
         for (var i = 0; i < res.length; i++) {
-          Map<int, bool> elem = {res[i].id: false};
+          Map<int, bool> elem = {res[i]["id"]: false};
           _problems.addAll(elem);
         }
         refreshBells();
@@ -116,9 +117,11 @@ class _ProblemScreenState extends State<ProblemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.title);
     return Scaffold(
       appBar: CustomAppBar(
-        title: widget.title,
+        title:
+            widget.title == null ? "unresolved".tr().toString() : widget.title,
         centerTitle: true,
       ),
       body: Container(
@@ -130,12 +133,14 @@ class _ProblemScreenState extends State<ProblemScreen> {
             return snapshot.hasData
                 ? ProblemList(
                     data: snapshot.data,
-                    title: widget.title,
-                    status: widget.status,
+                    title: widget.title == null
+                        ? "unresolved".tr().toString()
+                        : widget.title,
+                    status: widget.status == null ? "warning" : widget.status,
                     alertList: _problems,
                   )
                 : Center(
-                    child: Text("Loading"),
+                    child: Text("Loading".tr().toString()),
                   );
           },
         ),

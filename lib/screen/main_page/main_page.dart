@@ -3,7 +3,6 @@ import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/category.dart';
 import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
@@ -88,8 +87,9 @@ class _MainPageState extends State<MainPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Привет, ${globals.userData['first_name']}",
+                        "${"hello".tr().toString()}, ${globals.userData['first_name']}",
                         style: TextStyle(
+                            fontFamily: globals.font,
                             color: Colors.white,
                             fontSize: 26,
                             fontWeight: FontWeight.w600),
@@ -97,6 +97,7 @@ class _MainPageState extends State<MainPage> {
                       Text(
                         "welcome".tr().toString(),
                         style: TextStyle(
+                            fontFamily: globals.font,
                             color: Colors.white,
                             fontSize: 26,
                             fontWeight: FontWeight.w600),
@@ -107,8 +108,9 @@ class _MainPageState extends State<MainPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 30, left: 20, bottom: 10),
                   child: Text(
-                    "Сообщить о проблемы",
+                    "send_problem".tr().toString(),
                     style: TextStyle(
+                        fontFamily: globals.font,
                         color: Color(0xff313B6C),
                         fontSize: 18,
                         fontWeight: FontWeight.w600),
@@ -127,7 +129,7 @@ class _MainPageState extends State<MainPage> {
                             return snapshot.hasData
                                 ? CategoryList(categories: snapshot.data)
                                 : Center(
-                                    child: Text("Loading"),
+                                    child: Text("Loading".tr().toString()),
                                   );
                           }),
                     ],
@@ -149,8 +151,9 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Новости Сегодня",
+                            "today".tr().toString(),
                             style: TextStyle(
+                                fontFamily: globals.font,
                                 color: Color(0xff313B6C),
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600),
@@ -166,8 +169,9 @@ class _MainPageState extends State<MainPage> {
                               );
                             },
                             child: Text(
-                              "Смотреть все",
+                              "show_all".tr().toString(),
                               style: TextStyle(
+                                  fontFamily: globals.font,
                                   color: Color(0xff66676C),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500),
@@ -187,7 +191,7 @@ class _MainPageState extends State<MainPage> {
                                       breaking: true,
                                     )
                                   : Center(
-                                      child: Text("Нет новостей"),
+                                      child: Text("no_news".tr().toString()),
                                     );
                             }),
                       ),
@@ -205,8 +209,9 @@ class _MainPageState extends State<MainPage> {
                 height: 40,
                 alignment: Alignment.center,
                 child: Text(
-                  "Приложения работает в тестовом режиме",
+                  "test_notify".tr().toString(),
                   style: TextStyle(
+                      fontFamily: globals.font,
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w500),

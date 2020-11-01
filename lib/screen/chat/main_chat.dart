@@ -233,7 +233,7 @@ class _MainChatState extends State<MainChat> {
                     }),
               )
             : Center(
-                child: Text("Loading"),
+                child: Text(""),
               );
       },
     );
@@ -267,7 +267,7 @@ class _MainChatState extends State<MainChat> {
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Сообщение",
+        title: "messages".tr().toString(),
         centerTitle: true,
       ),
       body: Container(
@@ -323,7 +323,7 @@ class _MainChatState extends State<MainChat> {
                             },
                             controller: messageController,
                             decoration: InputDecoration.collapsed(
-                              hintText: "Введите сообщения",
+                              hintText: "enter_message".tr().toString(),
                               hintStyle: Theme.of(context).textTheme.display1,
                             ),
                           )),

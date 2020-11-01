@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/main_page/news/news_breaking_screen.dart';
 import 'package:xalq_nazorati/screen/main_page/news/news_planned_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 
 class NewsScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Новости",
+        title: "news".tr().toString(),
         centerTitle: true,
       ),
       body: Container(
@@ -75,10 +76,10 @@ class _NewsScreenState extends State<NewsScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Сегодня",
+                      "today".tr().toString(),
                       style: TextStyle(
                         color: _txt1,
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 18,
                       ),
                     ),
@@ -100,10 +101,10 @@ class _NewsScreenState extends State<NewsScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Планированные",
+                      "planning".tr().toString(),
                       style: TextStyle(
                         color: _txt2,
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 18,
                       ),
                     ),

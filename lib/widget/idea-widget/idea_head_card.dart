@@ -54,7 +54,7 @@ class IdeaHeadCard extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: Color(0xff323F4B),
-                  fontFamily: "Gilroy",
+                  fontFamily: globals.font,
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
@@ -66,7 +66,7 @@ class IdeaHeadCard extends StatelessWidget {
                 desc,
                 style: TextStyle(
                   color: Color(0xff323F4B),
-                  fontFamily: "Gilroy",
+                  fontFamily: globals.font,
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                 ),

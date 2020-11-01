@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1085883665581-bel5c2l5tnae36hgbfujgmcnfopgh03o.apps.googleusercontent.com</string>
+	<string>1085883665581-jn4sk13mcvap08jpd5jflnkaun192fur.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1085883665581-bel5c2l5tnae36hgbfujgmcnfopgh03o</string>
+	<string>com.googleusercontent.apps.1085883665581-jn4sk13mcvap08jpd5jflnkaun192fur</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAGbgYm0ls1FE5Z_Z3vkWAnMV521eVK9QM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.xalq-nazorati</string>
+	<string>com.example.xalqNazorati</string>
 	<key>PROJECT_ID</key>
 	<string>xalq-nazorati</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1085883665581:ios:1eb967b1d2377ea100ca24</string>
+	<string>1:1085883665581:ios:5aaab5db349bb4a100ca24</string>
 	<key>DATABASE_URL</key>
 	<string>https://xalq-nazorati.firebaseio.com</string>
 </dict>

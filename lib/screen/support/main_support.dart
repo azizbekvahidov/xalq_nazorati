@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/widget/app_bar/custom_icon_appbar.dart';
 
 class MainSupport extends StatefulWidget {
@@ -20,7 +22,7 @@ class _MainSupportState extends State<MainSupport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomIconAppBar(
-        title: "Сообщить о баге",
+        title: "bugs_problem".tr().toString(),
         icon: "assets/img/support.svg",
       ),
       body: SingleChildScrollView(
@@ -38,13 +40,13 @@ class _MainSupportState extends State<MainSupport> {
             Padding(
               padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
               child: Text(
-                "У вас есть проблема с приложением напишите нам в телеграм бот",
+                "send_to_bot_message".tr().toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xff313B6C),
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  fontFamily: "Gilroy",
+                  fontFamily: globals.font,
                 ),
               ),
             ),
@@ -59,11 +61,11 @@ class _MainSupportState extends State<MainSupport> {
                   padding: EdgeInsets.symmetric(horizontal: 18),
                   height: 50,
                   child: Text(
-                    "Сообщить о проблеме",
+                    "send_notify".tr().toString(),
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w400,
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         color: Colors.white),
                   ),
                   decoration: BoxDecoration(

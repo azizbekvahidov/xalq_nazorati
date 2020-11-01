@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
@@ -86,7 +87,7 @@ class _CustomDottedCircleContainerState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Выберите фото",
+                      "choose_photo".tr().toString(),
                       style: Theme.of(context).textTheme.display2,
                     ),
                     Padding(
@@ -106,10 +107,10 @@ class _CustomDottedCircleContainerState
                             Padding(
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
-                                "Выбрать из галереи",
+                                "from_gallery".tr().toString(),
                                 style: TextStyle(
                                   color: Color(0xff66676C),
-                                  fontFamily: "Gilroy",
+                                  fontFamily: globals.font,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -133,10 +134,10 @@ class _CustomDottedCircleContainerState
                             Padding(
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
-                                "Сделать снимок",
+                                "from_camera".tr().toString(),
                                 style: TextStyle(
                                   color: Color(0xff66676C),
-                                  fontFamily: "Gilroy",
+                                  fontFamily: globals.font,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -149,7 +150,7 @@ class _CustomDottedCircleContainerState
                     Padding(
                       padding: EdgeInsets.only(top: 20),
                     ),
-                    DefaultButton("Отмена", () {
+                    DefaultButton("cancel".tr().toString(), () {
                       Navigator.of(context).pop();
                     }, Theme.of(context).primaryColor),
                   ],

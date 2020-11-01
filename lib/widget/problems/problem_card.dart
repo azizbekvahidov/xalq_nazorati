@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
-import 'package:xalq_nazorati/screen/profile/problem/solve_problem_screen.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
@@ -14,7 +13,7 @@ class ProblemCard extends StatefulWidget {
   bool alert = false;
   final String status;
   final String title;
-  final Problems data;
+  final Map<String, dynamic> data;
   ProblemCard({this.alert, this.status, this.title, this.data});
   @override
   _ProblemCardState createState() => _ProblemCardState();
@@ -25,7 +24,8 @@ class _ProblemCardState extends State<ProblemCard> {
 
   @override
   Widget build(BuildContext context) {
-    var deadline = DateTime.parse(widget.data.deadline).millisecondsSinceEpoch;
+    var deadline =
+        DateTime.parse(widget.data["deadline"]).millisecondsSinceEpoch;
     int days = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())
         .inDays;
@@ -37,7 +37,8 @@ class _ProblemCardState extends State<ProblemCard> {
     int minutes = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())
         .inMinutes;
-    _showTime = "${days}д : ${hours}ч : ${minutes}м";
+    _showTime =
+        "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()} : ${minutes}${"m".tr().toString()}";
     bool _alert = widget.alert == null ? false : widget.alert;
     var mediaQuery = MediaQuery.of(context);
     return InkWell(
@@ -78,10 +79,12 @@ class _ProblemCardState extends State<ProblemCard> {
                   Container(
                     width: mediaQuery.size.width * 0.7,
                     child: Text(
-                      widget.data.subsubcategory["title_ru"],
+                      widget.data["subsubcategory"]
+                              ["api_title".tr().toString()] ??
+                          "",
                       style: TextStyle(
                         color: Colors.black,
-                        fontFamily: "Gilroy",
+                        fontFamily: globals.font,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -120,10 +123,10 @@ class _ProblemCardState extends State<ProblemCard> {
               ),
               Row(
                 children: [
-                  BoxTextWarning(
-                      widget.data.status.tr().toString(), widget.status),
+                  BoxTextWarning("${widget.data["status"]}".tr().toString(),
+                      widget.status),
                   BoxTextDefault("${_showTime}"),
-                  BoxTextDefault("№${widget.data.id}"),
+                  BoxTextDefault("№${widget.data["id"]}"),
                 ],
               ),
             ],

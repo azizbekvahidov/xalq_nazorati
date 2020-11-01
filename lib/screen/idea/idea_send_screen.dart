@@ -155,7 +155,7 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                                       color: Color.fromRGBO(102, 103, 108, 0.6),
                                       fontSize: 10,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                     ),
                                   ),
                                 ),
@@ -220,7 +220,7 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                                                 text:
                                                     "Ознакомлен и согласен с ",
                                                 style: TextStyle(
-                                                  fontFamily: "Gilroy",
+                                                  fontFamily: globals.font,
                                                   fontSize: 12,
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -235,7 +235,7 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                                                 style: TextStyle(
                                                   decoration:
                                                       TextDecoration.underline,
-                                                  fontFamily: "Gilroy",
+                                                  fontFamily: globals.font,
                                                   fontSize: 12,
                                                   color: Theme.of(context)
                                                       .primaryColor,
@@ -245,7 +245,7 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                                               TextSpan(
                                                 text: " и ",
                                                 style: TextStyle(
-                                                  fontFamily: "Gilroy",
+                                                  fontFamily: globals.font,
                                                   fontSize: 12,
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.normal,
@@ -260,7 +260,7 @@ class _IdeaSendScreenState extends State<IdeaSendScreen> {
                                                 style: TextStyle(
                                                   decoration:
                                                       TextDecoration.underline,
-                                                  fontFamily: "Gilroy",
+                                                  fontFamily: globals.font,
                                                   fontSize: 12,
                                                   color: Theme.of(context)
                                                       .primaryColor,

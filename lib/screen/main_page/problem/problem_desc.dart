@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../main_page/problem/problem_locate.dart';
@@ -62,7 +63,7 @@ class _ProblemDescState extends State<ProblemDesc> {
         25;
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Опишите проблему",
+        title: "desc_provlem".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -82,9 +83,9 @@ class _ProblemDescState extends State<ProblemDesc> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("Описать проблему"),
+                            MainText("problem_describe".tr().toString()),
                             TextareaInput(
-                              hint: "Напишите о проблеме",
+                              hint: "problem_describe_hint".tr().toString(),
                               textareaController: descController,
                               notifyParent: checkChange,
                             ),
@@ -92,18 +93,18 @@ class _ProblemDescState extends State<ProblemDesc> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                MainText("Загрузите фото"),
+                                MainText("upload_photo".tr().toString()),
                                 InkWell(
                                   onTap: () {
                                     clearImages();
                                   },
                                   child: Text(
-                                    "Очистить",
+                                    "clear".tr().toString(),
                                     style: TextStyle(
                                       color: Color(0xffB2B7D0),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: "Gilroy",
+                                      fontFamily: globals.font,
                                     ),
                                   ),
                                 )
@@ -146,11 +147,11 @@ class _ProblemDescState extends State<ProblemDesc> {
                                 Expanded(
                                   flex: 9,
                                   child: Text(
-                                    "Размер одного файла не должен превышать 10 Мб, в количестве не более 4 файлов",
+                                    "upload_warning".tr().toString(),
                                     style: TextStyle(
                                         color: Color(0xffFF8F27),
                                         fontSize: 12,
-                                        fontFamily: "Gilroy"),
+                                        fontFamily: globals.font),
                                   ),
                                 ),
                               ],
@@ -172,11 +173,11 @@ class _ProblemDescState extends State<ProblemDesc> {
                           alignment: FractionalOffset.bottomCenter,
                           child: !_value
                               ? DefaultButton(
-                                  "Продолжить",
+                                  "continue".tr().toString(),
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : DefaultButton("Продолжить", () {
+                              : DefaultButton("continue".tr().toString(), () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (BuildContext context) {
                                     return ProblemLocate(descController.text,

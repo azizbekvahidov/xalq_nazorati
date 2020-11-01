@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class IconCardList extends StatelessWidget {
   final String title;
@@ -56,7 +57,7 @@ class IconCardList extends StatelessWidget {
                             text: TextSpan(
                               text: title,
                               style: TextStyle(
-                                fontFamily: "Gilroy",
+                                fontFamily: globals.font,
                                 color: Color(0xff050505),
                                 fontWeight: FontWeight.w600,
                                 fontSize: 18,

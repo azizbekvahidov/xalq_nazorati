@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _children = [
     MainPage(),
-    ProblemScreen("Нерешенные проблемы", "warning"),
+    ProblemScreen(),
     MainSupport(),
     MainProfile(),
   ];
@@ -83,7 +84,8 @@ class _HomePageState extends State<HomePage> {
                       // inactiveColor: Color(0xffFF8F27),
                       // activeColor: Theme.of(context).primaryColor,
                       title: Text(
-                        'Главная',
+                        'main'.tr().toString(),
+                        style: TextStyle(fontFamily: globals.font),
                         textAlign: TextAlign.center,
                       ),
                       icon: SvgPicture.asset("assets/img/home.svg",
@@ -92,7 +94,8 @@ class _HomePageState extends State<HomePage> {
                     BottomNavigationBarItem(
                       // activeColor: Theme.of(context).primaryColor,
                       title: Text(
-                        'Проблемы',
+                        'problems'.tr().toString(),
+                        style: TextStyle(fontFamily: globals.font),
                         textAlign: TextAlign.center,
                       ),
                       icon: SvgPicture.asset("assets/img/problem.svg",
@@ -101,7 +104,8 @@ class _HomePageState extends State<HomePage> {
                     BottomNavigationBarItem(
                       // activeColor: Theme.of(context).primaryColor,
                       title: Text(
-                        'Помощь',
+                        'help'.tr().toString(),
+                        style: TextStyle(fontFamily: globals.font),
                         textAlign: TextAlign.center,
                       ),
                       icon: SvgPicture.asset("assets/img/support.svg",
@@ -110,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                     BottomNavigationBarItem(
                       // activeColor: Theme.of(context).primaryColor,
                       title: Text(
-                        'Профиль',
+                        'profile'.tr().toString(),
+                        style: TextStyle(fontFamily: globals.font),
                         textAlign: TextAlign.center,
                       ),
                       icon: SvgPicture.asset("assets/img/profile.svg",
@@ -175,7 +180,7 @@ class _HomePageState extends State<HomePage> {
               )
             : Scaffold(
                 body: Center(
-                  child: Text("Loading"),
+                  child: Text("Loading".tr().toString()),
                 ),
               );
       },

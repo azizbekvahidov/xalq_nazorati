@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:easy_localization/easy_localization.dart';
 
 class TextareaInput extends StatefulWidget {
   final String hint;
@@ -58,7 +60,7 @@ class _TextareaInputState extends State<TextareaInput> {
                   controller: widget.textareaController,
                   maxLines: 7,
                   decoration: InputDecoration.collapsed(
-                    hintText: "Введите причину",
+                    hintText: widget.hint,
                     hintStyle: Theme.of(context).textTheme.display1,
                   ),
                 ),
@@ -70,12 +72,12 @@ class _TextareaInputState extends State<TextareaInput> {
           width: double.infinity,
           alignment: Alignment.centerRight,
           child: Text(
-            "Не более $cnt символов",
+            "${"textarea_counter_start".tr().toString()} $cnt ${"textarea_counter_end".tr().toString()}",
             style: TextStyle(
               color: Color.fromRGBO(102, 103, 108, 0.6),
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              fontFamily: "Gilroy",
+              fontFamily: globals.font,
             ),
           ),
         ),

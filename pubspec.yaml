@@ -61,7 +61,12 @@ dependencies:
   firebase_core: ^0.5.0+1
   flutter_typeahead: ^1.8.8
   yandex_mapkit: ^0.4.0
-  sms: ^0.2.4
+  # sms: ^0.2.4
+  share: ^0.6.5+4
+  rate_my_app: ^0.7.2
+  sms:
+    path: ./sms
+
 
 
 
