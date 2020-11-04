@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -15,8 +16,9 @@ class ProblemSolvedRateScreen extends StatefulWidget {
   final String executorAvatar;
   final int executorId;
   final String position;
+  final String choose;
   ProblemSolvedRateScreen(this.id, this.executorName, this.executorAvatar,
-      this.executorId, this.position);
+      this.executorId, this.position, this.choose);
   @override
   _ProblemSolvedRateScreenState createState() =>
       _ProblemSolvedRateScreenState();
@@ -31,31 +33,64 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
 
   Future sendData() async {
     String desc = descController.text;
-    if (desc != "" && rated != 0) {
-      var url = '${globals.api_link}/problems/confirm';
-      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      Map<String, dynamic> data = {
-        "problem_id": widget.id,
-        "executor_id": widget.executorId,
-        "message": "$desc",
-        "rating": rating,
-      };
-      var response = await Requests.post(url, body: data, headers: headers);
+    if (widget.choose != "deny") {
+      if (desc != "" && rated != 0) {
+        var url = '${globals.api_link}/problems/confirm';
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}"
+        };
+        Map<String, dynamic> data = {
+          "problem_id": widget.id,
+          "executor_id": widget.executorId,
+          "message": "$desc",
+          "rating": rating,
+        };
+        var response = await Requests.post(url, body: data, headers: headers);
 
-      // String reply = await response.transform(utf8.decoder).join();
-      // var temp = response.json();
-      if (response.statusCode == 200) {
-        var res = response.json(); //parseProblems(response.content());
+        // String reply = await response.transform(utf8.decoder).join();
+        // var temp = response.json();
+        if (response.statusCode == 200) {
+          var res = response.json(); //parseProblems(response.content());
 
-        setState(() {
-          dataSended = true;
-        });
-        Timer(Duration(seconds: 3), () {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) {
-            return MainProfile();
-          }), (Route<dynamic> route) => true);
-        });
+          setState(() {
+            dataSended = true;
+          });
+          Timer(Duration(seconds: 3), () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return MainProfile();
+            }), (Route<dynamic> route) => false);
+          });
+        }
+      }
+    } else {
+      if (desc != "") {
+        var url = '${globals.api_link}/problems/deny';
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}"
+        };
+        Map<String, dynamic> data = {
+          "problem_id": widget.id,
+          "executor_id": widget.executorId,
+          "message": "$desc",
+        };
+        var response = await Requests.post(url, body: data, headers: headers);
+
+        // String reply = await response.transform(utf8.decoder).join();
+        // var temp = response.json();
+        if (response.statusCode == 200) {
+          var res = response.json(); //parseProblems(response.content());
+
+          setState(() {
+            dataSended = true;
+          });
+          Timer(Duration(seconds: 3), () {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) {
+              return MainProfile();
+            }), (Route<dynamic> route) => false);
+          });
+        }
       }
     }
   }
@@ -74,7 +109,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Проблема решена",
+        title: "problem_solved".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -133,7 +168,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                           alignment: Alignment.center,
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: Text(
-                            "Как наш исполнитель помог вам? пожалуйста, оцените и напишите отзыв",
+                            "rate_executor".tr().toString(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: globals.font,
@@ -145,21 +180,23 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 18),
                         ),
-                        SmoothStarRating(
-                          allowHalfRating: false,
-                          onRated: (v) {
-                            setState(() {
-                              rated = v.toInt();
-                              print(rated);
-                            });
-                          },
-                          starCount: 5,
-                          rating: rating,
-                          size: 40.0,
-                          color: Theme.of(context).primaryColor,
-                          borderColor: Color(0xffEBEDF3),
-                          spacing: 0.0,
-                        ),
+                        (widget.choose == "accept")
+                            ? SmoothStarRating(
+                                allowHalfRating: false,
+                                onRated: (v) {
+                                  setState(() {
+                                    rated = v.toInt();
+                                    print(rated);
+                                  });
+                                },
+                                starCount: 5,
+                                rating: rating,
+                                size: 40.0,
+                                color: Theme.of(context).primaryColor,
+                                borderColor: Color(0xffEBEDF3),
+                                spacing: 0.0,
+                              )
+                            : Container(),
                         Container(
                             padding: EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 19),
@@ -182,7 +219,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                                 sendData();
                               },
                               child: Text(
-                                "Подтвердить",
+                                "accept".tr().toString(),
                                 style: Theme.of(context).textTheme.button,
                               ),
                             ),
@@ -194,7 +231,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        "Спасибо за поддержку!",
+                        "thanks".tr().toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontFamily: globals.font,

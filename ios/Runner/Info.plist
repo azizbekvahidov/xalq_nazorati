@@ -70,8 +70,6 @@
 	<array>
 		<string>tel</string>
 	</array>
-	<key>io.flutter.embedded_views_preview</key> 
-	<true/> 
 	
 </dict>
 </plist>

@@ -109,6 +109,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
 
         if (r1.statusCode == 200) isSend = true;
         if (isSend) {
+          globals.tempPhone = widget.phone;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               settings:
                   const RouteSettings(name: PassRecognizeScreen.routeName),
@@ -180,7 +181,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 26,
-                                  fontFamily: 'Gilroy',
+                                  fontFamily: globals.font,
                                 ),
                               ),
                               Padding(
@@ -192,7 +193,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 18,
-                                  fontFamily: 'Gilroy',
+                                  fontFamily: globals.font,
                                 ),
                               ),
                             ],

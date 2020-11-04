@@ -78,6 +78,7 @@ class _MainProfileState extends State<MainProfile> {
             elevation: 0,
             title: Container(
               width: double.infinity,
+              height: 70,
               padding: EdgeInsets.only(top: 20),
               child: Column(
                 children: [

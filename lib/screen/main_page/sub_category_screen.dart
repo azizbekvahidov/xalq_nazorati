@@ -22,9 +22,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
   Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/subsubcategories/${widget.id}';
 
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
 

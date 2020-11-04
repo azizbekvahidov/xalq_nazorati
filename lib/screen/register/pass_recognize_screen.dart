@@ -94,92 +94,84 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                   children: [
                     MainText("pnfl".tr().toString()),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      width: double.infinity,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        color: Color(0xffF5F6F9),
-                        borderRadius: BorderRadius.circular(22.5),
-                        border: Border.all(
-                          color: Color.fromRGBO(178, 183, 208, 0.5),
-                          style: BorderStyle.solid,
-                          width: 0.5,
-                        ),
-                      ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            width: (mediaQuery.size.width -
-                                    mediaQuery.padding.left -
-                                    mediaQuery.padding.right) *
-                                0.789,
-                            child: Stack(
-                              alignment: Alignment.centerRight,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            width: mediaQuery.size.width * 0.75,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: Color(0xffF5F6F9),
+                              borderRadius: BorderRadius.circular(22.5),
+                              border: Border.all(
+                                color: Color.fromRGBO(178, 183, 208, 0.5),
+                                style: BorderStyle.solid,
+                                width: 0.5,
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                TextField(
-                                  controller: pnflController,
-                                  maxLines: 1,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.only(top: 0, bottom: 9),
-                                    border: InputBorder.none,
-                                    hintText: "enter_pnfl".tr().toString(),
-                                    hintStyle:
-                                        Theme.of(context).textTheme.display1,
+                                Container(
+                                  width: (mediaQuery.size.width -
+                                          mediaQuery.padding.left -
+                                          mediaQuery.padding.right) *
+                                      0.64,
+                                  child: TextField(
+                                    controller: pnflController,
+                                    maxLines: 1,
+                                    maxLength: 14,
+                                    buildCounter: (BuildContext context,
+                                            {int currentLength,
+                                            int maxLength,
+                                            bool isFocused}) =>
+                                        null,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          EdgeInsets.only(top: 0, bottom: 10),
+                                      border: InputBorder.none,
+                                      hintText: "enter_pnfl".tr().toString(),
+                                      hintStyle:
+                                          Theme.of(context).textTheme.display1,
+                                    ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () async {
-                                    // createAlertDialog(context);
-                                    final res = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                Platform.isAndroid
-                                                    ? AndroidCameraPage()
-                                                    : CameraScreen()));
-                                    if (res != null) {
-                                      setState(() {
-                                        pnflController.text =
-                                            res.personalNumber;
-                                        seriesController.text =
-                                            res.documentNumber;
-                                      });
-                                    }
-                                  },
-                                  child: SvgPicture.asset(
-                                      "assets/img/qr-code-scan.svg"),
-                                  // Container(
-                                  //     width: 19,
-                                  //     height: 19,
-                                  //     alignment: Alignment.center,
-                                  //     decoration: BoxDecoration(
-                                  //       borderRadius: BorderRadius.circular(19),
-                                  //       border: Border.all(
-                                  //           color: Color.fromRGBO(
-                                  //               49, 59, 108, 0.5),
-                                  //           style: BorderStyle.solid,
-                                  //           width: 2),
-                                  //     ),
-                                  //     child:
-                                  // Text(
-                                  //   "?",
-                                  //   style: TextStyle(
-                                  //     fontFamily: globals.font,
-                                  //     fontSize: 13,
-                                  //     color: Color.fromRGBO(49, 59, 108, 0.5),
-                                  //     fontWeight: FontWeight.bold,
-                                  //   ),
-                                  // ),
-                                  // ),
                                 ),
                               ],
                             ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              // createAlertDialog(context);
+                              final res = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Platform.isAndroid
+                                          ? AndroidCameraPage()
+                                          : CameraScreen()));
+                              if (res != null) {
+                                setState(() {
+                                  pnflController.text = res.personalNumber;
+                                  seriesController.text = res.documentNumber;
+                                });
+                              }
+                            },
+                            child: Container(
+                                margin: EdgeInsets.only(left: 10),
+                                width: 45,
+                                height: 45,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(22.5),
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/img/qr-code-scan.svg",
+                                  width: 15,
+                                )),
                           ),
                         ],
                       ),

@@ -61,7 +61,7 @@ class _SupportInfoState extends State<SupportInfo> {
             padding: EdgeInsets.symmetric(horizontal: 98),
             child: Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               height: 50,
               child: Text(
                 "call".tr().toString(),

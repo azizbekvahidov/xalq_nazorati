@@ -77,7 +77,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  fontFamily: 'Gilroy',
+                  fontFamily: globals.font,
                 ),
               ),
             ),

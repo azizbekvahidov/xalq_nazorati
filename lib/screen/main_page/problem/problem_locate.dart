@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/addresses.dart';
@@ -38,13 +37,13 @@ class ProblemLocate extends StatefulWidget {
 }
 
 class _ProblemLocateState extends State<ProblemLocate> {
-  GoogleMapController mapController;
   YandexMapController mapKitController;
 
   //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
-  static LatLng _initialPosition = LatLng(41.313014, 69.241047);
+  static Point _initialPosition =
+      Point(latitude: 41.313014, longitude: 69.241047);
 
-  static LatLng _lastMapPosition;
+  static Point _lastMapPosition;
   final addressController = TextEditingController();
   final extraController = TextEditingController();
   double _latitude = 0;
@@ -54,7 +53,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
   int _cnt = 40;
 
   Placemark _placemark;
-  final Map<String, Marker> _markers = {};
 
   @override
   void initState() {
@@ -97,7 +95,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
           var latlng = res.split(' ');
           double long = double.parse(latlng[0]);
           double lat = double.parse(latlng[1]);
-          _setLocation(LatLng(lat, long));
+          _setLocation(Point(latitude: lat, longitude: long));
         }
         // List<Addresses> addresses = parseAddress(json["data"]);
         // return addresses;
@@ -257,9 +255,12 @@ class _ProblemLocateState extends State<ProblemLocate> {
     }
     var currentLocation =
         await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    _setLocation(LatLng(currentLocation.latitude, currentLocation.longitude));
-    getAddressFromLatLng(
-        LatLng(currentLocation.latitude, currentLocation.longitude));
+    _setLocation(Point(
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude));
+    getAddressFromLatLng(Point(
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude));
   }
 
   void _setLocation(var coords) async {
@@ -303,18 +304,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
     } catch (e) {
       print(e);
     }
-  }
-
-  _onMapCreated(GoogleMapController controller) {
-    setState(() {
-      mapController = controller;
-    });
-  }
-
-  MapType _currentMapType = MapType.normal;
-
-  _onCameraMove(CameraPosition position) {
-    _lastMapPosition = position.target;
   }
 
   Widget mapButton(Function function, Icon icon, Color color) {
@@ -461,10 +450,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                 onSuggestionSelected:
                                                     (suggestion) {
                                                   checkChange();
-                                                  _setLocation(LatLng(
-                                                      double.parse(suggestion
-                                                          .house["latitude"]),
-                                                      double.parse(
+                                                  _setLocation(Point(
+                                                      latitude: double.parse(
+                                                          suggestion.house[
+                                                              "latitude"]),
+                                                      longitude: double.parse(
                                                           suggestion.house[
                                                               "longitude"])));
                                                   print(suggestion.address);

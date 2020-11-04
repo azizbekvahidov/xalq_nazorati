@@ -1,10 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/addresses.dart';
+import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/input/pass_input.dart';
 import '../rule_page.dart';
@@ -28,6 +31,7 @@ class _RegisterPersonalDataScreenState
   final addressController = TextEditingController();
   final passController = TextEditingController();
   final repassController = TextEditingController();
+  bool isLogin = false;
   bool _value = false;
 
   Future sendData() async {
@@ -51,8 +55,7 @@ class _RegisterPersonalDataScreenState
             body: map, verify: false, persistCookies: true);
 
         if (r1.statusCode == 201) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              LoginScreen.routeName, (Route<dynamic> route) => false);
+          getLogin();
         } else {
           var json = r1.json();
           Map<String, dynamic> res = json['detail'];
@@ -72,6 +75,46 @@ class _RegisterPersonalDataScreenState
         print(e);
       }
     }
+  }
+
+  void getLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userToken', null);
+    String phone = globals.tempPhone;
+    String pass = passController.text;
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signin';
+    Map map = {"phone": phone, "password": pass};
+    var response = await Requests.post(
+      url,
+      body: map,
+    );
+    // request.methodPost(map, url);
+    if (response.statusCode == 200) {
+      // Map<String,dynamic> reply = response.json();
+
+      Map<String, dynamic> responseBody = response.json();
+      addStringToSF(responseBody["token"]);
+      globals.token = responseBody["token"];
+      isLogin = true;
+    } else {
+      Map<String, dynamic> responseBody = response.json();
+      Fluttertoast.showToast(
+          msg: responseBody['message'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+
+    if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+  }
+
+  addStringToSF(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userToken', token);
   }
 
   static List<Addresses> _address;
@@ -234,42 +277,50 @@ class _RegisterPersonalDataScreenState
                               ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 10),
-                              width: dWith * 0.8,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "agree_agreements_start".tr().toString(),
-                                    style: TextStyle(
-                                      fontSize: dWith < 392 ? 10 : 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context)
-                                          .pushNamed(RulePage.routeName);
-                                    },
-                                    child: Text(
-                                      "agreement".tr().toString(),
+                              padding: EdgeInsets.only(left: 20),
+                              width: mediaQuery.size.width * 0.79,
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "agree_agreements_start"
+                                          .tr()
+                                          .toString(),
                                       style: TextStyle(
-                                        fontSize: dWith < 392 ? 10 : 12,
+                                        fontFamily: globals.font,
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Navigator.pushNamed(
+                                              context, RulePage.routeName);
+                                        },
+                                      text: "agreement".tr().toString(),
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        fontFamily: globals.font,
+                                        fontSize: 12,
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                  ),
-                                  Text(
-                                    "agree_agreements_end".tr().toString(),
-                                    style: TextStyle(
-                                      fontSize: dWith < 392 ? 10 : 12,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.normal,
+                                    TextSpan(
+                                      text: "agree_agreements_end"
+                                          .tr()
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],

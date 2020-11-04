@@ -40,7 +40,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   shared_preferences: ^0.5.10
   easy_localization: ^2.3.3
-  google_maps_flutter: ^0.5.32
+  # google_maps_flutter: ^0.5.32
   # flutter_google_maps: ^4.0.0
   geolocator: ^6.0.0+4
   intl: ^0.16.1
@@ -176,16 +176,16 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Gilroy
+    - family: Raleway
       fonts:
-        - asset: assets/fonts/Gilroy-Regular.ttf
-        - asset: assets/fonts/Gilroy-Medium.ttf
+        - asset: assets/fonts/Raleway-Regular.ttf
+        - asset: assets/fonts/Raleway-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Gilroy-Medium.ttf
+        - asset: assets/fonts/Raleway-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Gilroy-Semibold.ttf
+        - asset: assets/fonts/Raleway-Semibold.ttf
           weight: 600
-        - asset: assets/fonts/Gilroy-Bold.ttf
+        - asset: assets/fonts/Raleway-Bold.ttf
           weight: 900
         # - asset: assets/fonts/Gilroy-Black.ttf
         #   weight: 900

@@ -20,9 +20,9 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/categories';
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
 
@@ -32,9 +32,9 @@ class _MainPageState extends State<MainPage> {
   Future<List> getNews() async {
     var url = '${globals.api_link}/news?limit=3';
 
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
 
@@ -87,7 +87,7 @@ class _MainPageState extends State<MainPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${"hello".tr().toString()}, ${globals.userData['first_name']}",
+                        "${"hello".tr().toString()}, ${globals.userData['first_name'] ?? ""}",
                         style: TextStyle(
                             fontFamily: globals.font,
                             color: Colors.white,

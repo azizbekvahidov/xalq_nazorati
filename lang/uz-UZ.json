@@ -153,9 +153,24 @@
     "share_app":"Do‘stlar bilan bo‘lishish",
     "rate_app":"Ilovani baholash",
     "rule_of_moderation":"Moderatsiya qoidalari",
-    "about_desc":"Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с сообщениями о проблемах.",
+    "about_desc":"Bu hokimlik va shahar aholisining samarali hamkorligi uchun murojaatlar bilan ishlashni optimallashtirishga qaratilgan interfaol xizmatdir.",
+    "reason":"Sababni kiriting",
 
-    
+    "solve_warning":"Bu yerda yaqinda muammongiz yechimi ko`rinadi",
+  "executor":"Ijrochi",
+  "execute_date":"Ijro sanasi",
+  "solve_description":"Yechim tavsifi",
+  "docs":"Xujjatlar",
+  "was":"Eski holat",
+  "be":"Hozirgi holat",
+  "request":"Заявка",
+  "problem":"Muammo:",
+  "place":"Joy:",
+  "accept":"Tasdiqlash",
+  "deny":"Men yechimdan noroziman",
+  "thanks":"Yordam uchun rahmat!",
+  "rate_executor":"Bizning ijrochimiz sizga qanday yordam berdi? Iltimos, baho bering va sharh yozing",
+  "solved_status":"Bajarildi:",
 
 
 
@@ -166,7 +181,7 @@
 
 
 
-  "call_message":"Muammo haqida telefon orqali shahar dispetcher xizmatiga uy-joy kommunal xizmatlari xabar berish",
+  "call_message":"Muammo haqida telefon orqali shahar dispetcher xizmati uy-joy kommunal xizmatlariga xabar berish",
   "send_notify":"Xabar berish",
   "send_to_bot_message":"Ilova bilan muammo bo`lsa bizga telegram bot orqali xabar bering",
   "bugs_problem":"Xato haqida xabar berish",

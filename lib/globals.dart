@@ -11,7 +11,7 @@ String country = null;
 String api_link = "https://new.xalqnazorati.uz/ru/api";
 String site_link = "https://new.xalqnazorati.uz";
 Map<String, dynamic> userData;
-String font = "Gilroy";
+String font = "Raleway";
 Color activeButtonColor = Color(0xff00AC8A);
 Color deactiveButtonColor = Color(0xffB2B7D0);
 Map<String, File> images = {
@@ -20,3 +20,4 @@ Map<String, File> images = {
   "file3": null,
   "file4": null,
 };
+String tempPhone = null;

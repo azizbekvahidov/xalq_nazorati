@@ -64,22 +64,26 @@ class MyApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.copyWith(
               // ignore: deprecated_member_use
               title: TextStyle(
+                fontFamily: globals.font,
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
                 color: Colors.black,
               ),
               display1: TextStyle(
+                fontFamily: globals.font,
                 fontSize: 18,
                 fontWeight: FontWeight.normal,
                 color: Color(0xffB2B7D0),
               ),
               display2: TextStyle(
+                fontFamily: globals.font,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xff313B6C),
               ),
 
               button: TextStyle(
+                fontFamily: globals.font,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,

@@ -14,8 +14,6 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Xalq Nazorati"
         android:icon="@mipmap/ic_launcher">
-    <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDXPBpKelAQdT0nHHWW4LoZs78JpHeIn4s"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

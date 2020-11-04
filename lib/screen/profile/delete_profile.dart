@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -26,8 +27,7 @@ class _DeleteProfileState extends State<DeleteProfile> {
     String desc = descController.text;
     if (desc != "") {
       try {
-        var url =
-            '${globals.site_link}${(globals.lang).tr().toString()}/users/profile';
+        var url = '${globals.site_link}/ru/api/users/profile';
 
         Map<String, String> map = {"reason": desc};
         Map<String, String> headers = {
@@ -41,12 +41,32 @@ class _DeleteProfileState extends State<DeleteProfile> {
           r1.raiseForStatus();
           prefs.setString('userToken', null);
           globals.userData = null;
+          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+              LoginScreen.routeName, (Route<dynamic> route) => false);
         } else {
-          print(r1);
+          dynamic json = r1.json();
+          print(json["detail"]);
+          Fluttertoast.showToast(
+              msg: json['detail'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 15.0);
         }
       } catch (ex) {
         print(ex);
       }
+    } else {
+      Fluttertoast.showToast(
+          msg: "reason".tr().toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
     }
   }
 
@@ -142,12 +162,7 @@ class _DeleteProfileState extends State<DeleteProfile> {
                               : */
                               DefaultButton("delete_accaunt".tr().toString(),
                                   () {
-                            deleteProfile().then((value) {
-                              Navigator.of(context, rootNavigator: true)
-                                  .pushNamedAndRemoveUntil(
-                                      LoginScreen.routeName,
-                                      (Route<dynamic> route) => false);
-                            });
+                            deleteProfile();
                             // setState(() {
                             //   _value = !_value;
                             // });

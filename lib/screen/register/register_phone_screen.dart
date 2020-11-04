@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -173,7 +174,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 26,
-                                  fontFamily: 'Gilroy',
+                                  fontFamily: globals.font,
                                 ),
                               ),
                               Padding(
@@ -185,7 +186,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 18,
-                                  fontFamily: 'Gilroy',
+                                  fontFamily: globals.font,
                                 ),
                               ),
                             ],
@@ -256,49 +257,49 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                               ),
                               Container(
                                 padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.75,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "reg_offer_aggreement_start"
-                                          .tr()
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: 13,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
+                                width: mediaQuery.size.width * 0.79,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "reg_offer_aggreement_start"
+                                            .tr()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pushNamed(
-                                            context, RulePage.routeName);
-                                      },
-                                      child: new Text(
-                                        "offer".tr().toString(),
+                                      TextSpan(
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.pushNamed(
+                                                context, RulePage.routeName);
+                                          },
+                                        text: "offer".tr().toString(),
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontFamily: globals.font,
-                                          fontSize: 13,
+                                          fontSize: 12,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      "reg_offer_aggreement_end"
-                                          .tr()
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: 13,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
+                                      TextSpan(
+                                        text: "reg_offer_aggreement_end"
+                                            .tr()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

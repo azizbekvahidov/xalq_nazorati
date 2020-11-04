@@ -156,7 +156,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
     var mediaQuery = MediaQuery.of(context);
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Проблема решена',
+        title: "problem_solved".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -192,7 +192,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Исполнитель",
+                                          "executor".tr().toString(),
                                           style: TextStyle(
                                             fontFamily: globals.font,
                                             fontSize: 12,
@@ -217,7 +217,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Дата исполнения",
+                                          "execute_date".tr().toString(),
                                           style: TextStyle(
                                             fontFamily: globals.font,
                                             fontSize: 12,
@@ -249,7 +249,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Описание решении",
+                                      "solve_description".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
                                         fontSize: 12,
@@ -278,7 +278,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Документы",
+                                      "docs".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
                                         fontSize: 12,
@@ -312,7 +312,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 child: ImageCarousel(
-                                  "Было",
+                                  "was".tr().toString(),
                                   [
                                     "${res['problem']['file_1']}",
                                     "${res['problem']['file_2']}",
@@ -325,21 +325,22 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                               Divider(),
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 15),
-                                child: ImageCarousel("Стало", _files[0]),
+                                child: ImageCarousel(
+                                    "be".tr().toString(), _files[0]),
                               ),
                               Container(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 19, right: 19),
                                 child: Column(
                                   children: [
-                                    ProblemSolveDesc("Заявка",
+                                    ProblemSolveDesc("request".tr().toString(),
                                         "№${res["problem"]["id"]} от ${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]["created_at"]).toString()))}"),
-                                    ProblemSolveDesc("Проблема",
+                                    ProblemSolveDesc("problem".tr().toString(),
                                         "${res["problem"]["subsubcategory"]["title_ru"]}"),
-                                    ProblemSolveDesc("Место",
+                                    ProblemSolveDesc("place".tr().toString(),
                                         "${res["problem"]["address"]}, ${res["problem"]["note"]}"),
                                     ProblemSolveDesc(
-                                      "Выполнено",
+                                      "solved_status".tr().toString(),
                                       "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",
                                     ),
                                   ],
@@ -372,11 +373,12 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                                 "${executors['last_name']} ${executors['name']}",
                                                 executors['user']['avatar'],
                                                 executors['id'],
-                                                executors['position']);
+                                                executors['position'],
+                                                "accept");
                                           }));
                                         },
                                         child: Text(
-                                          "Подтвердить",
+                                          "accept".tr().toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .button,
@@ -402,9 +404,21 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           borderRadius:
                                               BorderRadius.circular(34),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(builder:
+                                                  (BuildContext context) {
+                                            return ProblemSolvedRateScreen(
+                                                widget.id,
+                                                "${executors['last_name']} ${executors['name']}",
+                                                executors['user']['avatar'],
+                                                executors['id'],
+                                                executors['position'],
+                                                "deny");
+                                          }));
+                                        },
                                         child: Text(
-                                          "Я не согласен с решением",
+                                          "deny".tr().toString(),
                                           style: TextStyle(
                                               color: Color(0xffB2B7D0)),
                                         ),
@@ -420,12 +434,12 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                       height: mediaQuery.size.height * 0.8,
                       width: mediaQuery.size.width,
                       child: Center(
-                        child: Text("здесь скоро отобразится решение проблемы"),
+                        child: Text("solve_warning".tr().toString()),
                       ),
                     );
             } else {
               _widget = Center(
-                child: Text("Loading"),
+                child: Text("Loading".tr().toString()),
               );
             }
 

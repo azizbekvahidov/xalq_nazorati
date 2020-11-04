@@ -262,7 +262,11 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                                 children: [
                                   Text(
                                     "+998",
-                                    style: Theme.of(context).textTheme.title,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                   VerticalDivider(
                                     color: Color.fromRGBO(183, 183, 195, 0.5),

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:mrz_parser/mrz_parser.dart';
@@ -32,6 +33,22 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
   void initState() {
     super.initState();
     _initializeCamera();
+  }
+
+  void _initializeCamera() async {
+    List<CameraDescription> cameras = await availableCameras();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    _camera = CameraController(cameras[0], ResolutionPreset.high);
+    _camera.initialize().then((_) async {
+      await Future.delayed(Duration(milliseconds: 300));
+      await _camera.startImageStream(_process);
+      setState(() {
+        _cameraInitialized = true;
+      });
+    });
   }
 
   Future<Uint8List> convertImagetoPng(CameraImage image) async {
@@ -104,25 +121,23 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
     return allBytes.done().buffer.asUint8List();
   }
 
-  void _initializeCamera() async {
-    List<CameraDescription> cameras = await availableCameras();
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    _camera = CameraController(cameras[0], ResolutionPreset.high);
-    _camera.initialize().then((_) async {
-      await Future.delayed(Duration(milliseconds: 300));
-      await _camera.startImageStream(_process);
-      setState(() {
-        _cameraInitialized = true;
-      });
-    });
-  }
-
   List<String> _splitRecognized(String recognizedText) {
     final s = recognizedText.replaceAll(' ', '');
     return s.split('\n').where((s) => s.isNotEmpty && s.length > 25).toList();
+  }
+
+  ImageRotation _rotationIntToImageRotation(int rotation) {
+    switch (rotation) {
+      case 0:
+        return ImageRotation.rotation0;
+      case 90:
+        return ImageRotation.rotation90;
+      case 180:
+        return ImageRotation.rotation180;
+      default:
+        assert(rotation == 270);
+        return ImageRotation.rotation270;
+    }
   }
 
   FirebaseVisionImageMetadata _buildMetaData(
@@ -150,7 +165,12 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
       final data = _concatenatePlanes(image.planes);
       try {
         final fimage = FirebaseVisionImage.fromBytes(
-            data, _buildMetaData(image, ImageRotation.rotation90));
+            data,
+            _buildMetaData(
+                image,
+                _rotationIntToImageRotation(
+                    _camera.description.sensorOrientation)));
+
         textRecognizer.processImage(fimage).then((rec) async {
           try {
             final list = _splitRecognized(rec.text);
@@ -166,7 +186,8 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
           } catch (ex) {
             _processing = false;
           }
-        });
+        })
+          ..whenComplete(() => _processing = false);
       } catch (ex) {
         _processing = false;
       }
@@ -199,18 +220,24 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
               //   child: CameraPreview(_camera)),
               // ) :
               Container(),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+            ),
+          ),
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            CustomAppBar(
+            PnflScanAppbar(
               title: "pnfl_scan".tr().toString(),
               textColor: Colors.white,
-              backgroundColor: Colors.transparent,
             ),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 50,
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.25),
+                  color: Colors.grey.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(5)),
             ),
             Padding(

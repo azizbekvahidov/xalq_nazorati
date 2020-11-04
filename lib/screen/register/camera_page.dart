@@ -3,6 +3,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mrz_scanner/flutter_mrz_scanner.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -113,10 +114,9 @@ class _CameraScreenState extends State<CameraScreen> {
             ),
           ),
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            CustomAppBar(
+            PnflScanAppbar(
               title: 'pnfl_scan'.tr().toString(),
               textColor: Colors.white,
-              backgroundColor: Colors.transparent,
             ),
             Container(
               width: MediaQuery.of(context).size.width,
