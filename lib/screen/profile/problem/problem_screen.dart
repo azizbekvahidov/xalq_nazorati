@@ -117,7 +117,6 @@ class _ProblemScreenState extends State<ProblemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.title);
     return Scaffold(
       appBar: CustomAppBar(
         title:

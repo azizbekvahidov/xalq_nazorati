@@ -29,7 +29,8 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
     try {
       var url = '${globals.api_link}/problems/problem/$id';
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response =
+          await Requests.get(url, headers: headers, timeoutSeconds: 5);
 
       // String reply = await response.transform(utf8.decoder).join();
       // var temp = response.json();

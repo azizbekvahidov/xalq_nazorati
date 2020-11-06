@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/profile/main_profile.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
@@ -43,23 +44,19 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
           "problem_id": widget.id,
           "executor_id": widget.executorId,
           "message": "$desc",
-          "rating": rating,
+          "rating": rated,
         };
         var response = await Requests.post(url, body: data, headers: headers);
 
         // String reply = await response.transform(utf8.decoder).join();
         // var temp = response.json();
         if (response.statusCode == 200) {
-          var res = response.json(); //parseProblems(response.content());
-
           setState(() {
             dataSended = true;
           });
           Timer(Duration(seconds: 3), () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return MainProfile();
-            }), (Route<dynamic> route) => false);
+            Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+                HomePage.routeName, (Route<dynamic> route) => false);
           });
         }
       }
@@ -79,16 +76,15 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
         // String reply = await response.transform(utf8.decoder).join();
         // var temp = response.json();
         if (response.statusCode == 200) {
+          print("sended");
           var res = response.json(); //parseProblems(response.content());
 
           setState(() {
             dataSended = true;
           });
           Timer(Duration(seconds: 3), () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) {
-              return MainProfile();
-            }), (Route<dynamic> route) => false);
+            Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+                HomePage.routeName, (Route<dynamic> route) => false);
           });
         }
       }

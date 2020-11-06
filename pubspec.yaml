@@ -113,13 +113,7 @@ flutter:
     - assets/img/support.svg
     - assets/img/problem.svg
     
-    - assets/img/field.svg
-    - assets/img/road.svg
-    - assets/img/citySpace.svg
-    - assets/img/transport.svg
-    - assets/img/selling.svg
-    - assets/img/house.svg
-    - assets/img/test.png
+  
     - assets/img/location.svg
     - assets/img/support.png
 
@@ -142,7 +136,6 @@ flutter:
 
     - assets/img/newsLocate.svg
     - assets/img/newsClock.svg
-    - assets/img/newsPic.jpg
     - assets/img/facebook.svg
     - assets/img/instagram.svg
     - assets/img/twitter.svg
@@ -151,8 +144,6 @@ flutter:
     - assets/img/bell.svg
     - assets/img/pdf.png
 
-    - assets/img/likeBtn.svg
-    - assets/img/dislikeBtn.svg
     - assets/img/user.svg
     - assets/img/calendar.svg
     - assets/img/pin.svg
@@ -161,6 +152,7 @@ flutter:
     - assets/img/file_icon.svg
     - assets/img/qr-code-scan.svg
     - flutter_assets/placemark.png
+    - assets/img/info.svg
 
   #   - images/a_dot_ham.jpeg
 

@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
@@ -42,7 +43,7 @@ class _DeleteProfileState extends State<DeleteProfile> {
           prefs.setString('userToken', null);
           globals.userData = null;
           Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
-              LoginScreen.routeName, (Route<dynamic> route) => false);
+              HomePage.routeName, (Route<dynamic> route) => false);
         } else {
           dynamic json = r1.json();
           print(json["detail"]);

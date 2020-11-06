@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
+import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 
 class SubCategoryCardList extends StatelessWidget {
   final String title;
@@ -21,6 +22,31 @@ class SubCategoryCardList extends StatelessWidget {
       "file3": null,
       "file4": null,
     });
+  }
+
+  customDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.35,
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: GetLoginDialog(),
+            ),
+          );
+        });
   }
 
   SubCategoryCardList(this.id, this.title, this.categoryId, this.divider);
@@ -66,14 +92,18 @@ class SubCategoryCardList extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return ProblemDesc(id, title, categoryId);
-                  },
-                ),
-                // ModalRoute.withName(HomePage.routeName),
-              ).then(onGoBack);
+              if (globals.token != null) {
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return ProblemDesc(id, title, categoryId);
+                    },
+                  ),
+                  // ModalRoute.withName(HomePage.routeName),
+                ).then(onGoBack);
+              } else {
+                customDialog(context);
+              }
             },
           ),
           if (divider) Divider(),

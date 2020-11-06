@@ -66,10 +66,10 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
 
       reply.lastWhere((element) {
         checkMessage(element["id"]);
+        setState(() {
+          _data.add(reply[0]);
+        });
         return true;
-      });
-      setState(() {
-        _data.add(reply[0]);
       });
     } catch (e) {
       print(e);

@@ -20,7 +20,6 @@ class ProblemContentScreen extends StatefulWidget {
   final String status;
   final String title;
   final Map<String, dynamic> data;
-
   ProblemContentScreen(this.title, this.status, this.data);
   @override
   _ProblemContentScreenState createState() => _ProblemContentScreenState();
@@ -29,16 +28,23 @@ class ProblemContentScreen extends StatefulWidget {
 class _ProblemContentScreenState extends State<ProblemContentScreen> {
   bool _alert = false;
   String _showTime;
-  Timer timer;
+  Timer timers;
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      refreshBells();
-    });
+    try {
+      timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
+        refreshBells();
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   FutureOr onGoBack(dynamic value) {
+    timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      refreshBells();
+    });
     clearImages();
   }
 
@@ -53,7 +59,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
 
   @override
   void dispose() {
-    timer?.cancel();
+    timers?.cancel();
     super.dispose();
   }
 
@@ -406,10 +412,18 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
               ShadowBox(
                 child: Column(
                   children: [
-                    CustomCardList("subcat2", "status".tr().toString(),
-                        ProblemStatusScreen(widget.data["id"]), true),
-                    CustomCardList("subcat2", "messages".tr().toString(),
-                        MainChat(widget.data["id"]), true),
+                    CustomCardList(
+                      "subcat2",
+                      "status".tr().toString(),
+                      ProblemStatusScreen(widget.data["id"]),
+                      true,
+                    ),
+                    CustomCardList(
+                      "subcat2",
+                      "messages".tr().toString(),
+                      MainChat(widget.data["id"]),
+                      true,
+                    ),
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,6 +466,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                               ),
                             ),
                             onTap: () {
+                              timers.cancel();
                               Navigator.of(context, rootNavigator: true).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) {
@@ -467,13 +482,14 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                       ),
                     ),
                     CustomCardList(
-                        "subcat2",
-                        "problem_solved".tr().toString(),
-                        SolveProblemScreen(
-                          status: widget.status,
-                          id: widget.data["id"],
-                        ),
-                        false),
+                      "subcat2",
+                      "problem_solved".tr().toString(),
+                      SolveProblemScreen(
+                        status: widget.status,
+                        id: widget.data["id"],
+                      ),
+                      false,
+                    ),
                   ],
                 ),
               ),

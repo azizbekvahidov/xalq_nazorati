@@ -109,7 +109,13 @@ class _RegisterPersonalDataScreenState
           fontSize: 15.0);
     }
 
-    if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+    if (isLogin)
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) {
+        return HomePage();
+      }),
+          (Route<dynamic> route) =>
+              false); //Navigator.of(context).pushReplacementNamed(HomePage.routeName);
   }
 
   addStringToSF(String token) async {

@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -54,6 +54,9 @@
 	<string>Need to upload image</string>
 	<!-- localizations -->
 	<key>CFBundleLocalizations</key>
+<!-- 
+	<key>CFBundleDisplayName</key>
+	<string>Xalq Nazorati</string> -->
 	<array>
 		<string>uz</string>
 		<string>ru</string>
@@ -62,6 +65,9 @@
 	<!--  -->
 	<key>io.flutter.embedded_views_preview</key>
     <true/>
+
+	<key>io.flutter.embedded_views_preview</key>
+	<string>YES</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
 	<key>NSLocationAlwaysUsageDescription</key>

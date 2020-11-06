@@ -133,18 +133,20 @@ class _MainProfileState extends State<MainProfile> {
                             status: "warning"),
                         true),
                     CustomCardList(
-                        "subcat2",
-                        "solved".tr().toString(),
-                        ProblemScreen(
-                            title: "solved".tr().toString(), status: "success"),
-                        true),
+                      "subcat2",
+                      "solved".tr().toString(),
+                      ProblemScreen(
+                          title: "solved".tr().toString(), status: "success"),
+                      true,
+                    ),
                     CustomCardList(
-                        "subcat3",
-                        "take_off_problems".tr().toString(),
-                        ProblemScreen(
-                            title: "take_off_problems".tr().toString(),
-                            status: "danger"),
-                        false),
+                      "subcat3",
+                      "take_off_problems".tr().toString(),
+                      ProblemScreen(
+                          title: "take_off_problems".tr().toString(),
+                          status: "danger"),
+                      false,
+                    ),
                   ],
                 ),
               ),

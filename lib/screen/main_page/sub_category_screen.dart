@@ -4,10 +4,11 @@ import 'dart:convert';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/models/sub_category.dart';
 import 'package:xalq_nazorati/widget/category/sub_sub_categories_list.dart';
+import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 
 class SubCategoryScreen extends StatefulWidget {
-  static const routeName = "/category-screen";
+  static const routeName = "/sub-category-screen";
   final String title;
   final int id;
   final int categoryId;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/widget/problems/problem_card.dart';
@@ -7,6 +9,8 @@ class ProblemList extends StatefulWidget {
   final String title;
   final String status;
   final Map<int, bool> alertList;
+  Timer timer;
+  Function refreshBells;
   ProblemList({this.data, this.title, this.status, this.alertList, Key key})
       : super(key: key);
   @override

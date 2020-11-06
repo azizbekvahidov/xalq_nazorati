@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
+import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'profile/main_profile.dart';
 import 'support/main_support.dart';
 import 'main_page/main_page.dart';
@@ -53,6 +54,31 @@ class _HomePageState extends State<HomePage> {
     getUser();
   }
 
+  customDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.35,
+              padding: EdgeInsets.symmetric(vertical: 40),
+              child: GetLoginDialog(),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -64,17 +90,35 @@ class _HomePageState extends State<HomePage> {
                 bottomNavigationBar: BottomNavigationBar(
                   selectedItemColor: Theme.of(context).primaryColor,
                   onTap: (index) {
-                    setState(() {
-                      _colors[0] = Color(0xff66676C);
-                      _colors[1] = Color(0xff66676C);
-                      _colors[2] = Color(0xff66676C);
-                      _colors[3] = Color(0xff66676C);
-                      _page = _children[index];
-                      _colors[index] = Theme.of(context).primaryColor;
-                    });
-                    navigatorKey.currentState
-                        .popUntil((route) => route.isFirst);
-                    _currentIndex = index;
+                    if (index == 1 || index == 3) {
+                      if (globals.token == null) {
+                        customDialog(context);
+                      } else {
+                        setState(() {
+                          _colors[0] = Color(0xff66676C);
+                          _colors[1] = Color(0xff66676C);
+                          _colors[2] = Color(0xff66676C);
+                          _colors[3] = Color(0xff66676C);
+                          _page = _children[index];
+                          _colors[index] = Theme.of(context).primaryColor;
+                        });
+                        navigatorKey.currentState
+                            .popUntil((route) => route.isFirst);
+                        _currentIndex = index;
+                      }
+                    } else {
+                      setState(() {
+                        _colors[0] = Color(0xff66676C);
+                        _colors[1] = Color(0xff66676C);
+                        _colors[2] = Color(0xff66676C);
+                        _colors[3] = Color(0xff66676C);
+                        _page = _children[index];
+                        _colors[index] = Theme.of(context).primaryColor;
+                      });
+                      navigatorKey.currentState
+                          .popUntil((route) => route.isFirst);
+                      _currentIndex = index;
+                    }
                   },
                   type: BottomNavigationBarType.fixed,
                   selectedFontSize: 12,

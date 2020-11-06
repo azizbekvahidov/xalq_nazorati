@@ -1,13 +1,27 @@
+import 'dart:async';
+
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 
-class CustomCardList extends StatelessWidget {
+class CustomCardList extends StatefulWidget {
   final String title;
   final String id;
   final Widget route;
   bool divider = false;
 
   CustomCardList(this.id, this.title, this.route, this.divider);
+
+  @override
+  _CustomCardListState createState() => _CustomCardListState();
+}
+
+class _CustomCardListState extends State<CustomCardList> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -30,7 +44,7 @@ class CustomCardList extends StatelessWidget {
                       child: Container(
                           child: RichText(
                         text: TextSpan(
-                          text: title,
+                          text: widget.title,
                           style: TextStyle(
                             fontFamily: globals.font,
                             color: Color(0xff050505),
@@ -52,13 +66,13 @@ class CustomCardList extends StatelessWidget {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) {
-                    return route;
+                    return widget.route;
                   },
                 ),
               );
             },
           ),
-          if (divider) Divider(),
+          if (widget.divider) Divider(),
         ],
       ),
     );

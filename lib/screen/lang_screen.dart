@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:xalq_nazorati/screen/home_page.dart';
 import './login_screen.dart';
 
 class LangScreen extends StatefulWidget {
@@ -20,110 +21,109 @@ class _LangScreenState extends State<LangScreen> {
     prefs.setString('country', country);
   }
 
-  createAlertDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Builder(builder: (context) {
-            // Get available height and width of the build area of this widget. Make a choice depending on the size.
-            var height = MediaQuery.of(context).size.height;
-            var width = MediaQuery.of(context).size.width;
-
-            return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Container(
-                height: height,
-                width: width,
-                child: Column(
-                  children: [
-                    Text(
-                      "Портал Xalq Nazorati",
-                      style: TextStyle(
+  customDialog() {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.7,
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    "Портал Xalq Nazorati",
+                    style: TextStyle(
                         fontFamily: globals.font,
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: Color(0xff313B6C),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
-                        style: TextStyle(
+                        decoration: TextDecoration.none),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
+                      style: TextStyle(
                           fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
-                        ),
-                      ),
+                          decoration: TextDecoration.none),
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Улучшим город вместе",
-                        style: TextStyle(
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Улучшим город вместе",
+                      style: TextStyle(
                           fontFamily: globals.font,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff313B6C),
-                        ),
-                      ),
+                          decoration: TextDecoration.none),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
-                        style: TextStyle(
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
+                      style: TextStyle(
                           fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
-                        ),
-                      ),
+                          decoration: TextDecoration.none),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
-                        style: TextStyle(
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
+                      style: TextStyle(
                           fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
-                        ),
-                      ),
+                          decoration: TextDecoration.none),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text(
-                        "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
-                        style: TextStyle(
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
+                      style: TextStyle(
                           fontFamily: globals.font,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                           color: Colors.black,
-                        ),
-                      ),
+                          decoration: TextDecoration.none),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 50),
-                      color: Colors.white,
-                      width: double.infinity,
-                      child: Container(
-                          child: SvgPicture.asset("assets/img/Frame.svg")),
-                    ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 50),
+                    color: Colors.white,
+                    width: double.infinity,
+                    child: Container(
+                        child: SvgPicture.asset("assets/img/Frame.svg")),
+                  ),
+                ],
               ),
-            );
-          }),
-        );
-      },
-    );
+            ),
+          );
+        });
   }
 
   @override
@@ -158,7 +158,7 @@ class _LangScreenState extends State<LangScreen> {
                       addStringToSF("ru", "RU");
                       EasyLocalization.of(context).locale = Locale("ru", "RU");
                       Navigator.of(context)
-                          .pushReplacementNamed(LoginScreen.routeName);
+                          .pushReplacementNamed(HomePage.routeName);
                     },
                     child: Text(
                       "Русский",
@@ -189,7 +189,7 @@ class _LangScreenState extends State<LangScreen> {
                       addStringToSF("uz", "UZ");
                       EasyLocalization.of(context).locale = Locale("uz", "UZ");
                       Navigator.of(context)
-                          .pushReplacementNamed(LoginScreen.routeName);
+                          .pushReplacementNamed(HomePage.routeName);
                     },
                     child: Text(
                       "O`zbekcha",
@@ -220,7 +220,7 @@ class _LangScreenState extends State<LangScreen> {
                       addStringToSF("en", "US");
                       EasyLocalization.of(context).locale = Locale("en", "US");
                       Navigator.of(context)
-                          .pushReplacementNamed(LoginScreen.routeName);
+                          .pushReplacementNamed(HomePage.routeName);
                     },
                     child: Text(
                       "Ўзбекча",
@@ -246,7 +246,8 @@ class _LangScreenState extends State<LangScreen> {
                     children: [
                       InkWell(
                         onTap: () {
-                          createAlertDialog(context);
+                          customDialog();
+                          // createAlertDialog(context);
                         },
                         child: Container(
                           height: 30,

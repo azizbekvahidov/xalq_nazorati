@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
         globals.lang = _lang;
         globals.country = _country;
         if (_token == null) {
-          Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+          Navigator.pushReplacementNamed(context, HomePage.routeName);
         } else {
           globals.token = _token;
 

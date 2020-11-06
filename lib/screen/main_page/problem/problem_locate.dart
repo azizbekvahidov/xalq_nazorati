@@ -50,7 +50,9 @@ class _ProblemLocateState extends State<ProblemLocate> {
   double _longitude = 0;
   bool _value = true;
   bool _valid = false;
+  bool _sending = false;
   int _cnt = 40;
+  String _btn_message = "continue".tr().toString();
 
   Placemark _placemark;
 
@@ -170,7 +172,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
         "longitude": "$_longitude".substring(0, 10),
         "note": extraController.text,
       };
-      print(json.encode(sendData));
       Map<String, String> headers = {
         "Authorization": "token ${globals.token}",
       };
@@ -180,6 +181,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
       var response = await Requests.post(url, headers: headers, body: sendData);
 
       if (response.statusCode == 201) {
+        setState(() {
+          _sending = true;
+          _btn_message = "Loading".tr().toString();
+        });
         var reply = response.json();
 
         var url2 =
@@ -751,19 +756,15 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                 () {},
                                 Color(0xffB2B7D0),
                               )
-                            : DefaultButton("continue".tr().toString(), () {
-                                insertData().then((value) {
-                                  // print("sended");
-                                  // Navigator.of(context).pushAndRemoveUntil(
-                                  //   MaterialPageRoute(
-                                  //     builder: (BuildContext context) {
-                                  //       return ProblemFinish();
-                                  //     },
-                                  //   ),
-                                  //   ModalRoute.withName(MainPage.routeName),
-                                  // );
-                                });
-                              }, Theme.of(context).primaryColor),
+                            : DefaultButton(_btn_message, () {
+                                if (!_sending)
+                                  insertData().then((value) {});
+                                else
+                                  print('sending');
+                              },
+                                (!_sending)
+                                    ? Theme.of(context).primaryColor
+                                    : Color(0xffB2B7D0)),
                       ),
                     ),
                   ],

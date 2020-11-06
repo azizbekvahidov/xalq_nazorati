@@ -53,12 +53,24 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   children: [
                     // CustomCardList("id", "Изменить личные данные", null, true),
-                    CustomCardList("id", "change_pass".tr().toString(),
-                        ChangePassword(), true),
-                    CustomCardList("id", "change_profile".tr().toString(),
-                        ChangePersonalData(), true),
-                    CustomCardList("id", "delete_profile".tr().toString(),
-                        DeleteProfile(), false),
+                    CustomCardList(
+                      "id",
+                      "change_pass".tr().toString(),
+                      ChangePassword(),
+                      true,
+                    ),
+                    CustomCardList(
+                      "id",
+                      "change_profile".tr().toString(),
+                      ChangePersonalData(),
+                      true,
+                    ),
+                    CustomCardList(
+                      "id",
+                      "delete_profile".tr().toString(),
+                      DeleteProfile(),
+                      false,
+                    ),
                   ],
                 ),
               ),

@@ -109,7 +109,6 @@ class _ImageCarouselState extends State<ImageCarousel> {
               itemCount: widget.files.length,
               itemBuilder: (BuildContext ctx, index) {
                 var src = widget.files[index];
-                print("${widget.title} $src");
                 return AutoScrollTag(
                   key: ValueKey(index),
                   controller: _scrollControllertop,

@@ -195,6 +195,17 @@ PODS:
     - Flutter
   - webview_flutter (0.0.1):
     - Flutter
+  - yandex_mapkit (0.0.1):
+    - Flutter
+    - YandexMapKit (= 3.5.0)
+    - YandexMapKitSearch (= 3.5.0)
+    - YandexRuntime (= 3.5.0)
+  - YandexMapKit (3.5.0):
+    - YandexRuntime (= 3.5.0)
+  - YandexMapKitSearch (3.5.0):
+    - YandexMapKit (= 3.5.0)
+    - YandexRuntime (= 3.5.0)
+  - YandexRuntime (3.5.0)
 
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
@@ -218,6 +229,7 @@ DEPENDENCIES:
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+  - yandex_mapkit (from `.symlinks/plugins/yandex_mapkit/ios`)
 
 SPEC REPOS:
   trunk:
@@ -245,6 +257,9 @@ SPEC REPOS:
     - SwiftyGif
     - SwiftyTesseract
     - Toast
+    - YandexMapKit
+    - YandexMapKitSearch
+    - YandexRuntime
 
 EXTERNAL SOURCES:
   camera:
@@ -289,6 +304,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
+  yandex_mapkit:
+    :path: ".symlinks/plugins/yandex_mapkit/ios"
 
 SPEC CHECKSUMS:
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
@@ -336,6 +353,10 @@ SPEC CHECKSUMS:
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: 0d4a70faf8950410735e3f61fb15d517c8a6efc4
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
+  yandex_mapkit: 808e1857438445c61e2789a9e4374b230a0a97ca
+  YandexMapKit: ecd4b78de34a35df63d066ac299e6fd0fe46d1ba
+  YandexMapKitSearch: b46ddd1c80e2e35d006cdfc4ab88070a50cebeda
+  YandexRuntime: 2d55244d06267106cf9b00c25a1e63f72a73b6fd
 
 PODFILE CHECKSUM: b91433e4744e86d0314f07e5915a0e039db56ead
 

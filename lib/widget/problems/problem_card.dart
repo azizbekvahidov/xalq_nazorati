@@ -14,12 +14,24 @@ class ProblemCard extends StatefulWidget {
   final String status;
   final String title;
   final Map<String, dynamic> data;
-  ProblemCard({this.alert, this.status, this.title, this.data});
+  ProblemCard({
+    this.alert,
+    this.status,
+    this.title,
+    this.data,
+  });
+
   @override
   _ProblemCardState createState() => _ProblemCardState();
 }
 
 class _ProblemCardState extends State<ProblemCard> {
+  FutureOr onGoBack(dynamic value) {
+    // widget.timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+    //   widget.refreshBells();
+    // });
+  }
+
   String _showTime;
 
   @override
@@ -49,23 +61,10 @@ class _ProblemCardState extends State<ProblemCard> {
               var route;
               route = ProblemContentScreen(
                   widget.title, widget.status, widget.data);
-              // switch (widget.status) {
-              //   case "warning":
-
-              //     break;
-              //   case "success":
-              //     route = SolveProblemScreen(
-              //         status: widget.status, id: widget.data.id);
-              //     break;
-              //   case "danger":
-              //     route = SolveProblemScreen(
-              //         status: widget.status, id: widget.data.id);
-              //     break;
-              // }
               return route;
             },
           ),
-        );
+        ).then((value) => onGoBack(value));
       },
       child: ShadowBox(
         child: Container(
