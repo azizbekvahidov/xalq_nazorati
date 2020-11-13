@@ -42,6 +42,7 @@ class _DeleteProfileState extends State<DeleteProfile> {
           r1.raiseForStatus();
           prefs.setString('userToken', null);
           globals.userData = null;
+          globals.token = null;
           Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
               HomePage.routeName, (Route<dynamic> route) => false);
         } else {

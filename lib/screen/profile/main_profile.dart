@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import '../../widget/select_lang.dart';
@@ -54,6 +55,7 @@ class _MainProfileState extends State<MainProfile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', null);
     globals.userData = null;
+    globals.token = null;
   }
 
   @override
@@ -290,7 +292,7 @@ class _MainProfileState extends State<MainProfile> {
                                 quitProfile().then((value) {
                                   Navigator.of(context, rootNavigator: true)
                                       .pushNamedAndRemoveUntil(
-                                          LoginScreen.routeName,
+                                          HomePage.routeName,
                                           (Route<dynamic> route) => false);
                                 });
                               }),

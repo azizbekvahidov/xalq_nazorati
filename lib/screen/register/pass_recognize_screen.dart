@@ -9,6 +9,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/register/android_camera.dart';
 import 'package:xalq_nazorati/screen/register/camera_page.dart';
+import 'package:xalq_nazorati/screen/register/pas_recognize_notify.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import './pas_recognized_screen.dart';
 import '../../widget/default_button.dart';
@@ -145,19 +146,30 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                           ),
                           InkWell(
                             onTap: () async {
-                              // createAlertDialog(context);
                               final res = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Platform.isAndroid
-                                          ? AndroidCameraPage()
-                                          : CameraScreen()));
+                                      builder: (context) =>
+                                          PasRecognizeNotify()));
                               if (res != null) {
                                 setState(() {
                                   pnflController.text = res.personalNumber;
                                   seriesController.text = res.documentNumber;
                                 });
                               }
+                              // createAlertDialog(context);
+                              // final res = await Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => Platform.isAndroid
+                              //             ? AndroidCameraPage()
+                              //             : CameraScreen()));
+                              // if (res != null) {
+                              //   setState(() {
+                              //     pnflController.text = res.personalNumber;
+                              //     seriesController.text = res.documentNumber;
+                              //   });
+                              // }
                             },
                             child: Container(
                                 margin: EdgeInsets.only(left: 10),
