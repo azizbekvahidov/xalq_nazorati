@@ -49,7 +49,6 @@ class _ProblemScreenState extends State<ProblemScreen> {
 
       var url =
           '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
-      HttpGet request = HttpGet();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await Requests.get(url, headers: headers);
       if (response.statusCode == 200) {

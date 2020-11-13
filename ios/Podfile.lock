@@ -101,6 +101,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_mrz_scanner (0.0.1):
     - Flutter
     - SwiftyTesseract (~> 3.0)
@@ -214,6 +216,7 @@ DEPENDENCIES:
   - firebase_ml_vision (from `.symlinks/plugins/firebase_ml_vision/ios`)
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_mrz_scanner (from `.symlinks/plugins/flutter_mrz_scanner/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -274,6 +277,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_mrz_scanner:
     :path: ".symlinks/plugins/flutter_mrz_scanner/ios"
   fluttertoast:
@@ -325,6 +330,7 @@ SPEC CHECKSUMS:
   FirebaseMLVision: 485358b97d3332669ecc4fed55ee360aaef2813d
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
+  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_mrz_scanner: dd007f835e78ff02bee317851e00331891ccdaaa
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   geolocator: 1ae40084cc6c1586ce5ad12cfc3fd38c64d05f2f

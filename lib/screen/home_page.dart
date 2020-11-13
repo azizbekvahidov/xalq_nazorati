@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.45,
               padding: EdgeInsets.symmetric(vertical: 40),
               child: GetLoginDialog(),
             ),

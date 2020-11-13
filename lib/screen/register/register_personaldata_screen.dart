@@ -39,7 +39,7 @@ class _RegisterPersonalDataScreenState
     String address = addressController.text;
     String pass = passController.text;
     String repass = repassController.text;
-    if (_value && email != "" && address != "") {
+    if (_value && address != "") {
       try {
         String url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup';

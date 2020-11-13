@@ -58,7 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
           fontSize: 15.0);
     }
 
-    if (isLogin) Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+    if (isLogin)
+      Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+          HomePage.routeName, (Route<dynamic> route) => false);
   }
 
   addStringToSF(String token) async {

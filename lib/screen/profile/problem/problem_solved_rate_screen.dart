@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -62,30 +63,41 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
       }
     } else {
       if (desc != "") {
-        var url = '${globals.api_link}/problems/deny';
-        Map<String, String> headers = {
-          "Authorization": "token ${globals.token}"
-        };
-        Map<String, dynamic> data = {
-          "problem_id": widget.id,
-          "executor_id": widget.executorId,
-          "message": "$desc",
-        };
-        var response = await Requests.post(url, body: data, headers: headers);
-
-        // String reply = await response.transform(utf8.decoder).join();
-        // var temp = response.json();
-        if (response.statusCode == 200) {
+        try {
+          var url = '${globals.api_link}/problems/deny';
+          Map<String, String> headers = {
+            "Authorization": "token ${globals.token}"
+          };
+          Map<String, dynamic> data = {
+            "problem_id": widget.id,
+            "reason": "$desc",
+          };
+          var response = await Requests.post(url, body: data, headers: headers);
           print("sended");
-          var res = response.json(); //parseProblems(response.content());
+          // String reply = await response.transform(utf8.decoder).join();
+          // var temp = response.json();
+          if (response.statusCode == 201) {
+            print("sended2");
+            // var res = response.json(); //parseProblems(response.content());
 
-          setState(() {
-            dataSended = true;
-          });
-          Timer(Duration(seconds: 3), () {
-            Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
-                HomePage.routeName, (Route<dynamic> route) => false);
-          });
+            setState(() {
+              dataSended = true;
+            });
+            Timer(Duration(seconds: 3), () {
+              Navigator.of(context, rootNavigator: true)
+                  .pushNamedAndRemoveUntil(
+                      HomePage.routeName, (Route<dynamic> route) => false);
+            });
+          }
+        } catch (e) {
+          Fluttertoast.showToast(
+              msg: e.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 15.0);
         }
       }
     }

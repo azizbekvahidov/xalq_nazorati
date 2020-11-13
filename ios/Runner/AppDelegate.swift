@@ -10,6 +10,9 @@ import Firebase
   ) -> Bool {
     YMKMapKit.setApiKey("c8faaaf7-6b6b-44ba-84a8-e298a0e513b3")
     FirebaseApp.configure()
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    }
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

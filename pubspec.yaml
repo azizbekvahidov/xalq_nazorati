@@ -64,6 +64,10 @@ dependencies:
   # sms: ^0.2.4
   share: ^0.6.5+4
   rate_my_app: ^0.7.2
+  flutter_local_notifications: ^3.0.1+2
+  # workmanager: ^0.2.3
+
+
   sms:
     path: ./sms
 
@@ -89,6 +93,7 @@ flutter_icons:
   android: true
   image_path_ios: "assets/launcher/launcher.png"
   image_path_android: "assets/launcher/launcher.png"
+  image_path: "assets/launcher/launcher.png"
 # The following section is specific to Flutter.
 flutter:
 

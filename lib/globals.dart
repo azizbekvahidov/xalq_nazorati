@@ -3,7 +3,6 @@ library xalq_nazorati.globals;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:xalq_nazorati/models/user.dart';
 
 String token = null;
 String lang = null;
@@ -22,3 +21,6 @@ Map<String, File> images = {
 };
 String tempPhone = null;
 String routeName = null;
+
+Map<int, bool> problems = {};
+bool isGetProblem = false;

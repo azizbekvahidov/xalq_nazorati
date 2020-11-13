@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:requests/requests.dart';
+// import 'package:workmanager/workmanager.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -22,14 +26,34 @@ import './screen/login_screen.dart';
 import './screen/lang_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+const periodicTask = "periodicTask";
+const simpleTaskKey = "simpleTask";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  // WidgetsFlutterBinding.ensureInitialized();
-  // AppLanguage appLanguage = AppLanguage();
-  // await appLanguage.fetchLocale();
 
-  // HttpOverrides.global = new MyHttpOverrides();
+  await Firebase.initializeApp();
+  // await Workmanager.initialize(callbackDispatcher,
+  //     isInDebugMode:
+  //         true); //to true if still in testing lev turn it to false whenever you are launching the app
+
+  // await Workmanager.registerPeriodicTask("1",
+  //     periodicTask, //This is the value that will be returned in the callbackDispatcher
+
+  //     initialDelay: Duration(seconds: 5),
+  //     frequency: Duration(seconds: 10),
+  //     existingWorkPolicy: ExistingWorkPolicy.replace,
+  //     constraints: Constraints(
+  //       networkType: NetworkType.connected,
+  //     ));
+  //
+  // ("5", periodicTask,
+  //     existingWorkPolicy: ExistingWorkPolicy.replace,
+  //     frequency: Duration(minutes: 1), //when should it check the link
+  //     initialDelay:
+  //         Duration(seconds: 5), //duration before showing the notification
+  //     constraints: Constraints(
+  //       networkType: NetworkType.connected,
+  //     ));
   runApp(EasyLocalization(
     child: MyApp(),
     path: "lang",
@@ -40,6 +64,147 @@ void main() async {
       Locale('en', 'US'),
     ],
   ));
+}
+
+Timer timer;
+
+// void callbackDispatcher() {
+//   try {
+//     Workmanager.executeTask((task, inputData) async {
+//       print(task);
+//       FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
+//       var android = new AndroidInitializationSettings("app_icon");
+//       var iOS = IOSInitializationSettings();
+//       var initSetttings = InitializationSettings(android: android, iOS: iOS);
+//       flp.initialize(initSetttings);
+//       switch (task) {
+//         case simpleTaskKey:
+//           startTimer(flp);
+//           break;
+//         case Workmanager.iOSBackgroundTask:
+//           startTimer(flp);
+//           break;
+//         case periodicTask:
+//           refreshBells(flp);
+//           break;
+//       }
+//       return Future.value(true);
+//       // return startTimer(flp);
+//     });
+//   } catch (e) {
+//     print(e);
+//   }
+// }
+
+void startTimer(flp) {
+  Timer.periodic(Duration(seconds: 10), (Timer t) {
+    refreshBells(flp);
+  });
+}
+
+Future showNotification(String id, fltrNotification) async {
+  var androidDetails = new AndroidNotificationDetails(
+      "id", "name", "description",
+      importance: Importance.max, priority: Priority.high, ticker: 'ticker');
+  var iOSDetails = IOSNotificationDetails();
+  var generalNotificationDetails =
+      new NotificationDetails(android: androidDetails, iOS: iOSDetails);
+  await fltrNotification.show(int.parse(id), "task", "you crated task some $id",
+      generalNotificationDetails);
+}
+
+Future notificationSelected(String payload) {}
+
+Future getProblems() async {
+  try {
+    if (globals.token != null) {
+      var url = '${globals.api_link}/problems/list/processing';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var reply = response.json();
+        // var some = temp.values.toList();
+        var res = reply["results"];
+        for (var i = 0; i < res.length; i++) {
+          if (globals.problems[res[i]["id"]] == null) {
+            Map<int, bool> elem = {res[i]["id"]: false};
+            globals.problems.addAll(elem);
+          }
+        }
+      }
+
+      url = '${globals.api_link}/problems/list/confirmed';
+      response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var reply = response.json();
+        // var some = temp.values.toList();
+        var res = reply["results"];
+        for (var i = 0; i < res.length; i++) {
+          if (globals.problems[res[i]["id"]] == null) {
+            Map<int, bool> elem = {res[i]["id"]: false};
+            globals.problems.addAll(elem);
+          }
+        }
+      }
+      url = '${globals.api_link}/problems/list/denied';
+      response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var reply = response.json();
+        // var some = temp.values.toList();
+        var res = reply["results"];
+        for (var i = 0; i < res.length; i++) {
+          if (globals.problems[res[i]["id"]] == null) {
+            Map<int, bool> elem = {res[i]["id"]: false};
+            globals.problems.addAll(elem);
+          }
+        }
+      }
+      globals.isGetProblem = true;
+      print(globals.problems);
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+void refreshBells(flp) async {
+  getProblems();
+  var status = await Permission.notification.status;
+  try {
+    if (globals.token != null) {
+      String _list = "";
+      int i = 0;
+      globals.problems.forEach((key, value) {
+        i++;
+        _list += "$key";
+        if (i != globals.problems.length) _list += ",";
+      });
+
+      var url =
+          '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var res = response.json();
+        if (res['result'].length != 0) {
+          for (var i = 0; i < res['result'].length; i++) {
+            var problem_id = res['result'][i];
+            if (!globals.problems[problem_id]) {
+              showNotification("${problem_id}", flp);
+              globals.problems[problem_id] = true;
+            }
+            // globals.problems[problem_id] = true;
+          }
+        }
+      }
+    }
+    // String reply = await response.transform(utf8.decoder).join();
+
+    // var temp = parseProblems(reply);
+
+  } catch (e) {
+    print(e);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -117,6 +282,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String _lang = null;
   String _token = null;
   String _country = null;
+  Timer timer;
+
   Future<void> getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
@@ -143,7 +310,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
+    FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings("app_icon");
+    var iOS = IOSInitializationSettings();
+    var initSetttings = InitializationSettings(android: android, iOS: iOS);
+    flp.initialize(initSetttings);
+    startTimer(flp);
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
@@ -174,14 +346,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-  }
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
   }
 }
