@@ -69,7 +69,9 @@ class _ProblemDescState extends State<ProblemDesc> {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.17,
+          height: mediaQuery.size.height < 560
+              ? mediaQuery.size.height
+              : mediaQuery.size.height * 0.8,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

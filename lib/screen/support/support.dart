@@ -46,6 +46,7 @@ class _SupportState extends State<Support> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "technical_support".tr().toString(),
@@ -82,7 +83,7 @@ class _SupportState extends State<Support> {
                         style: TextStyle(
                           color: _txt1,
                           fontFamily: globals.font,
-                          fontSize: 18,
+                          fontSize: width < 360 ? 15 : 18,
                         ),
                       ),
                     ),
@@ -107,7 +108,7 @@ class _SupportState extends State<Support> {
                         style: TextStyle(
                           color: _txt2,
                           fontFamily: globals.font,
-                          fontSize: 18,
+                          fontSize: width < 360 ? 15 : 18,
                         ),
                       ),
                     ),

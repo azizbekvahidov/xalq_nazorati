@@ -25,6 +25,7 @@ class _CategoryCardState extends State<CategoryCard> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var width = mediaQuery.size.width;
     final double cWidth = (mediaQuery.size.width -
             mediaQuery.padding.left -
             mediaQuery.padding.right) *
@@ -75,7 +76,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: (width < 360) ? 10 : 12,
                   fontWeight: FontWeight.w500,
                   fontFamily: globals.font,
                 ),

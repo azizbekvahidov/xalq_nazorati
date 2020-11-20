@@ -46,6 +46,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "news".tr().toString(),
@@ -80,7 +81,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       style: TextStyle(
                         color: _txt1,
                         fontFamily: globals.font,
-                        fontSize: 18,
+                        fontSize: width < 360 ? 15 : 18,
                       ),
                     ),
                   ),
@@ -105,7 +106,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       style: TextStyle(
                         color: _txt2,
                         fontFamily: globals.font,
-                        fontSize: 18,
+                        fontSize: width < 360 ? 15 : 18,
                       ),
                     ),
                   ),

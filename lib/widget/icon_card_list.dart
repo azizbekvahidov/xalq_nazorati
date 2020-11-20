@@ -45,7 +45,7 @@ class IconCardList extends StatelessWidget {
                       width: (mediaQuery.size.width -
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
-                          0.84,
+                          0.82,
                       child: Container(
                           child: Row(
                         children: [
@@ -60,7 +60,7 @@ class IconCardList extends StatelessWidget {
                                 fontFamily: globals.font,
                                 color: Color(0xff050505),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 18,
+                                fontSize: mediaQuery.size.width < 360 ? 16 : 18,
                               ),
                             ),
                           ),

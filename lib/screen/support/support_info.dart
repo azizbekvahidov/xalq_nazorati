@@ -22,6 +22,7 @@ class _SupportInfoState extends State<SupportInfo> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Container(
@@ -36,7 +37,7 @@ class _SupportInfoState extends State<SupportInfo> {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff313B6C),
-              fontSize: 18,
+              fontSize: width < 360 ? 15 : 18,
               fontWeight: FontWeight.bold,
               fontFamily: globals.font,
             ),
@@ -66,7 +67,7 @@ class _SupportInfoState extends State<SupportInfo> {
               child: Text(
                 "call".tr().toString(),
                 style: TextStyle(
-                    fontSize: 18,
+                    fontSize: width < 360 ? 15 : 18,
                     fontWeight: FontWeight.w400,
                     fontFamily: globals.font,
                     color: Colors.white),

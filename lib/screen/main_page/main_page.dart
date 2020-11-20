@@ -216,7 +216,7 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(
                       fontFamily: globals.font,
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: (mediaQuery.size.width < 360) ? 14 : 16,
                       fontWeight: FontWeight.w500),
                 ),
               )),

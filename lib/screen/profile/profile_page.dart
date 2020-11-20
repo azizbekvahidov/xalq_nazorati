@@ -43,8 +43,12 @@ class ProfilePage extends StatelessWidget {
                       CardList("birthday".tr().toString(), "${birthDate}"),
                       CardList("gender".tr().toString(),
                           "${globals.userData['gender']}".tr().toString()),
-                      CardList("fact_accress".tr().toString(),
-                          "${globals.userData['address_str']}"),
+                      CardList(
+                          "fact_accress".tr().toString(),
+                          "${globals.userData['address_str']}"
+                              .replaceAll("\n", " ")
+                              .replaceAll("\t", " ")
+                              .replaceAll("\r", " ")),
                     ],
                   ),
                 ),

@@ -70,6 +70,8 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    final dWith = mediaQuery.size.width;
+    final dHeight = mediaQuery.size.height;
     final PreferredSizeWidget appBar =
         CustomAppBar(title: "identity_user".tr().toString());
     return Scaffold(
@@ -101,7 +103,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 20),
                             margin: EdgeInsets.symmetric(vertical: 10),
-                            width: mediaQuery.size.width * 0.75,
+                            width: (dWith < 360) ? dWith * 0.70 : dWith * 0.75,
                             height: 45,
                             decoration: BoxDecoration(
                               color: Color(0xffF5F6F9),
@@ -120,7 +122,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                   width: (mediaQuery.size.width -
                                           mediaQuery.padding.left -
                                           mediaQuery.padding.right) *
-                                      0.64,
+                                      ((dWith < 360) ? 0.57 : 0.64),
                                   child: TextField(
                                     controller: pnflController,
                                     maxLines: 1,

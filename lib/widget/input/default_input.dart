@@ -41,7 +41,7 @@ class _DefaultInputState extends State<DefaultInput> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                0.74,
+                0.71,
             child: TextField(
               keyboardType: widget.inputType,
               onChanged: (value) {

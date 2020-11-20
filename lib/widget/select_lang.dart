@@ -24,6 +24,9 @@ class _SelectLangState extends State<SelectLang> {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    double dHeight = mediaQuery.size.height;
+    double dWidth = mediaQuery.size.width;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -32,8 +35,8 @@ class _SelectLangState extends State<SelectLang> {
           topRight: Radius.circular(15),
         ),
       ),
-      height: 325,
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      height: dHeight * 1,
+      padding: EdgeInsets.symmetric(vertical: dHeight * 0.025),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,16 +48,16 @@ class _SelectLangState extends State<SelectLang> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: dHeight * 0.012),
           ),
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
-            title: const Text(
+            title: Text(
               'Русский',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: 18,
+                fontSize: (dWidth < 360) ? 16 : 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -68,12 +71,12 @@ class _SelectLangState extends State<SelectLang> {
           ),
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
-            title: const Text(
+            title: Text(
               'O‘zbekcha',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: 18,
+                fontSize: (dWidth < 360) ? 16 : 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -87,12 +90,12 @@ class _SelectLangState extends State<SelectLang> {
           ),
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
-            title: const Text(
+            title: Text(
               'Ўзбекча',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: 18,
+                fontSize: (dWidth < 360) ? 16 : 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -105,7 +108,7 @@ class _SelectLangState extends State<SelectLang> {
             },
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: dHeight * 0.015),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),

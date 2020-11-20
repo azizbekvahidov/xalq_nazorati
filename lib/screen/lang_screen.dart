@@ -40,86 +40,89 @@ class _LangScreenState extends State<LangScreen> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.7,
               padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(
-                    "Портал Xalq Nazorati",
-                    style: TextStyle(
-                        fontFamily: globals.font,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff313B6C),
-                        decoration: TextDecoration.none),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Text(
+                      "Портал Xalq Nazorati",
                       style: TextStyle(
                           fontFamily: globals.font,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          decoration: TextDecoration.none),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Улучшим город вместе",
-                      style: TextStyle(
-                          fontFamily: globals.font,
-                          fontSize: 18,
+                          fontSize: 20,
                           fontWeight: FontWeight.w700,
                           color: Color(0xff313B6C),
                           decoration: TextDecoration.none),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
-                      style: TextStyle(
-                          fontFamily: globals.font,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          decoration: TextDecoration.none),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
+                        style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            decoration: TextDecoration.none),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
-                      style: TextStyle(
-                          fontFamily: globals.font,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          decoration: TextDecoration.none),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Улучшим город вместе",
+                        style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff313B6C),
+                            decoration: TextDecoration.none),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
-                      style: TextStyle(
-                          fontFamily: globals.font,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          decoration: TextDecoration.none),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
+                        style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            decoration: TextDecoration.none),
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 50),
-                    color: Colors.white,
-                    width: double.infinity,
-                    child: Container(
-                        child: SvgPicture.asset("assets/img/Frame.svg")),
-                  ),
-                ],
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
+                        style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            decoration: TextDecoration.none),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
+                        style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            decoration: TextDecoration.none),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 50),
+                      color: Colors.white,
+                      width: double.infinity,
+                      child: Container(
+                          child: SvgPicture.asset("assets/img/Frame.svg")),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

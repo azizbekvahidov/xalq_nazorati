@@ -12,12 +12,16 @@ class GetLoginDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SvgPicture.asset("assets/img/info.svg"),
+          SvgPicture.asset(
+            "assets/img/info.svg",
+            height: height * 0.12,
+          ),
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
@@ -26,7 +30,7 @@ class GetLoginDialog extends StatelessWidget {
                   text: "sign_up_warning".tr().toString(),
                   style: TextStyle(
                     fontFamily: globals.font,
-                    fontSize: 16,
+                    fontSize: (height < 560) ? 14 : 16,
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
@@ -41,7 +45,7 @@ class GetLoginDialog extends StatelessWidget {
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                     fontFamily: globals.font,
-                    fontSize: 16,
+                    fontSize: (height < 560) ? 14 : 16,
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
@@ -50,7 +54,7 @@ class GetLoginDialog extends StatelessWidget {
                   text: "or".tr().toString(),
                   style: TextStyle(
                     fontFamily: globals.font,
-                    fontSize: 16,
+                    fontSize: (height < 560) ? 14 : 16,
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
@@ -66,7 +70,7 @@ class GetLoginDialog extends StatelessWidget {
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                     fontFamily: globals.font,
-                    fontSize: 16,
+                    fontSize: (height < 560) ? 14 : 16,
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w600,
                   ),

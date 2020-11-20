@@ -16,6 +16,8 @@ class _PhoneInputState extends State<PhoneInput> {
     var maskFormatter = new MaskTextInputFormatter(
         mask: '__ ___ __ __', filter: {"_": RegExp(r'[0-9]')});
     final mediaQuery = MediaQuery.of(context);
+    final dWith = mediaQuery.size.width;
+    final dHeight = mediaQuery.size.height;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       margin: EdgeInsets.symmetric(vertical: 10),
@@ -48,7 +50,7 @@ class _PhoneInputState extends State<PhoneInput> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                0.6,
+                0.55,
             child: TextField(
               inputFormatters: [maskFormatter],
               controller: widget.myController,

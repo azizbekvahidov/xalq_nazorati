@@ -16,6 +16,7 @@ class SupportFeedback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Container(
@@ -30,7 +31,7 @@ class SupportFeedback extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff313B6C),
-              fontSize: 18,
+              fontSize: width < 360 ? 15 : 18,
               fontWeight: FontWeight.bold,
               fontFamily: globals.font,
             ),
@@ -49,7 +50,7 @@ class SupportFeedback extends StatelessWidget {
               child: Text(
                 "send_notify".tr().toString(),
                 style: TextStyle(
-                    fontSize: 18,
+                    fontSize: width < 360 ? 15 : 18,
                     fontWeight: FontWeight.w400,
                     fontFamily: globals.font,
                     color: Colors.white),

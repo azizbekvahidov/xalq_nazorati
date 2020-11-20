@@ -24,3 +24,5 @@ String routeName = null;
 
 Map<int, bool> problems = {};
 bool isGetProblem = false;
+String deviceToken = "";
+String device = "";

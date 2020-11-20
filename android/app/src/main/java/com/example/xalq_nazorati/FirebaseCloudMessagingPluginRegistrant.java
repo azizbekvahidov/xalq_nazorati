@@ -1,0 +1,21 @@
+package com.example.xalq_nazorati;
+import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
+
+final class FirebaseCloudMessagingRegistrant{
+    public static void registerWith(PluginRegistry registry){
+        if(alreadyRegisteredWith(registry)){
+            return;
+        }
+        FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
+    }
+    private static boolean alreadyRegisteredWith(PluginRegistry registry){
+        final String key = FirebaseCloudMessagingRegistrant.class.getCanonicalName();
+        if(registry.hasPlugin(key)){
+            return true;
+        }
+        registry.registrarFor(key);
+        return false;
+    }
+
+}

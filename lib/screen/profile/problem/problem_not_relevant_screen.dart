@@ -127,7 +127,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.17,
+          height: mediaQuery.size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

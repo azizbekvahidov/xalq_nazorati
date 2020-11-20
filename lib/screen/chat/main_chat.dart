@@ -144,7 +144,9 @@ class _MainChatState extends State<MainChat> {
         return snapshot.hasData
             ? Container(
                 width: mediaQuery.size.width,
-                height: mediaQuery.size.height * 0.8,
+                height: mediaQuery.size.height < 560
+                    ? mediaQuery.size.height * 0.58
+                    : mediaQuery.size.height * 0.67,
                 child: ListView.builder(
                     reverse: true,
                     physics: BouncingScrollPhysics(),
@@ -316,7 +318,7 @@ class _MainChatState extends State<MainChat> {
                         ),
                       ),
                       Container(
-                          width: (mediaQuery.size.width - 40) * 0.70,
+                          width: (mediaQuery.size.width - 40) * 0.60,
                           child: TextField(
                             onChanged: (value) {
                               changeText(value);

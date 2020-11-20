@@ -45,7 +45,13 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
             status = await Permission.sms.status;
             if (status.isGranted) {
               var r1 = await Requests.post(url, body: map);
-
+              Navigator.of(context).push(MaterialPageRoute(
+                  settings:
+                      const RouteSettings(name: RegisterVerifyScreen.routeName),
+                  builder: (context) => RegisterVerifyScreen(
+                        phoneView: phoneWiew,
+                        phone: phone,
+                      )));
               if (r1.statusCode == 200) {
                 dynamic json = r1.json();
                 r1.raiseForStatus();
@@ -129,6 +135,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
+    final dHeight = mediaQuery.size.height;
     final PreferredSizeWidget appBar = AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
@@ -154,8 +161,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
             children: [
               Container(
                 color: Colors.transparent,
-                height:
-                    270 - appBar.preferredSize.height, //mediaQuery.size.height,
+                height: dHeight * 0.4 -
+                    appBar.preferredSize.height, //mediaQuery.size.height,
                 width: double.infinity,
                 child: Stack(
                   children: [
@@ -199,7 +206,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
               ),
               Container(
                 width: double.infinity,
-                height: mediaQuery.size.height - 270,
+                height: mediaQuery.size.height - dHeight * 0.4,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -257,7 +264,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                               ),
                               Container(
                                 padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.79,
+                                width: mediaQuery.size.width * 0.75,
                                 child: RichText(
                                   text: TextSpan(
                                     children: [
@@ -267,7 +274,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                             .toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: 12,
+                                          fontSize: dWith < 360 ? 10 : 12,
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
                                         ),

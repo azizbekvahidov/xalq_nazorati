@@ -24,81 +24,88 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
       appBar: CustomAppBar(
         title: "how_scan_pas".tr().toString(),
       ),
-      body: ShadowBox(
-        child: Container(
-          padding: EdgeInsets.only(left: 28, right: 28, top: 43.2, bottom: 40),
-          height: meduaQuery.height * 0.8,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "pas_notify_text_1".tr().toString(),
-                style: TextStyle(
-                  color: Color(0xff313B6C),
-                  fontFamily: globals.font,
-                  fontSize: 14,
-                ),
-              ),
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Text(
-                "pas_notify_text_2".tr().toString(),
-                style: TextStyle(
-                  color: Color(0xffDE1B1B),
-                  fontFamily: globals.font,
-                  fontSize: 14,
-                ),
-              ),
-              Padding(padding: EdgeInsets.only(top: 10)),
-              Text(
-                "pas_notify_text_3".tr().toString(),
-                style: TextStyle(
-                  color: Color(0xff313B6C),
-                  fontFamily: globals.font,
-                  fontSize: 14,
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(top: 27),
-                child: Image.asset(
-                  "assets/img/iPhone11.png",
-                  height: meduaQuery.height * 0.40,
-                ),
-              ),
-              Padding(padding: EdgeInsets.only(top: 40)),
-              InkWell(
-                onTap: () async {
-                  final res = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Platform.isAndroid
-                              ? AndroidCameraPage()
-                              : CameraScreen()));
-                  if (res != null) {
-                    Navigator.pop(context, res);
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: meduaQuery.width,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(29),
-                    color: Theme.of(context).primaryColor,
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: ShadowBox(
+          child: Container(
+            padding: EdgeInsets.only(
+                left: 28,
+                right: 28,
+                top: meduaQuery.height * 0.05,
+                bottom: meduaQuery.height * 0.05),
+            height: meduaQuery.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "pas_notify_text_1".tr().toString(),
+                  style: TextStyle(
+                    color: Color(0xff313B6C),
+                    fontFamily: globals.font,
+                    fontSize: 14,
                   ),
-                  margin: EdgeInsets.symmetric(horizontal: 29),
-                  child: Text(
-                    "scan_begin".tr().toString(),
-                    style: TextStyle(
-                      color: Color(0xffffffff),
-                      fontFamily: globals.font,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                ),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Text(
+                  "pas_notify_text_2".tr().toString(),
+                  style: TextStyle(
+                    color: Color(0xffDE1B1B),
+                    fontFamily: globals.font,
+                    fontSize: 14,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Text(
+                  "pas_notify_text_3".tr().toString(),
+                  style: TextStyle(
+                    color: Color(0xff313B6C),
+                    fontFamily: globals.font,
+                    fontSize: 14,
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 27),
+                  child: Image.asset(
+                    "assets/img/iPhone11.png",
+                    height: meduaQuery.height * 0.40,
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(top: 40)),
+                InkWell(
+                  onTap: () async {
+                    final res = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Platform.isAndroid
+                                ? AndroidCameraPage()
+                                : CameraScreen()));
+                    if (res != null) {
+                      Navigator.pop(context, res);
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: meduaQuery.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(29),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 29),
+                    child: Text(
+                      "scan_begin".tr().toString(),
+                      style: TextStyle(
+                        color: Color(0xffffffff),
+                        fontFamily: globals.font,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

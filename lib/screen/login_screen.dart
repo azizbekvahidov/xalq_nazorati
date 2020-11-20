@@ -72,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
+    final dHeight = mediaQuery.size.height;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               Container(
                 color: Colors.transparent,
-                height: 300, //mediaQuery.size.height,
+                height: dHeight * 0.35, //mediaQuery.size.height,
                 width: double.infinity,
                 child: Center(
                   child: SvgPicture.asset("assets/img/FrameW.svg"),
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Container(
                 width: double.infinity,
-                height: mediaQuery.size.height - 300,
+                height: dHeight * 0.65,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -138,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       "accaunt_question".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: dWith < 400 ? 13 : 14,
+                                        fontSize: dWith < 360 ? 11 : 14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -152,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         "sign_ups".tr().toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: dWith < 400 ? 13 : 14,
+                                          fontSize: dWith < 360 ? 11 : 14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

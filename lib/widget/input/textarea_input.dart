@@ -48,7 +48,7 @@ class _TextareaInputState extends State<TextareaInput> {
                 width: (mediaQuery.size.width -
                         mediaQuery.padding.left -
                         mediaQuery.padding.right) *
-                    0.77,
+                    0.74,
                 child: TextField(
                   onChanged: (text) {
                     changeTxt(text);

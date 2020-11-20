@@ -167,7 +167,7 @@ class _RegisterPersonalDataScreenState
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Container(
-            height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
+            height: mediaQuery.size.height * 1.05,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -284,7 +284,7 @@ class _RegisterPersonalDataScreenState
                             ),
                             Container(
                               padding: EdgeInsets.only(left: 20),
-                              width: mediaQuery.size.width * 0.79,
+                              width: mediaQuery.size.width * 0.76,
                               child: RichText(
                                 text: TextSpan(
                                   children: [
@@ -337,7 +337,7 @@ class _RegisterPersonalDataScreenState
                 ),
                 Container(
                   child: Padding(
-                    padding: EdgeInsets.all(38),
+                    padding: EdgeInsets.all(20),
                     child: Stack(
                       children: [
                         Positioned(

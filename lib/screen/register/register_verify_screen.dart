@@ -136,6 +136,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
+    final dHeight = mediaQuery.size.height;
     final PreferredSizeWidget appBar = AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
@@ -161,8 +162,8 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
             children: [
               Container(
                 color: Colors.transparent,
-                height:
-                    270 - appBar.preferredSize.height, //mediaQuery.size.height,
+                height: dHeight * 0.4 -
+                    appBar.preferredSize.height, //mediaQuery.size.height,
                 width: double.infinity,
                 child: Stack(
                   children: [
@@ -206,7 +207,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
               ),
               Container(
                 width: double.infinity,
-                height: mediaQuery.size.height - 270,
+                height: mediaQuery.size.height - dHeight * 0.4,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -236,7 +237,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                             children: [
                               Container(
                                 padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.85,
+                                width: mediaQuery.size.width * 0.83,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [

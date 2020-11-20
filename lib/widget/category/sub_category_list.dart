@@ -69,7 +69,7 @@ class SubCategoryCardList extends StatelessWidget {
                       width: (mediaQuery.size.width -
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
-                          0.84,
+                          0.82,
                       child: Container(
                           child: RichText(
                         text: TextSpan(
@@ -78,7 +78,7 @@ class SubCategoryCardList extends StatelessWidget {
                             fontFamily: globals.font,
                             color: Color(0xff000000),
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize: mediaQuery.size.width < 360 ? 16 : 18,
                           ),
                         ),
                       ))),

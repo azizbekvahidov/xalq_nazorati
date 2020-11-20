@@ -94,7 +94,7 @@ class _CustomDottedCircleContainerState
                       padding: EdgeInsets.only(top: 20),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 14),
                       child: InkWell(
                         onTap: () {
                           pickGallery();
@@ -121,7 +121,7 @@ class _CustomDottedCircleContainerState
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 15),
                       child: InkWell(
                         onTap: () {
                           pickerCam();

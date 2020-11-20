@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -65,7 +66,7 @@ void main() async {
     ],
   ));
 }
-
+/*
 Timer timer;
 
 // void callbackDispatcher() {
@@ -206,6 +207,7 @@ void refreshBells(flp) async {
     print(e);
   }
 }
+*/
 
 class MyApp extends StatelessWidget {
   @override
@@ -279,6 +281,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String _title = "Title";
+  String _helper = "helper";
   String _lang = null;
   String _token = null;
   String _country = null;
@@ -299,23 +303,130 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future getUser() async {
     var url = '${globals.api_link}/users/profile';
+    Map<String, String> headers = {"Authorization": "token $_token"};
     HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      // dynamic json = response.json();
 
-    String reply = await response.transform(utf8.decoder).join();
+      globals.userData = response.json();
+      globals.token = _token;
+    } else {
+      globals.token = null;
+      dynamic json = response.json();
+      print(json["detail"]);
+      Fluttertoast.showToast(
+          msg: json['detail'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+    // String reply = await response.transform(utf8.decoder).join();
+    print(response.statusCode);
+    // globals.userData = json.decode(reply);
+  }
 
-    globals.userData = json.decode(reply);
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
+  Future displayNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'channel-id', 'fcm', 'androidcoding.in',
+        importance: Importance.max, priority: Priority.high);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message['notification']['title'],
+      message['notification']['body'],
+      platformChannelSpecifics,
+      payload: 'fcm',
+    );
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+
+    // On Select Android Notifications
+  }
+
+  Future onDidRecieveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => new CupertinoAlertDialog(
+        title: new Text(title),
+        content: new Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: new Text('Ok'),
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+
+              // On select iOS notification
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void initState() {
     super.initState();
-    FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
+    globals.device = Platform.isIOS ? "ios" : "android";
+
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidRecieveLocalNotification);
+
+    var initializationSettings = new InitializationSettings(
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print('on message ${message}');
+        displayNotification(message);
+      },
+      onResume: (Map<String, dynamic> message) {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print('on launch $message');
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      globals.deviceToken = token;
+      print(token);
+    });
+    /*FlutterLocalNotificationsPlugin flp = FlutterLocalNotificationsPlugin();
     var android = new AndroidInitializationSettings("app_icon");
     var iOS = IOSInitializationSettings();
     var initSetttings = InitializationSettings(android: android, iOS: iOS);
     flp.initialize(initSetttings);
     startTimer(flp);
+     */
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
@@ -329,9 +440,13 @@ class _MyHomePageState extends State<MyHomePage> {
         if (_token == null) {
           Navigator.pushReplacementNamed(context, HomePage.routeName);
         } else {
-          globals.token = _token;
-
-          Navigator.pushReplacementNamed(context, HomePage.routeName);
+          // globals.token = _token;
+          getUser();
+          if (globals.token != null) {
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
+          } else {
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
+          }
         }
       }
     });

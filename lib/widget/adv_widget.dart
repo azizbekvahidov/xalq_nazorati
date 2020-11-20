@@ -6,6 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 class AdvWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var width = mediaQuery.size.width;
     return Container(
       margin: EdgeInsets.only(top: 25),
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -79,7 +81,7 @@ class AdvWidget extends StatelessWidget {
             left: 20,
             top: 27,
             child: Container(
-              width: 224,
+              width: (width < 360) ? width * 0.6 : width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -92,15 +94,18 @@ class AdvWidget extends StatelessWidget {
                       fontFamily: globals.font,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Text(
-                      "adv_desc".tr().toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: globals.font,
+                  Container(
+                    width: width * 0.5,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Text(
+                        "adv_desc".tr().toString(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: (width < 360) ? 11 : 12,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: globals.font,
+                        ),
                       ),
                     ),
                   ),

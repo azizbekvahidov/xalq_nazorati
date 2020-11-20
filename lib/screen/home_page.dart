@@ -72,7 +72,8 @@ class _HomePageState extends State<HomePage> {
               ),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.45,
-              padding: EdgeInsets.symmetric(vertical: 40),
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
               child: GetLoginDialog(),
             ),
           );

@@ -28,9 +28,9 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
       backgroundColor: Color(0xffF5F6F9),
       appBar: CustomAppBar(title: "proof_data".tr().toString()),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
+          height: mediaQuery.size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -57,7 +57,7 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
               ),
               Container(
                 child: Padding(
-                  padding: EdgeInsets.all(38),
+                  padding: EdgeInsets.all(20),
                   child: Stack(
                     children: [
                       Positioned(

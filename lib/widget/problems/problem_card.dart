@@ -59,8 +59,7 @@ class _ProblemCardState extends State<ProblemCard> {
           MaterialPageRoute(
             builder: (BuildContext context) {
               var route;
-              route = ProblemContentScreen(
-                  widget.title, widget.status, widget.data);
+              route = ProblemContentScreen(widget.data["id"]);
               return route;
             },
           ),

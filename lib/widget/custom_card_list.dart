@@ -40,7 +40,7 @@ class _CustomCardListState extends State<CustomCardList> {
                       width: (mediaQuery.size.width -
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
-                          0.84,
+                          0.82,
                       child: Container(
                           child: RichText(
                         text: TextSpan(
