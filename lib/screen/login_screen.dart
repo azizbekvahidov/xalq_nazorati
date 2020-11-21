@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
+import 'package:xalq_nazorati/screen/register/forgot_pass_phone.dart';
 import 'register/register_phone_screen.dart';
 import '../widget/input/pass_input.dart';
 import '../widget/default_button.dart';
@@ -33,7 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
     String pass = passController.text;
     var url =
         '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signin';
-    Map map = {"phone": phone, "password": pass};
+    Map map = {
+      "phone": phone,
+      "password": pass,
+      "fcm_token": globals.deviceToken,
+      "device_type": globals.device,
+      "lang": globals.lang.tr().toString()
+    };
     var response = await Requests.post(
       url,
       body: map,
@@ -119,6 +126,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           MainText("pass_title".tr().toString()),
                           PassInput(
                               "pass_hint".tr().toString(), passController),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(ForgotPassPhone.routeName);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                "forgot_pass".tr().toString(),
+                                style: TextStyle(
+                                    fontFamily: globals.font,
+                                    fontSize: 16,
+                                    color: Color(0xff858589)),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       Positioned(

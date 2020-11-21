@@ -9,21 +9,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
 import '../login_screen.dart';
-import './register_verify_screen.dart';
+import 'register_verify_screen.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 import '../../widget/input/phone_input.dart';
 
-class RegisterPhoneScreen extends StatefulWidget {
-  static const routeName = "/register-phone";
+class ForgotPassPhone extends StatefulWidget {
+  static const routeName = "/forgot-pass-phone";
 
   @override
-  _RegisterPhoneScreenState createState() => _RegisterPhoneScreenState();
+  _ForgotPassPhoneState createState() => _ForgotPassPhoneState();
 }
 
-class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
+class _ForgotPassPhoneState extends State<ForgotPassPhone> {
   final phoneController = TextEditingController();
   bool _value = false;
   String phoneWiew = "";
@@ -33,10 +34,10 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     if (phoneController.text == "") phone = "";
 
-    if (!isRegister && phone != "") {
+    if (phone != "") {
       try {
         String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-code';
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/recover-code';
         Map map = {"phone": phone};
 
         var status = await Permission.sms.status;
@@ -44,30 +45,23 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
           Permission.sms.request().then((value) async {
             status = await Permission.sms.status;
             if (status.isGranted) {
-              var r1 = await Requests.post(url, body: map);
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     settings:
-              //         const RouteSettings(name: RegisterVerifyScreen.routeName),
-              //     builder: (context) => RegisterVerifyScreen(
-              //           phoneView: phoneWiew,
-              //           phone: phone,
-              //         )));
+              var r1 = await Requests.post(url,
+                  body: map, verify: false, persistCookies: true);
+
               if (r1.statusCode == 200) {
                 dynamic json = r1.json();
                 r1.raiseForStatus();
                 print(r1.content());
                 isRegister = true;
                 phoneWiew = json["phone_view"];
-                if (isRegister && _value) {
+                if (isRegister) {
                   setState(() {
                     phoneController.text = "";
-                    _value = !_value;
                   });
                   isRegister = false;
                   Navigator.of(context).push(MaterialPageRoute(
-                      settings: const RouteSettings(
-                          name: RegisterVerifyScreen.routeName),
-                      builder: (context) => RegisterVerifyScreen(
+                      settings: const RouteSettings(name: ForgotPass.routeName),
+                      builder: (context) => ForgotPass(
                             phoneView: phoneWiew,
                             phone: phone,
                           )));
@@ -89,7 +83,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
           });
           // We didn't ask for permission yet.
         } else {
-          var r1 = await Requests.post(url, body: map);
+          var r1 = await Requests.post(url,
+              body: map, verify: false, persistCookies: true);
 
           if (r1.statusCode == 200) {
             dynamic json = r1.json();
@@ -97,16 +92,14 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
             print(r1.content());
             isRegister = true;
             phoneWiew = json["phone_view"];
-            if (isRegister && _value) {
+            if (isRegister) {
               setState(() {
                 phoneController.text = "";
-                _value = !_value;
               });
               isRegister = false;
               Navigator.of(context).push(MaterialPageRoute(
-                  settings:
-                      const RouteSettings(name: RegisterVerifyScreen.routeName),
-                  builder: (context) => RegisterVerifyScreen(
+                  settings: const RouteSettings(name: ForgotPass.routeName),
+                  builder: (context) => ForgotPass(
                         phoneView: phoneWiew,
                         phone: phone,
                       )));
@@ -176,7 +169,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "sign_ups".tr().toString(),
+                                "reset_txt".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -188,7 +181,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "reg_title_desc".tr().toString(),
+                                "reset_desc".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -223,94 +216,6 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                         children: [
                           MainText("tel_number_title".tr().toString()),
                           PhoneInput(phoneController),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _value = !_value;
-                                  });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2,
-                                          style: BorderStyle.solid,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      shape: BoxShape.circle,
-                                      color: _value
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.transparent),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: _value
-                                        ? Icon(
-                                            Icons.check,
-                                            size: 15.0,
-                                            color: Colors.white,
-                                          )
-                                        : Icon(
-                                            Icons.check_box_outline_blank,
-                                            size: 15.0,
-                                            color: Colors.transparent,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.75,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "reg_offer_aggreement_start"
-                                            .tr()
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWith < 360 ? 10 : 12,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushNamed(
-                                                context, RulePage.routeName);
-                                          },
-                                        text: "offer".tr().toString(),
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontFamily: globals.font,
-                                          fontSize: 12,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "reg_offer_aggreement_end"
-                                            .tr()
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
                         ],
                       ),
                       Positioned(
@@ -321,27 +226,21 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                !_value
-                                    ? DefaultButton(
-                                        "sign_up".tr().toString(),
-                                        () {},
-                                        Color(0xffB2B7D0),
-                                      )
-                                    : DefaultButton(
-                                        "sign_up".tr().toString(),
-                                        () {
-                                          getCode();
-                                          // Navigator.of(context).pushNamed(
-                                          //     RegisterVerifyScreen.routeName);
-                                        },
-                                        Theme.of(context).primaryColor,
-                                      ),
+                                DefaultButton(
+                                  "send".tr().toString(),
+                                  () {
+                                    getCode();
+                                    // Navigator.of(context).pushNamed(
+                                    //     RegisterVerifyScreen.routeName);
+                                  },
+                                  Theme.of(context).primaryColor,
+                                ),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "accaunt_question2".tr().toString(),
+                                      "",
                                       style: TextStyle(
                                         fontFamily: globals.font,
                                         fontSize: dWith < 400 ? 13 : 14,
@@ -350,15 +249,9 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                       ),
                                     ),
                                     FlatButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamedAndRemoveUntil(
-                                                LoginScreen.routeName,
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                      },
+                                      onPressed: () => null,
                                       child: Text(
-                                        "log_in".tr().toString(),
+                                        "",
                                         style: TextStyle(
                                           fontFamily: globals.font,
                                           fontSize: dWith < 400 ? 13 : 14,

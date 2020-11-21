@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:requests/requests.dart';
 import '../widget/default_button.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
@@ -35,7 +36,7 @@ class _SelectLangState extends State<SelectLang> {
           topRight: Radius.circular(15),
         ),
       ),
-      height: dHeight * 1,
+      height: dHeight < 560 ? dHeight : dHeight * 0.4,
       padding: EdgeInsets.symmetric(vertical: dHeight * 0.025),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,22 +113,42 @@ class _SelectLangState extends State<SelectLang> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: DefaultButton("use".tr().toString(), () {
-              String country;
-              switch (_lang) {
-                case 'uz':
-                  country = 'UZ';
-                  break;
-                case 'ru':
-                  country = 'RU';
-                  break;
-                case 'en':
-                  country = 'US';
-                  break;
+            child: DefaultButton("use".tr().toString(), () async {
+              var url =
+                  '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/switch-lang';
+              Map map = {
+                "fcm_token": globals.deviceToken,
+                "lang": _lang.tr().toString()
+              };
+              Map<String, String> headers = {
+                "Authorization": "token ${globals.token}"
+              };
+              var response = await Requests.post(
+                url,
+                headers: headers,
+                body: map,
+              );
+              // request.methodPost(map, url);
+              if (response.statusCode == 200) {
+                String country;
+                switch (_lang) {
+                  case 'uz':
+                    country = 'UZ';
+                    break;
+                  case 'ru':
+                    country = 'RU';
+                    break;
+                  case 'en':
+                    country = 'US';
+                    break;
+                }
+                EasyLocalization.of(context).locale = Locale(_lang, country);
+                Navigator.pop(context);
+                widget.callBack(_lang, country);
+              } else {
+                var responseBody = response.json();
+                print(responseBody);
               }
-              EasyLocalization.of(context).locale = Locale(_lang, country);
-              Navigator.pop(context);
-              widget.callBack(_lang, country);
             }, Theme.of(context).primaryColor),
           ),
         ],

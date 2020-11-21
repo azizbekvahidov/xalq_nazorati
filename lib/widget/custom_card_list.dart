@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 
 class CustomCardList extends StatefulWidget {
   final String title;
@@ -20,6 +21,32 @@ class _CustomCardListState extends State<CustomCardList> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  customDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.45,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: GetLoginDialog(),
+            ),
+          );
+        });
   }
 
   @override
@@ -63,13 +90,17 @@ class _CustomCardListState extends State<CustomCardList> {
               ),
             ),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return widget.route;
-                  },
-                ),
-              );
+              if (globals.token != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return widget.route;
+                    },
+                  ),
+                );
+              } else {
+                customDialog(context);
+              }
             },
           ),
           if (widget.divider) Divider(),

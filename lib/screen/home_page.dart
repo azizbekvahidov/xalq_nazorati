@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                 bottomNavigationBar: BottomNavigationBar(
                   selectedItemColor: Theme.of(context).primaryColor,
                   onTap: (index) {
-                    if (index == 1 || index == 3) {
+                    if (index == 1) {
                       if (globals.token == null) {
                         customDialog(context);
                       } else {

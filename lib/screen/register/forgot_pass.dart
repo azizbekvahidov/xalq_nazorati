@@ -7,22 +7,23 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:requests/requests.dart';
 import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import '../../screen/register/pass_recognize_screen.dart';
+import 'package:xalq_nazorati/screen/register/forgot_pass_recover.dart';
+import 'pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 
-class RegisterVerifyScreen extends StatefulWidget {
-  static const routeName = "/register-phone-verify";
+class ForgotPass extends StatefulWidget {
+  static const routeName = "/forgot-pass";
   final phoneView;
   final phone;
-  RegisterVerifyScreen({this.phoneView, this.phone});
+  ForgotPass({this.phoneView, this.phone});
 
   @override
-  _RegisterVerifyScreenState createState() => _RegisterVerifyScreenState();
+  _ForgotPassState createState() => _ForgotPassState();
 }
 
-class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
+class _ForgotPassState extends State<ForgotPass> {
   bool _value = false;
   String _showTime = "03:00";
   Timer _timer;
@@ -101,7 +102,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
     if (!isSend && code != "") {
       try {
         String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/recover-code-validation';
         Map map = {"code": int.parse(code)};
         // String url = '${globals.api_link}/users/get-phone';
         var r1 = await Requests.post(url,
@@ -111,9 +112,8 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
         if (isSend) {
           globals.tempPhone = widget.phone;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              settings:
-                  const RouteSettings(name: PassRecognizeScreen.routeName),
-              builder: (context) => PassRecognizeScreen()));
+              settings: const RouteSettings(name: ForgotPassRecover.routeName),
+              builder: (context) => ForgotPassRecover()));
         } else {
           dynamic json = r1.json();
           print(json["detail"]);

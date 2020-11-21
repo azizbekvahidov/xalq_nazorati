@@ -1,122 +1,56 @@
-import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
-import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import '../../screen/register/pass_recognize_screen.dart';
-import '../../widget/input/default_input.dart';
+import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
+import 'package:xalq_nazorati/screen/rule_page.dart';
+import 'package:xalq_nazorati/widget/input/pass_input.dart';
+import '../login_screen.dart';
+import 'register_verify_screen.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
+import '../../widget/input/phone_input.dart';
 
-class RegisterVerifyScreen extends StatefulWidget {
-  static const routeName = "/register-phone-verify";
-  final phoneView;
-  final phone;
-  RegisterVerifyScreen({this.phoneView, this.phone});
+class ForgotPassRecover extends StatefulWidget {
+  static const routeName = "/forgot-pass-recover";
 
   @override
-  _RegisterVerifyScreenState createState() => _RegisterVerifyScreenState();
+  _ForgotPassRecoverState createState() => _ForgotPassRecoverState();
 }
 
-class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
+class _ForgotPassRecoverState extends State<ForgotPassRecover> {
+  final passController = TextEditingController();
+  final pass2Controller = TextEditingController();
   bool _value = false;
-  String _showTime = "03:00";
-  Timer _timer;
-  final codeController = TextEditingController();
-  int _start = 180;
-
-  void getSMS() async {
-    // Create SMS Receiver Listener
-    SmsReceiver receiver = new SmsReceiver();
-    // msg has New Incoming Message
-    receiver.onSmsReceived.listen((SmsMessage msg) {
-      print(msg.address);
-      print(msg.body);
-      print(msg.date);
-      print(msg.isRead);
-      print(msg.sender);
-      print(msg.threadId);
-      print(msg.state);
-      codeController.text = msg.body;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-    getSMS();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) => setState(
-        () {
-          if (_start < 1) {
-            timer.cancel();
-          } else {
-            _start = _start - 1;
-            // _showTime = "$_start";
-            int min = (_start / 60).toInt();
-            int sec = _start - (min * 60);
-            String secs = "$sec";
-            if (sec < 10) secs = "0$sec";
-            _showTime = "0$min:$secs";
-          }
-        },
-      ),
-    );
-  }
-
-  void resendCode() async {
-    if (_start == 0) {
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/retry-signup-code';
-      var r1 = await Requests.post(url, verify: false, persistCookies: true);
-      r1.raiseForStatus();
-
-      _start = 180;
-      startTimer();
-      // _startListening();
-      // print(responseBody["detail"]);
-    }
-  }
-
-  bool isSend = false;
-  void verify() async {
-    String code = codeController.text;
-
-    if (!isSend && code != "") {
+  bool isRegister = false;
+  void getCode() async {
+    if (passController.text != "" && pass2Controller.text != "") {
       try {
         String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
-        Map map = {"code": int.parse(code)};
-        // String url = '${globals.api_link}/users/get-phone';
-        var r1 = await Requests.post(url,
-            body: map, verify: false, persistCookies: true);
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/recover-password';
+        Map map = {
+          "new_password1": passController.text,
+          "new_password2": pass2Controller.text
+        };
 
-        if (r1.statusCode == 200) isSend = true;
-        if (isSend) {
-          globals.tempPhone = widget.phone;
+        var r1 = await Requests.post(url, body: map);
+
+        if (r1.statusCode == 200) {
+          isRegister = true;
+          isRegister = false;
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              settings:
-                  const RouteSettings(name: PassRecognizeScreen.routeName),
-              builder: (context) => PassRecognizeScreen()));
+              settings: const RouteSettings(name: ForgotPass.routeName),
+              builder: (context) => LoginScreen()));
         } else {
           dynamic json = r1.json();
-          print(json["detail"]);
+          print(json['detail']);
           Fluttertoast.showToast(
               msg: json['detail'],
               toastLength: Toast.LENGTH_SHORT,
@@ -125,6 +59,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
               backgroundColor: Colors.grey,
               textColor: Colors.white,
               fontSize: 15.0);
+          print(json);
         }
       } catch (e) {
         print(e);
@@ -177,7 +112,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                "check".tr().toString(),
+                                "reset_txt".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -189,7 +124,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 padding: EdgeInsets.only(top: 15),
                               ),
                               Text(
-                                "${"sended_code_desc_start".tr().toString()}${widget.phoneView}${"sended_code_desc_end".tr().toString()}",
+                                "reset_desc".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -222,39 +157,12 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MainText("check_code_title".tr().toString()),
-                          DefaultInput(
-                            hint: "check_code_hint".tr().toString(),
-                            textController: codeController,
-                            notifyParent: () {},
-                            inputType: TextInputType.number,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.83,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      _showTime,
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
+                          MainText("pass_title".tr().toString()),
+                          PassInput("come_up_pass_hint".tr().toString(),
+                              passController),
+                          MainText("confirm_pass_title".tr().toString()),
+                          PassInput("confirm_pass_hint".tr().toString(),
+                              pass2Controller),
                         ],
                       ),
                       Positioned(
@@ -266,17 +174,20 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 DefaultButton(
-                                  "continue".tr().toString(),
+                                  "send".tr().toString(),
                                   () {
-                                    verify();
+                                    getCode();
+                                    // Navigator.of(context).pushNamed(
+                                    //     RegisterVerifyScreen.routeName);
                                   },
                                   Theme.of(context).primaryColor,
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "dont_get_code".tr().toString(),
+                                      "",
                                       style: TextStyle(
                                         fontFamily: globals.font,
                                         fontSize: dWith < 400 ? 13 : 14,
@@ -285,11 +196,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                       ),
                                     ),
                                     FlatButton(
-                                      onPressed: () {
-                                        resendCode();
-                                      },
+                                      onPressed: () => null,
                                       child: Text(
-                                        "resend".tr().toString(),
+                                        "",
                                         style: TextStyle(
                                           fontFamily: globals.font,
                                           fontSize: dWith < 400 ? 13 : 14,
