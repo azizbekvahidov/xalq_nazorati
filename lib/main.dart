@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass_phone.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass_recover.dart';
@@ -60,6 +64,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       title: 'Xalq Nazorati',
+      navigatorKey: NavigationService.navigationKey,
       theme: ThemeData(
         primaryColor: Color(0xff1ABC9C),
         fontFamily: 'Gilroy',
@@ -74,18 +79,30 @@ class MyApp extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
                 color: Colors.black,
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
               ),
               display1: TextStyle(
                 fontFamily: globals.font,
                 fontSize: 18,
                 fontWeight: FontWeight.normal,
                 color: Color(0xffB2B7D0),
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
               ),
               display2: TextStyle(
                 fontFamily: globals.font,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xff313B6C),
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
               ),
 
               button: TextStyle(
@@ -93,6 +110,10 @@ class MyApp extends StatelessWidget {
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
               ),
             ),
       ),
@@ -105,6 +126,7 @@ class MyApp extends StatelessWidget {
         PassRecognizeScreen.routeName: (ctx) => PassRecognizeScreen(),
         PasRecognizedScreen.routeName: (ctx) => PasRecognizedScreen(),
         ForgotPassPhone.routeName: (ctx) => ForgotPassPhone(),
+        ProblemContentScreen.routeName: (ctx) => ProblemContentScreen(),
         ForgotPass.routeName: (ctx) => ForgotPass(),
         ForgotPassRecover.routeName: (ctx) => ForgotPassRecover(),
         RegisterPersonalDataScreen.routeName: (ctx) =>
@@ -115,6 +137,22 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+    print("data is $data");
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+    print("notification is $notification");
+  }
+
+  // Or do other work.
 }
 
 class MyHomePage extends StatefulWidget {
@@ -187,13 +225,17 @@ class _MyHomePageState extends State<MyHomePage> {
       message['notification']['title'],
       message['notification']['body'],
       platformChannelSpecifics,
-      payload: 'fcm',
+      payload: message["data"]["problem_id"],
     );
   }
 
   Future onSelectNotification(String payload) async {
     if (payload != null) {
-      debugPrint('notification payload: ' + payload);
+      try {
+        await _navigateToItemDetail(int.parse(payload));
+      } catch (e) {
+        print(e.toString());
+      }
     }
 
     // On Select Android Notifications
@@ -222,6 +264,17 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _navigateToItemDetail(int id) async {
+    // Clear away dialogs
+    try {
+      await navService.push(MaterialPageRoute(builder: (_) {
+        return ProblemContentScreen(id: id);
+      }));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -241,15 +294,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        print('on message ${message}');
-        displayNotification(message);
+        if (message["data"].containsKey("problem_id"))
+          displayNotification(message);
       },
       onResume: (Map<String, dynamic> message) {
-        print('on resume $message');
+        if (message["data"].containsKey("problem_id"))
+          navService.push(MaterialPageRoute(builder: (_) {
+            return ProblemContentScreen(
+                id: int.parse(message["data"]["problem_id"]));
+          }));
       },
       onLaunch: (Map<String, dynamic> message) {
-        print('on launch $message');
+        if (message["data"].containsKey("problem_id"))
+          Timer(Duration(seconds: 3), () {
+            print("onLunch");
+            navService.push(MaterialPageRoute(builder: (_) {
+              return ProblemContentScreen(
+                  id: int.parse(message["data"]["problem_id"]));
+            }));
+          });
       },
+      onBackgroundMessage: myBackgroundMessageHandler,
     );
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));

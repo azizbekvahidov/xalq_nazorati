@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1085883665581",
-    "firebase_url": "https://xalq-nazorati.firebaseio.com",
-    "project_id": "xalq-nazorati",
-    "storage_bucket": "xalq-nazorati.appspot.com"
+    "project_number": "361204410906",
+    "firebase_url": "https://xalq-nazorati-1a2bb.firebaseio.com",
+    "project_id": "xalq-nazorati-1a2bb",
+    "storage_bucket": "xalq-nazorati-1a2bb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1085883665581:android:988e8cb4248b23e500ca24",
+        "mobilesdk_app_id": "1:361204410906:android:b405e4b20d58f71b21ffa3",
         "android_client_info": {
           "package_name": "com.example.xalq_nazorati"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1085883665581-mjifvl67t9lfmdljmpcotau1ebdbsci5.apps.googleusercontent.com",
+          "client_id": "361204410906-e1mf3ha0a5lhjc5jtclb1j44hq618783.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCywIxd0fRenX4jAHTmgo8jSS4zrFhijfo"
+          "current_key": "AIzaSyAk2li889U18uk9YzucuV73omRPf-5m6_k"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1085883665581-mjifvl67t9lfmdljmpcotau1ebdbsci5.apps.googleusercontent.com",
+              "client_id": "361204410906-e1mf3ha0a5lhjc5jtclb1j44hq618783.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

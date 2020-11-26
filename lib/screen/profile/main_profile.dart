@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:requests/requests.dart';
@@ -138,6 +140,10 @@ class _MainProfileState extends State<MainProfile> {
                   Text(
                     globals.token != null ? "${globals.userData['phone']}" : "",
                     style: TextStyle(
+                        fontFeatures: [
+                          FontFeature.enable("pnum"),
+                          FontFeature.enable("lnum")
+                        ],
                         color: Color(0xff66676C),
                         fontSize: 14,
                         fontFamily: globals.font),

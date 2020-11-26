@@ -337,7 +337,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                     ProblemSolveDesc("request".tr().toString(),
                                         "№${res["problem"]["id"]} от ${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]["created_at"]).toString()))}"),
                                     ProblemSolveDesc("problem".tr().toString(),
-                                        "${res["problem"]["subsubcategory"]["title_ru"]}"),
+                                        "${res["problem"]["subsubcategory"]["api_title".tr().toString()]}"),
                                     ProblemSolveDesc("place".tr().toString(),
                                         "${res["problem"]["address"]}, ${res["problem"]["note"]}"),
                                     ProblemSolveDesc(

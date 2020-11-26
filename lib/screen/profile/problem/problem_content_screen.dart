@@ -19,8 +19,9 @@ import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ProblemContentScreen extends StatefulWidget {
+  static const routeName = "/problem-content-screen";
   final int id;
-  ProblemContentScreen(this.id);
+  ProblemContentScreen({this.id});
   @override
   _ProblemContentScreenState createState() => _ProblemContentScreenState();
 }
@@ -325,8 +326,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   },
                                                                   child: Image
                                                                       .network(
-                                                                          _data[
-                                                                              "file_1"]),
+                                                                          "${globals.site_link}/${_data["file_1"]}"),
                                                                 )
                                                               : Container(),
                                                     ),
@@ -368,8 +368,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   },
                                                                   child: Image
                                                                       .network(
-                                                                          _data[
-                                                                              "file_2"]),
+                                                                          "${globals.site_link}/${_data["file_2"]}"),
                                                                 )
                                                               : Container(),
                                                     ),
@@ -415,8 +414,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   },
                                                                   child: Image
                                                                       .network(
-                                                                          _data[
-                                                                              "file_3"]),
+                                                                          "${globals.site_link}/${_data["file_3"]}"),
                                                                 )
                                                               : Container(),
                                                     ),
@@ -461,8 +459,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   },
                                                                   child: Image
                                                                       .network(
-                                                                          _data[
-                                                                              "file_4"]),
+                                                                          "${globals.site_link}/${_data["file_4"]}"),
                                                                 )
                                                               : Container(),
                                                     ),
@@ -506,7 +503,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                       );
                                                     },
                                                     child: Image.network(
-                                                        _data["file_5"]))
+                                                        "${globals.site_link}/${_data["file_5"]}"))
                                                 : Container(),
                                           ),
                                         ),
@@ -588,7 +585,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                           MaterialPageRoute(
                                             builder: (BuildContext context) {
                                               return ProblemNotRelevantScreen(
-                                                  _data["id"]);
+                                                  _data["id"], _status);
                                             },
                                           ),
                                         ).then(onGoBack);
@@ -618,8 +615,10 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                   ),
                 ),
               )
-            : Center(
-                child: Text("Loading".tr().toString()),
+            : Scaffold(
+                body: Center(
+                  child: Text("Loading".tr().toString()),
+                ),
               );
       },
     );

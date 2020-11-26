@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class FullScreen extends StatelessWidget {
   final String imgSrc;
@@ -11,7 +12,7 @@ class FullScreen extends StatelessWidget {
           child: Hero(
             tag: 'imageHero',
             child: Image.network(
-              imgSrc,
+              "${globals.site_link}/${imgSrc}",
             ),
           ),
         ),

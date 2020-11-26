@@ -114,22 +114,48 @@ class _SelectLangState extends State<SelectLang> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: DefaultButton("use".tr().toString(), () async {
-              var url =
-                  '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/switch-lang';
-              Map map = {
-                "fcm_token": globals.deviceToken,
-                "lang": _lang.tr().toString()
-              };
-              Map<String, String> headers = {
-                "Authorization": "token ${globals.token}"
-              };
-              var response = await Requests.post(
-                url,
-                headers: headers,
-                body: map,
-              );
-              // request.methodPost(map, url);
-              if (response.statusCode == 200) {
+              if(globals.token != null) {
+                var url =
+                    '${globals.site_link}/${(globals.lang)
+                    .tr()
+                    .toString()}/api/users/switch-lang';
+                Map map = {
+                  "fcm_token": globals.deviceToken,
+                  "lang": _lang.tr().toString()
+                };
+                Map<String, String> headers = {
+                  "Authorization": "token ${globals.token}"
+                };
+                var response = await Requests.post(
+                  url,
+                  headers: headers,
+                  body: map,
+                );
+                // request.methodPost(map, url);
+                if (response.statusCode == 200) {
+                  String country;
+                  switch (_lang) {
+                    case 'uz':
+                      country = 'UZ';
+                      break;
+                    case 'ru':
+                      country = 'RU';
+                      break;
+                    case 'en':
+                      country = 'US';
+                      break;
+                  }
+                  EasyLocalization
+                      .of(context)
+                      .locale = Locale(_lang, country);
+                  Navigator.pop(context);
+                  widget.callBack(_lang, country);
+                } else {
+                  var responseBody = response.json();
+                  print(responseBody);
+                }
+              }
+              else{
                 String country;
                 switch (_lang) {
                   case 'uz':
@@ -142,12 +168,11 @@ class _SelectLangState extends State<SelectLang> {
                     country = 'US';
                     break;
                 }
-                EasyLocalization.of(context).locale = Locale(_lang, country);
+                EasyLocalization
+                    .of(context)
+                    .locale = Locale(_lang, country);
                 Navigator.pop(context);
                 widget.callBack(_lang, country);
-              } else {
-                var responseBody = response.json();
-                print(responseBody);
               }
             }, Theme.of(context).primaryColor),
           ),

@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class CardList extends StatelessWidget {
   final String title;
@@ -17,6 +20,7 @@ class CardList extends StatelessWidget {
               title,
               style: TextStyle(
                 fontSize: 12,
+                fontFamily: globals.font,
                 color: Color(0xff66676C),
               ),
             ),
@@ -26,6 +30,11 @@ class CardList extends StatelessWidget {
             child: Text(
               name,
               style: TextStyle(
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
+                fontFamily: globals.font,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
                 color: Color(0xff000000),
