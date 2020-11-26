@@ -4,6 +4,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -37,12 +38,24 @@ class _CustomDottedCircleContainerState
   //   }
   // }
 
+  void _getLocation() async {
+    var status = await Permission.location.status;
+    print(status);
+    if (status.isUndetermined || status.isDenied) {
+      Permission.location.request();
+      // We didn't ask for permission yet.
+    }
+    globals.userLocation = await getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+  }
+
   pickerCam() async {
     // ignore: deprecated_member_use
     File _img = await ImagePicker.pickImage(source: ImageSource.camera);
     if (_img != null && validate(_img)) {
       // widget.image = _img;
       globals.images.addAll({widget.img: _img});
+      await _getLocation();
       setState(() {});
     }
   }

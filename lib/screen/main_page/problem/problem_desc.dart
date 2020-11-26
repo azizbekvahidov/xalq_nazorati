@@ -39,6 +39,7 @@ class _ProblemDescState extends State<ProblemDesc> {
         "file3": null,
         "file4": null,
       });
+      globals.userLocation = null;
     });
   }
 

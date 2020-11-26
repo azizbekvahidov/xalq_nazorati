@@ -59,6 +59,16 @@ class _ProblemLocateState extends State<ProblemLocate> {
   @override
   void initState() {
     super.initState();
+    if (globals.userLocation != null) {
+      getAddressFromLatLng(Point(
+          latitude: globals.userLocation.latitude,
+          longitude: globals.userLocation.longitude));
+      Timer(Duration(seconds: 1), () {
+        _setLocation(Point(
+            latitude: globals.userLocation.latitude,
+            longitude: globals.userLocation.longitude));
+      });
+    }
   }
 
   static List<Addresses> _address;
@@ -232,6 +242,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
           globals.images['file2'] = null;
           globals.images['file3'] = null;
           globals.images['file4'] = null;
+          globals.userLocation = null;
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (BuildContext context) {

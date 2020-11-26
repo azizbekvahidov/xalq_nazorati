@@ -26,3 +26,4 @@ Map<int, bool> problems = {};
 bool isGetProblem = false;
 String deviceToken = "";
 String device = "";
+var userLocation = null;
