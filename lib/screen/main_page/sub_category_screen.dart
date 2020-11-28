@@ -50,7 +50,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
           child: Column(

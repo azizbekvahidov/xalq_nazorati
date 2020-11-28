@@ -22,7 +22,8 @@ class _PdfWidgetState extends State<PdfWidget> {
   Widget build(BuildContext context) {
     String _fileName = widget.fileName.split("/").last;
     String ext = widget.fileName.split(".").last;
-    // File temp = await to_file.urlToFile(widget.fileName, ext);
+    String uri = "${globals.site_link}${widget.fileName}";
+    // File file = File.fromUri(Uri.parse(uri));
     return InkWell(
       onTap: () {
         Navigator.of(context).push(

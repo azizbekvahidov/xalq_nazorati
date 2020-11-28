@@ -84,7 +84,13 @@ class _RegisterPersonalDataScreenState
     String pass = passController.text;
     var url =
         '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signin';
-    Map map = {"phone": phone, "password": pass};
+    Map map = {
+      "phone": phone,
+      "password": pass,
+      "fcm_token": globals.deviceToken,
+      "device_type": globals.device,
+      "lang": globals.lang.tr().toString()
+    };
     var response = await Requests.post(
       url,
       body: map,

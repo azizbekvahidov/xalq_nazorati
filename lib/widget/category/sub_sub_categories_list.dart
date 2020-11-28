@@ -23,7 +23,7 @@ class _SubSubCategoriesListState extends State<SubSubCategoriesList> {
 
       // height: mediaQuery.size.height * 0.75,
       child: ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         itemCount: widget.categories.length,
         itemBuilder: (context, index) {
           return SubCategoryCardList(
