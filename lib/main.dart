@@ -143,13 +143,11 @@ Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
   if (message.containsKey('data')) {
     // Handle data message
     final dynamic data = message['data'];
-    print("data is $data");
   }
 
   if (message.containsKey('notification')) {
     // Handle notification message
     final dynamic notification = message['notification'];
-    print("notification is $notification");
   }
 
   // Or do other work.
@@ -194,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       globals.token = null;
       dynamic json = response.json();
-      print(json["detail"]);
       Fluttertoast.showToast(
           msg: json['detail'],
           toastLength: Toast.LENGTH_SHORT,
@@ -205,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
           fontSize: 15.0);
     }
     // String reply = await response.transform(utf8.decoder).join();
-    print(response.statusCode);
+    // print(response.statusCode);
     // globals.userData = json.decode(reply);
   }
 
@@ -307,7 +304,6 @@ class _MyHomePageState extends State<MyHomePage> {
       onLaunch: (Map<String, dynamic> message) {
         if (message["data"].containsKey("problem_id"))
           Timer(Duration(seconds: 3), () {
-            print("onLunch");
             navService.push(MaterialPageRoute(builder: (_) {
               return ProblemContentScreen(
                   id: int.parse(message["data"]["problem_id"]));
@@ -325,7 +321,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       globals.deviceToken = token;
-      print(token);
     });
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {

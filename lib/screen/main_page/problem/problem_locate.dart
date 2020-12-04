@@ -172,6 +172,81 @@ class _ProblemLocateState extends State<ProblemLocate> {
     return res;
   }
 
+  customDialog(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.45,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/img/info.svg",
+                      height: height * 0.12,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "problem_warning".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: (height < 560) ? 14 : 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FlatButton(
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 35),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(
+                              style: BorderStyle.solid,
+                              color: Theme.of(context).primaryColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            "close".tr().toString(),
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor),
+                          )),
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   Future insertData() async {
     try {
       Map<String, String> sendData = {
@@ -253,8 +328,8 @@ class _ProblemLocateState extends State<ProblemLocate> {
           );
         }
       } else {
-        String reply = response.json();
-
+        var reply = response.json();
+        customDialog(context);
         print(reply);
       }
     } catch (e) {

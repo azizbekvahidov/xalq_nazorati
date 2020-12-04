@@ -176,7 +176,9 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
             final list = _splitRecognized(rec.text);
             for (int i = 0; i < list.length - 1; i++) {
               final sublist = list.sublist(i, i + 2);
+              print("sublist $sublist");
               final result = MRZParser.tryParse(sublist);
+              print("result $result");
               if (result != null) {
                 Navigator.pop(context, result);
                 break;

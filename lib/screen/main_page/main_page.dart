@@ -57,7 +57,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(globals.userData);
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       body: Stack(

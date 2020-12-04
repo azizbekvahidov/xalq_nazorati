@@ -41,7 +41,9 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
       print(msg.sender);
       print(msg.threadId);
       print(msg.state);
-      codeController.text = msg.body;
+      final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
+
+      codeController.text = intValue.toString();
     });
   }
 

@@ -30,7 +30,9 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height,
+          height: mediaQuery.size.height < 560
+              ? mediaQuery.size.height
+              : mediaQuery.size.height * 0.8,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

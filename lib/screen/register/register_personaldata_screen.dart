@@ -173,7 +173,9 @@ class _RegisterPersonalDataScreenState
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Container(
-            height: mediaQuery.size.height * 1.05,
+            height: mediaQuery.size.height < 560
+                ? mediaQuery.size.height
+                : mediaQuery.size.height * 0.8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
