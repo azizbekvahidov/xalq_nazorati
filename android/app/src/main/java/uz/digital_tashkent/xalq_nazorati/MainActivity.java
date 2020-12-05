@@ -1,4 +1,4 @@
-package com.example.xalq_nazorati;
+package uz.digital_tashkent.xalq_nazorati;
 
 import androidx.annotation.NonNull;
 

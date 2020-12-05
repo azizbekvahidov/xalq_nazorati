@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361204410906:android:672d2373d954291621ffa3",
+        "android_client_info": {
+          "package_name": "uz.digital_tashkent.xalq_nazorati"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361204410906-e1mf3ha0a5lhjc5jtclb1j44hq618783.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAk2li889U18uk9YzucuV73omRPf-5m6_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361204410906-e1mf3ha0a5lhjc5jtclb1j44hq618783.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

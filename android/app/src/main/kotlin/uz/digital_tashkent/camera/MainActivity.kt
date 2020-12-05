@@ -1,4 +1,4 @@
-package com.example.testProj
+package uz.digital_tashkent.camera
 
 import io.flutter.embedding.android.FlutterActivity
 

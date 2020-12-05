@@ -1,4 +1,4 @@
-package com.example.xalq_nazorati;
+package uz.digital_tashkent.xalq_nazorati;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin;
 
