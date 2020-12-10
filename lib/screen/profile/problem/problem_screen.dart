@@ -82,6 +82,9 @@ class _ProblemScreenState extends State<ProblemScreen> {
       case "danger":
         _type = "denied";
         break;
+      case "delayed":
+        _type = "planned";
+        break;
     }
 
     try {

@@ -12,16 +12,13 @@ class NewsBreakingScreen extends StatefulWidget {
 }
 
 class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
-  Future<List<News>> getNews() async {
+  Future<List> getNews() async {
     var url = '${globals.api_link}/news?category=breaking';
 
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
-
-    return reply["result"];
+    return reply["results"];
   }
 
   List<News> parseNews(var responseBody) {

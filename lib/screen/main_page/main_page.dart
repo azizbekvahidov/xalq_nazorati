@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -39,20 +41,58 @@ class _MainPageState extends State<MainPage> {
     var response = await Requests.get(url);
 
     var reply = response.json();
-
-    return reply["result"];
+    return reply["results"];
   }
 
-  List<Categories> parseCategory(String responseBody) {
-    final parsed = (json.decode(responseBody).cast<Map<String, dynamic>>());
+  // List<Categories> parseCategory(String responseBody) {
+  //   final parsed = (json.decode(responseBody).cast<Map<String, dynamic>>());
 
-    return parsed.map<Categories>((json) => Categories.fromJson(json)).toList();
-  }
+  //   return parsed.map<Categories>((json) => Categories.fromJson(json)).toList();
+  // }
 
-  List<News> parseNews(var responseBody) {
-    final parsed = json.decode(responseBody).cast<dynamic>();
-    var res = parsed.map<News>((json) => News.fromJson(json)).toList();
-    return res;
+  // List<News> parseNews(var responseBody) {
+  //   final parsed = json.decode(responseBody).cast<dynamic>();
+  //   var res = parsed.map<News>((json) => News.fromJson(json)).toList();
+  //   return res;
+  // }
+
+  customDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.7,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.03,
+                  horizontal: MediaQuery.of(context).size.width * 0.05),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "notifications".tr().toString(),
+                      style: Theme.of(context).textTheme.display2,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -67,8 +107,8 @@ class _MainPageState extends State<MainPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(bottom: 40, left: 20, right: 20),
-                  height: 188,
+                  padding: EdgeInsets.only(bottom: 30, left: 20, right: 20),
+                  height: 210,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -86,24 +126,89 @@ class _MainPageState extends State<MainPage> {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "${"hello".tr().toString()}, ${globals.userData['first_name'] ?? ""}",
-                        style: TextStyle(
-                            fontFamily: globals.font,
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w600),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${"hello".tr().toString()}, ${globals.userData['first_name'] ?? ""}",
+                                style: TextStyle(
+                                    fontFamily: globals.font,
+                                    color: Colors.white,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                "welcome".tr().toString(),
+                                style: TextStyle(
+                                    fontFamily: globals.font,
+                                    color: Colors.white,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              color: Color.fromRGBO(255, 255, 255, 0.3),
+                            ),
+                            child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  customDialog(context);
+                                },
+                                child: Stack(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/img/bell.svg",
+                                      height: 28,
+                                      color: Colors.white,
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: Container(
+                                        width: 16,
+                                        height: 16,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: Color(0xffFF5555),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            "25",
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              color: Colors.white,
+                                              fontSize: 8,
+                                              fontWeight: FontWeight.w600,
+                                              fontFeatures: [
+                                                FontFeature.enable("pnum"),
+                                                FontFeature.enable("lnum")
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "welcome".tr().toString(),
-                        style: TextStyle(
-                            fontFamily: globals.font,
-                            color: Colors.white,
-                            fontSize: 26,
-                            fontWeight: FontWeight.w600),
-                      ),
+                      SearchtInput("search".tr().toString()),
                     ],
                   ),
                 ),

@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:carousel_slider/carousel_slider.dart';
 
 class FullScreen extends StatelessWidget {
-  final String imgSrc;
-  FullScreen(this.imgSrc);
+  final List<String> imgList;
+  FullScreen(this.imgList);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        child: Center(
-          child: Hero(
-            tag: 'imageHero',
-            child: Image.network(
-              "${globals.site_link}/${imgSrc}",
-            ),
-          ),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-        },
+    final double height = MediaQuery.of(context).size.height;
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: height,
+        viewportFraction: 1.0,
+        enlargeCenterPage: false,
+        // autoPlay: false,
       ),
+      items: imgList
+          .map((item) => Container(
+                child: Center(
+                    child: Image.network(
+                  item,
+                  fit: BoxFit.cover,
+                  height: height,
+                )),
+              ))
+          .toList(),
     );
   }
 }

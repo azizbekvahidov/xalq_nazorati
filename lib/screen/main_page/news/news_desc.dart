@@ -18,15 +18,12 @@ class NewsDesc extends StatefulWidget {
 }
 
 class _NewsDescState extends State<NewsDesc> {
-  Future<News> getNews() async {
+  Future<Map> getNews() async {
     var url = '${globals.api_link}/news/${widget.id}';
 
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
-
     return reply;
   }
 
@@ -54,9 +51,9 @@ class _NewsDescState extends State<NewsDesc> {
               String dayOfWeek;
               if (snapshot.hasData) {
                 _publishDate =
-                    formatter.format(DateTime.parse(data["publishDate"]));
+                    formatter.format(DateTime.parse(data["date_time"]));
                 dayOfWeek = DateFormat('EEEE')
-                    .format(DateTime.parse(data["publishDate"]));
+                    .format(DateTime.parse(data["date_time"]));
               }
               return snapshot.hasData
                   ? Container(
@@ -116,10 +113,13 @@ class _NewsDescState extends State<NewsDesc> {
                             width: cWidth,
                             child: FittedBox(
                               fit: BoxFit.contain,
-                              child: Image.network(data.img),
+                              child: Image.network(data['img']),
                             ),
                           ),
-                          Html(data: data["api_content".tr().toString()]),
+
+                          data["api_content".tr().toString()] != null
+                              ? Html(data: data["api_content".tr().toString()])
+                              : Container(),
                           // Center(
                           //   child: Padding(
                           //     padding:

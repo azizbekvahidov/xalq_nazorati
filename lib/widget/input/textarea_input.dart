@@ -51,7 +51,16 @@ class _TextareaInputState extends State<TextareaInput> {
                     0.74,
                 child: TextField(
                   onChanged: (text) {
-                    changeTxt(text);
+                    String result = text;
+                    if (result.length > 1200) {
+                      result = result.substring(0, 1200);
+
+                      widget.textareaController.text = result;
+                      widget.textareaController.selection =
+                          TextSelection.fromPosition(
+                              TextPosition(offset: result.length));
+                    }
+                    changeTxt(result);
                   },
                   buildCounter: (BuildContext context,
                           {int currentLength, int maxLength, bool isFocused}) =>

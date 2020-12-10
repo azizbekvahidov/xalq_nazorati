@@ -50,7 +50,7 @@ class _ProblemCardState extends State<ProblemCard> {
         .difference(DateTime.now())
         .inMinutes;
     _showTime =
-        "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()} : ${minutes}${"m".tr().toString()}";
+        "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
     bool _alert = widget.alert == null ? false : widget.alert;
     var mediaQuery = MediaQuery.of(context);
     return InkWell(
@@ -121,10 +121,16 @@ class _ProblemCardState extends State<ProblemCard> {
               ),
               Row(
                 children: [
+                  BoxTextDefault("№${widget.data["id"]}"),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5),
+                  ),
                   BoxTextWarning("${widget.data["status"]}".tr().toString(),
                       widget.status),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5),
+                  ),
                   BoxTextDefault("${_showTime}"),
-                  BoxTextDefault("№${widget.data["id"]}"),
                 ],
               ),
             ],

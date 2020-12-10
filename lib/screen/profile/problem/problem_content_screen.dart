@@ -97,7 +97,6 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
 
   void refreshBells() async {
     try {
-      _alert = false;
       String _list = "${_data["id"]}";
       var url =
           '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
@@ -110,8 +109,11 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
             var problem_id = res['result'][i];
             if (problem_id == _data["id"]) _alert = true;
           }
+        } else {
+          _alert = false;
         }
       }
+
       setState(() {});
       // String reply = await response.transform(utf8.decoder).join();
 
@@ -120,6 +122,12 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  List<String> imgList = [];
+
+  generateList(String img) {
+    if (img != null) imgList.add("${globals.site_link}$img");
   }
 
   @override
@@ -145,6 +153,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
               _data["status"] == "closed") {
             _status = "danger";
             _title = "take_off_problems".tr().toString();
+          } else if (_data["status"] == "planned") {
+            _status = "delayed";
+            _title = "delayed_problems".tr().toString();
           }
           // switch (_data["status"]) {
           //   case "warning":
@@ -173,8 +184,14 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
               .difference(DateTime.now())
               .inMinutes;
           _showTime =
-              "${days}${"d".tr().toString()}  : ${hours}${"h".tr().toString()} : ${minutes}${"m".tr().toString()}";
+              "${days}${"d".tr().toString()}  : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
+          generateList(_data["file_1"]);
+          generateList(_data["file_2"]);
+          generateList(_data["file_3"]);
+          generateList(_data["file_4"]);
+          generateList(_data["file_5"]);
         }
+
         return snapshot.hasData
             ? Scaffold(
                 appBar: CustomAppBar(
@@ -255,13 +272,19 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                     ),
                                     Row(
                                       children: [
+                                        BoxTextDefault("№${_data["id"]}"),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5),
+                                        ),
                                         BoxTextWarning(
                                             "${_data["status"]}"
                                                 .tr()
                                                 .toString(),
                                             _status),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5),
+                                        ),
                                         BoxTextDefault(_showTime),
-                                        BoxTextDefault("№${_data["id"]}"),
                                       ],
                                     ),
                                   ],
@@ -304,31 +327,29 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                             5),
                                                     child: FittedBox(
                                                       fit: BoxFit.cover,
-                                                      child:
-                                                          _data["file_1"] !=
-                                                                  null
-                                                              ? GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context,
-                                                                            rootNavigator:
-                                                                                true)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return FullScreen(
-                                                                              _data["file_1"]);
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                  child: Image
-                                                                      .network(
-                                                                          "${globals.site_link}/${_data["file_1"]}"),
-                                                                )
-                                                              : Container(),
+                                                      child: _data["file_1"] !=
+                                                              null
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .push(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return FullScreen(
+                                                                          imgList);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Image.network(
+                                                                  "${globals.site_link}/${_data["file_1"]}"),
+                                                            )
+                                                          : Container(),
                                                     ),
                                                   ),
                                                 ),
@@ -346,31 +367,29 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                             5),
                                                     child: FittedBox(
                                                       fit: BoxFit.cover,
-                                                      child:
-                                                          _data["file_2"] !=
-                                                                  null
-                                                              ? GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context,
-                                                                            rootNavigator:
-                                                                                true)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return FullScreen(
-                                                                              _data["file_2"]);
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                  child: Image
-                                                                      .network(
-                                                                          "${globals.site_link}/${_data["file_2"]}"),
-                                                                )
-                                                              : Container(),
+                                                      child: _data["file_2"] !=
+                                                              null
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .push(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return FullScreen(
+                                                                          imgList);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Image.network(
+                                                                  "${globals.site_link}/${_data["file_2"]}"),
+                                                            )
+                                                          : Container(),
                                                     ),
                                                   ),
                                                 ),
@@ -392,31 +411,29 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                             5),
                                                     child: FittedBox(
                                                       fit: BoxFit.cover,
-                                                      child:
-                                                          _data["file_3"] !=
-                                                                  null
-                                                              ? GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context,
-                                                                            rootNavigator:
-                                                                                true)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return FullScreen(
-                                                                              _data["file_3"]);
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                  child: Image
-                                                                      .network(
-                                                                          "${globals.site_link}/${_data["file_3"]}"),
-                                                                )
-                                                              : Container(),
+                                                      child: _data["file_3"] !=
+                                                              null
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .push(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return FullScreen(
+                                                                          imgList);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Image.network(
+                                                                  "${globals.site_link}/${_data["file_3"]}"),
+                                                            )
+                                                          : Container(),
                                                     ),
                                                   ),
                                                 ),
@@ -437,31 +454,29 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                             5),
                                                     child: FittedBox(
                                                       fit: BoxFit.cover,
-                                                      child:
-                                                          _data["file_4"] !=
-                                                                  null
-                                                              ? GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context,
-                                                                            rootNavigator:
-                                                                                true)
-                                                                        .push(
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return FullScreen(
-                                                                              _data["file_4"]);
-                                                                        },
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                  child: Image
-                                                                      .network(
-                                                                          "${globals.site_link}/${_data["file_4"]}"),
-                                                                )
-                                                              : Container(),
+                                                      child: _data["file_4"] !=
+                                                              null
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                Navigator.of(
+                                                                        context,
+                                                                        rootNavigator:
+                                                                            true)
+                                                                    .push(
+                                                                  MaterialPageRoute(
+                                                                    builder:
+                                                                        (BuildContext
+                                                                            context) {
+                                                                      return FullScreen(
+                                                                          imgList);
+                                                                    },
+                                                                  ),
+                                                                );
+                                                              },
+                                                              child: Image.network(
+                                                                  "${globals.site_link}/${_data["file_4"]}"),
+                                                            )
+                                                          : Container(),
                                                     ),
                                                   ),
                                                 ),
@@ -496,8 +511,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                           builder: (BuildContext
                                                               context) {
                                                             return FullScreen(
-                                                                _data[
-                                                                    "file_5"]);
+                                                                imgList);
                                                           },
                                                         ),
                                                       );

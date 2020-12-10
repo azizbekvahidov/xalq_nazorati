@@ -161,50 +161,22 @@ class _MainProfileState extends State<MainProfile> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.only(
-                  left: 20,
-                  top: 20,
-                ),
-                child: Text(
-                  "profile_messages".tr().toString(),
-                  style: TextStyle(
-                    color: Color(0xff66676C),
-                    fontFamily: globals.font,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              ShadowBox(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomCardList(
-                        "subcat1",
-                        "unresolved".tr().toString(),
-                        ProblemScreen(
-                            title: "unresolved".tr().toString(),
-                            status: "warning"),
-                        true),
-                    CustomCardList(
-                      "subcat2",
-                      "solved".tr().toString(),
-                      ProblemScreen(
-                          title: "solved".tr().toString(), status: "success"),
-                      true,
-                    ),
-                    CustomCardList(
-                      "subcat3",
-                      "take_off_problems".tr().toString(),
-                      ProblemScreen(
-                          title: "take_off_problems".tr().toString(),
-                          status: "danger"),
-                      false,
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   padding: EdgeInsets.only(
+              //     left: 20,
+              //     top: 20,
+              //   ),
+              //   child: Text(
+              //     "profile_messages".tr().toString(),
+              //     style: TextStyle(
+              //       color: Color(0xff66676C),
+              //       fontFamily: globals.font,
+              //       fontSize: 16,
+              //       fontWeight: FontWeight.w600,
+              //     ),
+              //   ),
+              // ),
+
               Container(
                 padding: EdgeInsets.only(
                   left: 20,

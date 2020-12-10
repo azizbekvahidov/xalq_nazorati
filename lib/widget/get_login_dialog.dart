@@ -39,7 +39,8 @@ class GetLoginDialog extends StatelessWidget {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       globals.routeName = routeName;
-                      Navigator.pushNamed(context, LoginScreen.routeName);
+                      Navigator.pushReplacementNamed(
+                          context, LoginScreen.routeName);
                     },
                   text: "get_log_in".tr().toString(),
                   style: TextStyle(
@@ -63,7 +64,7 @@ class GetLoginDialog extends StatelessWidget {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       globals.routeName = routeName;
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                           context, RegisterPhoneScreen.routeName);
                     },
                   text: "get_sign_ups".tr().toString(),

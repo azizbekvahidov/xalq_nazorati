@@ -249,6 +249,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
 
   Future insertData() async {
     try {
+      setState(() {
+        _sending = true;
+        _btn_message = "Loading".tr().toString();
+      });
       Map<String, String> sendData = {
         "subsubcategory": "${widget.subSubCategoryId}",
         "content": widget.desc,
@@ -328,11 +332,19 @@ class _ProblemLocateState extends State<ProblemLocate> {
           );
         }
       } else {
+        setState(() {
+          _sending = false;
+          _btn_message = "continue".tr().toString();
+        });
         var reply = response.json();
         customDialog(context);
         print(reply);
       }
     } catch (e) {
+      setState(() {
+        _sending = false;
+        _btn_message = "continue".tr().toString();
+      });
       print(e);
     }
   }
@@ -588,7 +600,17 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                   bool isFocused}) =>
                                               null,
                                           onChanged: (value) {
-                                            changeTxt(value);
+                                            var result = value;
+                                            if (result.length > 40) {
+                                              result = result.substring(0, 40);
+                                              extraController.text = result;
+                                              extraController.selection =
+                                                  TextSelection.fromPosition(
+                                                      TextPosition(
+                                                          offset:
+                                                              result.length));
+                                            }
+                                            changeTxt(result);
                                           },
                                           controller: extraController,
                                           maxLines: 1,

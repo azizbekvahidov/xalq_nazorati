@@ -182,6 +182,8 @@ class _MainChatState extends State<MainChat> {
                               child: Column(
                                 children: [
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
@@ -197,29 +199,98 @@ class _MainChatState extends State<MainChat> {
                                                   height: 60,
                                                   child: FittedBox(
                                                     fit: BoxFit.cover,
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        Navigator.of(context,
-                                                                rootNavigator:
-                                                                    true)
-                                                            .push(
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                              return FullScreen(
-                                                                  "${globals.site_link}${_data[index].file}");
+                                                    child: (_data[index]
+                                                                    .file
+                                                                    .split(".")
+                                                                    .last ==
+                                                                "jpg" ||
+                                                            _data[index]
+                                                                    .file
+                                                                    .split(".")
+                                                                    .last ==
+                                                                "jpeg" ||
+                                                            _data[index]
+                                                                    .file
+                                                                    .split(".")
+                                                                    .last ==
+                                                                "png" ||
+                                                            _data[index]
+                                                                    .file
+                                                                    .split(".")
+                                                                    .last ==
+                                                                "gif")
+                                                        ? GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .push(
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return GestureDetector(
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Hero(
+                                                                          tag:
+                                                                              'imageHero',
+                                                                          child:
+                                                                              Image.network(
+                                                                            "${globals.site_link}${_data[index].file}",
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                    );
+                                                                  },
+                                                                ),
+                                                              );
                                                             },
+                                                            child: Image.network(
+                                                                "${globals.site_link}${_data[index].file}"),
+                                                          )
+                                                        : Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    20),
+                                                            color: Colors.white,
+                                                            child: Center(
+                                                              child: Text(
+                                                                "file"
+                                                                    .tr()
+                                                                    .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      globals
+                                                                          .font,
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ),
-                                                        );
-                                                      },
-                                                      child: Image.network(
-                                                          "${globals.site_link}${_data[index].file}"),
-                                                    ),
                                                   ),
                                                 ),
                                               ),
                                       ),
+                                      _data[index].file != null
+                                          ? Container(
+                                              padding:
+                                                  EdgeInsets.only(left: 10),
+                                              width:
+                                                  mediaQuery.size.width * 0.5,
+                                              child: Text(_data[index]
+                                                  .file
+                                                  .split("/")
+                                                  .last),
+                                            )
+                                          : Container(),
                                     ],
                                   ),
                                   Row(

@@ -27,13 +27,13 @@ class _NewsListState extends State<NewsList> {
                   widget.news[index]["id"],
                   title,
                   widget.news[index]["location"],
-                  widget.news[index]["publishDate"],
+                  widget.news[index]["date_time"],
                   widget.news[index]["img"])
               : NewsItemPlanned(
                   widget.news[index]["id"],
                   title,
                   widget.news[index]["location"],
-                  widget.news[index]["publishDate"],
+                  widget.news[index]["date_time"],
                   widget.news[index]["img"],
                   widget.news[index]["api_content".tr().toString()]);
         },

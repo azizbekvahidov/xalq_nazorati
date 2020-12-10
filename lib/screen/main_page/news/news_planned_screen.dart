@@ -12,15 +12,14 @@ class NewsPlannedScreen extends StatefulWidget {
 }
 
 class _NewsPlannedScreenState extends State<NewsPlannedScreen> {
-  Future<List<News>> getNews() async {
+  Future<List> getNews() async {
     var url = '${globals.api_link}/news?category=planned';
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
-    var response = await Requests.get(url, headers: headers);
+    var response = await Requests.get(url);
 
     var reply = response.json();
 
-    return reply["result"];
+    return reply["results"];
   }
 
   List<News> parseNews(var responseBody) {
