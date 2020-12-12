@@ -185,7 +185,21 @@
   "file":"файл",
   "delayed_problems":"Отсроченные проблемы",
   "search":"Қидирув",
-
+  "street": "Куча",
+  "quarter": "Квартал",
+  "massif": "Массив",
+  "all_parametr": "Барча параметрлар",
+  "district":"Туман",
+  "select_district":"Туманни танланг",
+  "placeType":"Жой",
+  "select_placeType":"Квартал, Кўча ва бощқасини танлангKvartal, ko'cha va boshqasini tanlang",
+  "streets":"Кўча",
+  "select_street":"Кўчани танланг",
+  "houses":"Уй",
+  "select_houses":"Уйни танланг",
+  "mahalla":"Маҳалла",
+  "here_mahalla":"Бу ерда маҳалла кўринади",
+  "fill_personal_data":"Майдон тўлдирилмаган",
 
 
 

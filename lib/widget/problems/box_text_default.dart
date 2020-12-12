@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,11 @@ class BoxTextDefault extends StatelessWidget {
           color: Colors.black,
           fontFamily: globals.font,
           fontSize: 10,
+          fontFeatures: [
+            FontFeature.enable("pnum"),
+            FontFeature.enable("lnum")
+          ],
+          decoration: TextDecoration.none,
         ),
       ),
     );

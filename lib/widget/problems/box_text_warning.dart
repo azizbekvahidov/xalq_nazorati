@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
@@ -42,6 +44,11 @@ class BoxTextWarning extends StatelessWidget {
           color: _txtColor,
           fontFamily: globals.font,
           fontSize: 10,
+          fontFeatures: [
+            FontFeature.enable("pnum"),
+            FontFeature.enable("lnum")
+          ],
+          decoration: TextDecoration.none,
         ),
       ),
     );

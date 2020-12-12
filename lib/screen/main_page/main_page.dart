@@ -13,6 +13,8 @@ import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
+import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
+import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import '../../widget/input/search_input.dart';
 
 class MainPage extends StatefulWidget {
@@ -31,6 +33,47 @@ class _MainPageState extends State<MainPage> {
     var reply = response.json();
 
     return reply;
+  }
+
+  int notificationCnt = 0;
+  List notifyList = [];
+
+  getNotification() async {
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/count';
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var reply = response.json();
+      setState(() {
+        notificationCnt = reply["count"];
+      });
+    } else {
+      var reply = response.json();
+      print(reply);
+    }
+  }
+
+  getNotificationList() async {
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications';
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var reply = response.json();
+      return reply;
+    } else if (response.statusCode == 500)
+      print("500");
+    else {
+      var reply = response.json();
+      print(reply);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   Future<List> getNews() async {
@@ -87,6 +130,83 @@ class _MainPageState extends State<MainPage> {
                       "notifications".tr().toString(),
                       style: Theme.of(context).textTheme.display2,
                     ),
+                    FutureBuilder(
+                        future: getNotificationList(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) print(snapshot.error);
+                          return snapshot.hasData
+                              ? Container(
+                                  height: 70.0 * snapshot.data.length,
+                                  child: ListView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      print(snapshot.data[index]);
+                                      return Container(
+                                          height: 90,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Container(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        BoxTextWarning(
+                                                            "ID ${snapshot.data[index]["problem_id"]}",
+                                                            "success"),
+                                                        Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 8)),
+                                                        BoxTextDefault(
+                                                            "${snapshot.data[index]["datetime"]}")
+                                                      ],
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        print("asdasd");
+                                                      },
+                                                      child: Icon(Icons.close),
+                                                    ),
+                                                  ],
+                                                ),
+                                                GestureDetector(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.only(top: 8),
+                                                    height: 55,
+                                                    child: Text(
+                                                      "${snapshot.data[index]["action"]}",
+                                                      style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration.none,
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontFamily:
+                                                            globals.font,
+                                                        color:
+                                                            Color(0xff313B6C),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Divider(),
+                                              ],
+                                            ),
+                                          ));
+                                    },
+                                  ),
+                                )
+                              : Container();
+                        }),
                   ],
                 ),
               ),
@@ -97,6 +217,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    getNotification();
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
@@ -153,59 +274,68 @@ class _MainPageState extends State<MainPage> {
                               ),
                             ],
                           ),
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              color: Color.fromRGBO(255, 255, 255, 0.3),
-                            ),
-                            child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  customDialog(context);
-                                },
-                                child: Stack(
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/img/bell.svg",
-                                      height: 28,
-                                      color: Colors.white,
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: Container(
-                                        width: 16,
-                                        height: 16,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Color(0xffFF5555),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "25",
-                                            style: TextStyle(
-                                              fontFamily: globals.font,
-                                              color: Colors.white,
-                                              fontSize: 8,
-                                              fontWeight: FontWeight.w600,
-                                              fontFeatures: [
-                                                FontFeature.enable("pnum"),
-                                                FontFeature.enable("lnum")
-                                              ],
-                                            ),
+                          globals.token != null
+                              ? Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(24),
+                                    color: Color.fromRGBO(255, 255, 255, 0.3),
+                                  ),
+                                  child: Center(
+                                    child: InkWell(
+                                      onTap: () {
+                                        customDialog(context);
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/img/bell.svg",
+                                            height: 28,
+                                            color: Colors.white,
                                           ),
-                                        ),
+                                          Positioned(
+                                            right: 0,
+                                            top: 0,
+                                            child: notificationCnt != 0
+                                                ? Container(
+                                                    width: 16,
+                                                    height: 16,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      color: Color(0xffFF5555),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "$notificationCnt",
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              globals.font,
+                                                          color: Colors.white,
+                                                          fontSize: 8,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFeatures: [
+                                                            FontFeature.enable(
+                                                                "pnum"),
+                                                            FontFeature.enable(
+                                                                "lnum")
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
                       SearchtInput("search".tr().toString()),

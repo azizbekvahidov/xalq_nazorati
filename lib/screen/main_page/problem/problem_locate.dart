@@ -14,6 +14,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/addresses.dart';
+import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -53,6 +54,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   bool _sending = false;
   int _cnt = 40;
   String _btn_message = "continue".tr().toString();
+  String address = "";
 
   Placemark _placemark;
 
@@ -74,7 +76,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   static List<Addresses> _address;
   changeAddress(String value) async {
     try {
-      String address = addressController.text;
+      address = addressController.text;
       Map<String, String> headers = {
         "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002"
       };
@@ -94,7 +96,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
 
   getLocateFromAddress(String val) async {
     try {
-      String address = addressController.text;
+      address = addressController.text;
       var url =
           'https://geocode-maps.yandex.ru/1.x/?apikey=2795d389-a82c-4d0d-913e-35f811762571&geocode=$val&format=json';
       var r1 = await Requests.get(url);
@@ -256,7 +258,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
       Map<String, String> sendData = {
         "subsubcategory": "${widget.subSubCategoryId}",
         "content": widget.desc,
-        "address": addressController.text,
+        "address": address,
         "latitude": "$_latitude".substring(0, 10),
         "longitude": "$_longitude".substring(0, 10),
         "note": extraController.text,
@@ -349,6 +351,18 @@ class _ProblemLocateState extends State<ProblemLocate> {
     }
   }
 
+  setAddress(var addr) {
+    address =
+        "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
+
+    var latlang = Point(
+        latitude: double.tryParse(addr['latitude']),
+        longitude: double.tryParse(addr['longitude']));
+    _setLocation(Point(
+        latitude: double.tryParse(addr['latitude']),
+        longitude: double.tryParse(addr['longitude'])));
+  }
+
   void _getLocation() async {
     var status = await Permission.location.status;
     print(status);
@@ -421,7 +435,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   }
 
   checkChange() {
-    String descValue = addressController.text;
+    String descValue = address;
     setState(() {
       if (descValue != "" && _latitude != 0 && _longitude != 0)
         _valid = true;
@@ -461,31 +475,37 @@ class _ProblemLocateState extends State<ProblemLocate> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                MainText("set_address".tr().toString()),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 20),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  width: double.infinity,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffF5F6F9),
-                                    borderRadius: BorderRadius.circular(22.5),
-                                    border: Border.all(
-                                      color: Color.fromRGBO(178, 183, 208, 0.5),
-                                      style: BorderStyle.solid,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: (mediaQuery.size.width -
-                                                mediaQuery.padding.left -
-                                                mediaQuery.padding.right) *
-                                            0.74,
-                                        child: widget.categoryId != 18
-                                            ? TypeAheadField(
+                                widget.categoryId != 18
+                                    ? MainText("set_address".tr().toString())
+                                    : Container(),
+                                widget.categoryId != 18
+                                    ? Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 20),
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        width: double.infinity,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xffF5F6F9),
+                                          borderRadius:
+                                              BorderRadius.circular(22.5),
+                                          border: Border.all(
+                                            color: Color.fromRGBO(
+                                                178, 183, 208, 0.5),
+                                            style: BorderStyle.solid,
+                                            width: 0.5,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: (mediaQuery.size.width -
+                                                      mediaQuery.padding.left -
+                                                      mediaQuery
+                                                          .padding.right) *
+                                                  0.74,
+                                              child: TypeAheadField(
                                                 textFieldConfiguration:
                                                     TextFieldConfiguration(
                                                   controller: addressController,
@@ -521,54 +541,14 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                   addressController.text =
                                                       suggestion.title;
                                                 },
-                                              )
-                                            : TypeAheadField(
-                                                textFieldConfiguration:
-                                                    TextFieldConfiguration(
-                                                  controller: addressController,
-                                                  autofocus: true,
-                                                  decoration:
-                                                      InputDecoration.collapsed(
-                                                    hintText: "address_example"
-                                                        .tr()
-                                                        .toString(),
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display1,
-                                                  ),
-                                                ),
-                                                hideOnEmpty: true,
-                                                suggestionsCallback:
-                                                    (pattern) async {
-                                                  return await changeAddress(
-                                                      pattern);
-                                                },
-                                                itemBuilder:
-                                                    (context, suggestion) {
-                                                  return ListTile(
-                                                    title: Text(
-                                                        suggestion.address),
-                                                  );
-                                                },
-                                                onSuggestionSelected:
-                                                    (suggestion) {
-                                                  checkChange();
-                                                  _setLocation(Point(
-                                                      latitude: double.parse(
-                                                          suggestion.house[
-                                                              "latitude"]),
-                                                      longitude: double.parse(
-                                                          suggestion.house[
-                                                              "longitude"])));
-                                                  print(suggestion.address);
-                                                  addressController.text =
-                                                      suggestion.address;
-                                                },
                                               ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : AddressSearch(
+                                        setAddress: setAddress,
                                       ),
-                                    ],
-                                  ),
-                                ),
                                 MainText("notes".tr().toString()),
                                 Container(
                                   padding: EdgeInsets.symmetric(

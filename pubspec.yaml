@@ -70,6 +70,10 @@ dependencies:
   no_context_navigation: ^1.0.3
   expandable: ^4.1.4
   carousel_slider: ^2.3.1
+  scrollable_positioned_list: ^0.1.8
+  indexed_list_view: ^1.1.5
+
+
   # workmanager: ^0.2.3
 
 
