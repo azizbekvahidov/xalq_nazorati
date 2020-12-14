@@ -10,9 +10,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/category.dart';
 import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
+import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
+import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import '../../widget/input/search_input.dart';
 
 class MainPage extends StatefulWidget {
@@ -31,6 +34,69 @@ class _MainPageState extends State<MainPage> {
     var reply = response.json();
 
     return reply;
+  }
+
+  int notificationCnt = 0;
+  List notifyList = [];
+  var _newNotifyList;
+
+  getNotification() async {
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/count';
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var reply = response.json();
+      setState(() {
+        notificationCnt = reply["count"];
+      });
+    } else {
+      var reply = response.json();
+      print(reply);
+    }
+  }
+
+  checkNotification(var id) async {
+    try {
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/check';
+      Map<String, String> data = {"id": id.toString()};
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+      var response = await Requests.post(url, headers: headers, body: data);
+      if (response.statusCode == 201) {
+        var reply = response.json();
+        getNotification();
+        setState(() {});
+      } else {
+        var reply = response.json();
+        print(reply);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getNotificationList() async {
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    var url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications';
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var reply = response.json();
+      return reply;
+    } else if (response.statusCode == 500)
+      print("500");
+    else {
+      var reply = response.json();
+      print(reply);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   Future<List> getNews() async {
@@ -57,6 +123,9 @@ class _MainPageState extends State<MainPage> {
   // }
 
   customDialog(BuildContext context) {
+    _newNotifyList = getNotificationList();
+    DateFormat formatterDay = DateFormat('dd');
+    DateFormat formatterMonth = DateFormat('MMMM');
     return showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -66,37 +135,209 @@ class _MainPageState extends State<MainPage> {
         transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
-          return Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0)),
-                color: Colors.white,
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.7,
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.03,
-                  horizontal: MediaQuery.of(context).size.width * 0.05),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "notifications".tr().toString(),
-                      style: Theme.of(context).textTheme.display2,
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "notifications".tr().toString(),
+                          style: Theme.of(context).textTheme.display2,
+                        ),
+                        FutureBuilder(
+                            future: _newNotifyList,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) print(snapshot.error);
+                              return snapshot.hasData
+                                  ? Container(
+                                      height: 115.0 * snapshot.data.length,
+                                      child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: snapshot.data.length,
+                                        itemBuilder:
+                                            (BuildContext context, index) {
+                                          String statDateDay = formatterDay
+                                              .format(DateTime.parse(DateFormat(
+                                                      "yyyy-MM-ddTHH:mm:ssZ")
+                                                  .parseUTC(snapshot.data[index]
+                                                      ["datetime"])
+                                                  .toString()));
+
+                                          String statDateMonth = formatterMonth
+                                              .format(DateTime.parse(DateFormat(
+                                                      "yyyy-MM-ddTHH:mm:ssZ")
+                                                  .parseUTC(snapshot.data[index]
+                                                      ["datetime"])
+                                                  .toString()));
+                                          return Dismissible(
+                                            key: Key(snapshot.data[index]
+                                                .toString()),
+                                            onDismissed: (direction) {
+                                              if (direction ==
+                                                  DismissDirection.endToStart) {
+                                                checkNotification(
+                                                    snapshot.data[index]["id"]);
+                                              } else if (direction ==
+                                                  DismissDirection.startToEnd) {
+                                                checkNotification(
+                                                    snapshot.data[index]["id"]);
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      var route;
+                                                      route =
+                                                          ProblemContentScreen(
+                                                              id: snapshot.data[
+                                                                      index][
+                                                                  "problem_id"]);
+                                                      return route;
+                                                    },
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            child: Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                                height: 95,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Container(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              BoxTextWarning(
+                                                                  "ID ${snapshot.data[index]["problem_id"]}",
+                                                                  "success"),
+                                                              Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              8)),
+                                                              BoxTextDefault(
+                                                                  "$statDateDay " +
+                                                                      "$statDateMonth"
+                                                                          .tr()
+                                                                          .toString())
+                                                            ],
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              checkNotification(
+                                                                  snapshot.data[
+                                                                          index]
+                                                                      ["id"]);
+                                                              setState(() {
+                                                                snapshot.data
+                                                                    .removeAt(
+                                                                        index);
+                                                              });
+                                                            },
+                                                            child: Icon(
+                                                                Icons.close),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      FlatButton(
+                                                        padding:
+                                                            EdgeInsets.all(0),
+                                                        onPressed: () {
+                                                          checkNotification(
+                                                              snapshot.data[
+                                                                  index]["id"]);
+                                                          Navigator.of(context)
+                                                              .pushReplacement(
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                var route;
+                                                                route = ProblemContentScreen(
+                                                                    id: snapshot
+                                                                            .data[index]
+                                                                        [
+                                                                        "problem_id"]);
+                                                                return route;
+                                                              },
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 8),
+                                                          height: 50,
+                                                          child: Text(
+                                                            "${snapshot.data[index]["action"]}",
+                                                            style: TextStyle(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .none,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontFamily:
+                                                                  globals.font,
+                                                              color: Color(
+                                                                  0xff313B6C),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Divider(),
+                                                    ],
+                                                  ),
+                                                )),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : Container();
+                            }),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         });
   }
 
   @override
   Widget build(BuildContext context) {
+    getNotification();
     final mediaQuery = MediaQuery.of(context);
     return Scaffold(
       body: Stack(
@@ -153,62 +394,71 @@ class _MainPageState extends State<MainPage> {
                               ),
                             ],
                           ),
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              color: Color.fromRGBO(255, 255, 255, 0.3),
-                            ),
-                            child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  customDialog(context);
-                                },
-                                child: Stack(
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/img/bell.svg",
-                                      height: 28,
-                                      color: Colors.white,
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      top: 0,
-                                      child: Container(
-                                        width: 16,
-                                        height: 16,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: Color(0xffFF5555),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "25",
-                                            style: TextStyle(
-                                              fontFamily: globals.font,
-                                              color: Colors.white,
-                                              fontSize: 8,
-                                              fontWeight: FontWeight.w600,
-                                              fontFeatures: [
-                                                FontFeature.enable("pnum"),
-                                                FontFeature.enable("lnum")
-                                              ],
-                                            ),
+                          globals.token != null
+                              ? Container(
+                                  width: 48,
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(24),
+                                    color: Color.fromRGBO(255, 255, 255, 0.3),
+                                  ),
+                                  child: Center(
+                                    child: InkWell(
+                                      onTap: () {
+                                        customDialog(context);
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/img/bell.svg",
+                                            height: 28,
+                                            color: Colors.white,
                                           ),
-                                        ),
+                                          Positioned(
+                                            right: 0,
+                                            top: 0,
+                                            child: notificationCnt != 0
+                                                ? Container(
+                                                    width: 16,
+                                                    height: 16,
+                                                    alignment: Alignment.center,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      color: Color(0xffFF5555),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "$notificationCnt",
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              globals.font,
+                                                          color: Colors.white,
+                                                          fontSize: 8,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontFeatures: [
+                                                            FontFeature.enable(
+                                                                "pnum"),
+                                                            FontFeature.enable(
+                                                                "lnum")
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                  ),
+                                )
+                              : Container(),
                         ],
                       ),
-                      SearchtInput("search".tr().toString()),
+                      SearchtInput("search"),
                     ],
                   ),
                 ),

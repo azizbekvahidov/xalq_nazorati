@@ -391,6 +391,9 @@ class _MainChatState extends State<MainChat> {
                       Container(
                           width: (mediaQuery.size.width - 40) * 0.60,
                           child: TextField(
+                            onSubmitted: (value) {
+                              sendMessage();
+                            },
                             onChanged: (value) {
                               changeText(value);
                             },

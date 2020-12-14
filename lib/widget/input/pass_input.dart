@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/parser.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PassInput extends StatefulWidget {
   final String hint;
@@ -45,6 +47,16 @@ class _PassInputState extends State<PassInput> {
                   hintStyle: Theme.of(context).textTheme.display1),
             ),
           ),
+          InkWell(
+            onTap: () {
+              setState(() {
+                _passShow = !_passShow;
+              });
+            },
+            child: _passShow
+                ? SvgPicture.asset("assets/img/eye_open.svg")
+                : SvgPicture.asset("assets/img/eye_close.svg"),
+          )
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,6 +21,8 @@ class _ChangePasswordState extends State<ChangePassword> {
   final rePassController = TextEditingController();
   bool _value = false;
   bool _passShow = false;
+  bool _oldpassShow = false;
+  bool _repassShow = false;
 
   void validation() {
     if (oldPassController.text != "" &&
@@ -133,13 +136,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.7,
+                                        0.73,
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
                                       },
                                       controller: oldPassController,
-                                      obscureText: !_passShow,
+                                      obscureText: !_oldpassShow,
                                       maxLines: 1,
                                       decoration: InputDecoration.collapsed(
                                           hintText: "pass_hint".tr().toString(),
@@ -148,6 +151,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .display1),
                                     ),
                                   ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _oldpassShow = !_oldpassShow;
+                                      });
+                                    },
+                                    child: _oldpassShow
+                                        ? SvgPicture.asset(
+                                            "assets/img/eye_open.svg")
+                                        : SvgPicture.asset(
+                                            "assets/img/eye_close.svg"),
+                                  )
                                 ],
                               ),
                             ),
@@ -174,7 +189,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.7,
+                                        0.73,
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
@@ -191,6 +206,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .display1),
                                     ),
                                   ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _passShow = !_passShow;
+                                      });
+                                    },
+                                    child: _passShow
+                                        ? SvgPicture.asset(
+                                            "assets/img/eye_open.svg")
+                                        : SvgPicture.asset(
+                                            "assets/img/eye_close.svg"),
+                                  )
                                 ],
                               ),
                             ),
@@ -217,13 +244,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.7,
+                                        0.73,
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
                                       },
                                       controller: rePassController,
-                                      obscureText: !_passShow,
+                                      obscureText: !_repassShow,
                                       maxLines: 1,
                                       decoration: InputDecoration.collapsed(
                                           hintText: "confirm_pass_hint"
@@ -234,6 +261,18 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .display1),
                                     ),
                                   ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _repassShow = !_repassShow;
+                                      });
+                                    },
+                                    child: _repassShow
+                                        ? SvgPicture.asset(
+                                            "assets/img/eye_open.svg")
+                                        : SvgPicture.asset(
+                                            "assets/img/eye_close.svg"),
+                                  )
                                 ],
                               ),
                             ),

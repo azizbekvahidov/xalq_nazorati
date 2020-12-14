@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:sms/sms.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/input/default_input.dart';
@@ -28,6 +29,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
   Timer _timer;
   int _start = 180;
   bool _isSend = false;
+  String address;
 
   final codeController = TextEditingController();
   void getSMS() async {
@@ -79,7 +81,6 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
 
   Future changeProfile() async {
     try {
-      String address = addressController.text;
       String email = emailController.text;
       String code = "${codeController.text}";
       if (code != "") {
@@ -109,10 +110,28 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         } else {
           print(json);
         }
+      } else {
+        Fluttertoast.showToast(
+            msg: "fill_personal_data".tr().toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 15.0);
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  setAddress(var addr) {
+    address =
+        "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
+
+    // latlang = Point(
+    //     latitude: double.tryParse(addr['latitude']),
+    //     longitude: double.tryParse(addr['longitude']));
   }
 
   Future sendMessage() async {
@@ -215,7 +234,6 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -230,11 +248,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("fact_accress".tr().toString()),
-                            DefaultInput(
-                              hint: "address_hint".tr().toString(),
-                              textController: addressController,
-                              notifyParent: checkChange,
+                            AddressSearch(
+                              setAddress: setAddress,
                             ),
                             MainText("email_title".tr().toString()),
                             DefaultInput(

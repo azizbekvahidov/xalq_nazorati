@@ -50,15 +50,9 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    isExpanded = false;
-    print(widget.data["id"]);
-    print(widget.subcategoryId);
+    isExpanded = true;
     if (widget.subcategoryId != null) {
-      if (widget.data["id"] == widget.subcategoryId) {
-        setState(() {
-          isExpanded = true;
-        });
-      }
+      if (widget.data["id"] == widget.subcategoryId) {}
     }
   }
 
@@ -126,7 +120,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
             isExpanded = value;
           });
         },
-        initiallyExpanded: isExpanded,
+        initiallyExpanded: true,
         headerBackgroundColor: Colors.transparent,
         children: [
           Column(
@@ -140,7 +134,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                       return snap.hasData
                           ? ConstrainedBox(
                               constraints: BoxConstraints(
-                                  maxHeight: 69.0 * snap.data.length,
+                                  maxHeight: 71.0 * snap.data.length,
                                   minHeight: 56.0),
                               child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
