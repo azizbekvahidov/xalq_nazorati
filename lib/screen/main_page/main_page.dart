@@ -10,6 +10,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/category.dart';
 import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
@@ -37,6 +38,7 @@ class _MainPageState extends State<MainPage> {
 
   int notificationCnt = 0;
   List notifyList = [];
+  var _newNotifyList;
 
   getNotification() async {
     var url =
@@ -52,6 +54,27 @@ class _MainPageState extends State<MainPage> {
     } else {
       var reply = response.json();
       print(reply);
+    }
+  }
+
+  checkNotification(var id) async {
+    try {
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/check';
+      Map<String, String> data = {"id": id.toString()};
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+      var response = await Requests.post(url, headers: headers, body: data);
+      if (response.statusCode == 201) {
+        var reply = response.json();
+        getNotification();
+        setState(() {});
+      } else {
+        var reply = response.json();
+        print(reply);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -100,6 +123,9 @@ class _MainPageState extends State<MainPage> {
   // }
 
   customDialog(BuildContext context) {
+    _newNotifyList = getNotificationList();
+    DateFormat formatterDay = DateFormat('dd');
+    DateFormat formatterMonth = DateFormat('MMMM');
     return showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -109,108 +135,202 @@ class _MainPageState extends State<MainPage> {
         transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
-          return Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0)),
-                color: Colors.white,
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.7,
-              padding: EdgeInsets.symmetric(
-                  vertical: MediaQuery.of(context).size.height * 0.03,
-                  horizontal: MediaQuery.of(context).size.width * 0.05),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "notifications".tr().toString(),
-                      style: Theme.of(context).textTheme.display2,
-                    ),
-                    FutureBuilder(
-                        future: getNotificationList(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) print(snapshot.error);
-                          return snapshot.hasData
-                              ? Container(
-                                  height: 70.0 * snapshot.data.length,
-                                  child: ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder: (BuildContext context, index) {
-                                      print(snapshot.data[index]);
-                                      return Container(
-                                          height: 90,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Container(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        BoxTextWarning(
-                                                            "ID ${snapshot.data[index]["problem_id"]}",
-                                                            "success"),
-                                                        Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 8)),
-                                                        BoxTextDefault(
-                                                            "${snapshot.data[index]["datetime"]}")
-                                                      ],
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        print("asdasd");
-                                                      },
-                                                      child: Icon(Icons.close),
-                                                    ),
-                                                  ],
-                                                ),
-                                                GestureDetector(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.only(top: 8),
-                                                    height: 55,
-                                                    child: Text(
-                                                      "${snapshot.data[index]["action"]}",
-                                                      style: TextStyle(
-                                                        decoration:
-                                                            TextDecoration.none,
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontFamily:
-                                                            globals.font,
-                                                        color:
-                                                            Color(0xff313B6C),
-                                                      ),
-                                                    ),
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "notifications".tr().toString(),
+                          style: Theme.of(context).textTheme.display2,
+                        ),
+                        FutureBuilder(
+                            future: _newNotifyList,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) print(snapshot.error);
+                              return snapshot.hasData
+                                  ? Container(
+                                      height: 115.0 * snapshot.data.length,
+                                      child: ListView.builder(
+                                        physics: BouncingScrollPhysics(),
+                                        itemCount: snapshot.data.length,
+                                        itemBuilder:
+                                            (BuildContext context, index) {
+                                          String statDateDay = formatterDay
+                                              .format(DateTime.parse(DateFormat(
+                                                      "yyyy-MM-ddTHH:mm:ssZ")
+                                                  .parseUTC(snapshot.data[index]
+                                                      ["datetime"])
+                                                  .toString()));
+
+                                          String statDateMonth = formatterMonth
+                                              .format(DateTime.parse(DateFormat(
+                                                      "yyyy-MM-ddTHH:mm:ssZ")
+                                                  .parseUTC(snapshot.data[index]
+                                                      ["datetime"])
+                                                  .toString()));
+                                          return Dismissible(
+                                            key: Key(snapshot.data[index]
+                                                .toString()),
+                                            onDismissed: (direction) {
+                                              if (direction ==
+                                                  DismissDirection.endToStart) {
+                                                checkNotification(
+                                                    snapshot.data[index]["id"]);
+                                              } else if (direction ==
+                                                  DismissDirection.startToEnd) {
+                                                checkNotification(
+                                                    snapshot.data[index]["id"]);
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      var route;
+                                                      route =
+                                                          ProblemContentScreen(
+                                                              id: snapshot.data[
+                                                                      index][
+                                                                  "problem_id"]);
+                                                      return route;
+                                                    },
                                                   ),
-                                                ),
-                                                Divider(),
-                                              ],
-                                            ),
-                                          ));
-                                    },
-                                  ),
-                                )
-                              : Container();
-                        }),
-                  ],
+                                                );
+                                              }
+                                            },
+                                            child: Container(
+                                                margin:
+                                                    EdgeInsets.only(bottom: 20),
+                                                height: 95,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Container(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              BoxTextWarning(
+                                                                  "ID ${snapshot.data[index]["problem_id"]}",
+                                                                  "success"),
+                                                              Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              8)),
+                                                              BoxTextDefault(
+                                                                  "$statDateDay " +
+                                                                      "$statDateMonth"
+                                                                          .tr()
+                                                                          .toString())
+                                                            ],
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              checkNotification(
+                                                                  snapshot.data[
+                                                                          index]
+                                                                      ["id"]);
+                                                              setState(() {
+                                                                snapshot.data
+                                                                    .removeAt(
+                                                                        index);
+                                                              });
+                                                            },
+                                                            child: Icon(
+                                                                Icons.close),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      FlatButton(
+                                                        padding:
+                                                            EdgeInsets.all(0),
+                                                        onPressed: () {
+                                                          checkNotification(
+                                                              snapshot.data[
+                                                                  index]["id"]);
+                                                          Navigator.of(context)
+                                                              .pushReplacement(
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (BuildContext
+                                                                      context) {
+                                                                var route;
+                                                                route = ProblemContentScreen(
+                                                                    id: snapshot
+                                                                            .data[index]
+                                                                        [
+                                                                        "problem_id"]);
+                                                                return route;
+                                                              },
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 8),
+                                                          height: 50,
+                                                          child: Text(
+                                                            "${snapshot.data[index]["action"]}",
+                                                            style: TextStyle(
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .none,
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontFamily:
+                                                                  globals.font,
+                                                              color: Color(
+                                                                  0xff313B6C),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Divider(),
+                                                    ],
+                                                  ),
+                                                )),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : Container();
+                            }),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         });
   }
@@ -338,7 +458,7 @@ class _MainPageState extends State<MainPage> {
                               : Container(),
                         ],
                       ),
-                      SearchtInput("search".tr().toString()),
+                      SearchtInput("search"),
                     ],
                   ),
                 ),

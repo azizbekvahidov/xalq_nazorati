@@ -21,6 +21,7 @@ class BoxTextDefault extends StatelessWidget {
         style: TextStyle(
           color: Colors.black,
           fontFamily: globals.font,
+          fontWeight: FontWeight.w500,
           fontSize: 10,
           fontFeatures: [
             FontFeature.enable("pnum"),

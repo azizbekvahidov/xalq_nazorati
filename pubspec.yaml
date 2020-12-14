@@ -168,6 +168,8 @@ flutter:
     - flutter_assets/placemark.png
     - assets/img/info.svg
     - assets/img/iPhone11.png
+    - assets/img/eye_open.svg
+    - assets/img/eye_close.svg
 
   #   - images/a_dot_ham.jpeg
 

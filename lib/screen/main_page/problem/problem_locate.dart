@@ -132,6 +132,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
         if (temp.length != 0) {
           var res = temp[0]['GeoObject']['name'];
           addressController.text = res;
+          address = res;
         }
         checkChange();
         // List<Addresses> addresses = parseAddress(json["data"]);

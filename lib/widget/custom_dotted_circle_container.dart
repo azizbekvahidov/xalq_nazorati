@@ -54,9 +54,11 @@ class _CustomDottedCircleContainerState
     File _img = await ImagePicker.pickImage(source: ImageSource.camera);
     if (_img != null && validate(_img)) {
       // widget.image = _img;
-      globals.images.addAll({widget.img: _img});
+      print("take shot");
       await _getLocation();
-      setState(() {});
+      setState(() {
+        globals.images.addAll({widget.img: _img});
+      });
     }
   }
 
@@ -107,33 +109,6 @@ class _CustomDottedCircleContainerState
                       padding: EdgeInsets.only(top: 20),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      child: InkWell(
-                        onTap: () {
-                          pickGallery();
-                          Navigator.of(context).pop();
-                          print("click to gallery");
-                        },
-                        child: Row(
-                          children: [
-                            SvgPicture.asset("assets/img/image.svg"),
-                            Padding(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Text(
-                                "from_gallery".tr().toString(),
-                                style: TextStyle(
-                                  color: Color(0xff66676C),
-                                  fontFamily: globals.font,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
                       padding: EdgeInsets.symmetric(vertical: 15),
                       child: InkWell(
                         onTap: () {
@@ -148,6 +123,32 @@ class _CustomDottedCircleContainerState
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
                                 "from_camera".tr().toString(),
+                                style: TextStyle(
+                                  color: Color(0xff66676C),
+                                  fontFamily: globals.font,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: InkWell(
+                        onTap: () {
+                          pickGallery();
+                          Navigator.of(context).pop();
+                        },
+                        child: Row(
+                          children: [
+                            SvgPicture.asset("assets/img/image.svg"),
+                            Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Text(
+                                "from_gallery".tr().toString(),
                                 style: TextStyle(
                                   color: Color(0xff66676C),
                                   fontFamily: globals.font,

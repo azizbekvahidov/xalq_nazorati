@@ -43,6 +43,7 @@ class BoxTextWarning extends StatelessWidget {
         style: TextStyle(
           color: _txtColor,
           fontFamily: globals.font,
+          fontWeight: FontWeight.w500,
           fontSize: 10,
           fontFeatures: [
             FontFeature.enable("pnum"),

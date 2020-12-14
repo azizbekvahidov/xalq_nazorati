@@ -76,7 +76,7 @@ class _CategoryScreenState extends State<CategoryScreen>
       if (isScroll != true) {
         Timer(Duration(seconds: 2), () {
           itemScrollController.scrollTo(
-              index: _index, duration: Duration(milliseconds: 100));
+              index: _index, duration: Duration(milliseconds: 500));
         });
         isScroll = true;
         timers.cancel();
