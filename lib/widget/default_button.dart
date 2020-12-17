@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class DefaultButton extends StatefulWidget {
   final String txt;
@@ -23,7 +24,9 @@ class _DefaultButtonState extends State<DefaultButton> {
         onPressed: widget.routeFunc,
         child: Text(
           widget.txt,
-          style: Theme.of(context).textTheme.button,
+          style: Theme.of(context).textTheme.button.copyWith(
+              fontSize:
+                  MediaQuery.of(context).size.height * globals.fontSize10),
         ),
       ),
     );

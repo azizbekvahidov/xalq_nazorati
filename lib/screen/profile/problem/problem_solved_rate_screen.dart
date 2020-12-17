@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -115,6 +116,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "problem_solved".tr().toString(),
@@ -148,7 +150,11 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w700,
-                  fontSize: 24,
+                  fontSize: dWidth * globals.fontSize24,
+                  fontFeatures: [
+                    FontFeature.enable("pnum"),
+                    FontFeature.enable("lnum")
+                  ],
                 ),
               ),
               Padding(
@@ -159,7 +165,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w400,
-                  fontSize: 18,
+                  fontSize: dWidth * globals.fontSize18,
                 ),
               ),
               Padding(
@@ -181,7 +187,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                             style: TextStyle(
                               fontFamily: globals.font,
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: dWidth * globals.fontSize16,
                             ),
                           ),
                         ),
@@ -228,7 +234,11 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                               },
                               child: Text(
                                 "accept".tr().toString(),
-                                style: Theme.of(context).textTheme.button,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .button
+                                    .copyWith(
+                                        fontSize: dWidth * globals.fontSize18),
                               ),
                             ),
                           ),
@@ -244,7 +254,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                         style: TextStyle(
                           fontFamily: globals.font,
                           fontWeight: FontWeight.w700,
-                          fontSize: 24,
+                          fontSize: dWidth * globals.fontSize24,
                         ),
                       ),
                     ),

@@ -37,7 +37,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                 color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.45,
+              height: MediaQuery.of(context).size.height * 0.5,
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.05),
               child: GetLoginDialog(),
@@ -84,6 +84,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
     return Container(
       margin: EdgeInsets.only(top: 15),
       decoration: BoxDecoration(
@@ -111,7 +112,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                 fontFamily: globals.font,
                 color: (isExpanded) ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w600,
-                fontSize: mediaQuery.size.width < 360 ? 16 : 18,
+                fontSize: dWidth * globals.fontSize18,
               ),
             )),
         iconColor: isExpanded ? Colors.white : Colors.black,
@@ -180,9 +181,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                 color: Color(0xff000000),
                                                 fontWeight: FontWeight.w400,
                                                 fontSize:
-                                                    mediaQuery.size.width < 360
-                                                        ? 14
-                                                        : 16,
+                                                    dWidth * globals.fontSize16,
                                               ),
                                             ),
                                           ),

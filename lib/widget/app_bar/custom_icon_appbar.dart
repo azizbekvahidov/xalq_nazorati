@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class CustomIconAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -41,7 +42,8 @@ class _CustomIconAppBarState extends State<CustomIconAppBar> {
         ),
         title: Text(
           widget.title,
-          style: Theme.of(context).textTheme.display2,
+          style: Theme.of(context).textTheme.display2.copyWith(
+              fontSize: MediaQuery.of(context).size.width * globals.fontSize20),
         ),
       ),
     );

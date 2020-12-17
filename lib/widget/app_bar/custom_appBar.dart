@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -41,7 +42,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
           style: Theme.of(context)
               .textTheme
               .display2
-              .apply(color: widget.textColor),
+              .apply(color: widget.textColor)
+              .copyWith(
+                  fontSize:
+                      MediaQuery.of(context).size.width * globals.fontSize20),
         ),
       ),
     );

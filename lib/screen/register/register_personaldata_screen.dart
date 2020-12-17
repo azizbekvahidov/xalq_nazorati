@@ -32,6 +32,7 @@ class _RegisterPersonalDataScreenState
   final addressController = TextEditingController();
   final passController = TextEditingController();
   final repassController = TextEditingController();
+  final flatController = TextEditingController();
   bool isLogin = false;
   bool _value = false;
   String address = "";
@@ -143,7 +144,9 @@ class _RegisterPersonalDataScreenState
   setAddress(var addr) {
     address =
         "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
-
+    if (flatController.text != "") {
+      address += ", ${flatController.text}";
+    }
     // latlang = Point(
     //     latitude: double.tryParse(addr['latitude']),
     //     longitude: double.tryParse(addr['longitude']));
@@ -179,6 +182,12 @@ class _RegisterPersonalDataScreenState
                       children: [
                         AddressSearch(
                           setAddress: setAddress,
+                        ),
+                        MainText("flat".tr().toString()),
+                        DefaultInput(
+                          hint: "enter_flat".tr().toString(),
+                          inputType: TextInputType.number,
+                          textController: flatController,
                         ),
                         // Container(
                         //   padding: EdgeInsets.symmetric(
@@ -296,7 +305,7 @@ class _RegisterPersonalDataScreenState
                                           .toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: 12,
+                                        fontSize: dWith * globals.fontSize12,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -311,7 +320,7 @@ class _RegisterPersonalDataScreenState
                                       style: TextStyle(
                                         decoration: TextDecoration.underline,
                                         fontFamily: globals.font,
-                                        fontSize: 12,
+                                        fontSize: dWith * globals.fontSize12,
                                         color: Theme.of(context).primaryColor,
                                         fontWeight: FontWeight.normal,
                                       ),

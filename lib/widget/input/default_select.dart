@@ -17,7 +17,7 @@ class _DefaultSelectState extends State<DefaultSelect> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
       margin: EdgeInsets.symmetric(vertical: 10),
       width: double.infinity,
       height: 45,
@@ -36,7 +36,7 @@ class _DefaultSelectState extends State<DefaultSelect> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                0.79,
+                (mediaQuery.size.width <= 360 ? 0.74 : 0.79),
             child:
                 // Container(
                 //   height: 40,

@@ -96,7 +96,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       backgroundColor: Color(0xffF5F6F9),
       appBar: appbar,
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Container(
           height: mediaQuery.size.height - mediaQuery.size.height * 0.17,
           child: Column(
@@ -136,7 +136,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.73,
+                                        (mediaQuery.size.width <= 360
+                                            ? 0.66
+                                            : 0.73),
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
@@ -148,7 +150,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                                           hintText: "pass_hint".tr().toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .display1),
+                                              .display1
+                                              .copyWith(
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize18)),
                                     ),
                                   ),
                                   InkWell(
@@ -189,7 +195,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.73,
+                                        (mediaQuery.size.width <= 360
+                                            ? 0.66
+                                            : 0.73),
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
@@ -203,7 +211,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .display1),
+                                              .display1
+                                              .copyWith(
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize18)),
                                     ),
                                   ),
                                   InkWell(
@@ -244,7 +256,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                                     width: (mediaQuery.size.width -
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
-                                        0.73,
+                                        (mediaQuery.size.width <= 360
+                                            ? 0.66
+                                            : 0.73),
                                     child: TextField(
                                       onChanged: (text) {
                                         validation();
@@ -258,7 +272,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                                               .toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .display1),
+                                              .display1
+                                              .copyWith(
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize18)),
                                     ),
                                   ),
                                   InkWell(
@@ -293,12 +311,11 @@ class _ChangePasswordState extends State<ChangePassword> {
                           alignment: FractionalOffset.bottomCenter,
                           child: !_value
                               ? DefaultButton(
-                                  "change_pass".tr().toString(),
+                                  "change".tr().toString(),
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : DefaultButton("change_pass".tr().toString(),
-                                  () {
+                              : DefaultButton("change".tr().toString(), () {
                                   changePass();
                                   // setState(() {
                                   //   _value = !_value;

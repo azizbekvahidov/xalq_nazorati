@@ -56,6 +56,7 @@ class _ProblemDescState extends State<ProblemDesc> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
 
     final size = (mediaQuery.size.width -
                 mediaQuery.padding.left -
@@ -105,7 +106,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                                     "clear".tr().toString(),
                                     style: TextStyle(
                                       color: Color(0xffB2B7D0),
-                                      fontSize: 14,
+                                      fontSize: dWidth * globals.fontSize14,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: globals.font,
                                     ),
@@ -139,8 +140,8 @@ class _ProblemDescState extends State<ProblemDesc> {
                               ),
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
                                   flex: 1,
@@ -176,7 +177,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                           alignment: FractionalOffset.bottomCenter,
                           child: !_value
                               ? DefaultButton(
-                                  "continue".tr().toString(),
+                                  "add_problem".tr().toString(),
                                   () {},
                                   Color(0xffB2B7D0),
                                 )

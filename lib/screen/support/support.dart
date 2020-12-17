@@ -83,7 +83,7 @@ class _SupportState extends State<Support> {
                         style: TextStyle(
                           color: _txt1,
                           fontFamily: globals.font,
-                          fontSize: width < 360 ? 15 : 18,
+                          fontSize: width * globals.fontSize18,
                         ),
                       ),
                     ),
@@ -108,7 +108,7 @@ class _SupportState extends State<Support> {
                         style: TextStyle(
                           color: _txt2,
                           fontFamily: globals.font,
-                          fontSize: width < 360 ? 15 : 18,
+                          fontSize: width * globals.fontSize18,
                         ),
                       ),
                     ),

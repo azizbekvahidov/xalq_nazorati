@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -5,7 +7,7 @@ import 'package:html/parser.dart' show parse;
 import 'package:xalq_nazorati/screen/main_page/news/news_desc.dart';
 
 class NewsItemPlanned extends StatefulWidget {
-  final int id;
+  final String id;
   final String title;
   final String location;
   final String publishDate;
@@ -69,7 +71,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                     style: TextStyle(
                       color: Color(0xff313B6C),
                       fontFamily: globals.font,
-                      fontSize: 14,
+                      fontSize: mediaQuery.size.width * globals.fontSize14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -80,7 +82,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                       maxLines: 3,
                       style: TextStyle(
                         fontFamily: globals.font,
-                        fontSize: 12,
+                        fontSize: mediaQuery.size.width * globals.fontSize12,
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
                       ),
@@ -94,9 +96,14 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                           "${_publishDate}",
                           style: TextStyle(
                             fontFamily: globals.font,
-                            fontSize: 12,
+                            fontSize:
+                                mediaQuery.size.width * globals.fontSize12,
                             fontWeight: FontWeight.w400,
                             color: Color(0xffB2B7D0),
+                            fontFeatures: [
+                              FontFeature.enable("pnum"),
+                              FontFeature.enable("lnum")
+                            ],
                           ),
                         ),
                       ],

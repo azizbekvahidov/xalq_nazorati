@@ -133,6 +133,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
     return FutureBuilder(
       future: getProblems(widget.id),
       builder: (context, snapshot) {
@@ -147,12 +148,12 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
             _title = "unresolved".tr().toString();
           } else if (_data["status"] == "denied" ||
               _data["status"] == "canceled") {
-            _status = "success";
-            _title = "solved".tr().toString();
-          } else if (_data["status"] == "confirmed" ||
-              _data["status"] == "closed") {
             _status = "danger";
             _title = "take_off_problems".tr().toString();
+          } else if (_data["status"] == "confirmed" ||
+              _data["status"] == "closed") {
+            _status = "success";
+            _title = "solved".tr().toString();
           } else if (_data["status"] == "planned") {
             _status = "delayed";
             _title = "delayed_problems".tr().toString();
@@ -229,7 +230,8 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontFamily: globals.font,
-                                              fontSize: 18,
+                                              fontSize:
+                                                  dWidth * globals.fontSize18,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -298,7 +300,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                   _data["content"],
                                   style: TextStyle(
                                     fontFamily: globals.font,
-                                    fontSize: 14,
+                                    fontSize: dWidth * globals.fontSize14,
                                   ),
                                 ),
                               ),
@@ -319,7 +321,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                 Container(
                                                   margin: EdgeInsets.only(),
                                                   width: mediaQuery.size.width *
-                                                      0.24,
+                                                      0.23,
                                                   height: 90,
                                                   child: ClipRRect(
                                                     borderRadius:
@@ -357,9 +359,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                   margin: EdgeInsets.only(
                                                       left: mediaQuery
                                                               .size.width *
-                                                          0.0266),
+                                                          0.024),
                                                   width: mediaQuery.size.width *
-                                                      0.24,
+                                                      0.23,
                                                   height: 90,
                                                   child: ClipRRect(
                                                     borderRadius:
@@ -401,9 +403,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                   margin: EdgeInsets.only(
                                                       top: mediaQuery
                                                               .size.width *
-                                                          0.0266),
+                                                          0.024),
                                                   width: mediaQuery.size.width *
-                                                      0.24,
+                                                      0.23,
                                                   height: 90,
                                                   child: ClipRRect(
                                                     borderRadius:
@@ -441,12 +443,12 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                   margin: EdgeInsets.only(
                                                       left: mediaQuery
                                                               .size.width *
-                                                          0.0266,
+                                                          0.024,
                                                       top: mediaQuery
                                                               .size.width *
-                                                          0.0266),
+                                                          0.024),
                                                   width: mediaQuery.size.width *
-                                                      0.24,
+                                                      0.23,
                                                   height: 90,
                                                   child: ClipRRect(
                                                     borderRadius:
@@ -488,7 +490,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                       Container(
                                         margin: EdgeInsets.only(
                                             left:
-                                                mediaQuery.size.width * 0.0266),
+                                                mediaQuery.size.width * 0.024),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(5),
@@ -578,7 +580,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                       color: Color(0xff050505),
                                                       fontWeight:
                                                           FontWeight.w600,
-                                                      fontSize: 18,
+                                                      fontSize: mediaQuery
+                                                              .size.width *
+                                                          globals.fontSize18,
                                                     ),
                                                   ),
                                                 ))),

@@ -55,7 +55,7 @@ class _MainProfileState extends State<MainProfile> {
                 color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.45,
+              height: MediaQuery.of(context).size.height * 0.5,
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.05),
               child: GetLoginDialog(),
@@ -133,9 +133,11 @@ class _MainProfileState extends State<MainProfile> {
                 children: [
                   Text(
                     globals.token != null
-                        ? "${globals.userData['last_name']} ${globals.userData['first_name']}"
+                        ? "${globals.capitalize(globals.userData['last_name'])} ${globals.capitalize(globals.userData['first_name'])}"
                         : "",
-                    style: Theme.of(context).textTheme.display2,
+                    style: Theme.of(context).textTheme.display2.copyWith(
+                          fontSize: mediaQuery.size.width * globals.fontSize20,
+                        ),
                   ),
                   Text(
                     globals.token != null ? "${globals.userData['phone']}" : "",
@@ -145,7 +147,7 @@ class _MainProfileState extends State<MainProfile> {
                           FontFeature.enable("lnum")
                         ],
                         color: Color(0xff66676C),
-                        fontSize: 14,
+                        fontSize: mediaQuery.size.width * globals.fontSize14,
                         fontFamily: globals.font),
                   ),
                 ],
@@ -187,7 +189,7 @@ class _MainProfileState extends State<MainProfile> {
                   style: TextStyle(
                     color: Color(0xff66676C),
                     fontFamily: globals.font,
-                    fontSize: 16,
+                    fontSize: mediaQuery.size.width * globals.fontSize16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -229,9 +231,8 @@ class _MainProfileState extends State<MainProfile> {
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:
-                                                    mediaQuery.size.width < 360
-                                                        ? 16
-                                                        : 18,
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
                                               ),
                                             ),
                                           ),
@@ -299,9 +300,8 @@ class _MainProfileState extends State<MainProfile> {
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:
-                                                    mediaQuery.size.width < 360
-                                                        ? 16
-                                                        : 18,
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
                                               ),
                                             ),
                                           ),
@@ -362,9 +362,8 @@ class _MainProfileState extends State<MainProfile> {
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:
-                                                    mediaQuery.size.width < 360
-                                                        ? 16
-                                                        : 18,
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
                                               ),
                                             ),
                                           ),
@@ -436,11 +435,8 @@ class _MainProfileState extends State<MainProfile> {
                                                         fontWeight:
                                                             FontWeight.w600,
                                                         fontSize: mediaQuery
-                                                                    .size
-                                                                    .width <
-                                                                360
-                                                            ? 16
-                                                            : 18,
+                                                                .size.width *
+                                                            globals.fontSize18,
                                                       ),
                                                     ),
                                                   ),

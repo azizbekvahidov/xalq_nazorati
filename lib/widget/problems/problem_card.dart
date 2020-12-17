@@ -83,7 +83,7 @@ class _ProblemCardState extends State<ProblemCard> {
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: globals.font,
-                        fontSize: 18,
+                        fontSize: mediaQuery.size.width * globals.fontSize18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

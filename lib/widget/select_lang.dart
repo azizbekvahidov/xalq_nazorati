@@ -36,7 +36,7 @@ class _SelectLangState extends State<SelectLang> {
           topRight: Radius.circular(15),
         ),
       ),
-      height: dHeight < 560 ? dHeight : dHeight * 0.4,
+      height: dHeight <= 800 ? dHeight * 0.6 : dHeight * 0.4,
       padding: EdgeInsets.symmetric(vertical: dHeight * 0.025),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,11 +45,11 @@ class _SelectLangState extends State<SelectLang> {
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: Text(
               "choose_lang".tr().toString(),
-              style: Theme.of(context).textTheme.display2,
+              style: Theme.of(context)
+                  .textTheme
+                  .display2
+                  .copyWith(fontSize: dWidth * globals.fontSize20),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: dHeight * 0.012),
           ),
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
@@ -58,7 +58,7 @@ class _SelectLangState extends State<SelectLang> {
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: (dWidth < 360) ? 16 : 18,
+                fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -73,11 +73,11 @@ class _SelectLangState extends State<SelectLang> {
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
             title: Text(
-              'O‘zbekcha',
+              'O‘zbek',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: (dWidth < 360) ? 16 : 18,
+                fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -92,11 +92,11 @@ class _SelectLangState extends State<SelectLang> {
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
             title: Text(
-              'Ўзбекча',
+              'Ўзбек',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
-                fontSize: (dWidth < 360) ? 16 : 18,
+                fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -108,17 +108,12 @@ class _SelectLangState extends State<SelectLang> {
               });
             },
           ),
-          Padding(
-            padding: EdgeInsets.only(top: dHeight * 0.015),
-          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             child: DefaultButton("use".tr().toString(), () async {
-              if(globals.token != null) {
+              if (globals.token != null) {
                 var url =
-                    '${globals.site_link}/${(globals.lang)
-                    .tr()
-                    .toString()}/api/users/switch-lang';
+                    '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/switch-lang';
                 Map map = {
                   "fcm_token": globals.deviceToken,
                   "lang": _lang.tr().toString()
@@ -145,17 +140,14 @@ class _SelectLangState extends State<SelectLang> {
                       country = 'US';
                       break;
                   }
-                  EasyLocalization
-                      .of(context)
-                      .locale = Locale(_lang, country);
+                  EasyLocalization.of(context).locale = Locale(_lang, country);
                   Navigator.pop(context);
                   widget.callBack(_lang, country);
                 } else {
                   var responseBody = response.json();
                   print(responseBody);
                 }
-              }
-              else{
+              } else {
                 String country;
                 switch (_lang) {
                   case 'uz':
@@ -168,9 +160,7 @@ class _SelectLangState extends State<SelectLang> {
                     country = 'US';
                     break;
                 }
-                EasyLocalization
-                    .of(context)
-                    .locale = Locale(_lang, country);
+                EasyLocalization.of(context).locale = Locale(_lang, country);
                 Navigator.pop(context);
                 widget.callBack(_lang, country);
               }

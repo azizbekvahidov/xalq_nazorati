@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -183,20 +184,24 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 26,
+                                  fontSize: dWith * globals.fontSize26,
                                   fontFamily: globals.font,
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 15),
+                                padding: EdgeInsets.only(top: 10),
                               ),
                               Text(
                                 "${"sended_code_desc_start".tr().toString()}${widget.phoneView}${"sended_code_desc_end".tr().toString()}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 18,
+                                  fontSize: dWith * globals.fontSize18,
                                   fontFamily: globals.font,
+                                  fontFeatures: [
+                                    FontFeature.enable("pnum"),
+                                    FontFeature.enable("lnum")
+                                  ],
                                 ),
                               ),
                             ],
@@ -247,7 +252,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                       _showTime,
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: 18,
+                                        fontSize: dWith * globals.fontSize18,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -281,7 +286,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                       "dont_get_code".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: dWith < 400 ? 13 : 14,
+                                        fontSize: dWith * globals.fontSize14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -294,7 +299,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                                         "resend".tr().toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: dWith < 400 ? 13 : 14,
+                                          fontSize: dWith * globals.fontSize14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

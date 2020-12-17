@@ -10,6 +10,7 @@ class CardList extends StatelessWidget {
   CardList(this.title, this.name);
   @override
   Widget build(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -19,7 +20,7 @@ class CardList extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: dWidth * globals.fontSize12,
                 fontFamily: globals.font,
                 color: Color(0xff66676C),
               ),
@@ -35,7 +36,7 @@ class CardList extends StatelessWidget {
                   FontFeature.enable("lnum")
                 ],
                 fontFamily: globals.font,
-                fontSize: 18,
+                fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w500,
                 color: Color(0xff000000),
               ),

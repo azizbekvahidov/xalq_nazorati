@@ -76,7 +76,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: (width < 360) ? 10 : 12,
+                  fontSize: (width * globals.fontSize12),
                   fontWeight: FontWeight.w500,
                   fontFamily: globals.font,
                 ),

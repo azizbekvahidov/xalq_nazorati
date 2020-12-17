@@ -116,9 +116,10 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
+                                  margin: EdgeInsets.symmetric(vertical: 3),
                                   width: (mediaQuery.size.width -
                                           mediaQuery.padding.left -
                                           mediaQuery.padding.right) *
@@ -138,8 +139,12 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                           EdgeInsets.only(top: 0, bottom: 10),
                                       border: InputBorder.none,
                                       hintText: "enter_pnfl".tr().toString(),
-                                      hintStyle:
-                                          Theme.of(context).textTheme.display1,
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .display1
+                                          .copyWith(
+                                              fontSize:
+                                                  dWith * globals.fontSize18),
                                     ),
                                   ),
                                 ),
@@ -244,7 +249,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                 "personal_data_use_agree".tr().toString(),
                                 style: TextStyle(
                                   fontFamily: globals.font,
-                                  fontSize: 13,
+                                  fontSize: dWith * globals.fontSize12,
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,
                                 ),

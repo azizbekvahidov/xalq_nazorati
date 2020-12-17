@@ -10,6 +10,7 @@ class BoxTextWarning extends StatelessWidget {
   BoxTextWarning(this.txt, this.status);
   @override
   Widget build(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
     Color _bgcolor = Color(0xffFEF0DB);
     Color _borderColor = Color.fromRGBO(255, 165, 21, 0.5);
     Color _txtColor = Color(0xffFFA515);
@@ -44,7 +45,7 @@ class BoxTextWarning extends StatelessWidget {
           color: _txtColor,
           fontFamily: globals.font,
           fontWeight: FontWeight.w500,
-          fontSize: 10,
+          fontSize: dWidth * globals.fontSize10,
           fontFeatures: [
             FontFeature.enable("pnum"),
             FontFeature.enable("lnum")

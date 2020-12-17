@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -37,7 +39,7 @@ class _SupportInfoState extends State<SupportInfo> {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff313B6C),
-              fontSize: width < 360 ? 15 : 18,
+              fontSize: width * globals.fontSize18,
               fontWeight: FontWeight.bold,
               fontFamily: globals.font,
             ),
@@ -51,36 +53,42 @@ class _SupportInfoState extends State<SupportInfo> {
                 fontSize: 42,
                 fontWeight: FontWeight.w700,
                 fontFamily: globals.font,
+                fontFeatures: [
+                  FontFeature.enable("pnum"),
+                  FontFeature.enable("lnum")
+                ],
                 foreground: Paint()..shader = linearGradient),
           ),
         ),
-        InkWell(
-          onTap: () {
-            launchUrl("tel://1055");
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 98),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 30),
+          child: InkWell(
+            onTap: () {
+              launchUrl("tel://1055");
+            },
             child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              height: 50,
-              child: Text(
-                "call".tr().toString(),
-                style: TextStyle(
-                    fontSize: width < 360 ? 15 : 18,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: globals.font,
-                    color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xff12B79B),
-                    Color(0xff00AC8A),
-                  ],
+              child: Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                height: 50,
+                child: Text(
+                  "call".tr().toString(),
+                  style: TextStyle(
+                      fontSize: width * globals.fontSize18,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: globals.font,
+                      color: Colors.white),
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xff12B79B),
+                      Color(0xff00AC8A),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -155,6 +156,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "problem_solved".tr().toString(),
@@ -196,19 +198,29 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           "executor".tr().toString(),
                                           style: TextStyle(
                                             fontFamily: globals.font,
-                                            fontSize: 12,
+                                            fontSize:
+                                                dWidth * globals.fontSize12,
                                             fontWeight: FontWeight.w400,
+                                            fontFeatures: [
+                                              FontFeature.enable("pnum"),
+                                              FontFeature.enable("lnum")
+                                            ],
                                           ),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(top: 10),
                                         ),
                                         Text(
-                                          "${executors['last_name']} ${executors['name']}",
+                                          "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
                                           style: TextStyle(
                                             fontFamily: globals.font,
-                                            fontSize: 14,
+                                            fontSize:
+                                                dWidth * globals.fontSize14,
                                             fontWeight: FontWeight.w600,
+                                            fontFeatures: [
+                                              FontFeature.enable("pnum"),
+                                              FontFeature.enable("lnum")
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -221,8 +233,13 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           "execute_date".tr().toString(),
                                           style: TextStyle(
                                             fontFamily: globals.font,
-                                            fontSize: 12,
+                                            fontSize:
+                                                dWidth * globals.fontSize12,
                                             fontWeight: FontWeight.w400,
+                                            fontFeatures: [
+                                              FontFeature.enable("pnum"),
+                                              FontFeature.enable("lnum")
+                                            ],
                                           ),
                                         ),
                                         Padding(
@@ -232,8 +249,13 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",
                                           style: TextStyle(
                                             fontFamily: globals.font,
-                                            fontSize: 14,
+                                            fontSize:
+                                                dWidth * globals.fontSize14,
                                             fontWeight: FontWeight.w600,
+                                            fontFeatures: [
+                                              FontFeature.enable("pnum"),
+                                              FontFeature.enable("lnum")
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -253,7 +275,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       "solve_description".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: 12,
+                                        fontSize: dWidth * globals.fontSize12,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -264,7 +286,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       "${result['content']}",
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: 14,
+                                        fontSize: dWidth * globals.fontSize14,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -282,7 +304,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       "docs".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: 12,
+                                        fontSize: dWidth * globals.fontSize12,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -371,7 +393,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                                   (BuildContext context) {
                                             return ProblemSolvedRateScreen(
                                                 widget.id,
-                                                "${executors['last_name']} ${executors['name']}",
+                                                "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
                                                 executors['user']['avatar'],
                                                 executors['id'],
                                                 executors['position'],
@@ -382,7 +404,11 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                           "accept".tr().toString(),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .button,
+                                              .button
+                                              .copyWith(
+                                                fontSize:
+                                                    dWidth * globals.fontSize18,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -411,7 +437,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                                   (BuildContext context) {
                                             return ProblemSolvedRateScreen(
                                                 widget.id,
-                                                "${executors['last_name']} ${executors['name']}",
+                                                "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
                                                 executors['user']['avatar'],
                                                 executors['id'],
                                                 executors['position'],
@@ -421,6 +447,9 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                         child: Text(
                                           "deny".tr().toString(),
                                           style: TextStyle(
+                                              fontSize:
+                                                  dWidth * globals.fontSize18,
+                                              fontFamily: globals.font,
                                               color: Color(0xffB2B7D0)),
                                         ),
                                       ),

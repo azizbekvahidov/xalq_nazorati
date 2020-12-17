@@ -6,6 +6,7 @@ import '../../widget/app_bar/custom_appBar.dart';
 import './register_personaldata_screen.dart';
 import '../../widget/card_list.dart';
 import '../../widget/default_button.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class PasRecognizedScreen extends StatefulWidget {
   static const routeName = "/register-pas-recognized";
@@ -47,9 +48,12 @@ class _PasRecognizedScreenState extends State<PasRecognizedScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CardList("name".tr().toString(), user["first_name"]),
-                    CardList("surname".tr().toString(), user["last_name"]),
-                    CardList("lastname".tr().toString(), user["patronymic"]),
+                    CardList("name".tr().toString(),
+                        globals.capitalize(user["first_name"])),
+                    CardList("surname".tr().toString(),
+                        globals.capitalize(user["last_name"])),
+                    CardList("lastname".tr().toString(),
+                        globals.capitalize(user["patronymic"])),
                     CardList("birthday".tr().toString(),
                         formatter.format(DateTime.parse(user["birth_date"]))),
                     CardList("gender".tr().toString(),

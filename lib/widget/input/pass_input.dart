@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/parser.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class PassInput extends StatefulWidget {
   final String hint;
@@ -37,14 +38,15 @@ class _PassInputState extends State<PassInput> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                0.7,
+                (mediaQuery.size.width <= 360 ? 0.64 : 0.7),
             child: TextField(
               controller: widget.passController,
               obscureText: !_passShow,
               maxLines: 1,
               decoration: InputDecoration.collapsed(
                   hintText: widget.hint,
-                  hintStyle: Theme.of(context).textTheme.display1),
+                  hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                      fontSize: mediaQuery.size.width * globals.fontSize18)),
             ),
           ),
           InkWell(

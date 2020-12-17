@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
@@ -7,6 +9,7 @@ class ProblemSolveDesc extends StatelessWidget {
   ProblemSolveDesc(this.leftTxt, this.rightTxt);
   @override
   Widget build(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
     return Column(
       children: [
         Row(
@@ -18,7 +21,11 @@ class ProblemSolveDesc extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: dWidth * globals.fontSize14,
+                  fontFeatures: [
+                    FontFeature.enable("pnum"),
+                    FontFeature.enable("lnum")
+                  ],
                 ),
               ),
             ),
@@ -29,7 +36,11 @@ class ProblemSolveDesc extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w400,
-                  fontSize: 14,
+                  fontSize: dWidth * globals.fontSize14,
+                  fontFeatures: [
+                    FontFeature.enable("pnum"),
+                    FontFeature.enable("lnum")
+                  ],
                 ),
               ),
             ),

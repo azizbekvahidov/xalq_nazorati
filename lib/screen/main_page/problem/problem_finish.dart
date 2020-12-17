@@ -11,6 +11,7 @@ class ProblemFinish extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -19,9 +20,10 @@ class ProblemFinish extends StatelessWidget {
           padding: EdgeInsets.only(
               left: mediaQuery.size.width * 0.06,
               right: mediaQuery.size.width * 0.06,
-              top: mediaQuery.size.height * 0.06),
+              top: mediaQuery.size.height * 0.15),
           height: mediaQuery.size.height,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
@@ -34,7 +36,7 @@ class ProblemFinish extends StatelessWidget {
                         color: Color(0xff313B6C),
                         fontFamily: globals.font,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: dWidth * globals.fontSize24,
                       ),
                     ),
                     Padding(
@@ -45,7 +47,7 @@ class ProblemFinish extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(0xff66676C),
-                          fontSize: 14,
+                          fontSize: dWidth * globals.fontSize14,
                           fontFamily: globals.font),
                     ),
                     Padding(
@@ -54,10 +56,32 @@ class ProblemFinish extends StatelessWidget {
                     ),
                     SvgPicture.asset(
                       "assets/img/finish.svg",
-                      width: mediaQuery.size.width * 0.6,
-                    )
+                      width: mediaQuery.size.width * 0.35,
+                    ),
                   ],
                 ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "finish_and".tr().toString(),
+                    style: TextStyle(
+                        color: Color(0xff66676C),
+                        fontSize: dWidth * globals.fontSize14,
+                        fontFamily: globals.font),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10, left: 20),
+                    child: Text(
+                      "finish_and_txt".tr().toString(),
+                      style: TextStyle(
+                          color: Color(0xff66676C),
+                          fontSize: dWidth * globals.fontSize14,
+                          fontFamily: globals.font),
+                    ),
+                  ),
+                ],
               ),
               Container(
                 child: Padding(

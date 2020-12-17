@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class DefaultInput extends StatefulWidget {
   final textController;
@@ -51,7 +52,8 @@ class _DefaultInputState extends State<DefaultInput> {
               maxLines: 1,
               decoration: InputDecoration.collapsed(
                 hintText: widget.hint,
-                hintStyle: Theme.of(context).textTheme.display1,
+                hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                    fontSize: mediaQuery.size.width * globals.fontSize18),
               ),
             ),
           ),

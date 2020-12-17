@@ -134,7 +134,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final dWith = mediaQuery.size.width;
+    final dWidth = mediaQuery.size.width;
     final dHeight = mediaQuery.size.height;
     final PreferredSizeWidget appBar = AppBar(
       backgroundColor: Colors.transparent,
@@ -180,19 +180,19 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 26,
+                                  fontSize: dWidth * globals.fontSize26,
                                   fontFamily: globals.font,
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 15),
+                                padding: EdgeInsets.only(top: 10),
                               ),
                               Text(
                                 "reg_title_desc".tr().toString(),
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
-                                  fontSize: 18,
+                                  fontSize: dWidth * globals.fontSize18,
                                   fontFamily: globals.font,
                                 ),
                               ),
@@ -274,7 +274,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                             .toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: dWith < 360 ? 10 : 12,
+                                          fontSize: dWidth * globals.fontSize12,
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -289,7 +289,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                         style: TextStyle(
                                           decoration: TextDecoration.underline,
                                           fontFamily: globals.font,
-                                          fontSize: 12,
+                                          fontSize: dWidth * globals.fontSize12,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -300,7 +300,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                             .toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: 12,
+                                          fontSize: dWidth * globals.fontSize12,
                                           color: Colors.black,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -344,7 +344,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                       "accaunt_question2".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: dWith < 400 ? 13 : 14,
+                                        fontSize: dWidth * globals.fontSize14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -361,7 +361,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                                         "log_in".tr().toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: dWith < 400 ? 13 : 14,
+                                          fontSize: dWidth * globals.fontSize14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

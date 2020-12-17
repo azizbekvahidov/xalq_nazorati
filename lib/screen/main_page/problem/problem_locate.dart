@@ -177,6 +177,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
 
   customDialog(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var dWidth = MediaQuery.of(context).size.width;
     return showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -213,7 +214,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                             text: "problem_warning".tr().toString(),
                             style: TextStyle(
                               fontFamily: globals.font,
-                              fontSize: (height < 560) ? 14 : 16,
+                              fontSize: dWidth * globals.fontSize16,
                               color: Colors.black,
                               fontWeight: FontWeight.w600,
                             ),
@@ -456,6 +457,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBar(title: "where_is_problem".tr().toString()),
       body: SingleChildScrollView(
@@ -518,7 +520,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                         .toString(),
                                                     hintStyle: Theme.of(context)
                                                         .textTheme
-                                                        .display1,
+                                                        .display1
+                                                        .copyWith(
+                                                            fontSize: dWidth *
+                                                                globals
+                                                                    .fontSize18),
                                                   ),
                                                 ),
                                                 hideOnEmpty: true,
@@ -600,7 +606,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                 "note_example".tr().toString(),
                                             hintStyle: Theme.of(context)
                                                 .textTheme
-                                                .display1,
+                                                .display1
+                                                .copyWith(
+                                                    fontSize: dWidth *
+                                                        globals.fontSize18),
                                           ),
                                         ),
                                       ),
@@ -614,7 +623,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                     "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
                                     style: TextStyle(
                                       color: Color.fromRGBO(102, 103, 108, 0.6),
-                                      fontSize: 10,
+                                      fontSize: dWidth * globals.fontSize10,
                                       fontWeight: FontWeight.w600,
                                       fontFamily: globals.font,
                                     ),
@@ -846,10 +855,18 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                 Color(0xffB2B7D0),
                               )
                             : DefaultButton(_btn_message, () {
-                                if (!_sending)
-                                  insertData().then((value) {});
-                                else
-                                  print('sending');
+                                // if (!_sending)
+                                //   insertData().then((value) {});
+                                // else
+                                //   print('sending');
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return ProblemFinish();
+                                    },
+                                  ),
+                                  ModalRoute.withName(MainPage.routeName),
+                                );
                               },
                                 (!_sending)
                                     ? Theme.of(context).primaryColor

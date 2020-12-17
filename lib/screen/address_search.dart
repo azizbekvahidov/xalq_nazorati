@@ -11,14 +11,15 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class AddressSearch extends StatefulWidget {
   Function setAddress;
-  AddressSearch({this.setAddress, Key key}) : super(key: key);
+  bool ischange;
+  AddressSearch({this.setAddress, this.ischange, Key key}) : super(key: key);
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
 }
 
 class _AddressSearchState extends State<AddressSearch> {
-  List<String> placeType = ["street", "quarter", "massif", "all"];
+  List<String> placeType = ["street", "quarter", "massif", "all_parametr"];
 
   // List<DropdownMenuItem<String>> _district;
   String _selectedType;
@@ -122,6 +123,15 @@ class _AddressSearchState extends State<AddressSearch> {
     return res;
   }
 
+  validate() {
+    // if (_selectedDistrict != "" && _selectedType != "" && searchAddressController.text != "" && houseController.text != "") {
+    if (mahallaController.text != "") {
+      setState(() {
+        widget.ischange = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -141,7 +151,12 @@ class _AddressSearchState extends State<AddressSearch> {
                     _selectedDistrict = val;
                   });
                 },
-                hint: Text("select_district".tr().toString()),
+                hint: Text(
+                  "select_district".tr().toString(),
+                  style: TextStyle(
+                      fontFamily: globals.font,
+                      fontSize: dWidth * globals.fontSize18),
+                ),
                 value: _selectedDistrict,
               ),
             ),
@@ -163,7 +178,12 @@ class _AddressSearchState extends State<AddressSearch> {
                     _selectedType = val;
                   });
                 },
-                hint: Text("select_placeType".tr().toString()),
+                hint: Text(
+                  "select_placeType".tr().toString(),
+                  style: TextStyle(
+                      fontFamily: globals.font,
+                      fontSize: dWidth * globals.fontSize18),
+                ),
                 value: _selectedType,
               ),
             ),
@@ -196,7 +216,10 @@ class _AddressSearchState extends State<AddressSearch> {
                         autofocus: false,
                         decoration: InputDecoration.collapsed(
                           hintText: "select_street".tr().toString(),
-                          hintStyle: Theme.of(context).textTheme.display1,
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .display1
+                              .copyWith(fontSize: dWidth * globals.fontSize18),
                         ),
                       ),
                       hideOnEmpty: true,
@@ -244,7 +267,10 @@ class _AddressSearchState extends State<AddressSearch> {
                         autofocus: false,
                         decoration: InputDecoration.collapsed(
                           hintText: "select_houses".tr().toString(),
-                          hintStyle: Theme.of(context).textTheme.display1,
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .display1
+                              .copyWith(fontSize: dWidth * globals.fontSize18),
                         ),
                       ),
                       hideOnEmpty: true,
@@ -261,6 +287,7 @@ class _AddressSearchState extends State<AddressSearch> {
                         mahallaController.text =
                             suggestion["community"]["name"];
                         houseController.text = suggestion["number"];
+                        validate();
                       },
                     )),
               ],
@@ -295,7 +322,10 @@ class _AddressSearchState extends State<AddressSearch> {
                     maxLines: 1,
                     decoration: InputDecoration.collapsed(
                       hintText: "here_mahalla".tr().toString(),
-                      hintStyle: Theme.of(context).textTheme.display1,
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .copyWith(fontSize: dWidth * globals.fontSize18),
                     ),
                   ),
                 ),

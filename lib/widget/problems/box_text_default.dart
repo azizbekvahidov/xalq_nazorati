@@ -9,6 +9,7 @@ class BoxTextDefault extends StatelessWidget {
   BoxTextDefault(this.txt);
   @override
   Widget build(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 6, horizontal: 5),
       decoration: BoxDecoration(
@@ -22,7 +23,7 @@ class BoxTextDefault extends StatelessWidget {
           color: Colors.black,
           fontFamily: globals.font,
           fontWeight: FontWeight.w500,
-          fontSize: 10,
+          fontSize: dWidth * globals.fontSize10,
           fontFeatures: [
             FontFeature.enable("pnum"),
             FontFeature.enable("lnum")

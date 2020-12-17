@@ -76,7 +76,8 @@ class _CustomCardListState extends State<CustomCardList> {
                             fontFamily: globals.font,
                             color: Color(0xff050505),
                             fontWeight: FontWeight.w600,
-                            fontSize: 18,
+                            fontSize:
+                                mediaQuery.size.width * globals.fontSize18,
                           ),
                         ),
                       ))),

@@ -69,7 +69,8 @@ class _NewsScreenState extends State<NewsScreen> {
                     _selectTab(0);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width <= 360 ? 15 : 30),
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
@@ -81,7 +82,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       style: TextStyle(
                         color: _txt1,
                         fontFamily: globals.font,
-                        fontSize: width < 360 ? 15 : 18,
+                        fontSize: width * globals.fontSize18,
                       ),
                     ),
                   ),
@@ -94,7 +95,8 @@ class _NewsScreenState extends State<NewsScreen> {
                     _selectTab(1);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: width <= 360 ? 15 : 30),
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
@@ -106,7 +108,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       style: TextStyle(
                         color: _txt2,
                         fontFamily: globals.font,
-                        fontSize: width < 360 ? 15 : 18,
+                        fontSize: width * globals.fontSize18,
                       ),
                     ),
                   ),

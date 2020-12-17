@@ -31,7 +31,7 @@ class SupportFeedback extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xff313B6C),
-              fontSize: width < 360 ? 15 : 18,
+              fontSize: width * globals.fontSize18,
               fontWeight: FontWeight.bold,
               fontFamily: globals.font,
             ),
@@ -42,7 +42,8 @@ class SupportFeedback extends StatelessWidget {
             launchUrl("https://t.me/xalqnazorati_bot");
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 72, vertical: 30),
+            padding:
+                EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 30),
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 18),
@@ -50,7 +51,7 @@ class SupportFeedback extends StatelessWidget {
               child: Text(
                 "send_notify".tr().toString(),
                 style: TextStyle(
-                    fontSize: width < 360 ? 15 : 18,
+                    fontSize: width * globals.fontSize18,
                     fontWeight: FontWeight.w400,
                     fontFamily: globals.font,
                     color: Colors.white),

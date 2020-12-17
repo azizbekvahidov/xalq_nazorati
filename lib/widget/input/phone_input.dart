@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/globals.dart' as globals;
 
 class PhoneInput extends StatefulWidget {
   final myController;
@@ -37,9 +40,14 @@ class _PhoneInputState extends State<PhoneInput> {
           Text(
             "+998",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: dWith * globals.fontSize16,
               fontWeight: FontWeight.normal,
+              fontFamily: globals.font,
               color: Colors.black,
+              fontFeatures: [
+                FontFeature.enable("pnum"),
+                FontFeature.enable("lnum")
+              ],
             ),
           ),
           VerticalDivider(
@@ -58,7 +66,10 @@ class _PhoneInputState extends State<PhoneInput> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration.collapsed(
                   hintText: "tel_number_hint".tr().toString(),
-                  hintStyle: Theme.of(context).textTheme.display1),
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .display1
+                      .copyWith(fontSize: dWith * globals.fontSize18)),
             ),
           ),
         ],

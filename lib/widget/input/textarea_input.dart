@@ -70,7 +70,8 @@ class _TextareaInputState extends State<TextareaInput> {
                   maxLines: 7,
                   decoration: InputDecoration.collapsed(
                     hintText: widget.hint,
-                    hintStyle: Theme.of(context).textTheme.display1,
+                    hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                        fontSize: mediaQuery.size.width * globals.fontSize18),
                   ),
                 ),
               ),
@@ -84,7 +85,7 @@ class _TextareaInputState extends State<TextareaInput> {
             "${"textarea_counter_start".tr().toString()} $cnt ${"textarea_counter_end".tr().toString()}",
             style: TextStyle(
               color: Color.fromRGBO(102, 103, 108, 0.6),
-              fontSize: 10,
+              fontSize: mediaQuery.size.width * globals.fontSize10,
               fontWeight: FontWeight.w600,
               fontFamily: globals.font,
             ),

@@ -45,40 +45,42 @@ class _MainSupportState extends State<MainSupport> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xff313B6C),
-                  fontSize: width < 360 ? 15 : 18,
+                  fontSize: width * globals.fontSize18,
                   fontWeight: FontWeight.bold,
                   fontFamily: globals.font,
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {
-                launchUrl("https://t.me/xalqnazorati_bot");
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.15, vertical: 30),
+            Container(
+              padding:
+                  EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 30),
+              child: InkWell(
+                onTap: () {
+                  launchUrl("https://t.me/xalqnazorati_bot");
+                },
                 child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 18),
-                  height: 50,
-                  child: Text(
-                    "send_notify".tr().toString(),
-                    style: TextStyle(
-                        fontSize: width < 360 ? 15 : 18,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: globals.font,
-                        color: Colors.white),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff12B79B),
-                        Color(0xff00AC8A),
-                      ],
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 18),
+                    height: 50,
+                    child: Text(
+                      "send_notify".tr().toString(),
+                      style: TextStyle(
+                          fontSize: width * globals.fontSize18,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: globals.font,
+                          color: Colors.white),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff12B79B),
+                          Color(0xff00AC8A),
+                        ],
+                      ),
                     ),
                   ),
                 ),

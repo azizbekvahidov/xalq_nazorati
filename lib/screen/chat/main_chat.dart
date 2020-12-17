@@ -400,7 +400,12 @@ class _MainChatState extends State<MainChat> {
                             controller: messageController,
                             decoration: InputDecoration.collapsed(
                               hintText: "enter_message".tr().toString(),
-                              hintStyle: Theme.of(context).textTheme.display1,
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .display1
+                                  .copyWith(
+                                      fontSize: mediaQuery.size.width *
+                                          globals.fontSize18),
                             ),
                           )),
                       InkWell(

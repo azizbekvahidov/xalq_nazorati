@@ -56,10 +56,10 @@ class _LangScreenState extends State<LangScreen> {
                     Container(
                       padding: EdgeInsets.only(top: 20),
                       child: Text(
-                        "Это интерактивный сервис для эффективного взаимодействия хокимията и горожан, призванный оптимизировать работу с обращениями.",
+                        "Интерактивный сервис для эффективного сотрудничества жителей столицы и работников городских служб  г.Ташкента.",
                         style: TextStyle(
                             fontFamily: globals.font,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                             decoration: TextDecoration.none),
@@ -84,7 +84,7 @@ class _LangScreenState extends State<LangScreen> {
                         "У Ташкентцев появилась дополнительная возможность принять участие в улучшении города своими предложениями или пожаловаться на нарушения.",
                         style: TextStyle(
                             fontFamily: globals.font,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                             decoration: TextDecoration.none),
@@ -96,7 +96,7 @@ class _LangScreenState extends State<LangScreen> {
                         "Можно отслеживать статус своего сообщения о проблеме, знакомиться с предложениями других граждан и со статистикой работы над сообщениями. ",
                         style: TextStyle(
                             fontFamily: globals.font,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                             decoration: TextDecoration.none),
@@ -108,7 +108,7 @@ class _LangScreenState extends State<LangScreen> {
                         "Напомним, что работа с сообщениями о проблемах регламентируется Пользовательским соглашением, согласно которому сигналы и сообщения о проблемах рассматриваются в течение пятнадцати дней со дня поступления.",
                         style: TextStyle(
                             fontFamily: globals.font,
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                             decoration: TextDecoration.none),

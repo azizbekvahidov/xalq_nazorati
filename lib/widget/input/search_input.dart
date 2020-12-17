@@ -157,14 +157,15 @@ class _SearchtInputState extends State<SearchtInput> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                0.70,
+                0.68,
             child: TypeAheadField(
               textFieldConfiguration: TextFieldConfiguration(
                 controller: searchController,
                 autofocus: false,
                 decoration: InputDecoration.collapsed(
                   hintText: widget.hint.tr().toString(),
-                  hintStyle: Theme.of(context).textTheme.display1,
+                  hintStyle: Theme.of(context).textTheme.display1.copyWith(
+                      fontSize: mediaQuery.size.width * globals.fontSize18),
                 ),
               ),
               hideOnEmpty: true,

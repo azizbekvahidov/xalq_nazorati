@@ -114,6 +114,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
 
     final size = (mediaQuery.size.width -
                 mediaQuery.padding.left -
@@ -160,7 +161,8 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                           "clear".tr().toString(),
                                           style: TextStyle(
                                             color: Color(0xffB2B7D0),
-                                            fontSize: 14,
+                                            fontSize:
+                                                dWidth * globals.fontSize14,
                                             fontWeight: FontWeight.w500,
                                             fontFamily: globals.font,
                                           ),
@@ -198,7 +200,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Expanded(
                                         flex: 1,
@@ -211,7 +213,8 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                           "upload_warning".tr().toString(),
                                           style: TextStyle(
                                               color: Color(0xffFF8F27),
-                                              fontSize: 12,
+                                              fontSize:
+                                                  dWidth * globals.fontSize12,
                                               fontFamily: globals.font),
                                         ),
                                       ),
@@ -273,7 +276,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                 style: TextStyle(
                   fontFamily: globals.font,
                   fontWeight: FontWeight.w700,
-                  fontSize: 24,
+                  fontSize: dWidth * globals.fontSize24,
                 ),
               ),
             ),

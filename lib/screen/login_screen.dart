@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       "accaunt_question".tr().toString(),
                                       style: TextStyle(
                                         fontFamily: globals.font,
-                                        fontSize: dWith < 360 ? 11 : 14,
+                                        fontSize: dWith * globals.fontSize14,
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         "sign_ups".tr().toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
-                                          fontSize: dWith < 360 ? 11 : 14,
+                                          fontSize: dWith * globals.fontSize14,
                                           color: Theme.of(context).primaryColor,
                                           fontWeight: FontWeight.w600,
                                         ),

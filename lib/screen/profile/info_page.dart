@@ -28,6 +28,7 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = mediaQuery.size.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "about_app".tr().toString(),
@@ -54,7 +55,7 @@ class _InfoPageState extends State<InfoPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 14,
+                          fontSize: dWidth * globals.fontSize14,
                           fontFamily: globals.font,
                         ),
                       ),
@@ -99,9 +100,7 @@ class _InfoPageState extends State<InfoPage> {
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:
-                                                    mediaQuery.size.width < 360
-                                                        ? 16
-                                                        : 18,
+                                                    dWidth * globals.fontSize18,
                                               ),
                                             ),
                                           ),
@@ -152,7 +151,7 @@ class _InfoPageState extends State<InfoPage> {
                     style: TextStyle(
                       color: Color(0xff66676C),
                       fontFamily: globals.font,
-                      fontSize: 14,
+                      fontSize: dWidth * globals.fontSize14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

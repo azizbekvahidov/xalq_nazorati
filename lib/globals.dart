@@ -27,3 +27,27 @@ bool isGetProblem = false;
 String deviceToken = "";
 String device = "";
 var userLocation = null;
+var fontSize10 = 0.027;
+var fontSize12 = 0.032;
+var fontSize14 = 0.0374;
+var fontSize16 = 0.0427;
+var fontSize18 = 0.048;
+var fontSize20 = 0.0534;
+var fontSize24 = 0.064;
+var fontSize26 = 0.0694;
+
+String capitalize(String stringVal) {
+  if (stringVal == null) {
+    throw ArgumentError.notNull('string');
+  }
+
+  if (stringVal.isEmpty) {
+    return stringVal;
+  }
+  var res = "";
+  for (var i = 0; i < stringVal.length; i++) {
+    res += stringVal[i].toLowerCase();
+  }
+
+  return res[0].toUpperCase() + res.substring(1);
+}

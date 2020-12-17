@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.45,
+              height: MediaQuery.of(context).size.height * 0.5,
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.05),
               child: GetLoginDialog(),
@@ -123,7 +123,8 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   type: BottomNavigationBarType.fixed,
-                  selectedFontSize: 12,
+                  selectedFontSize:
+                      MediaQuery.of(context).size.width * globals.fontSize12,
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(

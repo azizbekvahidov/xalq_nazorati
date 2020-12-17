@@ -13,6 +13,7 @@ class GetLoginDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,73 +31,114 @@ class GetLoginDialog extends StatelessWidget {
                   text: "sign_up_warning".tr().toString(),
                   style: TextStyle(
                     fontFamily: globals.font,
-                    fontSize: (height < 560) ? 14 : 16,
+                    fontSize: width * globals.fontSize16,
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
-                ),
-                TextSpan(
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      globals.routeName = routeName;
-                      Navigator.pushReplacementNamed(
-                          context, LoginScreen.routeName);
-                    },
-                  text: "get_log_in".tr().toString(),
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontFamily: globals.font,
-                    fontSize: (height < 560) ? 14 : 16,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                TextSpan(
-                  text: "or".tr().toString(),
-                  style: TextStyle(
-                    fontFamily: globals.font,
-                    fontSize: (height < 560) ? 14 : 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                TextSpan(
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      globals.routeName = routeName;
-                      Navigator.pushReplacementNamed(
-                          context, RegisterPhoneScreen.routeName);
-                    },
-                  text: "get_sign_ups".tr().toString(),
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    fontFamily: globals.font,
-                    fontSize: (height < 560) ? 14 : 16,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  // ),
+                  // TextSpan(
+                  //   recognizer: TapGestureRecognizer()
+                  //     ..onTap = () {
+                  //       globals.routeName = routeName;
+                  //       Navigator.pushReplacementNamed(
+                  //           context, LoginScreen.routeName);
+                  //     },
+                  //   text: "get_log_in".tr().toString(),
+                  //   style: TextStyle(
+                  //     decoration: TextDecoration.underline,
+                  //     fontFamily: globals.font,
+                  //     fontSize: (height < 560) ? 14 : 16,
+                  //     color: Theme.of(context).primaryColor,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // ),
+                  // TextSpan(
+                  //   text: "or".tr().toString(),
+                  //   style: TextStyle(
+                  //     fontFamily: globals.font,
+                  //     fontSize: (height < 560) ? 14 : 16,
+                  //     color: Colors.black,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
+                  // ),
+                  // TextSpan(
+                  //   recognizer: TapGestureRecognizer()
+                  //     ..onTap = () {
+                  //       globals.routeName = routeName;
+                  //       Navigator.pushReplacementNamed(
+                  //           context, RegisterPhoneScreen.routeName);
+                  //     },
+                  //   text: "get_sign_ups".tr().toString(),
+                  //   style: TextStyle(
+                  //     decoration: TextDecoration.underline,
+                  //     fontFamily: globals.font,
+                  //     fontSize: (height < 560) ? 14 : 16,
+                  //     color: Theme.of(context).primaryColor,
+                  //     fontWeight: FontWeight.w600,
+                  //   ),
                 ),
               ],
             ),
           ),
-          FlatButton(
-            child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(
-                    style: BorderStyle.solid,
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 35),
+            child: FlatButton(
+              child: Container(
+                  width: width,
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
                     color: Theme.of(context).primaryColor,
-                    width: 1,
+                    border: Border.all(
+                      style: BorderStyle.solid,
+                      color: Theme.of(context).primaryColor,
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: Text(
-                  "close".tr().toString(),
-                  style: TextStyle(color: Theme.of(context).primaryColor),
-                )),
-            onPressed: () {
-              Navigator.pop(context, true);
-            },
+                  child: Center(
+                    child: Text(
+                      "log_in".tr().toString(),
+                      style: TextStyle(
+                          fontSize: width * globals.fontSize16,
+                          color: Colors.white),
+                    ),
+                  )),
+              onPressed: () {
+                globals.routeName = routeName;
+                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+                // Navigator.pop(context, true);
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 35),
+            child: FlatButton(
+              child: Container(
+                  width: width,
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      style: BorderStyle.solid,
+                      color: Theme.of(context).primaryColor,
+                      width: 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "sign_up".tr().toString(),
+                      style: TextStyle(
+                          fontSize: width * globals.fontSize16,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                  )),
+              onPressed: () {
+                globals.routeName = routeName;
+                Navigator.pushReplacementNamed(
+                    context, RegisterPhoneScreen.routeName);
+                // Navigator.pop(context, true);
+              },
+            ),
           )
         ],
       ),

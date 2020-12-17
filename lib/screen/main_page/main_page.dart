@@ -126,6 +126,7 @@ class _MainPageState extends State<MainPage> {
     _newNotifyList = getNotificationList();
     DateFormat formatterDay = DateFormat('dd');
     DateFormat formatterMonth = DateFormat('MMMM');
+    var dWidth = MediaQuery.of(context).size.width;
     return showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -150,182 +151,194 @@ class _MainPageState extends State<MainPage> {
                   padding: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.03,
                       horizontal: MediaQuery.of(context).size.width * 0.05),
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "notifications".tr().toString(),
-                          style: Theme.of(context).textTheme.display2,
-                        ),
-                        FutureBuilder(
-                            future: _newNotifyList,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) print(snapshot.error);
-                              return snapshot.hasData
-                                  ? Container(
-                                      height: 115.0 * snapshot.data.length,
-                                      child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: snapshot.data.length,
-                                        itemBuilder:
-                                            (BuildContext context, index) {
-                                          String statDateDay = formatterDay
-                                              .format(DateTime.parse(DateFormat(
-                                                      "yyyy-MM-ddTHH:mm:ssZ")
-                                                  .parseUTC(snapshot.data[index]
-                                                      ["datetime"])
-                                                  .toString()));
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "notifications".tr().toString(),
+                            style: Theme.of(context).textTheme.display2,
+                          ),
+                          FutureBuilder(
+                              future: _newNotifyList,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) print(snapshot.error);
+                                return snapshot.hasData
+                                    ? Container(
+                                        height: 115.0 * snapshot.data.length,
+                                        child: ListView.builder(
+                                          physics: BouncingScrollPhysics(),
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder:
+                                              (BuildContext context, index) {
+                                            String statDateDay = formatterDay
+                                                .format(DateTime.parse(DateFormat(
+                                                        "yyyy-MM-ddTHH:mm:ssZ")
+                                                    .parseUTC(
+                                                        snapshot.data[index]
+                                                            ["datetime"])
+                                                    .toString()));
 
-                                          String statDateMonth = formatterMonth
-                                              .format(DateTime.parse(DateFormat(
-                                                      "yyyy-MM-ddTHH:mm:ssZ")
-                                                  .parseUTC(snapshot.data[index]
-                                                      ["datetime"])
-                                                  .toString()));
-                                          return Dismissible(
-                                            key: Key(snapshot.data[index]
-                                                .toString()),
-                                            onDismissed: (direction) {
-                                              if (direction ==
-                                                  DismissDirection.endToStart) {
-                                                checkNotification(
-                                                    snapshot.data[index]["id"]);
-                                              } else if (direction ==
-                                                  DismissDirection.startToEnd) {
-                                                checkNotification(
-                                                    snapshot.data[index]["id"]);
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      var route;
-                                                      route =
-                                                          ProblemContentScreen(
-                                                              id: snapshot.data[
-                                                                      index][
-                                                                  "problem_id"]);
-                                                      return route;
-                                                    },
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                            child: Container(
-                                                margin:
-                                                    EdgeInsets.only(bottom: 20),
-                                                height: 95,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Container(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              BoxTextWarning(
-                                                                  "ID ${snapshot.data[index]["problem_id"]}",
-                                                                  "success"),
-                                                              Padding(
-                                                                  padding: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              8)),
-                                                              BoxTextDefault(
-                                                                  "$statDateDay " +
-                                                                      "$statDateMonth"
-                                                                          .tr()
-                                                                          .toString())
-                                                            ],
-                                                          ),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              checkNotification(
-                                                                  snapshot.data[
-                                                                          index]
-                                                                      ["id"]);
-                                                              setState(() {
-                                                                snapshot.data
-                                                                    .removeAt(
-                                                                        index);
-                                                              });
-                                                            },
-                                                            child: Icon(
-                                                                Icons.close),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      FlatButton(
-                                                        padding:
-                                                            EdgeInsets.all(0),
-                                                        onPressed: () {
-                                                          checkNotification(
-                                                              snapshot.data[
-                                                                  index]["id"]);
-                                                          Navigator.of(context)
-                                                              .pushReplacement(
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                var route;
-                                                                route = ProblemContentScreen(
-                                                                    id: snapshot
-                                                                            .data[index]
-                                                                        [
-                                                                        "problem_id"]);
-                                                                return route;
-                                                              },
+                                            String statDateMonth = formatterMonth
+                                                .format(DateTime.parse(DateFormat(
+                                                        "yyyy-MM-ddTHH:mm:ssZ")
+                                                    .parseUTC(
+                                                        snapshot.data[index]
+                                                            ["datetime"])
+                                                    .toString()));
+                                            return Dismissible(
+                                              key: Key(snapshot.data[index]
+                                                  .toString()),
+                                              onDismissed: (direction) {
+                                                if (direction ==
+                                                    DismissDirection
+                                                        .endToStart) {
+                                                  checkNotification(snapshot
+                                                      .data[index]["id"]);
+                                                } else if (direction ==
+                                                    DismissDirection
+                                                        .startToEnd) {
+                                                  checkNotification(snapshot
+                                                      .data[index]["id"]);
+                                                  Navigator.of(context)
+                                                      .pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        var route;
+                                                        route = ProblemContentScreen(
+                                                            id: snapshot
+                                                                    .data[index]
+                                                                ["problem_id"]);
+                                                        return route;
+                                                      },
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: Container(
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 20),
+                                                  height: 95,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                BoxTextWarning(
+                                                                    "ID ${snapshot.data[index]["problem_id"]}",
+                                                                    "success"),
+                                                                Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            left:
+                                                                                8)),
+                                                                BoxTextDefault(
+                                                                    "$statDateDay " +
+                                                                        "$statDateMonth"
+                                                                            .tr()
+                                                                            .toString())
+                                                              ],
                                                             ),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
+                                                            GestureDetector(
+                                                              onTap: () {
+                                                                checkNotification(
+                                                                    snapshot.data[
+                                                                            index]
+                                                                        ["id"]);
+                                                                setState(() {
+                                                                  snapshot.data
+                                                                      .removeAt(
+                                                                          index);
+                                                                });
+                                                              },
+                                                              child: Icon(
+                                                                  Icons.close),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        FlatButton(
                                                           padding:
-                                                              EdgeInsets.only(
-                                                                  top: 8),
-                                                          height: 50,
-                                                          child: Text(
-                                                            "${snapshot.data[index]["action"]}",
-                                                            style: TextStyle(
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .none,
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontFamily:
-                                                                  globals.font,
-                                                              color: Color(
-                                                                  0xff313B6C),
+                                                              EdgeInsets.all(0),
+                                                          onPressed: () {
+                                                            checkNotification(
+                                                                snapshot.data[
+                                                                        index]
+                                                                    ["id"]);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pushReplacement(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  var route;
+                                                                  route = ProblemContentScreen(
+                                                                      id: snapshot
+                                                                              .data[index]
+                                                                          [
+                                                                          "problem_id"]);
+                                                                  return route;
+                                                                },
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 8),
+                                                            height: 50,
+                                                            child: Text(
+                                                              "${snapshot.data[index]["action"]}",
+                                                              style: TextStyle(
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .none,
+                                                                fontSize: dWidth *
+                                                                    globals
+                                                                        .fontSize14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontFamily:
+                                                                    globals
+                                                                        .font,
+                                                                color: Color(
+                                                                    0xff313B6C),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
-                                                      Divider(),
-                                                    ],
-                                                  ),
-                                                )),
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : Container();
-                            }),
-                      ],
+                                                        Divider(),
+                                                      ],
+                                                    ),
+                                                  )),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : Container();
+                              }),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -339,6 +352,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     getNotification();
     final mediaQuery = MediaQuery.of(context);
+    var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         children: [
@@ -377,19 +391,21 @@ class _MainPageState extends State<MainPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${"hello".tr().toString()}, ${globals.userData['first_name'] ?? ""}",
-                                style: TextStyle(
-                                    fontFamily: globals.font,
-                                    color: Colors.white,
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Text(
                                 "welcome".tr().toString(),
                                 style: TextStyle(
                                     fontFamily: globals.font,
                                     color: Colors.white,
-                                    fontSize: 26,
+                                    fontSize: dWidth * globals.fontSize26,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                globals.token != null
+                                    ? "${globals.capitalize(globals.userData['last_name'])} ${globals.capitalize(globals.userData['first_name'])}"
+                                    : "",
+                                style: TextStyle(
+                                    fontFamily: globals.font,
+                                    color: Colors.white,
+                                    fontSize: dWidth * globals.fontSize26,
                                     fontWeight: FontWeight.w600),
                               ),
                             ],
@@ -469,7 +485,7 @@ class _MainPageState extends State<MainPage> {
                     style: TextStyle(
                         fontFamily: globals.font,
                         color: Color(0xff313B6C),
-                        fontSize: 18,
+                        fontSize: dWidth * globals.fontSize18,
                         fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -512,7 +528,7 @@ class _MainPageState extends State<MainPage> {
                             style: TextStyle(
                                 fontFamily: globals.font,
                                 color: Color(0xff313B6C),
-                                fontSize: 18,
+                                fontSize: dWidth * globals.fontSize18,
                                 fontWeight: FontWeight.w600),
                           ),
                           GestureDetector(
@@ -530,7 +546,7 @@ class _MainPageState extends State<MainPage> {
                               style: TextStyle(
                                   fontFamily: globals.font,
                                   color: Color(0xff66676C),
-                                  fontSize: 12,
+                                  fontSize: dWidth * globals.fontSize12,
                                   fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -570,7 +586,9 @@ class _MainPageState extends State<MainPage> {
                   style: TextStyle(
                       fontFamily: globals.font,
                       color: Colors.white,
-                      fontSize: (mediaQuery.size.width < 360) ? 14 : 16,
+                      fontSize: dWidth *
+                          globals
+                              .fontSize16, //(mediaQuery.size.width < 360) ? 14 : 16,
                       fontWeight: FontWeight.w500),
                 ),
               )),

@@ -57,11 +57,11 @@ class IconCardList extends StatelessWidget {
                             text: TextSpan(
                               text: title,
                               style: TextStyle(
-                                fontFamily: globals.font,
-                                color: Color(0xff050505),
-                                fontWeight: FontWeight.w600,
-                                fontSize: mediaQuery.size.width < 360 ? 16 : 18,
-                              ),
+                                  fontFamily: globals.font,
+                                  color: Color(0xff050505),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: mediaQuery.size.width *
+                                      globals.fontSize18),
                             ),
                           ),
                         ],

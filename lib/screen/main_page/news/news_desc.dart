@@ -10,7 +10,7 @@ import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 
 class NewsDesc extends StatefulWidget {
-  final int id;
+  final String id;
   NewsDesc(this.id);
 
   @override

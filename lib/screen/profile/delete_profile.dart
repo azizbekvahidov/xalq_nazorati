@@ -95,7 +95,7 @@ class _DeleteProfileState extends State<DeleteProfile> {
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.17,
+          height: mediaQuery.size.height - mediaQuery.size.height * 0.2,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

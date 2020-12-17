@@ -173,6 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String countryValue = prefs.getString('country');
     String token = prefs.getString('userToken');
     // setState(() {
+    globals.token = token;
     _lang = stringValue;
     _token = token;
     _country = countryValue;
