@@ -38,7 +38,7 @@ class _PassInputState extends State<PassInput> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                (mediaQuery.size.width <= 360 ? 0.64 : 0.7),
+                (mediaQuery.size.width <= 360 ? 0.64 : 0.69),
             child: TextField(
               controller: widget.passController,
               obscureText: !_passShow,

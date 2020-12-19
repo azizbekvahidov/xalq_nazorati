@@ -122,143 +122,149 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
         title: "problem_solved".tr().toString(),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: ShadowBox(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 10, bottom: 15),
-                width: 80,
-                height: 80,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(40),
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: widget.executorAvatar != null
-                        ? Image.asset("assets/img/newsPic.jpg")
-                        : Container(
-                            color: Colors.grey,
-                          ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: ShadowBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 15),
+                  width: 80,
+                  height: 80,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: widget.executorAvatar != null
+                          ? Image.asset("assets/img/newsPic.jpg")
+                          : Container(
+                              color: Colors.grey,
+                            ),
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                widget.executorName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: globals.font,
-                  fontWeight: FontWeight.w700,
-                  fontSize: dWidth * globals.fontSize24,
-                  fontFeatures: [
-                    FontFeature.enable("pnum"),
-                    FontFeature.enable("lnum")
-                  ],
+                Text(
+                  widget.executorName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontWeight: FontWeight.w700,
+                    fontSize: dWidth * globals.fontSize24,
+                    fontFeatures: [
+                      FontFeature.enable("pnum"),
+                      FontFeature.enable("lnum")
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 7),
-              ),
-              Text(
-                widget.position,
-                style: TextStyle(
-                  fontFamily: globals.font,
-                  fontWeight: FontWeight.w400,
-                  fontSize: dWidth * globals.fontSize18,
+                Padding(
+                  padding: EdgeInsets.only(top: 7),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-              ),
-              !dataSended
-                  ? Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            "rate_executor".tr().toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: globals.font,
-                              fontWeight: FontWeight.w600,
-                              fontSize: dWidth * globals.fontSize16,
+                Text(
+                  widget.position,
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontWeight: FontWeight.w400,
+                    fontSize: dWidth * globals.fontSize18,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                ),
+                Divider(),
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                ),
+                !dataSended
+                    ? Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              "rate_executor".tr().toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: globals.font,
+                                fontWeight: FontWeight.w600,
+                                fontSize: dWidth * globals.fontSize16,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18),
-                        ),
-                        (widget.choose == "accept")
-                            ? SmoothStarRating(
-                                allowHalfRating: false,
-                                onRated: (v) {
-                                  setState(() {
-                                    rated = v.toInt();
-                                    print(rated);
-                                  });
+                          Padding(
+                            padding: EdgeInsets.only(top: 18),
+                          ),
+                          (widget.choose == "accept")
+                              ? SmoothStarRating(
+                                  allowHalfRating: false,
+                                  onRated: (v) {
+                                    setState(() {
+                                      rated = v.toInt();
+                                      print(rated);
+                                    });
+                                  },
+                                  starCount: 5,
+                                  rating: rating,
+                                  size: 40.0,
+                                  color: Theme.of(context).primaryColor,
+                                  borderColor: Color(0xffEBEDF3),
+                                  spacing: 0.0,
+                                )
+                              : Container(),
+                          Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 19),
+                              child: TextareaInput(
+                                hint: "",
+                                textareaController: descController,
+                                notifyParent: checkChange,
+                              )),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 19),
+                            child: SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: FlatButton(
+                                color: globals.activeButtonColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(34),
+                                ),
+                                onPressed: () {
+                                  sendData();
                                 },
-                                starCount: 5,
-                                rating: rating,
-                                size: 40.0,
-                                color: Theme.of(context).primaryColor,
-                                borderColor: Color(0xffEBEDF3),
-                                spacing: 0.0,
-                              )
-                            : Container(),
-                        Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 19),
-                            child: TextareaInput(
-                              hint: "",
-                              textareaController: descController,
-                              notifyParent: checkChange,
-                            )),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 19),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: FlatButton(
-                              color: globals.activeButtonColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(34),
-                              ),
-                              onPressed: () {
-                                sendData();
-                              },
-                              child: Text(
-                                "accept".tr().toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    .copyWith(
-                                        fontSize: dWidth * globals.fontSize18),
+                                child: Text(
+                                  "accept".tr().toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(
+                                          fontSize:
+                                              dWidth * globals.fontSize18),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        "thanks".tr().toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: globals.font,
-                          fontWeight: FontWeight.w700,
-                          fontSize: dWidth * globals.fontSize24,
+                        ],
+                      )
+                    : Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "thanks".tr().toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: globals.font,
+                            fontWeight: FontWeight.w700,
+                            fontSize: dWidth * globals.fontSize24,
+                          ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

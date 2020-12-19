@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,6 +21,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
   @override
   Widget build(BuildContext context) {
     var meduaQuery = MediaQuery.of(context).size;
+    var dWidth = meduaQuery.width;
     return Scaffold(
       appBar: CustomAppBar(
         title: "how_scan_pas".tr().toString(),
@@ -38,29 +40,91 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "pas_notify_text_1".tr().toString(),
+                  "1) ${"pas_notify_text_1".tr().toString()}",
                   style: TextStyle(
                     color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: 14,
+                    fontSize: dWidth * globals.fontSize14,
+                    fontWeight: FontWeight.w500,
+                    fontFeatures: [
+                      FontFeature.enable("pnum"),
+                      FontFeature.enable("lnum")
+                    ],
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 Text(
-                  "pas_notify_text_2".tr().toString(),
+                  "2) ${"pas_notify_text_2".tr().toString()}",
                   style: TextStyle(
-                    color: Color(0xffDE1B1B),
+                    color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: 14,
+                    fontSize: dWidth * globals.fontSize14,
+                    fontWeight: FontWeight.w500,
+                    fontFeatures: [
+                      FontFeature.enable("pnum"),
+                      FontFeature.enable("lnum")
+                    ],
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 Text(
-                  "pas_notify_text_3".tr().toString(),
+                  "3) ${"pas_notify_text_3".tr().toString()}",
                   style: TextStyle(
                     color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: 14,
+                    fontSize: dWidth * globals.fontSize14,
+                    fontWeight: FontWeight.w500,
+                    fontFeatures: [
+                      FontFeature.enable("pnum"),
+                      FontFeature.enable("lnum")
+                    ],
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                RichText(
+                  textAlign: TextAlign.start,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "4) ",
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize14,
+                          color: Color(0xff313B6C),
+                          fontWeight: FontWeight.w500,
+                          fontFeatures: [
+                            FontFeature.enable("pnum"),
+                            FontFeature.enable("lnum")
+                          ],
+                        ),
+                      ),
+                      TextSpan(
+                        text: "${"pas_notify_text_4-1".tr().toString()}",
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize14,
+                          color: Color(0xffDE1B1B),
+                          fontWeight: FontWeight.w700,
+                          fontFeatures: [
+                            FontFeature.enable("pnum"),
+                            FontFeature.enable("lnum")
+                          ],
+                        ),
+                      ),
+                      TextSpan(
+                        text: "pas_notify_text_4-2".tr().toString(),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize14,
+                          color: Color(0xff313B6C),
+                          fontWeight: FontWeight.w500,
+                          fontFeatures: [
+                            FontFeature.enable("pnum"),
+                            FontFeature.enable("lnum")
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(

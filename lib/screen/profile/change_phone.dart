@@ -117,13 +117,15 @@ class _ChangePhoneState extends State<ChangePhone> {
   //   }
   // }
 
+  String phone = "";
+
   Future sendMessage() async {
     if (_start == 0) {
       _start = 180;
       sendMessage();
     } else if (_start == 180) {
       try {
-        String phone = "+998${phoneController.text}";
+        phone = "+998${phoneController.text}";
         phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
         var url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/change-phone';
@@ -140,7 +142,7 @@ class _ChangePhoneState extends State<ChangePhone> {
         if (r1.statusCode == 200) {
           var responseBody = r1.json();
           r1.raiseForStatus();
-          // startTimer();
+          startTimer();
           _isSend = true;
           // Navigator.of(context).pop();
         } else {
@@ -183,6 +185,9 @@ class _ChangePhoneState extends State<ChangePhone> {
         print(r1.content());
         r1.raiseForStatus();
         _timer.cancel();
+        setState(() {
+          globals.userData["phone"] = phone;
+        });
         Navigator.of(context).pop();
       } else {
         print(r1.content());
@@ -219,116 +224,126 @@ class _ChangePhoneState extends State<ChangePhone> {
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
       appBar: appbar,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ShadowBox(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  MainText("tel_number_title".tr().toString()),
-                                  PhoneInput(phoneController),
-                                  InkWell(
-                                    onTap: () {
-                                      sendMessage();
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.symmetric(vertical: 10),
-                                      width: mediaQuery.size.width,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Color.fromRGBO(26, 188, 156, 0.1),
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            width: 1),
-                                      ),
-                                      child: Center(
-                                          child:
-                                              Text("get_code".tr().toString())),
-                                    ),
-                                  ),
-                                  MainText("check_code_title".tr().toString()),
-                                  DefaultInput(
-                                    inputType: TextInputType.number,
-                                    hint: "check_code_hint".tr().toString(),
-                                    textController: codeController,
-                                    notifyParent: () {
-                                      validate();
-                                    },
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(left: 20),
-                                        width: mediaQuery.size.width * 0.85,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              _showTime,
-                                              style: TextStyle(
-                                                fontFamily: globals.font,
-                                                fontSize: 18,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ShadowBox(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MainText(
+                                        "tel_number_title".tr().toString()),
+                                    PhoneInput(phoneController),
+                                    InkWell(
+                                      onTap: () {
+                                        sendMessage();
+                                      },
+                                      child: Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        width: mediaQuery.size.width,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(26, 188, 156, 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              width: 1),
                                         ),
+                                        child: Center(
+                                            child: Text(
+                                                "get_code".tr().toString())),
                                       ),
-                                    ],
-                                  )
-                                ]),
+                                    ),
+                                    MainText(
+                                        "check_code_title".tr().toString()),
+                                    DefaultInput(
+                                      inputType: TextInputType.number,
+                                      hint: "check_code_hint".tr().toString(),
+                                      textController: codeController,
+                                      notifyParent: () {
+                                        validate();
+                                      },
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.only(left: 20),
+                                          width: mediaQuery.size.width * 0.85,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                _showTime,
+                                                style: TextStyle(
+                                                  fontFamily: globals.font,
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ]),
+                            ),
                           ),
-                        ),
-                      ]),
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(38),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: !_value
-                                ? DefaultButton(
-                                    "change",
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : DefaultButton("change".tr().toString(), () {
-                                    changePhone();
-                                    // changeProfile();
-                                    // setState(() {
-                                    //   _value = !_value;
-                                    // });
-                                    // Navigator.of(context)
-                                    //     .pushNamed(PasRecognizedScreen.routeName);
-                                  }, Theme.of(context).primaryColor),
+                        ]),
+                  ),
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(38),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: !_value
+                                  ? DefaultButton(
+                                      "change",
+                                      () {},
+                                      Color(0xffB2B7D0),
+                                    )
+                                  : DefaultButton("change".tr().toString(), () {
+                                      changePhone();
+                                      // changeProfile();
+                                      // setState(() {
+                                      //   _value = !_value;
+                                      // });
+                                      // Navigator.of(context)
+                                      //     .pushNamed(PasRecognizedScreen.routeName);
+                                    }, Theme.of(context).primaryColor),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+          ),
         ),
       ),
     );

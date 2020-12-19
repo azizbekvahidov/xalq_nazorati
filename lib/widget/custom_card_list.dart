@@ -98,7 +98,9 @@ class _CustomCardListState extends State<CustomCardList> {
                       return widget.route;
                     },
                   ),
-                );
+                ).then((value) {
+                  setState(() {});
+                });
               } else {
                 customDialog(context);
               }

@@ -353,16 +353,19 @@ class _ProblemLocateState extends State<ProblemLocate> {
     }
   }
 
-  setAddress(var addr) {
+  setAddress(var addr, flatController, isChange) {
     address =
         "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
-
+    print(address);
     var latlang = Point(
         latitude: double.tryParse(addr['latitude']),
         longitude: double.tryParse(addr['longitude']));
     _setLocation(Point(
         latitude: double.tryParse(addr['latitude']),
         longitude: double.tryParse(addr['longitude'])));
+    setState(() {
+      _valid = true;
+    });
   }
 
   void _getLocation() async {
@@ -460,424 +463,448 @@ class _ProblemLocateState extends State<ProblemLocate> {
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: CustomAppBar(title: "where_is_problem".tr().toString()),
-      body: SingleChildScrollView(
-        // physics: NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ShadowBox(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                widget.categoryId != 18
-                                    ? MainText("set_address".tr().toString())
-                                    : Container(),
-                                widget.categoryId != 18
-                                    ? Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        width: double.infinity,
-                                        height: 45,
-                                        decoration: BoxDecoration(
-                                          color: Color(0xffF5F6F9),
-                                          borderRadius:
-                                              BorderRadius.circular(22.5),
-                                          border: Border.all(
-                                            color: Color.fromRGBO(
-                                                178, 183, 208, 0.5),
-                                            style: BorderStyle.solid,
-                                            width: 0.5,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              width: (mediaQuery.size.width -
-                                                      mediaQuery.padding.left -
-                                                      mediaQuery
-                                                          .padding.right) *
-                                                  0.74,
-                                              child: TypeAheadField(
-                                                textFieldConfiguration:
-                                                    TextFieldConfiguration(
-                                                  controller: addressController,
-                                                  autofocus: true,
-                                                  decoration:
-                                                      InputDecoration.collapsed(
-                                                    hintText: "address_example"
-                                                        .tr()
-                                                        .toString(),
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display1
-                                                        .copyWith(
-                                                            fontSize: dWidth *
-                                                                globals
-                                                                    .fontSize18),
-                                                  ),
-                                                ),
-                                                hideOnEmpty: true,
-                                                suggestionsCallback:
-                                                    (pattern) async {
-                                                  await changeAddressMap(
-                                                      pattern);
-                                                  return response;
-                                                },
-                                                itemBuilder:
-                                                    (context, suggestion) {
-                                                  return ListTile(
-                                                    title:
-                                                        Text(suggestion.title),
-                                                  );
-                                                },
-                                                onSuggestionSelected:
-                                                    (suggestion) {
-                                                  getLocateFromAddress(
-                                                      suggestion.title);
-                                                  addressController.text =
-                                                      suggestion.title;
-                                                },
-                                              ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          // physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShadowBox(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  widget.categoryId != 18
+                                      ? MainText("set_address".tr().toString())
+                                      : Container(),
+                                  widget.categoryId != 18
+                                      ? Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 20),
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          width: double.infinity,
+                                          height: 45,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xffF5F6F9),
+                                            borderRadius:
+                                                BorderRadius.circular(22.5),
+                                            border: Border.all(
+                                              color: Color.fromRGBO(
+                                                  178, 183, 208, 0.5),
+                                              style: BorderStyle.solid,
+                                              width: 0.5,
                                             ),
-                                          ],
-                                        ),
-                                      )
-                                    : AddressSearch(
-                                        setAddress: setAddress,
-                                      ),
-                                MainText("notes".tr().toString()),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 10, horizontal: 20),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  width: double.infinity,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xffF5F6F9),
-                                    borderRadius: BorderRadius.circular(22.5),
-                                    border: Border.all(
-                                      color: Color.fromRGBO(178, 183, 208, 0.5),
-                                      style: BorderStyle.solid,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: (mediaQuery.size.width -
-                                                mediaQuery.padding.left -
-                                                mediaQuery.padding.right) *
-                                            0.74,
-                                        child: TextField(
-                                          maxLength: 40,
-                                          buildCounter: (BuildContext context,
-                                                  {int currentLength,
-                                                  int maxLength,
-                                                  bool isFocused}) =>
-                                              null,
-                                          onChanged: (value) {
-                                            var result = value;
-                                            if (result.length > 40) {
-                                              result = result.substring(0, 40);
-                                              extraController.text = result;
-                                              extraController.selection =
-                                                  TextSelection.fromPosition(
-                                                      TextPosition(
-                                                          offset:
-                                                              result.length));
-                                            }
-                                            changeTxt(result);
-                                          },
-                                          controller: extraController,
-                                          maxLines: 1,
-                                          decoration: InputDecoration.collapsed(
-                                            hintText:
-                                                "note_example".tr().toString(),
-                                            hintStyle: Theme.of(context)
-                                                .textTheme
-                                                .display1
-                                                .copyWith(
-                                                    fontSize: dWidth *
-                                                        globals.fontSize18),
                                           ),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: (mediaQuery.size.width -
+                                                        mediaQuery
+                                                            .padding.left -
+                                                        mediaQuery
+                                                            .padding.right) *
+                                                    0.74,
+                                                child: TypeAheadField(
+                                                  textFieldConfiguration:
+                                                      TextFieldConfiguration(
+                                                    controller:
+                                                        addressController,
+                                                    autofocus: true,
+                                                    decoration: InputDecoration
+                                                        .collapsed(
+                                                      hintText:
+                                                          "address_example"
+                                                              .tr()
+                                                              .toString(),
+                                                      hintStyle: Theme.of(
+                                                              context)
+                                                          .textTheme
+                                                          .display1
+                                                          .copyWith(
+                                                              fontSize: dWidth *
+                                                                  globals
+                                                                      .fontSize18),
+                                                    ),
+                                                  ),
+                                                  hideOnEmpty: true,
+                                                  suggestionsCallback:
+                                                      (pattern) async {
+                                                    await changeAddressMap(
+                                                        pattern);
+                                                    return response;
+                                                  },
+                                                  itemBuilder:
+                                                      (context, suggestion) {
+                                                    return ListTile(
+                                                      title: Text(
+                                                          suggestion.title),
+                                                    );
+                                                  },
+                                                  onSuggestionSelected:
+                                                      (suggestion) {
+                                                    getLocateFromAddress(
+                                                        suggestion.title);
+                                                    addressController.text =
+                                                        suggestion.title;
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : AddressSearch(
+                                          setAddress: setAddress,
+                                          isFlat: false,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  alignment: Alignment.centerRight,
-                                  child: Text(
-                                    "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
-                                    style: TextStyle(
-                                      color: Color.fromRGBO(102, 103, 108, 0.6),
-                                      fontSize: dWidth * globals.fontSize10,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: globals.font,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 20),
-                                  width: double.infinity,
-                                  height: 335,
-                                  decoration: BoxDecoration(
+                                  MainText("notes".tr().toString()),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 20),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    width: double.infinity,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffF5F6F9),
+                                      borderRadius: BorderRadius.circular(22.5),
                                       border: Border.all(
-                                          color: Color.fromRGBO(
-                                              178, 183, 208, 0.5),
-                                          width: 1),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Stack(
+                                        color:
+                                            Color.fromRGBO(178, 183, 208, 0.5),
+                                        style: BorderStyle.solid,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    child: Row(
                                       children: [
-                                        Positioned(
-                                            child: YandexMap(
-                                          onMapTap: (coords) {
-                                            _setLocation(coords);
-                                            getAddressFromLatLng(coords);
-                                          },
-                                          onMapCreated: (YandexMapController
-                                              yandexMapController) async {
-                                            yandexMapController.move(
-                                                point: Point(
-                                                    latitude: _initialPosition
-                                                        .latitude,
-                                                    longitude: _initialPosition
-                                                        .longitude),
-                                                zoom: 11,
-                                                animation: const MapAnimation(
-                                                    smooth: true,
-                                                    duration: 1.0));
-                                            mapKitController =
-                                                yandexMapController;
-                                          },
-                                        )),
-                                        // Positioned(
-                                        //   child: GoogleMap(
-                                        //     markers: _markers.values.toSet(),
-                                        //     mapType: _currentMapType,
-                                        //     initialCameraPosition: CameraPosition(
-                                        //       target: _initialPosition,
-                                        //       zoom: 10,
-                                        //     ),
-                                        //     onTap: (coord) {
-                                        //       _setLocation(coord);
-                                        //       print(coord);
-                                        //     },
-                                        //     onMapCreated: _onMapCreated,
-                                        //     zoomGesturesEnabled: true,
-                                        //     onCameraMove: _onCameraMove,
-                                        //     myLocationEnabled: true,
-                                        //     compassEnabled: true,
-                                        //     myLocationButtonEnabled: false,
-                                        //     zoomControlsEnabled: false,
-                                        //   ),
-                                        // ),
-                                        Positioned(
-                                          bottom: 10,
-                                          right: 10,
-                                          child: FloatingActionButton(
-                                            backgroundColor:
-                                                Theme.of(context).primaryColor,
-                                            child: SvgPicture.asset(
-                                                "assets/img/locate.svg"),
-                                            onPressed: _getLocation,
+                                        Container(
+                                          width: (mediaQuery.size.width -
+                                                  mediaQuery.padding.left -
+                                                  mediaQuery.padding.right) *
+                                              0.74,
+                                          child: TextField(
+                                            maxLength: 40,
+                                            buildCounter: (BuildContext context,
+                                                    {int currentLength,
+                                                    int maxLength,
+                                                    bool isFocused}) =>
+                                                null,
+                                            onChanged: (value) {
+                                              var result = value;
+                                              if (result.length > 40) {
+                                                result =
+                                                    result.substring(0, 40);
+                                                extraController.text = result;
+                                                extraController.selection =
+                                                    TextSelection.fromPosition(
+                                                        TextPosition(
+                                                            offset:
+                                                                result.length));
+                                              }
+                                              changeTxt(result);
+                                            },
+                                            controller: extraController,
+                                            maxLines: 1,
+                                            decoration:
+                                                InputDecoration.collapsed(
+                                              hintText: "note_example"
+                                                  .tr()
+                                                  .toString(),
+                                              hintStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .display1
+                                                  .copyWith(
+                                                      fontSize: dWidth *
+                                                          globals.fontSize18),
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
-                                // Padding(
-                                //   padding:
-                                //       const EdgeInsets.symmetric(vertical: 15),
-                                //   child: Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.spaceBetween,
-                                //     children: [
-                                //       InkWell(
-                                //         onTap: () {
-                                //           setState(() {
-                                //             _value = !_value;
-                                //           });
-                                //           checkChange();
-                                //         },
-                                //         child: Container(
-                                //           decoration: BoxDecoration(
-                                //               border: Border.all(
-                                //                   width: 2,
-                                //                   style: BorderStyle.solid,
-                                //                   color: Theme.of(context)
-                                //                       .primaryColor),
-                                //               shape: BoxShape.circle,
-                                //               color: _value
-                                //                   ? Theme.of(context)
-                                //                       .primaryColor
-                                //                   : Colors.transparent),
-                                //           child: Padding(
-                                //             padding: const EdgeInsets.all(5.0),
-                                //             child: _value
-                                //                 ? Icon(
-                                //                     Icons.check,
-                                //                     size: 15.0,
-                                //                     color: Colors.white,
-                                //                   )
-                                //                 : Icon(
-                                //                     Icons
-                                //                         .check_box_outline_blank,
-                                //                     size: 15.0,
-                                //                     color: Colors.transparent,
-                                //                   ),
-                                //           ),
-                                //         ),
-                                //       ),
-                                //       Container(
-                                //         padding: EdgeInsets.only(left: 20),
-                                //         width: mediaQuery.size.width * 0.8,
-                                //         child: RichText(
-                                //           text: TextSpan(
-                                //             children: [
-                                //               TextSpan(
-                                //                 text: "problem_aggreement_start"
-                                //                     .tr()
-                                //                     .toString(),
-                                //                 style: TextStyle(
-                                //                   fontFamily: globals.font,
-                                //                   fontSize: 12,
-                                //                   color: Colors.black,
-                                //                   fontWeight: FontWeight.normal,
-                                //                 ),
-                                //               ),
-                                //               TextSpan(
-                                //                 recognizer:
-                                //                     TapGestureRecognizer()
-                                //                       ..onTap = () {
-                                //                         Navigator.pushNamed(
-                                //                             context,
-                                //                             RulePage.routeName);
-                                //                       },
-                                //                 text: "user_aggreement"
-                                //                     .tr()
-                                //                     .toString(),
-                                //                 style: TextStyle(
-                                //                   decoration:
-                                //                       TextDecoration.underline,
-                                //                   fontFamily: globals.font,
-                                //                   fontSize: 12,
-                                //                   color: Theme.of(context)
-                                //                       .primaryColor,
-                                //                   fontWeight: FontWeight.normal,
-                                //                 ),
-                                //               ),
-                                //               TextSpan(
-                                //                 text: "and".tr().toString(),
-                                //                 style: TextStyle(
-                                //                   fontFamily: globals.font,
-                                //                   fontSize: 12,
-                                //                   color: Colors.black,
-                                //                   fontWeight: FontWeight.normal,
-                                //                 ),
-                                //               ),
-                                //               TextSpan(
-                                //                 recognizer:
-                                //                     TapGestureRecognizer()
-                                //                       ..onTap = () {
-                                //                         Navigator.pushNamed(
-                                //                             context,
-                                //                             RulePage.routeName);
-                                //                       },
-                                //                 text: "moderator_rule"
-                                //                     .tr()
-                                //                     .toString(),
-                                //                 style: TextStyle(
-                                //                   decoration:
-                                //                       TextDecoration.underline,
-                                //                   fontFamily: globals.font,
-                                //                   fontSize: 12,
-                                //                   color: Theme.of(context)
-                                //                       .primaryColor,
-                                //                   fontWeight: FontWeight.normal,
-                                //                 ),
-                                //               ),
-                                //               TextSpan(
-                                //                 text: "problem_aggreement_end"
-                                //                     .tr()
-                                //                     .toString(),
-                                //                 style: TextStyle(
-                                //                   fontFamily: globals.font,
-                                //                   fontSize: 12,
-                                //                   color: Colors.black,
-                                //                   fontWeight: FontWeight.normal,
-                                //                 ),
-                                //               ),
-                                //             ],
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // )
-                              ],
+                                  Container(
+                                    width: double.infinity,
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
+                                      style: TextStyle(
+                                        color:
+                                            Color.fromRGBO(102, 103, 108, 0.6),
+                                        fontSize: dWidth * globals.fontSize10,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: globals.font,
+                                      ),
+                                    ),
+                                  ),
+                                  widget.categoryId != 18
+                                      ? Container(
+                                          margin: EdgeInsets.only(top: 20),
+                                          width: double.infinity,
+                                          height: 335,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Color.fromRGBO(
+                                                      178, 183, 208, 0.5),
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Stack(
+                                              children: [
+                                                Positioned(
+                                                    child: YandexMap(
+                                                  onMapTap: (coords) {
+                                                    _setLocation(coords);
+                                                    getAddressFromLatLng(
+                                                        coords);
+                                                  },
+                                                  onMapCreated: (YandexMapController
+                                                      yandexMapController) async {
+                                                    yandexMapController.move(
+                                                        point: Point(
+                                                            latitude:
+                                                                _initialPosition
+                                                                    .latitude,
+                                                            longitude:
+                                                                _initialPosition
+                                                                    .longitude),
+                                                        zoom: 11,
+                                                        animation:
+                                                            const MapAnimation(
+                                                                smooth: true,
+                                                                duration: 1.0));
+                                                    mapKitController =
+                                                        yandexMapController;
+                                                  },
+                                                )),
+                                                // Positioned(
+                                                //   child: GoogleMap(
+                                                //     markers: _markers.values.toSet(),
+                                                //     mapType: _currentMapType,
+                                                //     initialCameraPosition: CameraPosition(
+                                                //       target: _initialPosition,
+                                                //       zoom: 10,
+                                                //     ),
+                                                //     onTap: (coord) {
+                                                //       _setLocation(coord);
+                                                //       print(coord);
+                                                //     },
+                                                //     onMapCreated: _onMapCreated,
+                                                //     zoomGesturesEnabled: true,
+                                                //     onCameraMove: _onCameraMove,
+                                                //     myLocationEnabled: true,
+                                                //     compassEnabled: true,
+                                                //     myLocationButtonEnabled: false,
+                                                //     zoomControlsEnabled: false,
+                                                //   ),
+                                                // ),
+                                                Positioned(
+                                                  bottom: 10,
+                                                  right: 10,
+                                                  child: FloatingActionButton(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    child: SvgPicture.asset(
+                                                        "assets/img/locate.svg"),
+                                                    onPressed: _getLocation,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.symmetric(vertical: 15),
+                                  //   child: Row(
+                                  //     mainAxisAlignment:
+                                  //         MainAxisAlignment.spaceBetween,
+                                  //     children: [
+                                  //       InkWell(
+                                  //         onTap: () {
+                                  //           setState(() {
+                                  //             _value = !_value;
+                                  //           });
+                                  //           checkChange();
+                                  //         },
+                                  //         child: Container(
+                                  //           decoration: BoxDecoration(
+                                  //               border: Border.all(
+                                  //                   width: 2,
+                                  //                   style: BorderStyle.solid,
+                                  //                   color: Theme.of(context)
+                                  //                       .primaryColor),
+                                  //               shape: BoxShape.circle,
+                                  //               color: _value
+                                  //                   ? Theme.of(context)
+                                  //                       .primaryColor
+                                  //                   : Colors.transparent),
+                                  //           child: Padding(
+                                  //             padding: const EdgeInsets.all(5.0),
+                                  //             child: _value
+                                  //                 ? Icon(
+                                  //                     Icons.check,
+                                  //                     size: 15.0,
+                                  //                     color: Colors.white,
+                                  //                   )
+                                  //                 : Icon(
+                                  //                     Icons
+                                  //                         .check_box_outline_blank,
+                                  //                     size: 15.0,
+                                  //                     color: Colors.transparent,
+                                  //                   ),
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //       Container(
+                                  //         padding: EdgeInsets.only(left: 20),
+                                  //         width: mediaQuery.size.width * 0.8,
+                                  //         child: RichText(
+                                  //           text: TextSpan(
+                                  //             children: [
+                                  //               TextSpan(
+                                  //                 text: "problem_aggreement_start"
+                                  //                     .tr()
+                                  //                     .toString(),
+                                  //                 style: TextStyle(
+                                  //                   fontFamily: globals.font,
+                                  //                   fontSize: 12,
+                                  //                   color: Colors.black,
+                                  //                   fontWeight: FontWeight.normal,
+                                  //                 ),
+                                  //               ),
+                                  //               TextSpan(
+                                  //                 recognizer:
+                                  //                     TapGestureRecognizer()
+                                  //                       ..onTap = () {
+                                  //                         Navigator.pushNamed(
+                                  //                             context,
+                                  //                             RulePage.routeName);
+                                  //                       },
+                                  //                 text: "user_aggreement"
+                                  //                     .tr()
+                                  //                     .toString(),
+                                  //                 style: TextStyle(
+                                  //                   decoration:
+                                  //                       TextDecoration.underline,
+                                  //                   fontFamily: globals.font,
+                                  //                   fontSize: 12,
+                                  //                   color: Theme.of(context)
+                                  //                       .primaryColor,
+                                  //                   fontWeight: FontWeight.normal,
+                                  //                 ),
+                                  //               ),
+                                  //               TextSpan(
+                                  //                 text: "and".tr().toString(),
+                                  //                 style: TextStyle(
+                                  //                   fontFamily: globals.font,
+                                  //                   fontSize: 12,
+                                  //                   color: Colors.black,
+                                  //                   fontWeight: FontWeight.normal,
+                                  //                 ),
+                                  //               ),
+                                  //               TextSpan(
+                                  //                 recognizer:
+                                  //                     TapGestureRecognizer()
+                                  //                       ..onTap = () {
+                                  //                         Navigator.pushNamed(
+                                  //                             context,
+                                  //                             RulePage.routeName);
+                                  //                       },
+                                  //                 text: "moderator_rule"
+                                  //                     .tr()
+                                  //                     .toString(),
+                                  //                 style: TextStyle(
+                                  //                   decoration:
+                                  //                       TextDecoration.underline,
+                                  //                   fontFamily: globals.font,
+                                  //                   fontSize: 12,
+                                  //                   color: Theme.of(context)
+                                  //                       .primaryColor,
+                                  //                   fontWeight: FontWeight.normal,
+                                  //                 ),
+                                  //               ),
+                                  //               TextSpan(
+                                  //                 text: "problem_aggreement_end"
+                                  //                     .tr()
+                                  //                     .toString(),
+                                  //                 style: TextStyle(
+                                  //                   fontFamily: globals.font,
+                                  //                   fontSize: 12,
+                                  //                   color: Colors.black,
+                                  //                   fontWeight: FontWeight.normal,
+                                  //                 ),
+                                  //               ),
+                                  //             ],
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: Align(
-                        alignment: FractionalOffset.bottomCenter,
-                        child: !_valid
-                            ? DefaultButton(
-                                "continue".tr().toString(),
-                                () {},
-                                Color(0xffB2B7D0),
-                              )
-                            : DefaultButton(_btn_message, () {
-                                // if (!_sending)
-                                //   insertData().then((value) {});
-                                // else
-                                //   print('sending');
-                                Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ProblemFinish();
-                                    },
-                                  ),
-                                  ModalRoute.withName(MainPage.routeName),
-                                );
-                              },
-                                (!_sending)
-                                    ? Theme.of(context).primaryColor
-                                    : Color(0xffB2B7D0)),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: !_valid
+                              ? DefaultButton(
+                                  "continue".tr().toString(),
+                                  () {},
+                                  Color(0xffB2B7D0),
+                                )
+                              : DefaultButton(_btn_message, () {
+                                  // if (!_sending)
+                                  //   insertData().then((value) {});
+                                  // else
+                                  //   print('sending');
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                        return ProblemFinish();
+                                      },
+                                    ),
+                                    ModalRoute.withName(MainPage.routeName),
+                                  );
+                                },
+                                  (!_sending)
+                                      ? Theme.of(context).primaryColor
+                                      : Color(0xffB2B7D0)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

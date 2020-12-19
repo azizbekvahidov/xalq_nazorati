@@ -255,7 +255,9 @@ class _MainProfileState extends State<MainProfile> {
                                       return ProfilePage();
                                     },
                                   ),
-                                );
+                                ).then((value) {
+                                  setState(() {});
+                                });
                               } else {
                                 customDialog(context);
                               }

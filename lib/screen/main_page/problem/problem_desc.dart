@@ -68,133 +68,140 @@ class _ProblemDescState extends State<ProblemDesc> {
         title: "desc_provlem".tr().toString(),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          height: mediaQuery.size.height < 560
-              ? mediaQuery.size.height
-              : mediaQuery.size.height * 0.8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShadowBox(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MainText("problem_describe".tr().toString()),
-                            TextareaInput(
-                              hint: "problem_describe_hint".tr().toString(),
-                              textareaController: descController,
-                              notifyParent: checkChange,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                MainText("upload_photo".tr().toString()),
-                                InkWell(
-                                  onTap: () {
-                                    clearImages();
-                                  },
-                                  child: Text(
-                                    "clear".tr().toString(),
-                                    style: TextStyle(
-                                      color: Color(0xffB2B7D0),
-                                      fontSize: dWidth * globals.fontSize14,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: globals.font,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(top: 20, bottom: 15),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            // height: mediaQuery.size.height < 560
+            //     ? mediaQuery.size.height
+            //     : mediaQuery.size.height * 0.8,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShadowBox(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("problem_describe".tr().toString()),
+                              TextareaInput(
+                                hint: "problem_describe_hint".tr().toString(),
+                                textareaController: descController,
+                                notifyParent: checkChange,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  CustomDottedCircleContainer(
-                                      size, image1, "file1"),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                  ),
-                                  CustomDottedCircleContainer(
-                                      size, image2, "file2"),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                  ),
-                                  CustomDottedCircleContainer(
-                                      size, image3, "file3"),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                  ),
-                                  CustomDottedCircleContainer(
-                                      size, image4, "file4"),
+                                  MainText("upload_photo".tr().toString()),
+                                  InkWell(
+                                    onTap: () {
+                                      clearImages();
+                                    },
+                                    child: Text(
+                                      "clear".tr().toString(),
+                                      style: TextStyle(
+                                        color: Color(0xffB2B7D0),
+                                        fontSize: dWidth * globals.fontSize14,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: globals.font,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: SvgPicture.asset(
-                                      "assets/img/warning.svg"),
+                              Container(
+                                padding: EdgeInsets.only(top: 20, bottom: 15),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomDottedCircleContainer(
+                                        size, image1, "file1"),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                    ),
+                                    CustomDottedCircleContainer(
+                                        size, image2, "file2"),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                    ),
+                                    CustomDottedCircleContainer(
+                                        size, image3, "file3"),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                    ),
+                                    CustomDottedCircleContainer(
+                                        size, image4, "file4"),
+                                  ],
                                 ),
-                                Expanded(
-                                  flex: 9,
-                                  child: Text(
-                                    "upload_warning".tr().toString(),
-                                    style: TextStyle(
-                                        color: Color(0xffFF8F27),
-                                        fontSize: 12,
-                                        fontFamily: globals.font),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: SvgPicture.asset(
+                                        "assets/img/warning.svg"),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: !_value
-                              ? DefaultButton(
-                                  "add_problem".tr().toString(),
-                                  () {},
-                                  Color(0xffB2B7D0),
-                                )
-                              : DefaultButton("continue".tr().toString(), () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                    return ProblemLocate(descController.text,
-                                        widget.id, widget.categoryId);
-                                  }));
-                                }, Theme.of(context).primaryColor),
+                                  Expanded(
+                                    flex: 9,
+                                    child: Text(
+                                      "upload_warning".tr().toString(),
+                                      style: TextStyle(
+                                          color: Color(0xffFF8F27),
+                                          fontSize: 12,
+                                          fontFamily: globals.font),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: !_value
+                                ? DefaultButton(
+                                    "add_problem".tr().toString(),
+                                    () {},
+                                    Color(0xffB2B7D0),
+                                  )
+                                : DefaultButton("continue".tr().toString(), () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                      return ProblemLocate(descController.text,
+                                          widget.id, widget.categoryId);
+                                    }));
+                                  }, Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

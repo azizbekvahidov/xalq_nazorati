@@ -343,91 +343,96 @@ class _MainChatState extends State<MainChat> {
         title: "messages".tr().toString(),
         centerTitle: true,
       ),
-      body: Container(
-        height: mediaQuery.size.height * 0.9,
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 85,
-              child: Container(
-                width: mediaQuery.size.width,
-                child: generateList(context),
-              ),
-            ),
-            Positioned(
-              bottom: 30,
-              child: Container(
-                width: mediaQuery.size.width,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Container(
+          height: mediaQuery.size.height * 0.9,
+          child: Stack(
+            children: [
+              Positioned(
+                bottom: 85,
                 child: Container(
-                  height: 55,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: _textActive
-                          ? Color(0xff1ABC9C)
-                          : Color.fromRGBO(178, 183, 208, 0.5),
-                      width: 1,
+                  width: mediaQuery.size.width,
+                  child: generateList(context),
+                ),
+              ),
+              Positioned(
+                bottom: 30,
+                child: Container(
+                  width: mediaQuery.size.width,
+                  child: Container(
+                    height: 55,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _textActive
+                            ? Color(0xff1ABC9C)
+                            : Color.fromRGBO(178, 183, 208, 0.5),
+                        width: 1,
+                      ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(27.5),
                     ),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(27.5),
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          pickedFile();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: SvgPicture.asset(
-                            "assets/img/file_icon.svg",
-                            color: _textActive
-                                ? Color(0xff000000)
-                                : Color.fromRGBO(49, 59, 108, 0.4),
-                          ),
-                        ),
-                      ),
-                      Container(
-                          width: (mediaQuery.size.width - 40) * 0.60,
-                          child: TextField(
-                            onSubmitted: (value) {
-                              sendMessage();
-                            },
-                            onChanged: (value) {
-                              changeText(value);
-                            },
-                            controller: messageController,
-                            decoration: InputDecoration.collapsed(
-                              hintText: "enter_message".tr().toString(),
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .display1
-                                  .copyWith(
-                                      fontSize: mediaQuery.size.width *
-                                          globals.fontSize18),
+                    margin: EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            pickedFile();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: SvgPicture.asset(
+                              "assets/img/file_icon.svg",
+                              color: _textActive
+                                  ? Color(0xff000000)
+                                  : Color.fromRGBO(49, 59, 108, 0.4),
                             ),
-                          )),
-                      InkWell(
-                        onTap: () {
-                          sendMessage();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(right: 20),
-                          child: SvgPicture.asset(
-                            "assets/img/send_icon.svg",
-                            color: _textActive
-                                ? Color.fromRGBO(26, 188, 156, 1)
-                                : Color.fromRGBO(49, 59, 108, 0.4),
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                            width: (mediaQuery.size.width - 40) * 0.60,
+                            child: TextField(
+                              onSubmitted: (value) {
+                                sendMessage();
+                              },
+                              onChanged: (value) {
+                                changeText(value);
+                              },
+                              controller: messageController,
+                              decoration: InputDecoration.collapsed(
+                                hintText: "enter_message".tr().toString(),
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .display1
+                                    .copyWith(
+                                        fontSize: mediaQuery.size.width *
+                                            globals.fontSize18),
+                              ),
+                            )),
+                        InkWell(
+                          onTap: () {
+                            sendMessage();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(right: 20),
+                            child: SvgPicture.asset(
+                              "assets/img/send_icon.svg",
+                              color: _textActive
+                                  ? Color.fromRGBO(26, 188, 156, 1)
+                                  : Color.fromRGBO(49, 59, 108, 0.4),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

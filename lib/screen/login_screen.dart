@@ -93,107 +93,114 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.transparent,
-                height: dHeight * 0.35, //mediaQuery.size.height,
-                width: double.infinity,
-                child: Center(
-                  child: SvgPicture.asset("assets/img/FrameW.svg"),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: dHeight * 0.65,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.transparent,
+                  height: dHeight * 0.35, //mediaQuery.size.height,
+                  width: double.infinity,
+                  child: Center(
+                    child: SvgPicture.asset("assets/img/FrameW.svg"),
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(25),
-                  child: Stack(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MainText("tel_number_title".tr().toString()),
-                          PhoneInput(phoneController),
-                          MainText("pass_title".tr().toString()),
-                          PassInput(
-                              "pass_hint".tr().toString(), passController),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushNamed(ForgotPassPhone.routeName);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Text(
-                                "forgot_pass".tr().toString(),
-                                style: TextStyle(
-                                    fontFamily: globals.font,
-                                    fontSize: 16,
-                                    color: Color(0xff858589)),
+                Container(
+                  width: double.infinity,
+                  height: dHeight * 0.65,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(25),
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MainText("tel_number_title".tr().toString()),
+                            PhoneInput(phoneController),
+                            MainText("pass_title".tr().toString()),
+                            PassInput(
+                                "pass_hint".tr().toString(), passController),
+                            InkWell(
+                              onTap: () {
+                                Navigator.of(context)
+                                    .pushNamed(ForgotPassPhone.routeName);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: Text(
+                                  "forgot_pass".tr().toString(),
+                                  style: TextStyle(
+                                      fontFamily: globals.font,
+                                      fontSize: 16,
+                                      color: Color(0xff858589)),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                DefaultButton("log_in".tr().toString(), () {
-                                  getLogin();
-                                }, Theme.of(context).primaryColor),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "accaunt_question".tr().toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWith * globals.fontSize14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pushNamed(
-                                            RegisterPhoneScreen.routeName);
-                                      },
-                                      child: Text(
-                                        "sign_ups".tr().toString(),
+                          ],
+                        ),
+                        Positioned(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  DefaultButton("log_in".tr().toString(), () {
+                                    getLogin();
+                                  }, Theme.of(context).primaryColor),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "accaunt_question".tr().toString(),
                                         style: TextStyle(
                                           fontFamily: globals.font,
                                           fontSize: dWith * globals.fontSize14,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ],
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                              RegisterPhoneScreen.routeName);
+                                        },
+                                        child: Text(
+                                          "sign_ups".tr().toString(),
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            fontSize:
+                                                dWith * globals.fontSize14,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

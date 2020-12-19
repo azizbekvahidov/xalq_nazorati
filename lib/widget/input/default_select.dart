@@ -36,7 +36,7 @@ class _DefaultSelectState extends State<DefaultSelect> {
             width: (mediaQuery.size.width -
                     mediaQuery.padding.left -
                     mediaQuery.padding.right) *
-                (mediaQuery.size.width <= 360 ? 0.74 : 0.79),
+                (mediaQuery.size.width <= 360 ? 0.74 : 0.78),
             child:
                 // Container(
                 //   height: 40,

@@ -30,9 +30,22 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
 
   final codeController = TextEditingController();
 
+  ScrollController scrollController;
+
   @override
   void initState() {
+    scrollController = ScrollController();
+    scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  _scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      setState(() {
+        print("reach the bottom");
+      });
+    }
   }
 
   Future changeProfile() async {
@@ -78,10 +91,25 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
     }
   }
 
-  setAddress(var addr) {
-    address =
-        "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
-    _value = true;
+  setAddress(var addr, flatController, var isChange) {
+    if (addr != null) {
+      address =
+          "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
+      if (flatController.text != "") {
+        address += ", ${flatController.text}";
+      }
+    }
+    print(isChange);
+
+    if (isChange) {
+      setState(() {
+        _value = true;
+      });
+    } else {
+      setState(() {
+        _value = false;
+      });
+    }
 
     // latlang = Point(
     //     latitude: double.tryParse(addr['latitude']),
@@ -102,68 +130,77 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
       appBar: appbar,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ShadowBox(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AddressSearch(
-                              setAddress: setAddress,
-                            ),
-                            // MainText("email_title".tr().toString()),
-                            // DefaultInput(
-                            //   hint: "email_hint".tr().toString(),
-                            //   textController: emailController,
-                            //   notifyParent: checkChange,
-                            // ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.all(38),
-                  child: Stack(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          controller: scrollController,
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child: !_value
-                              ? DefaultButton(
-                                  "change".tr().toString(),
-                                  () {},
-                                  Color(0xffB2B7D0),
-                                )
-                              : DefaultButton("change".tr().toString(), () {
-                                  changeProfile();
-                                  // setState(() {
-                                  //   _value = !_value;
-                                  // });
-                                  // Navigator.of(context)
-                                  //     .pushNamed(PasRecognizedScreen.routeName);
-                                }, Theme.of(context).primaryColor),
+                      ShadowBox(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AddressSearch(
+                                setAddress: setAddress,
+                                isFlat: true,
+                                ischange: _value,
+                              ),
+
+                              // MainText("email_title".tr().toString()),
+                              // DefaultInput(
+                              //   hint: "email_hint".tr().toString(),
+                              //   textController: emailController,
+                              //   notifyParent: checkChange,
+                              // ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(38),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: !_value
+                                ? DefaultButton(
+                                    "change".tr().toString(),
+                                    () {},
+                                    Color(0xffB2B7D0),
+                                  )
+                                : DefaultButton("change".tr().toString(), () {
+                                    changeProfile();
+                                    // setState(() {
+                                    //   _value = !_value;
+                                    // });
+                                    // Navigator.of(context)
+                                    //     .pushNamed(PasRecognizedScreen.routeName);
+                                  }, Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

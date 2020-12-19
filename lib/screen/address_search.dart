@@ -12,14 +12,25 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 class AddressSearch extends StatefulWidget {
   Function setAddress;
   bool ischange;
-  AddressSearch({this.setAddress, this.ischange, Key key}) : super(key: key);
+  bool isFlat = false;
+
+  AddressSearch({this.setAddress, this.ischange, this.isFlat, Key key})
+      : super(key: key);
 
   @override
   _AddressSearchState createState() => _AddressSearchState();
 }
 
 class _AddressSearchState extends State<AddressSearch> {
-  List<String> placeType = ["street", "quarter", "massif", "all_parametr"];
+  String placeType = "all";
+  bool _all_type = true;
+  bool _street_type = false;
+  bool _quarter_type = false;
+  bool _massiv_type = false;
+
+  bool isSelectDistrict = true;
+  bool isSelectStreet = true;
+  bool isSelectHouse = true;
 
   // List<DropdownMenuItem<String>> _district;
   String _selectedType;
@@ -31,15 +42,8 @@ class _AddressSearchState extends State<AddressSearch> {
   TextEditingController searchAddressController = TextEditingController();
   TextEditingController houseController = TextEditingController();
   TextEditingController mahallaController = TextEditingController();
+  TextEditingController flatController = TextEditingController();
 
-  //  = menuItems
-  //     .map(
-  //       (String val) => DropdownMenuItem<String>(
-  //         child: Text(val),
-  //         value: val,
-  //       ),
-  //     )
-  //     .toList();
   @override
   void initState() {
     super.initState();
@@ -71,15 +75,26 @@ class _AddressSearchState extends State<AddressSearch> {
         "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002",
         "Accept-Language": globals.lang == "ru" ? "ru" : "uz"
       };
-      var url =
-          'https://data.xalqnazorati.uz/api/v1/addresses/streets?q=$value&district_id=$_selectedDistrict';
-      if (_selectedType != "all_parametr") {
-        url += "&type=$_selectedType";
-      }
-      var r1 = await Requests.get(url, headers: headers);
-      if (r1.statusCode == 200) {
-        var json = r1.json();
-        return json["data"];
+      var url;
+      if (_selectedDistrict == null) {
+        url =
+            'https://data.xalqnazorati.uz/api/v1/addresses/suggestions?q=$value';
+        var r1 = await Requests.get(url, headers: headers);
+        if (r1.statusCode == 200) {
+          var json = r1.json();
+          return json["data"];
+        }
+      } else {
+        url =
+            'https://data.xalqnazorati.uz/api/v1/addresses/streets?q=$value&district_id=$_selectedDistrict';
+        if (!_all_type) {
+          url += "&type=$placeType";
+        }
+        var r1 = await Requests.get(url, headers: headers);
+        if (r1.statusCode == 200) {
+          var json = r1.json();
+          return json["data"];
+        }
       }
     } catch (e) {
       print(e);
@@ -123,13 +138,13 @@ class _AddressSearchState extends State<AddressSearch> {
     return res;
   }
 
-  validate() {
-    // if (_selectedDistrict != "" && _selectedType != "" && searchAddressController.text != "" && houseController.text != "") {
+  validate(var suggest) {
     if (mahallaController.text != "") {
       setState(() {
         widget.ischange = true;
       });
     }
+    widget.setAddress(suggest, flatController, widget.ischange);
   }
 
   @override
@@ -149,6 +164,14 @@ class _AddressSearchState extends State<AddressSearch> {
                 onChanged: (val) {
                   setState(() {
                     _selectedDistrict = val;
+                    setState(() {
+                      _selectedStreet = "";
+                      searchAddressController.text = "";
+                      houseController.text = "";
+                      mahallaController.text = "";
+                      widget.ischange = false;
+                    });
+                    validate(null);
                   });
                 },
                 hint: Text(
@@ -162,33 +185,192 @@ class _AddressSearchState extends State<AddressSearch> {
             ),
           ),
           MainText("placeType".tr().toString()),
-          DefaultSelect(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                isExpanded: true,
-                items: <String>["street", "quarter", "massif", "all"]
-                    .map<DropdownMenuItem<String>>((String e) {
-                  return DropdownMenuItem<String>(
-                    child: Text(e.tr().toString()),
-                    value: e,
-                  );
-                }).toList(),
-                onChanged: (val) {
-                  setState(() {
-                    _selectedType = val;
-                  });
-                },
-                hint: Text(
-                  "select_placeType".tr().toString(),
-                  style: TextStyle(
-                      fontFamily: globals.font,
-                      fontSize: dWidth * globals.fontSize18),
+          Padding(padding: EdgeInsets.only(top: 10)),
+          Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _all_type = true;
+                          _street_type = false;
+                          _quarter_type = false;
+                          _massiv_type = false;
+                          placeType = "all";
+
+                          _selectedStreet = "";
+                          searchAddressController.text = "";
+                          houseController.text = "";
+                          mahallaController.text = "";
+                          widget.ischange = false;
+                        });
+                        validate(null);
+                      },
+                      child: Container(
+                        width: dWidth / 2 - 20,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color:
+                              _all_type ? Color(0xff007BEC) : Color(0xffF5F6F9),
+                          border: Border.all(
+                              width: 1,
+                              color: Color.fromRGBO(178, 183, 208, 0.5)),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "all".tr().toString(),
+                            style: TextStyle(
+                                color: _all_type ? Colors.white : Colors.black,
+                                fontFamily: globals.font,
+                                fontWeight: FontWeight.w500,
+                                fontSize: dWidth * globals.fontSize16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10)),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _all_type = false;
+                          _street_type = true;
+                          _quarter_type = false;
+                          _massiv_type = false;
+                          placeType = "street";
+
+                          _selectedStreet = "";
+                          searchAddressController.text = "";
+                          houseController.text = "";
+                          mahallaController.text = "";
+                          widget.ischange = false;
+                        });
+                        validate(null);
+                      },
+                      child: Container(
+                        width: dWidth / 2 - 32,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: _street_type
+                              ? Color(0xff007BEC)
+                              : Color(0xffF5F6F9),
+                          border: Border.all(
+                              width: 1,
+                              color: Color.fromRGBO(178, 183, 208, 0.5)),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "street".tr().toString(),
+                            style: TextStyle(
+                                color:
+                                    _street_type ? Colors.white : Colors.black,
+                                fontFamily: globals.font,
+                                fontWeight: FontWeight.w500,
+                                fontSize: dWidth * globals.fontSize16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                value: _selectedType,
-              ),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _all_type = false;
+                          _street_type = false;
+                          _quarter_type = true;
+                          _massiv_type = false;
+                          placeType = "quarter";
+
+                          _selectedStreet = "";
+                          searchAddressController.text = "";
+                          houseController.text = "";
+                          mahallaController.text = "";
+                          widget.ischange = false;
+                        });
+                        validate(null);
+                      },
+                      child: Container(
+                        width: dWidth / 2 - 20,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: _quarter_type
+                              ? Color(0xff007BEC)
+                              : Color(0xffF5F6F9),
+                          border: Border.all(
+                              width: 1,
+                              color: Color.fromRGBO(178, 183, 208, 0.5)),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "quarter".tr().toString(),
+                            style: TextStyle(
+                                color:
+                                    _quarter_type ? Colors.white : Colors.black,
+                                fontFamily: globals.font,
+                                fontWeight: FontWeight.w500,
+                                fontSize: dWidth * globals.fontSize16),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(left: 10)),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _all_type = false;
+                          _street_type = false;
+                          _quarter_type = false;
+                          _massiv_type = true;
+                          placeType = "massif";
+
+                          _selectedStreet = "";
+                          searchAddressController.text = "";
+                          houseController.text = "";
+                          mahallaController.text = "";
+                          widget.ischange = false;
+                        });
+                        validate(null);
+                      },
+                      child: Container(
+                        width: dWidth / 2 - 32,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          color: _massiv_type
+                              ? Color(0xff007BEC)
+                              : Color(0xffF5F6F9),
+                          border: Border.all(
+                              width: 1,
+                              color: Color.fromRGBO(178, 183, 208, 0.5)),
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "massif".tr().toString(),
+                            style: TextStyle(
+                                color:
+                                    _massiv_type ? Colors.white : Colors.black,
+                                fontFamily: globals.font,
+                                fontWeight: FontWeight.w500,
+                                fontSize: dWidth * globals.fontSize16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
-          MainText("streets".tr().toString()),
+
+          Padding(padding: EdgeInsets.only(top: 10)),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             margin: EdgeInsets.symmetric(vertical: 10),
@@ -228,18 +410,67 @@ class _AddressSearchState extends State<AddressSearch> {
                       },
                       itemBuilder: (context, suggestion) {
                         return ListTile(
-                          title: Text(suggestion["full_name"]),
+                          title: _selectedDistrict == null
+                              ? Text(suggestion["address"])
+                              : Text(suggestion["full_name"]),
                         );
                       },
                       onSuggestionSelected: (suggestion) {
-                        _selectedStreet = suggestion["id"].toString();
-                        searchAddressController.text = suggestion["full_name"];
+                        if (_selectedDistrict == null) {
+                          print(suggestion);
+                          setState(() {
+                            _selectedDistrict =
+                                suggestion["district"]["id"].toString();
+                            // _selectedStreet = suggestion["district"]["name"];
+                            searchAddressController.text =
+                                suggestion["street"]["name"];
+                            houseController.text =
+                                suggestion["house"]["number"];
+                            mahallaController.text =
+                                suggestion["community"]["name"];
+                          });
+                          validate(suggestion);
+                        } else {
+                          _selectedStreet = suggestion["id"].toString();
+                          searchAddressController.text =
+                              suggestion["full_name"];
+
+                          setState(() {
+                            houseController.text = "";
+                            mahallaController.text = "";
+                            widget.ischange = false;
+                          });
+                          validate(null);
+                        }
+                      },
+                      noItemsFoundBuilder: (context) {
+                        return Text("not_found".tr().toString());
                       },
                     )),
               ],
             ),
           ),
           MainText("houses".tr().toString()),
+          // DefaultSelect(
+          //   child: DropdownButtonHideUnderline(
+          //     child: DropdownButton(
+          //       isExpanded: true,
+          //       items: _district,
+          //       onChanged: (val) {
+          //         setState(() {
+          //           _selectedDistrict = val;
+          //         });
+          //       },
+          //       hint: Text(
+          //         "select_district".tr().toString(),
+          //         style: TextStyle(
+          //             fontFamily: globals.font,
+          //             fontSize: dWidth * globals.fontSize18),
+          //       ),
+          //       value: _selectedDistrict,
+          //     ),
+          //   ),
+          // ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             margin: EdgeInsets.symmetric(vertical: 10),
@@ -283,16 +514,26 @@ class _AddressSearchState extends State<AddressSearch> {
                         );
                       },
                       onSuggestionSelected: (suggestion) {
-                        widget.setAddress(suggestion);
                         mahallaController.text =
                             suggestion["community"]["name"];
                         houseController.text = suggestion["number"];
-                        validate();
+                        validate(suggestion);
+                      },
+                      noItemsFoundBuilder: (context) {
+                        return Text("not_found".tr().toString());
                       },
                     )),
               ],
             ),
           ),
+          widget.isFlat ? MainText("flat".tr().toString()) : Container(),
+          widget.isFlat
+              ? DefaultInput(
+                  hint: "enter_flat".tr().toString(),
+                  inputType: TextInputType.number,
+                  textController: flatController,
+                )
+              : Container(),
           MainText("mahalla".tr().toString()),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

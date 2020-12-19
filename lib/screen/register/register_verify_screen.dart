@@ -99,40 +99,39 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
 
   bool isSend = false;
   void verify() async {
-    String code = codeController.text;
+    // String code = codeController.text;
 
-    if (!isSend && code != "") {
-      try {
-        String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
-        Map map = {"code": int.parse(code)};
-        // String url = '${globals.api_link}/users/get-phone';
-        var r1 = await Requests.post(url,
-            body: map, verify: false, persistCookies: true);
+    // if (!isSend && code != "") {
+    //   try {
+    //     String url =
+    //         '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
+    //     Map map = {"code": int.parse(code)};
+    //     // String url = '${globals.api_link}/users/get-phone';
+    //     var r1 = await Requests.post(url,
+    //         body: map, verify: false, persistCookies: true);
 
-        if (r1.statusCode == 200) isSend = true;
-        if (isSend) {
-          globals.tempPhone = widget.phone;
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              settings:
-                  const RouteSettings(name: PassRecognizeScreen.routeName),
-              builder: (context) => PassRecognizeScreen()));
-        } else {
-          dynamic json = r1.json();
-          print(json["detail"]);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
+    //     if (r1.statusCode == 200) isSend = true;
+    //     if (isSend) {
+    //       globals.tempPhone = widget.phone;
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        settings: const RouteSettings(name: PassRecognizeScreen.routeName),
+        builder: (context) => PassRecognizeScreen()));
+    //   } else {
+    //     dynamic json = r1.json();
+    //     print(json["detail"]);
+    //     Fluttertoast.showToast(
+    //         msg: json['detail'],
+    //         toastLength: Toast.LENGTH_SHORT,
+    //         gravity: ToastGravity.BOTTOM,
+    //         timeInSecForIosWeb: 2,
+    //         backgroundColor: Colors.grey,
+    //         textColor: Colors.white,
+    //         fontSize: 15.0);
+    //   }
+    // } catch (e) {
+    //   print(e);
+    // }
+    // }
   }
 
   @override
@@ -159,153 +158,54 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
       child: Scaffold(
         appBar: appBar,
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                color: Colors.transparent,
-                height: dHeight * 0.3 -
-                    appBar.preferredSize.height, //mediaQuery.size.height,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          padding: EdgeInsets.only(bottom: 30, left: 25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "check".tr().toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: dWith * globals.fontSize26,
-                                  fontFamily: globals.font,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                              ),
-                              Text(
-                                "${"sended_code_desc_start".tr().toString()}${widget.phoneView}${"sended_code_desc_end".tr().toString()}",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: dWith * globals.fontSize18,
-                                  fontFamily: globals.font,
-                                  fontFeatures: [
-                                    FontFeature.enable("pnum"),
-                                    FontFeature.enable("lnum")
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: mediaQuery.size.height - dHeight * 0.3,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(25),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.transparent,
+                  height: dHeight * 0.3 -
+                      appBar.preferredSize.height, //mediaQuery.size.height,
+                  width: double.infinity,
                   child: Stack(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MainText("check_code_title".tr().toString()),
-                          DefaultInput(
-                            hint: "check_code_hint".tr().toString(),
-                            textController: codeController,
-                            notifyParent: () {},
-                            inputType: TextInputType.number,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.83,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      _showTime,
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWith * globals.fontSize18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
                       Positioned(
                         child: Align(
-                          alignment: FractionalOffset.bottomCenter,
+                          alignment: Alignment.bottomLeft,
                           child: Container(
-                            margin: EdgeInsets.only(bottom: 30),
+                            padding: EdgeInsets.only(bottom: 30, left: 25),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                DefaultButton(
-                                  "continue".tr().toString(),
-                                  () {
-                                    verify();
-                                  },
-                                  Theme.of(context).primaryColor,
+                                Text(
+                                  "check".tr().toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: dWith * globals.fontSize26,
+                                    fontFamily: globals.font,
+                                  ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "dont_get_code".tr().toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWith * globals.fontSize14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () {
-                                        resendCode();
-                                      },
-                                      child: Text(
-                                        "resend".tr().toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWith * globals.fontSize14,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                ),
+                                Text(
+                                  "${"sended_code_desc_start".tr().toString()}${widget.phoneView}${"sended_code_desc_end".tr().toString()}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: dWith * globals.fontSize18,
+                                    fontFamily: globals.font,
+                                    fontFeatures: [
+                                      FontFeature.enable("pnum"),
+                                      FontFeature.enable("lnum")
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -315,8 +215,114 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                     ],
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: double.infinity,
+                  height: mediaQuery.size.height - dHeight * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(25),
+                    child: Stack(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MainText("check_code_title".tr().toString()),
+                            DefaultInput(
+                              hint: "check_code_hint".tr().toString(),
+                              textController: codeController,
+                              notifyParent: () {},
+                              inputType: TextInputType.number,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  width: mediaQuery.size.width * 0.83,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        _showTime,
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Positioned(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 30),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  DefaultButton(
+                                    "continue".tr().toString(),
+                                    () {
+                                      verify();
+                                    },
+                                    Theme.of(context).primaryColor,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "dont_get_code".tr().toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize14,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      FlatButton(
+                                        onPressed: () {
+                                          resendCode();
+                                        },
+                                        child: Text(
+                                          "resend".tr().toString(),
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            fontSize:
+                                                dWith * globals.fontSize14,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

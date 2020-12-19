@@ -80,66 +80,73 @@ class GetLoginDialog extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 35),
-            child: FlatButton(
-              child: Container(
-                  width: width,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Theme.of(context).primaryColor,
-                    border: Border.all(
-                      style: BorderStyle.solid,
-                      color: Theme.of(context).primaryColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "log_in".tr().toString(),
-                      style: TextStyle(
-                          fontSize: width * globals.fontSize16,
-                          color: Colors.white),
-                    ),
-                  )),
-              onPressed: () {
-                globals.routeName = routeName;
-                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-                // Navigator.pop(context, true);
-              },
-            ),
+          Column(
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 35),
+                child: FlatButton(
+                  child: Container(
+                      width: width,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Theme.of(context).primaryColor,
+                        border: Border.all(
+                          style: BorderStyle.solid,
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "log_in".tr().toString(),
+                          style: TextStyle(
+                              fontSize: width * globals.fontSize16,
+                              color: Colors.white),
+                        ),
+                      )),
+                  onPressed: () {
+                    globals.routeName = routeName;
+                    Navigator.pushReplacementNamed(
+                        context, LoginScreen.routeName);
+                    // Navigator.pop(context, true);
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 35),
+                child: FlatButton(
+                  child: Container(
+                      width: width,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        border: Border.all(
+                          style: BorderStyle.solid,
+                          color: Theme.of(context).primaryColor,
+                          width: 1,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "sign_up".tr().toString(),
+                          style: TextStyle(
+                              fontSize: width * globals.fontSize16,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                      )),
+                  onPressed: () {
+                    globals.routeName = routeName;
+                    Navigator.pushReplacementNamed(
+                        context, RegisterPhoneScreen.routeName);
+                    // Navigator.pop(context, true);
+                  },
+                ),
+              ),
+            ],
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 35),
-            child: FlatButton(
-              child: Container(
-                  width: width,
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(
-                      style: BorderStyle.solid,
-                      color: Theme.of(context).primaryColor,
-                      width: 1,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "sign_up".tr().toString(),
-                      style: TextStyle(
-                          fontSize: width * globals.fontSize16,
-                          color: Theme.of(context).primaryColor),
-                    ),
-                  )),
-              onPressed: () {
-                globals.routeName = routeName;
-                Navigator.pushReplacementNamed(
-                    context, RegisterPhoneScreen.routeName);
-                // Navigator.pop(context, true);
-              },
-            ),
-          )
         ],
       ),
     );

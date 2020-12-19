@@ -66,6 +66,8 @@ class ProfilePage extends StatelessWidget {
                               .replaceAll("\n", " ")
                               .replaceAll("\t", " ")
                               .replaceAll("\r", " ")),
+                      CardList("tel_number_hint".tr().toString(),
+                          "${globals.userData['phone']}"),
                     ],
                   ),
                 ),

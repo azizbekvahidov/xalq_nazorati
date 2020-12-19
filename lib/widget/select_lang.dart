@@ -36,7 +36,7 @@ class _SelectLangState extends State<SelectLang> {
           topRight: Radius.circular(15),
         ),
       ),
-      height: dHeight <= 800 ? dHeight * 0.6 : dHeight * 0.4,
+      height: 290,
       padding: EdgeInsets.symmetric(vertical: dHeight * 0.025),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

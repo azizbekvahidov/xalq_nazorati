@@ -32,7 +32,6 @@ class _RegisterPersonalDataScreenState
   final addressController = TextEditingController();
   final passController = TextEditingController();
   final repassController = TextEditingController();
-  final flatController = TextEditingController();
   bool isLogin = false;
   bool _value = false;
   String address = "";
@@ -141,7 +140,7 @@ class _RegisterPersonalDataScreenState
     prefs.setString('userToken', token);
   }
 
-  setAddress(var addr) {
+  setAddress(var addr, flatController, isChanged) {
     address =
         "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
     if (flatController.text != "") {
@@ -163,217 +162,219 @@ class _RegisterPersonalDataScreenState
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
       appBar: appbar,
-      body: Container(
-        constraints: BoxConstraints.expand(),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            // height: mediaQuery.size.height < 560
-            //     ? mediaQuery.size.height
-            //     : mediaQuery.size.height * 0.8,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ShadowBox(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AddressSearch(
-                          setAddress: setAddress,
-                        ),
-                        MainText("flat".tr().toString()),
-                        DefaultInput(
-                          hint: "enter_flat".tr().toString(),
-                          inputType: TextInputType.number,
-                          textController: flatController,
-                        ),
-                        // Container(
-                        //   padding: EdgeInsets.symmetric(
-                        //       vertical: 10, horizontal: 20),
-                        //   margin: EdgeInsets.symmetric(vertical: 10),
-                        //   width: double.infinity,
-                        //   height: 45,
-                        //   decoration: BoxDecoration(
-                        //     color: Color(0xffF5F6F9),
-                        //     borderRadius: BorderRadius.circular(22.5),
-                        //     border: Border.all(
-                        //       color: Color.fromRGBO(178, 183, 208, 0.5),
-                        //       style: BorderStyle.solid,
-                        //       width: 0.5,
-                        //     ),
-                        //   ),
-                        //   child: Row(
-                        //     children: [
-                        //       Container(
-                        //           width: (mediaQuery.size.width -
-                        //                   mediaQuery.padding.left -
-                        //                   mediaQuery.padding.right) *
-                        //               0.74,
-                        //           child: TypeAheadField(
-                        //             textFieldConfiguration:
-                        //                 TextFieldConfiguration(
-                        //               controller: addressController,
-                        //               autofocus: false,
-                        //               decoration: InputDecoration.collapsed(
-                        //                 hintText:
-                        //                     "address_hint".tr().toString(),
-                        //                 hintStyle: Theme.of(context)
-                        //                     .textTheme
-                        //                     .display1,
-                        //               ),
-                        //             ),
-                        //             hideOnEmpty: true,
-                        //             suggestionsCallback: (pattern) async {
-                        //               return await changeAddress(pattern);
-                        //             },
-                        //             itemBuilder: (context, suggestion) {
-                        //               return ListTile(
-                        //                 title: Text(suggestion.address),
-                        //               );
-                        //             },
-                        //             onSuggestionSelected: (suggestion) {
-                        //               print(suggestion.address);
-                        //               addressController.text =
-                        //                   suggestion.address;
-                        //             },
-                        //           )),
-                        //     ],
-                        //   ),
-                        // ),
-                        MainText("email_title".tr().toString()),
-                        DefaultInput(
-                          hint: "email_hint".tr().toString(),
-                          textController: emailController,
-                          notifyParent: () {},
-                          inputType: TextInputType.emailAddress,
-                        ),
-                        MainText("pass_title".tr().toString()),
-                        PassInput("come_up_pass_hint".tr().toString(),
-                            passController),
-                        MainText("confirm_pass_title".tr().toString()),
-                        PassInput("confirm_pass_hint".tr().toString(),
-                            repassController),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _value = !_value;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2,
-                                        style: BorderStyle.solid,
-                                        color: Theme.of(context).primaryColor),
-                                    shape: BoxShape.circle,
-                                    color: _value
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.transparent),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: _value
-                                      ? Icon(
-                                          Icons.check,
-                                          size: 15.0,
-                                          color: Colors.white,
-                                        )
-                                      : Icon(
-                                          Icons.check_box_outline_blank,
-                                          size: 15.0,
-                                          color: Colors.transparent,
-                                        ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(left: 20),
-                              width: mediaQuery.size.width * 0.76,
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "agree_agreements_start"
-                                          .tr()
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWith * globals.fontSize12,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.pushNamed(
-                                              context, RulePage.routeName);
-                                        },
-                                      text: "agreement".tr().toString(),
-                                      style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        fontFamily: globals.font,
-                                        fontSize: dWith * globals.fontSize12,
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "agree_agreements_end"
-                                          .tr()
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: !_value
-                                ? DefaultButton(
-                                    "continue".tr().toString(),
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : DefaultButton("continue".tr().toString(), () {
-                                    sendData().then((value) {
-                                      setState(() {
-                                        _value = !_value;
-                                      });
-                                    });
-                                  }, Theme.of(context).primaryColor),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Container(
+          constraints: BoxConstraints.expand(),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              // height: mediaQuery.size.height < 560
+              //     ? mediaQuery.size.height
+              //     : mediaQuery.size.height * 0.8,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ShadowBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AddressSearch(
+                            setAddress: setAddress,
+                            isFlat: true,
                           ),
-                        ),
-                      ],
+                          // Container(
+                          //   padding: EdgeInsets.symmetric(
+                          //       vertical: 10, horizontal: 20),
+                          //   margin: EdgeInsets.symmetric(vertical: 10),
+                          //   width: double.infinity,
+                          //   height: 45,
+                          //   decoration: BoxDecoration(
+                          //     color: Color(0xffF5F6F9),
+                          //     borderRadius: BorderRadius.circular(22.5),
+                          //     border: Border.all(
+                          //       color: Color.fromRGBO(178, 183, 208, 0.5),
+                          //       style: BorderStyle.solid,
+                          //       width: 0.5,
+                          //     ),
+                          //   ),
+                          //   child: Row(
+                          //     children: [
+                          //       Container(
+                          //           width: (mediaQuery.size.width -
+                          //                   mediaQuery.padding.left -
+                          //                   mediaQuery.padding.right) *
+                          //               0.74,
+                          //           child: TypeAheadField(
+                          //             textFieldConfiguration:
+                          //                 TextFieldConfiguration(
+                          //               controller: addressController,
+                          //               autofocus: false,
+                          //               decoration: InputDecoration.collapsed(
+                          //                 hintText:
+                          //                     "address_hint".tr().toString(),
+                          //                 hintStyle: Theme.of(context)
+                          //                     .textTheme
+                          //                     .display1,
+                          //               ),
+                          //             ),
+                          //             hideOnEmpty: true,
+                          //             suggestionsCallback: (pattern) async {
+                          //               return await changeAddress(pattern);
+                          //             },
+                          //             itemBuilder: (context, suggestion) {
+                          //               return ListTile(
+                          //                 title: Text(suggestion.address),
+                          //               );
+                          //             },
+                          //             onSuggestionSelected: (suggestion) {
+                          //               print(suggestion.address);
+                          //               addressController.text =
+                          //                   suggestion.address;
+                          //             },
+                          //           )),
+                          //     ],
+                          //   ),
+                          // ),
+                          MainText("email_title".tr().toString()),
+                          DefaultInput(
+                            hint: "email_hint".tr().toString(),
+                            textController: emailController,
+                            notifyParent: () {},
+                            inputType: TextInputType.emailAddress,
+                          ),
+                          MainText("pass_title".tr().toString()),
+                          PassInput("come_up_pass_hint".tr().toString(),
+                              passController),
+                          MainText("confirm_pass_title".tr().toString()),
+                          PassInput("confirm_pass_hint".tr().toString(),
+                              repassController),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _value = !_value;
+                                  });
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 2,
+                                          style: BorderStyle.solid,
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                      shape: BoxShape.circle,
+                                      color: _value
+                                          ? Theme.of(context).primaryColor
+                                          : Colors.transparent),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: _value
+                                        ? Icon(
+                                            Icons.check,
+                                            size: 15.0,
+                                            color: Colors.white,
+                                          )
+                                        : Icon(
+                                            Icons.check_box_outline_blank,
+                                            size: 15.0,
+                                            color: Colors.transparent,
+                                          ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 20),
+                                width: mediaQuery.size.width * 0.76,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "agree_agreements_start"
+                                            .tr()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.pushNamed(
+                                                context, RulePage.routeName);
+                                          },
+                                        text: "agreement".tr().toString(),
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize12,
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "agree_agreements_end"
+                                            .tr()
+                                            .toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: !_value
+                                  ? DefaultButton(
+                                      "continue".tr().toString(),
+                                      () {},
+                                      Color(0xffB2B7D0),
+                                    )
+                                  : DefaultButton("continue".tr().toString(),
+                                      () {
+                                      sendData().then((value) {
+                                        setState(() {
+                                          _value = !_value;
+                                        });
+                                      });
+                                    }, Theme.of(context).primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

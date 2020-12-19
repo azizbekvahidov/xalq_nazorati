@@ -72,13 +72,15 @@ dependencies:
   carousel_slider: ^2.3.1
   scrollable_positioned_list: ^0.1.8
   indexed_list_view: ^1.1.5
-
+  # flashlight: ^0.1.1
 
   # workmanager: ^0.2.3
 
 
   sms:
     path: ./sms
+  # lamp: 
+  #   path: ./lamp
 
 
 
@@ -170,6 +172,7 @@ flutter:
     - assets/img/iPhone11.png
     - assets/img/eye_open.svg
     - assets/img/eye_close.svg
+    - assets/img/ques.svg
 
   #   - images/a_dot_ham.jpeg
 

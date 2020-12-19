@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -19,53 +21,33 @@ class _CameraScreenState extends State<CameraScreen> {
   MRZController controller;
 
   bool isParsed = false;
+  Timer _timer;
+  int cnt = 20;
 
-  createAlertDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Column(
-              children: [
-                Text(
-                  "How_to_know_pnfl".tr().toString(),
-                  style: TextStyle(
-                    fontFamily: globals.font,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  width: double.infinity,
-                  child: Container(
-                      child: SvgPicture.asset("assets/img/Passport.svg")),
-                ),
-                FlatButton(
-                  child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(
-                          style: BorderStyle.solid,
-                          color: Theme.of(context).primaryColor,
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        "clese".tr().toString(),
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      )),
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                )
-              ],
-            ),
-          );
-        });
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      countDown();
+    });
+  }
+
+  countDown() {
+    if (cnt == 0) {
+      _timer.cancel();
+      Navigator.pop(context, "error");
+    } else {
+      setState(() {
+        cnt -= 1;
+      });
+    }
+  }
+
+  @override
+  void dispose() async {
+    _timer?.cancel();
+
+    super.dispose();
   }
 
   void _onControllerCreated(MRZController controller) {
@@ -117,6 +99,17 @@ class _CameraScreenState extends State<CameraScreen> {
             PnflScanAppbar(
               title: 'pnfl_scan'.tr().toString(),
               textColor: Colors.white,
+            ),
+            Container(
+              child: Center(
+                child: Text(
+                  "$cnt",
+                  style: TextStyle(
+                      color: Color(0xffE70C0C),
+                      fontSize: 60,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
             Container(
               width: MediaQuery.of(context).size.width,

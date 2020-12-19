@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>941571881086-6kvobtr3nn29csf6rbna58940n2f5pd0.apps.googleusercontent.com</string>
+	<string>361204410906-us6kiqkbhov20uk2aejk52ntavptpqia.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.941571881086-6kvobtr3nn29csf6rbna58940n2f5pd0</string>
+	<string>com.googleusercontent.apps.361204410906-us6kiqkbhov20uk2aejk52ntavptpqia</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBhi-IyFukm9zrSfFhxxSM_x56BhooxsDM</string>
+	<string>AIzaSyAq-yuZLx59CDn9ruhRVpJPjQXFlLdl0uE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>941571881086</string>
+	<string>361204410906</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.mrz.uz</string>
+	<string>uz.digitaltashkent.xalqNazorati</string>
 	<key>PROJECT_ID</key>
-	<string>mrzuz-d0091</string>
+	<string>xalq-nazorati-1a2bb</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mrzuz-d0091.appspot.com</string>
+	<string>xalq-nazorati-1a2bb.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:941571881086:ios:6b039dad81d31271d3002f</string>
+	<string>1:361204410906:ios:b5be14a625b9059d21ffa3</string>
 	<key>DATABASE_URL</key>
-	<string>https://mrzuz-d0091.firebaseio.com</string>
+	<string>https://xalq-nazorati-1a2bb.firebaseio.com</string>
 </dict>
 </plist>

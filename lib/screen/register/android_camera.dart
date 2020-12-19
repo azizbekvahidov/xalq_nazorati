@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -28,11 +29,28 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
   bool _processing = false;
   String texts = '';
   final textRecognizer = FirebaseVision.instance.textRecognizer();
-
+  Timer _timer;
+  int cnt = 20;
+  bool _flash = false;
   @override
   void initState() {
     super.initState();
     _initializeCamera();
+
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      countDown();
+    });
+  }
+
+  countDown() {
+    if (cnt == 0) {
+      _timer.cancel();
+      Navigator.pop(context, "error");
+    } else {
+      setState(() {
+        cnt -= 1;
+      });
+    }
   }
 
   void _initializeCamera() async {
@@ -200,6 +218,7 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
   void dispose() async {
     // await _camera.stopImageStream();
     await _camera.dispose();
+    _timer?.cancel();
 
     super.dispose();
   }
@@ -235,12 +254,30 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
               textColor: Colors.white,
             ),
             Container(
+              child: Center(
+                child: Text(
+                  "$cnt",
+                  style: TextStyle(
+                      color: Color(0xffE70C0C),
+                      fontSize: 60,
+                      fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            Container(
               width: MediaQuery.of(context).size.width,
               height: 50,
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(5)),
+            ),
+            Center(
+              child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                    child: Text("flash"),
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(38),
