@@ -11,6 +11,7 @@ import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:mrz_parser/mrz_parser.dart';
+// import 'package:flashlight/flashlight.dart';
 
 import 'package:image/image.dart' as imglib;
 
@@ -32,15 +33,25 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
   Timer _timer;
   int cnt = 20;
   bool _flash = false;
+  bool _hasFlashlight = false;
   @override
   void initState() {
     super.initState();
     _initializeCamera();
+    // initFlashlight();
 
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       countDown();
     });
   }
+
+  // initFlashlight() async {
+  //   bool hasFlash = await Flashlight.hasFlashlight;
+  //   print("Device has flash ? $hasFlash");
+  //   setState(() {
+  //     _hasFlashlight = hasFlash;
+  //   });
+  // }
 
   countDown() {
     if (cnt == 0) {
@@ -272,13 +283,22 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
                   color: Colors.grey.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(5)),
             ),
-            Center(
-              child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    child: Text("flash"),
-                  )),
-            ),
+            // _hasFlashlight
+            //     ? Center(
+            //         child: InkWell(
+            //             onTap: () {
+            //               if (_flash) {
+            //                 Flashlight.lightOff();
+            //               } else {
+            //                 Flashlight.lightOn();
+            //               }
+            //               _flash = !_flash;
+            //             },
+            //             child: Container(
+            //               child: Text("flash"),
+            //             )),
+            //       )
+            //     : Container(),
             Padding(
               padding: const EdgeInsets.all(38),
               child: Text("camera_put_data_right".tr().toString(),

@@ -290,6 +290,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  flashlight:
+    dependency: "direct main"
+    description:
+      name: flashlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -688,6 +695,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  platform_inputs:
+    dependency: "direct main"
+    description:
+      name: platform_inputs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   plugin_platform_interface:
     dependency: transitive
     description:

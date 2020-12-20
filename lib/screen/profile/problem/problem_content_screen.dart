@@ -545,74 +545,88 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                               CustomCardList(
                                 "subcat2",
                                 "messages".tr().toString(),
-                                MainChat(_data["id"]),
+                                MainChat(_data["id"], _data["status"]),
                                 true,
                               ),
-                              Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10, horizontal: 20),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                                width: (mediaQuery.size.width -
-                                                        mediaQuery
-                                                            .padding.left -
-                                                        mediaQuery
-                                                            .padding.right) *
-                                                    0.82,
-                                                child: Container(
-                                                    child: RichText(
-                                                  text: TextSpan(
-                                                    text: "problem_not_actual"
-                                                        .tr()
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontFamily: globals.font,
-                                                      color: Color(0xff050505),
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: mediaQuery
-                                                              .size.width *
-                                                          globals.fontSize18,
+                              (_data["status"] == "confirmed" ||
+                                      _data["status"] == "denied" ||
+                                      _data["status"] == "closed")
+                                  ? Container()
+                                  : Container(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 20),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                      width: (mediaQuery
+                                                                  .size.width -
+                                                              mediaQuery.padding
+                                                                  .left -
+                                                              mediaQuery.padding
+                                                                  .right) *
+                                                          0.82,
+                                                      child: Container(
+                                                          child: RichText(
+                                                        text: TextSpan(
+                                                          text:
+                                                              "problem_not_actual"
+                                                                  .tr()
+                                                                  .toString(),
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                globals.font,
+                                                            color: Color(
+                                                                0xff050505),
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            fontSize: mediaQuery
+                                                                    .size
+                                                                    .width *
+                                                                globals
+                                                                    .fontSize18,
+                                                          ),
+                                                        ),
+                                                      ))),
+                                                  Container(
+                                                    child: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 15,
                                                     ),
                                                   ),
-                                                ))),
-                                            Container(
-                                              child: Icon(
-                                                Icons.arrow_forward_ios,
-                                                size: 15,
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        timers.cancel();
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .push(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return ProblemNotRelevantScreen(
-                                                  _data["id"], _status);
+                                            onTap: () {
+                                              timers.cancel();
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .push(
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return ProblemNotRelevantScreen(
+                                                        _data["id"],
+                                                        _data['status']);
+                                                  },
+                                                ),
+                                              ).then(onGoBack);
                                             },
                                           ),
-                                        ).then(onGoBack);
-                                      },
+                                          Divider(),
+                                        ],
+                                      ),
                                     ),
-                                    Divider(),
-                                  ],
-                                ),
-                              ),
                               CustomCardList(
                                 "subcat2",
                                 "problem_solved".tr().toString(),

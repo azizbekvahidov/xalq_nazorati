@@ -142,7 +142,7 @@ class _RegisterPersonalDataScreenState
 
   setAddress(var addr, flatController, isChanged) {
     address =
-        "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
+        "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
     if (flatController.text != "") {
       address += ", ${flatController.text}";
     }

@@ -127,8 +127,21 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         title: "problem_not_actual".tr().toString(),
         centerTitle: true,
       ),
-      body: widget.status == "warning"
-          ? GestureDetector(
+      body: widget.status == "completed" || widget.status == "cenceled"
+          ? Center(
+              child: Text(
+                widget.status == "completed"
+                    ? "to_result".tr().toString()
+                    : "not_actual_decision".tr().toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: globals.font,
+                  fontWeight: FontWeight.w700,
+                  fontSize: dWidth * globals.fontSize24,
+                ),
+              ),
+            )
+          : GestureDetector(
               onTap: () {
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
@@ -276,17 +289,6 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                       ),
                     ],
                   ),
-                ),
-              ),
-            )
-          : Center(
-              child: Text(
-                "thanks".tr().toString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: globals.font,
-                  fontWeight: FontWeight.w700,
-                  fontSize: dWidth * globals.fontSize24,
                 ),
               ),
             ),

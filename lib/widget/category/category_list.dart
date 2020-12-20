@@ -21,6 +21,7 @@ class _CategoryListState extends State<CategoryList> {
       width: mediaQuery.size.width,
       height: mediaQuery.size.width * 3 / 4,
       child: GridView.builder(
+        // reverse: true,
         padding: EdgeInsets.all(0),
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

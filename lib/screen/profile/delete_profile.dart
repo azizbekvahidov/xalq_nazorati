@@ -92,92 +92,97 @@ class _DeleteProfileState extends State<DeleteProfile> {
     return Scaffold(
       backgroundColor: Color(0xffF5F6F9),
       appBar: appbar,
-      body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Container(
-          height: mediaQuery.size.height - mediaQuery.size.height * 0.2,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: SvgPicture.asset("assets/img/warning.svg"),
-                          ),
-                          Expanded(
-                            flex: 9,
-                            child: Text(
-                              "delete_accaunt_warning".tr().toString(),
-                              style: TextStyle(
-                                  color: Color(0xffFF8F27),
-                                  fontSize: 12,
-                                  fontFamily: globals.font),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    ShadowBox(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Container(
+            height: mediaQuery.size.height - mediaQuery.size.height * 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MainText("why_delete_accaunt".tr().toString()),
-                            TextareaInput(
-                              hint: "why_delete_accaunt_hint".tr().toString(),
-                              textareaController: descController,
-                              notifyParent: checkChange,
+                            Expanded(
+                              flex: 1,
+                              child: SvgPicture.asset("assets/img/warning.svg"),
+                            ),
+                            Expanded(
+                              flex: 9,
+                              child: Text(
+                                "delete_accaunt_warning".tr().toString(),
+                                style: TextStyle(
+                                    color: Color(0xffFF8F27),
+                                    fontSize: 12,
+                                    fontFamily: globals.font),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Padding(
-                  padding: EdgeInsets.all(38),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        child: Align(
-                          alignment: FractionalOffset.bottomCenter,
-                          child:
-                              /*!_value
-                              ? DefaultButton(
-                                  "Продолжить",
-                                  () {},
-                                  Color(0xffB2B7D0),
-                                )
-                              : */
-                              DefaultButton("delete_accaunt".tr().toString(),
-                                  () {
-                            deleteProfile();
-                            // setState(() {
-                            //   _value = !_value;
-                            // });
-                            // Navigator.of(context)
-                            //     .pushNamed(PasRecognizedScreen.routeName);
-                          }, Theme.of(context).primaryColor),
+                      ShadowBox(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("why_delete_accaunt".tr().toString()),
+                              TextareaInput(
+                                hint: "why_delete_accaunt_hint".tr().toString(),
+                                textareaController: descController,
+                                notifyParent: checkChange,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(38),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          child: Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child:
+                                /*!_value
+                                ? DefaultButton(
+                                    "Продолжить",
+                                    () {},
+                                    Color(0xffB2B7D0),
+                                  )
+                                : */
+                                DefaultButton("delete_accaunt".tr().toString(),
+                                    () {
+                              deleteProfile();
+                              // setState(() {
+                              //   _value = !_value;
+                              // });
+                              // Navigator.of(context)
+                              //     .pushNamed(PasRecognizedScreen.routeName);
+                            }, Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

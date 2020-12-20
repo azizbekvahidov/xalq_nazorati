@@ -53,14 +53,14 @@ class _AddressSearchState extends State<AddressSearch> {
   getDistricts() async {
     try {
       Map<String, String> headers = {
-        "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002",
-        "Accept-Language": globals.lang == "ru" ? "ru" : "uz"
+        "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
       };
-      var url = 'https://data.xalqnazorati.uz/api/v1/addresses/districts';
+      var url =
+          'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/districts';
       var r1 = await Requests.get(url, headers: headers);
       if (r1.statusCode == 200) {
         var json = r1.json();
-        _district = convertToList(json["data"]);
+        _district = convertToList(json["results"]);
         setState(() {});
         // return json.toList();
       }
@@ -72,28 +72,27 @@ class _AddressSearchState extends State<AddressSearch> {
   getStreet(String value) async {
     try {
       Map<String, String> headers = {
-        "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002",
-        "Accept-Language": globals.lang == "ru" ? "ru" : "uz"
+        "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
       };
       var url;
       if (_selectedDistrict == null) {
         url =
-            'https://data.xalqnazorati.uz/api/v1/addresses/suggestions?q=$value';
+            'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/suggestions?q=$value';
         var r1 = await Requests.get(url, headers: headers);
         if (r1.statusCode == 200) {
           var json = r1.json();
-          return json["data"];
+          return json["results"];
         }
       } else {
         url =
-            'https://data.xalqnazorati.uz/api/v1/addresses/streets?q=$value&district_id=$_selectedDistrict';
+            'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/streets?q=$value&district_id=$_selectedDistrict';
         if (!_all_type) {
           url += "&type=$placeType";
         }
         var r1 = await Requests.get(url, headers: headers);
         if (r1.statusCode == 200) {
           var json = r1.json();
-          return json["data"];
+          return json["results"];
         }
       }
     } catch (e) {
@@ -104,16 +103,17 @@ class _AddressSearchState extends State<AddressSearch> {
   getHouse(String value) async {
     try {
       Map<String, String> headers = {
-        "Authorization": "42e3edd0-a430-11ea-bb37-0242ac130002",
-        "Accept-Language": globals.lang == "ru" ? "ru" : "uz"
+        "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
       };
       var url =
-          'https://data.xalqnazorati.uz/api/v1/addresses/houses?q=$value&street_id=$_selectedStreet';
-
+          'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/houses?q=$value&street_id=$_selectedStreet';
+      if (!_all_type) {
+        url += "&type=$placeType";
+      }
       var r1 = await Requests.get(url, headers: headers);
       if (r1.statusCode == 200) {
         var json = r1.json();
-        return json["data"];
+        return json["results"];
       }
     } catch (e) {
       print(e);
@@ -132,7 +132,7 @@ class _AddressSearchState extends State<AddressSearch> {
     json.forEach((val) {
       res.add(DropdownMenuItem<String>(
         value: val["id"].toString(),
-        child: Text(val["name"]),
+        child: Text(val["name_${(globals.lang).tr().toString()}"]),
       ));
     });
     return res;
@@ -140,9 +140,7 @@ class _AddressSearchState extends State<AddressSearch> {
 
   validate(var suggest) {
     if (mahallaController.text != "") {
-      setState(() {
-        widget.ischange = true;
-      });
+      widget.ischange = true;
     }
     widget.setAddress(suggest, flatController, widget.ischange);
   }
@@ -409,10 +407,13 @@ class _AddressSearchState extends State<AddressSearch> {
                         return await getStreet(pattern);
                       },
                       itemBuilder: (context, suggestion) {
+                        print(suggestion);
                         return ListTile(
                           title: _selectedDistrict == null
-                              ? Text(suggestion["address"])
-                              : Text(suggestion["full_name"]),
+                              ? Text(suggestion[
+                                  "address_${(globals.lang).tr().toString()}"])
+                              : Text(suggestion[
+                                  "name_${(globals.lang).tr().toString()}"]),
                         );
                       },
                       onSuggestionSelected: (suggestion) {
@@ -422,18 +423,16 @@ class _AddressSearchState extends State<AddressSearch> {
                             _selectedDistrict =
                                 suggestion["district"]["id"].toString();
                             // _selectedStreet = suggestion["district"]["name"];
-                            searchAddressController.text =
-                                suggestion["street"]["name"];
-                            houseController.text =
-                                suggestion["house"]["number"];
-                            mahallaController.text =
-                                suggestion["community"]["name"];
+                            searchAddressController.text = suggestion[
+                                "name_${(globals.lang).tr().toString()}"];
+                            mahallaController.text = suggestion["community"]
+                                ["name_${(globals.lang).tr().toString()}"];
                           });
                           validate(suggestion);
                         } else {
                           _selectedStreet = suggestion["id"].toString();
-                          searchAddressController.text =
-                              suggestion["full_name"];
+                          searchAddressController.text = suggestion[
+                              "name_${(globals.lang).tr().toString()}"];
 
                           setState(() {
                             houseController.text = "";
@@ -514,8 +513,8 @@ class _AddressSearchState extends State<AddressSearch> {
                         );
                       },
                       onSuggestionSelected: (suggestion) {
-                        mahallaController.text =
-                            suggestion["community"]["name"];
+                        mahallaController.text = suggestion["community"]
+                            ["name_${(globals.lang).tr().toString()}"];
                         houseController.text = suggestion["number"];
                         validate(suggestion);
                       },

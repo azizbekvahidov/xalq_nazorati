@@ -32,6 +32,7 @@ class _MainPageState extends State<MainPage> {
     var response = await Requests.get(url);
 
     var reply = response.json();
+    reply = overrideCategory(reply);
 
     return reply;
   }
@@ -348,9 +349,17 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
+  overrideCategory(List<dynamic> data) {
+    List<dynamic> res = [];
+    for (int i = data.length - 1; i >= 0; i--) {
+      res.add(data[i]);
+    }
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
-    getNotification();
+    // getNotification();
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(

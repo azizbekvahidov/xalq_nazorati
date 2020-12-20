@@ -355,17 +355,13 @@ class _ProblemLocateState extends State<ProblemLocate> {
 
   setAddress(var addr, flatController, isChange) {
     address =
-        "${addr['district']['name']}, ${addr['street']['full_name']}, ${addr['community']['name']}, ${addr['number']}";
-    print(address);
-    var latlang = Point(
-        latitude: double.tryParse(addr['latitude']),
-        longitude: double.tryParse(addr['longitude']));
-    _setLocation(Point(
-        latitude: double.tryParse(addr['latitude']),
-        longitude: double.tryParse(addr['longitude'])));
-    setState(() {
-      _valid = true;
-    });
+        "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
+    _latitude = double.tryParse(addr['latitude']);
+    _longitude = double.tryParse(addr['longitude']);
+    if (isChange)
+      setState(() {
+        _valid = true;
+      });
   }
 
   void _getLocation() async {
@@ -881,18 +877,18 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                   Color(0xffB2B7D0),
                                 )
                               : DefaultButton(_btn_message, () {
-                                  // if (!_sending)
-                                  //   insertData().then((value) {});
-                                  // else
-                                  //   print('sending');
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                        return ProblemFinish();
-                                      },
-                                    ),
-                                    ModalRoute.withName(MainPage.routeName),
-                                  );
+                                  if (!_sending)
+                                    insertData().then((value) {});
+                                  else
+                                    print('sending');
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //   MaterialPageRoute(
+                                  //     builder: (BuildContext context) {
+                                  //       return ProblemFinish();
+                                  //     },
+                                  //   ),
+                                  //   ModalRoute.withName(MainPage.routeName),
+                                  // );
                                 },
                                   (!_sending)
                                       ? Theme.of(context).primaryColor

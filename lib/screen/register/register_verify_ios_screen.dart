@@ -5,54 +5,58 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:platform_inputs/ui_text_field.dart';
 import 'package:requests/requests.dart';
 import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import '../../screen/register/pass_recognize_screen.dart';
+import 'pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
+import 'package:platform_inputs/platform_inputs.dart';
 
-class RegisterVerifyScreen extends StatefulWidget {
+class RegisterVerifyIosScreen extends StatefulWidget {
   static const routeName = "/register-phone-verify";
   final phoneView;
   final phone;
-  RegisterVerifyScreen({this.phoneView, this.phone});
+  RegisterVerifyIosScreen({this.phoneView, this.phone});
 
   @override
-  _RegisterVerifyScreenState createState() => _RegisterVerifyScreenState();
+  _RegisterVerifyIosScreenState createState() =>
+      _RegisterVerifyIosScreenState();
 }
 
-class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
+class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
   bool _value = false;
   String _showTime = "03:00";
   Timer _timer;
   final codeController = TextEditingController();
   int _start = 180;
 
-  void getSMS() async {
-    // Create SMS Receiver Listener
-    SmsReceiver receiver = new SmsReceiver();
-    // msg has New Incoming Message
-    receiver.onSmsReceived.listen((SmsMessage msg) {
-      print(msg.address);
-      print(msg.body);
-      print(msg.date);
-      print(msg.isRead);
-      print(msg.sender);
-      print(msg.threadId);
-      print(msg.state);
-      final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
+  // void getSMS() async {
+  //   // Create SMS Receiver Listener
+  //   SmsReceiver receiver = new SmsReceiver();
+  //   // msg has New Incoming Message
+  //   receiver.onSmsReceived.listen((SmsMessage msg) {
+  //     print(msg.address);
+  //     print(msg.body);
+  //     print(msg.date);
+  //     print(msg.isRead);
+  //     print(msg.sender);
+  //     print(msg.threadId);
+  //     print(msg.state);
+  //     final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
 
-      codeController.text = intValue.toString();
-    });
-  }
+  //     codeController.text = intValue.toString();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
     startTimer();
-    getSMS();
+
+    // getSMS();
   }
 
   @override
@@ -234,12 +238,73 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("check_code_title".tr().toString()),
-                            DefaultInput(
-                              hint: "check_code_hint".tr().toString(),
-                              textController: codeController,
-                              notifyParent: () {},
-                              inputType: TextInputType.number,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Color(0xffF5F6F9),
+                                borderRadius: BorderRadius.circular(22.5),
+                                border: Border.all(
+                                  color: Color.fromRGBO(178, 183, 208, 0.5),
+                                  style: BorderStyle.solid,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: (mediaQuery.size.width -
+                                            mediaQuery.padding.left -
+                                            mediaQuery.padding.right) *
+                                        0.71,
+                                    child:
+                                        // UiTextField(
+                                        //   controller: codeController,
+                                        //   // focusNode: FocusNode(),
+                                        //   placeholder:
+                                        //       "check_code_hint".tr().toString(),
+                                        //   textContentType:
+                                        //       TextContentType.oneTimeCode,
+                                        //   keyboardType: KeyboardType.numberPad,
+                                        //   obsecureText: false,
+                                        //   onChanged: (value) {
+                                        //     print("$value");
+                                        //   },
+                                        //   onSubmitted: (value) {
+                                        //     print("$value");
+                                        //   },
+                                        // ),\
+
+                                        TextField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {},
+                                      controller: codeController,
+                                      maxLines: 1,
+                                      decoration: InputDecoration.collapsed(
+                                        hintText:
+                                            "check_code_hint".tr().toString(),
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .display1
+                                            .copyWith(
+                                                fontSize:
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
+                            // DefaultInput(
+                            //   hint: "check_code_hint".tr().toString(),
+                            //   textController: codeController,
+                            //   notifyParent: () {},
+                            //   inputType: TextInputType.number,
+                            // ),
                             Padding(
                               padding: EdgeInsets.only(top: 10),
                             ),

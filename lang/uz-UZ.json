@@ -166,7 +166,7 @@
     "about_desc":"Poytaht axolining va Toshkent shahar  xizmatlari xodimlari o'rtasida samarali hamkorlik qilish uchun interaktiv xizmat",
     "reason":"Sababni kiriting",
 
-    "solve_warning":"Bu yerda yaqinda muammongiz yechimi ko`rinadi",
+    "solve_warning":"Muammoni hal qilish natijasi bu erda tez orada namoyish etiladi.",
   "executor":"Ijrochi",
   "execute_date":"Ijro sanasi",
   "solve_description":"Yechim tavsifi",
@@ -236,6 +236,8 @@
   "pass_warning_bottom":"Jismoniy shaxsning shaxsiy identifikatsiya raqami",
   "pass_warning_number":" (14ta raqam)",
   "camera_error":"У вас возникла проблема\nс распознованием текста!",
+  "to_result":"Ko'rib chiqish uchun Natijalarga o'ting",
+  "not_actual_decision":"Siz muammoni aktual emas deb topdingiz",
 
 
 

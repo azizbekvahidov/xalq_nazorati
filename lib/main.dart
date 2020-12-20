@@ -311,7 +311,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }));
           });
       },
-      onBackgroundMessage: myBackgroundMessageHandler,
+      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
     );
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
@@ -323,6 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
       assert(token != null);
       globals.deviceToken = token;
     });
+    print(globals.deviceToken);
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
