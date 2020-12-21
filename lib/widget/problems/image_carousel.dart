@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/widget/full_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ImageCarousel extends StatefulWidget {
   final String title;
@@ -122,7 +124,25 @@ class _ImageCarouselState extends State<ImageCarousel> {
                     child: FittedBox(
                       fit: BoxFit.cover,
                       child: (src != null || src != "null")
-                          ? Image.network("${globals.site_link}$src")
+                          ? InkWell(
+                              child: CachedNetworkImage(
+                                imageUrl: "$src",
+                                // placeholder: (context, url) =>
+                                //     new CircularProgressIndicator(),
+                                // errorWidget: (context, url, error) =>
+                                //     new Icon(Icons.error),
+                              ),
+                              //  Image.network("${globals.site_link}$src"),
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return FullScreen(widget.files);
+                                    },
+                                  ),
+                                );
+                              },
+                            )
                           : Container(),
                     ),
                   ),

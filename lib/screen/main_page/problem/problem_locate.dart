@@ -513,6 +513,11 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                             .padding.right) *
                                                     0.74,
                                                 child: TypeAheadField(
+                                                  suggestionsBoxDecoration:
+                                                      SuggestionsBoxDecoration(
+                                                          offsetX: -20.0),
+                                                  addWidth: 50,
+                                                  offsetLeft: 10,
                                                   textFieldConfiguration:
                                                       TextFieldConfiguration(
                                                     controller:

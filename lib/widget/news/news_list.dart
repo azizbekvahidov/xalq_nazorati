@@ -22,7 +22,7 @@ class _NewsListState extends State<NewsList> {
         itemCount: widget.news.length,
         itemBuilder: (content, index) {
           String title = widget.news[index]["api_title".tr().toString()];
-          print(widget.news[index]);
+
           return widget.breaking
               ? NewsItemUrgent(
                   widget.news[index]["id"].toString(),

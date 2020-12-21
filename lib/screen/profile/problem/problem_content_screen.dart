@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:requests/requests.dart';
@@ -348,8 +349,13 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   ),
                                                                 );
                                                               },
-                                                              child: Image.network(
-                                                                  "${globals.site_link}/${_data["file_1"]}"),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    "${globals.site_link}/${_data["file_1"]}",
+                                                              ),
+                                                              // Image.network(
+                                                              //     "),
                                                             )
                                                           : Container(),
                                                     ),
@@ -388,8 +394,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   ),
                                                                 );
                                                               },
-                                                              child: Image.network(
-                                                                  "${globals.site_link}/${_data["file_2"]}"),
+                                                              child: CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${globals.site_link}/${_data["file_2"]}"),
                                                             )
                                                           : Container(),
                                                     ),
@@ -432,8 +439,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   ),
                                                                 );
                                                               },
-                                                              child: Image.network(
-                                                                  "${globals.site_link}/${_data["file_3"]}"),
+                                                              child: CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${globals.site_link}/${_data["file_3"]}"),
                                                             )
                                                           : Container(),
                                                     ),
@@ -475,8 +483,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                                   ),
                                                                 );
                                                               },
-                                                              child: Image.network(
-                                                                  "${globals.site_link}/${_data["file_4"]}"),
+                                                              child: CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      "${globals.site_link}/${_data["file_4"]}"),
                                                             )
                                                           : Container(),
                                                     ),
@@ -518,8 +527,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                         ),
                                                       );
                                                     },
-                                                    child: Image.network(
-                                                        "${globals.site_link}/${_data["file_5"]}"))
+                                                    child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            "${globals.site_link}/${_data["file_5"]}"))
                                                 : Container(),
                                           ),
                                         ),

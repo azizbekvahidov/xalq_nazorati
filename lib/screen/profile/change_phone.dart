@@ -188,7 +188,7 @@ class _ChangePhoneState extends State<ChangePhone> {
         setState(() {
           globals.userData["phone"] = phone;
         });
-        Navigator.of(context).pop();
+        Navigator.pop(context, phone);
       } else {
         print(r1.content());
         Map<String, dynamic> responseBody = r1.json();

@@ -181,7 +181,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                 color: Color(0xff000000),
                                                 fontWeight: FontWeight.w400,
                                                 fontSize:
-                                                    dWidth * globals.fontSize16,
+                                                    dWidth * globals.fontSize14,
                                               ),
                                             ),
                                           ),

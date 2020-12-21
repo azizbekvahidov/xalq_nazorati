@@ -51,3 +51,11 @@ String capitalize(String stringVal) {
 
   return res[0].toUpperCase() + res.substring(1);
 }
+
+bool validateFile(File img) {
+  if (img.lengthSync() > 10485760) {
+    return false;
+  } else {
+    return true;
+  }
+}

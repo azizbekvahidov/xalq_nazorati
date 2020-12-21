@@ -113,7 +113,9 @@ class _NewsDescState extends State<NewsDesc> {
                             width: cWidth,
                             child: FittedBox(
                               fit: BoxFit.contain,
-                              child: Image.network(data['img']),
+                              child: data['img'] == null
+                                  ? Container()
+                                  : Image.network(data['img']),
                             ),
                           ),
 

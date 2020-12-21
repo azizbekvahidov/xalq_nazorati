@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +14,7 @@ import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/chatMessage.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/full_screen.dart';
+import 'package:xalq_nazorati/widget/problems/pdf_view.dart';
 
 class MainChat extends StatefulWidget {
   final int id;
@@ -214,12 +217,7 @@ class _MainChatState extends State<MainChat> {
                                                                     .file
                                                                     .split(".")
                                                                     .last ==
-                                                                "png" ||
-                                                            _data[index]
-                                                                    .file
-                                                                    .split(".")
-                                                                    .last ==
-                                                                "gif")
+                                                                "png")
                                                         ? GestureDetector(
                                                             onTap: () {
                                                               Navigator.of(
@@ -254,24 +252,45 @@ class _MainChatState extends State<MainChat> {
                                                                 ),
                                                               );
                                                             },
-                                                            child: Image.network(
-                                                                "${globals.site_link}${_data[index].file}"),
+                                                            child: CachedNetworkImage(
+                                                                imageUrl:
+                                                                    "${globals.site_link}${_data[index].file}"),
                                                           )
-                                                        : Container(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    20),
-                                                            color: Colors.white,
-                                                            child: Center(
-                                                              child: Text(
-                                                                "file"
-                                                                    .tr()
-                                                                    .toString(),
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      globals
-                                                                          .font,
+                                                        : InkWell(
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    var route;
+                                                                    route = PdfView(
+                                                                        fileName:
+                                                                            "${_data[index].file}");
+                                                                    return route;
+                                                                  },
+                                                                ),
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(20),
+                                                              color:
+                                                                  Colors.white,
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "file"
+                                                                      .tr()
+                                                                      .toString(),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        globals
+                                                                            .font,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -316,9 +335,34 @@ class _MainChatState extends State<MainChat> {
   Future pickedFile() async {
     FilePickerResult result = await FilePicker.platform.pickFiles();
 
-    if (result != null) {
-      _file = File(result.files.single.path);
-      sendMessage();
+    if (result != null &&
+        globals.validateFile(File(result.files.single.path))) {
+      PlatformFile file = result.files.first;
+      if (file.extension == "jpg" ||
+          file.extension == "png" ||
+          file.extension == "jpeg" ||
+          file.extension == "pdf") {
+        _file = File(result.files.single.path);
+        sendMessage();
+      } else {
+        Fluttertoast.showToast(
+            msg: "file_warning".tr().toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.grey,
+            textColor: Colors.white,
+            fontSize: 15.0);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "file_warning".tr().toString(),
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
     }
   }
 

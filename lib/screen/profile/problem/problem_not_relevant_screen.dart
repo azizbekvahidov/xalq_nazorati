@@ -164,6 +164,15 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    MainText(
+                                        "problem_describe".tr().toString()),
+                                    TextareaInput(
+                                      hint: "problem_describe_hint"
+                                          .tr()
+                                          .toString(),
+                                      textareaController: descController,
+                                      notifyParent: checkChange,
+                                    ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -239,15 +248,6 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                           ),
                                         ),
                                       ],
-                                    ),
-                                    MainText(
-                                        "problem_describe".tr().toString()),
-                                    TextareaInput(
-                                      hint: "problem_describe_hint"
-                                          .tr()
-                                          .toString(),
-                                      textareaController: descController,
-                                      notifyParent: checkChange,
                                     ),
                                   ],
                                 ),

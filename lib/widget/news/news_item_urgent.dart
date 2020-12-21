@@ -40,6 +40,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
         );
       },
       child: Container(
+        padding: EdgeInsets.only(bottom: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,10 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FittedBox(
-                    fit: BoxFit.cover, child: Image.network(widget.img)),
+                    fit: BoxFit.cover,
+                    child: widget.img == null
+                        ? Container()
+                        : Image.network(widget.img)),
               ),
               // child: Image.network(widget.img),
             ),
@@ -77,8 +81,9 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SvgPicture.network(widget.img),
-                        Padding(
+                        SvgPicture.asset("assets/img/newsLocate.svg"),
+                        Container(
+                          width: cWidth - 190,
                           padding: const EdgeInsets.only(left: 5),
                           child: Text(
                             widget.location,
@@ -86,7 +91,7 @@ class _NewsItemUrgentState extends State<NewsItemUrgent> {
                             style: TextStyle(
                                 fontFamily: globals.font,
                                 fontSize:
-                                    mediaQuery.size.width * globals.fontSize12,
+                                    mediaQuery.size.width * globals.fontSize10,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black),
                           ),

@@ -117,7 +117,7 @@
     "take_off":"Muammoni yopish",
     "api_info":"info_uz",
     "profile_messages":"Yuborilgan muammolar",
-    "unresolved":"Yechilmagan muammolar",
+    "unresolved":"Ochiq muammolar",
     "solved":"Yopiq muammolar",
     "take_off_problems":"Rad etilgan muammolar",
     "common":"Umumiy",
@@ -197,7 +197,7 @@
   "problem_warning":"Xizmat hozirgi paytda sizning hududingizda mavjud emas.",
   "notifications":"Уведомления",
   "file":"fayl",
-  "delayed_problems":"Отсроченные проблемы",
+  "delayed_problems":"Kechiktitilgan muammolar",
   "search":"Toifani qidirish",
   "street": "Куча",
   "quarter": "Квартал",
@@ -235,9 +235,11 @@
   "pass_warning_head":"Pasportda JSHSHIRni qanday topish mumkin?",
   "pass_warning_bottom":"Jismoniy shaxsning shaxsiy identifikatsiya raqami",
   "pass_warning_number":" (14ta raqam)",
-  "camera_error":"У вас возникла проблема\nс распознованием текста!",
+  "camera_error":"Sizda matnni tanish \nbilan muammmo bor!",
   "to_result":"Ko'rib chiqish uchun Natijalarga o'ting",
   "not_actual_decision":"Siz muammoni aktual emas deb topdingiz",
+  "all_districts":"Barcha tumanlar",
+  "file_warning":"Fayl kengaytmasi mos emas yoki hajmi juda katta",
 
 
 

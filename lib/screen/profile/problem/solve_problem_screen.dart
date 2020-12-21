@@ -42,16 +42,37 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
     }
   }
 
+  List analyzeImages(var res) {
+    List files = [];
+    List<String> images = [];
+    if (res["file_1"] != null) {
+      images.add("${globals.site_link}${res["file_1"]}");
+    }
+    if (res["file_2"] != null) {
+      images.add("${globals.site_link}${res["file_2"]}");
+    }
+    if (res["file_3"] != null) {
+      images.add("${globals.site_link}${res["file_3"]}");
+    }
+    if (res["file_4"] != null) {
+      images.add("${globals.site_link}${res["file_4"]}");
+    }
+    if (res["file_5"] != null) {
+      images.add("${globals.site_link}${res["file_5"]}");
+    }
+    return images;
+  }
+
   List analyzeFiles(var res) {
     List files = [];
-    List images = [];
+    List<String> images = [];
     int f_i = 0;
     int i_i = 0;
     if (res["file_1"] != null) {
       String uri = "${globals.site_link}${res["file_1"]}";
       var ext = res["file_1"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_1"]);
+        images.add("${globals.site_link}${res["file_1"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_1"]);
       }
@@ -60,7 +81,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_2"]}";
       var ext = res["file_2"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_2"]);
+        images.add("${globals.site_link}${res["file_2"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_2"]);
       }
@@ -69,7 +90,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_3"]}";
       var ext = res["file_3"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_3"]);
+        images.add("${globals.site_link}${res["file_3"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_3"]);
       }
@@ -78,7 +99,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_4"]}";
       var ext = res["file_4"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_4"]);
+        images.add("${globals.site_link}${res["file_4"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_4"]);
       }
@@ -87,7 +108,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_5"]}";
       var ext = res["file_5"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_5"]);
+        images.add("${globals.site_link}${res["file_5"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_5"]);
       }
@@ -96,7 +117,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_6"]}";
       var ext = res["file_6"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_6"]);
+        images.add("${globals.site_link}${res["file_6"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_6"]);
       }
@@ -105,7 +126,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_7"]}";
       var ext = res["file_7"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_7"]);
+        images.add("${globals.site_link}${res["file_7"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_7"]);
       }
@@ -114,7 +135,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_8"]}";
       var ext = res["file_8"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_8"]);
+        images.add("${globals.site_link}${res["file_8"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_8"]);
       }
@@ -123,7 +144,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_9"]}";
       var ext = res["file_9"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_9"]);
+        images.add("${globals.site_link}${res["file_9"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_9"]);
       }
@@ -132,7 +153,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       String uri = "${globals.site_link}${res["file_10"]}";
       var ext = res["file_10"].split(".").last;
       if (ext == 'png' || ext == 'jpg' || ext == 'jpeg' || ext == 'gif') {
-        images.add(res["file_10"]);
+        images.add("${globals.site_link}${res["file_10"]}");
       } else if (ext == 'pdf') {
         files.add(res["file_10"]);
       }
@@ -176,9 +197,111 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
               var executors =
                   result != null ? res['problem']['executors'][0] : {};
               List _files = result != null ? analyzeFiles(result) : [];
+              List _images = res != null ? analyzeImages(res["problem"]) : [];
               _widget = result != null
                   ? Column(
                       children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 8),
+                          alignment: Alignment.center,
+                          width: dWidth,
+                          height: 50,
+                          color: Color(0xffC4C4C4),
+                          child: Text(
+                            "problem_solved".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWidth * globals.fontSize18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        ShadowBox(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Модератор (ФИО)",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        "12.12.2020",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize14,
+                                          fontWeight: FontWeight.w500,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 18, vertical: 8),
+                                  child: Text(
+                                    "Городской хокимия, Зам. хокима по вопросам Жилищно-Коммунального хозяйства и архитектуры",
+                                    style: TextStyle(
+                                      fontFamily: globals.font,
+                                      fontSize: dWidth * globals.fontSize10,
+                                      fontWeight: FontWeight.w400,
+                                      fontFeatures: [
+                                        FontFeature.enable("pnum"),
+                                        FontFeature.enable("lnum")
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Divider(),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 18),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Проблема признана неактуальной",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Text(
+                                          "Информация, направляемая пользователем на Портал, не содержит конкретных фактов, на основании которых возможно провести проверку, либо смысл информации, направляемой Пользователем на Портал, не ясен. ",
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            fontSize:
+                                                dWidth * globals.fontSize14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         ShadowBox(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,13 +459,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 child: ImageCarousel(
                                   "was".tr().toString(),
-                                  [
-                                    "${res['problem']['file_1']}",
-                                    "${res['problem']['file_2']}",
-                                    "${res['problem']['file_3']}",
-                                    "${res['problem']['file_4']}",
-                                    "${res['problem']['file_5']}",
-                                  ],
+                                  _images,
                                 ),
                               ),
                               Divider(),
@@ -361,7 +478,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                     ProblemSolveDesc("problem".tr().toString(),
                                         "${res["problem"]["subsubcategory"]["api_title".tr().toString()]}"),
                                     ProblemSolveDesc("place".tr().toString(),
-                                        "${res["problem"]["address"]}, ${res["problem"]["note"]}"),
+                                        "${res["problem"]["address"].replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("\r", " ")}, ${res["problem"]["note"]}"),
                                     ProblemSolveDesc(
                                       "solved_status".tr().toString(),
                                       "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",

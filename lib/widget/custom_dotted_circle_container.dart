@@ -52,7 +52,7 @@ class _CustomDottedCircleContainerState
   pickerCam() async {
     // ignore: deprecated_member_use
     File _img = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (_img != null && validate(_img)) {
+    if (_img != null && globals.validateFile(_img)) {
       // widget.image = _img;
       print("take shot");
       await _getLocation();
@@ -64,18 +64,10 @@ class _CustomDottedCircleContainerState
 
   pickGallery() async {
     File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (_img != null && validate(_img)) {
+    if (_img != null && globals.validateFile(_img)) {
       // widget.image = _img;
       globals.images.addAll({widget.img: _img});
       setState(() {});
-    }
-  }
-
-  bool validate(File img) {
-    if (img.lengthSync() > 10485760) {
-      return false;
-    } else {
-      return true;
     }
   }
 
@@ -84,6 +76,7 @@ class _CustomDottedCircleContainerState
     File _file = globals.images[widget.img];
     return InkWell(
       onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
         showModalBottomSheet(
             backgroundColor: Colors.transparent,
             context: context,

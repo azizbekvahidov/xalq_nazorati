@@ -71,8 +71,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
           Map<String, dynamic> reply = await r1.json();
 
           globals.userData = reply;
-          print(reply["address_str"]);
-          Navigator.of(context).pop();
+          Navigator.pop(context, address);
         } else {
           print(json);
         }
@@ -99,7 +98,6 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         address += ", ${flatController.text}";
       }
     }
-    print(isChange);
 
     if (isChange) {
       setState(() {

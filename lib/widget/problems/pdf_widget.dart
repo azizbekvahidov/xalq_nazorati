@@ -63,7 +63,7 @@ class _PdfWidgetState extends State<PdfWidget> {
                   ),
                 ),
                 Text(
-                  "${widget.date}  0,3 MB",
+                  "${widget.date} ",
                   style: TextStyle(
                     fontFamily: globals.font,
                     fontSize: 10,

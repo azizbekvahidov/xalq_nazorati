@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:carousel_slider/carousel_slider.dart';
@@ -18,8 +19,8 @@ class FullScreen extends StatelessWidget {
       items: imgList
           .map((item) => Container(
                 child: Center(
-                    child: Image.network(
-                  item,
+                    child: CachedNetworkImage(
+                  imageUrl: item,
                   fit: BoxFit.cover,
                   height: height,
                 )),

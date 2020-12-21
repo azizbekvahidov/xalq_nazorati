@@ -32,10 +32,10 @@ class _PdfViewState extends State<PdfView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "problem_passport".tr().toString(),
-        centerTitle: true,
-      ),
+      // appBar: CustomAppBar(
+      // title: "problem_passport".tr().toString(),
+      // centerTitle: true,
+      // ),
       body: Center(
         child: _isLoading
             ? Center(child: Text("Loading".tr().toString()))

@@ -168,7 +168,10 @@ class _MainPageState extends State<MainPage> {
                                 if (snapshot.hasError) print(snapshot.error);
                                 return snapshot.hasData
                                     ? Container(
-                                        height: 115.0 * snapshot.data.length,
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.7, //115.0 * snapshot.data.length,
                                         child: ListView.builder(
                                           physics: BouncingScrollPhysics(),
                                           itemCount: snapshot.data.length,
@@ -404,7 +407,7 @@ class _MainPageState extends State<MainPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "welcome".tr().toString(),
+                                  "${"welcome".tr().toString()},",
                                   style: TextStyle(
                                       fontFamily: globals.font,
                                       color: Colors.white,

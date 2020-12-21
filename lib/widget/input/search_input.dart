@@ -76,7 +76,7 @@ class _SearchtInputState extends State<SearchtInput> {
       } else {
         var json = r1.json();
 
-        print(json);
+        // print(json);
       }
     } catch (e) {
       print(e);
@@ -92,6 +92,8 @@ class _SearchtInputState extends State<SearchtInput> {
             "name": list["categories"][i]["api_title".tr().toString()],
             "id": list["categories"][i]["id"],
             "type": "categories",
+            "breadcrumbs":
+                "${list["categories"][i]["api_title".tr().toString()]}",
           }
         ]);
       }
@@ -106,6 +108,8 @@ class _SearchtInputState extends State<SearchtInput> {
             "category_id": list["subcategories"][i]["category"]["id"],
             "category_name": list["subcategories"][i]["category"]
                 ["api_title".tr().toString()],
+            "breadcrumbs":
+                "${list["subcategories"][i]["category"]["api_title".tr().toString()]} → ${list["subcategories"][i]["api_title".tr().toString()]}",
           }
         ]);
       }
@@ -119,6 +123,8 @@ class _SearchtInputState extends State<SearchtInput> {
             "type": "subsubcategories",
             "category_id": list["subsubcategories"][i]["subcategory"]
                 ["category"]["id"],
+            "breadcrumbs":
+                "${list["subsubcategories"][i]["subcategory"]["category"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["subcategory"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["api_title".tr().toString()]}",
           }
         ]);
       }
@@ -159,6 +165,9 @@ class _SearchtInputState extends State<SearchtInput> {
                     mediaQuery.padding.right) *
                 0.68,
             child: TypeAheadField(
+              addWidth: 75,
+              offsetLeft: 20,
+              getImmediateSuggestions: true,
               textFieldConfiguration: TextFieldConfiguration(
                 controller: searchController,
                 autofocus: false,
@@ -168,13 +177,18 @@ class _SearchtInputState extends State<SearchtInput> {
                       fontSize: mediaQuery.size.width * globals.fontSize18),
                 ),
               ),
-              hideOnEmpty: true,
+              hideOnEmpty: false,
               suggestionsCallback: (pattern) async {
-                if (pattern.length >= 3) {
-                  return await changeAddressMap(pattern);
-                } else
-                  return null;
+                // if (pattern.length >= 3) {
+                return await changeAddressMap(pattern);
+                // } else
+                //   return null;
               },
+              noItemsFoundBuilder: (context) {
+                return Text("not_found".tr().toString());
+              },
+              suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                  borderRadius: BorderRadius.circular(10)),
               itemBuilder: (context, suggestion) {
                 return InkWell(
                   onTap: () {
@@ -223,8 +237,50 @@ class _SearchtInputState extends State<SearchtInput> {
                       }
                     }
                   },
-                  child: ListTile(
-                    title: Text(suggestion["name"]),
+                  child: Container(
+                    width: mediaQuery.size.width,
+                    child: ListTile(
+                      title: Container(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.only(top: 6),
+                            child: Text(
+                              suggestion["name"],
+                              style: TextStyle(
+                                fontFamily: globals.font,
+                                fontSize:
+                                    mediaQuery.size.width * globals.fontSize14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Text(
+                              suggestion["breadcrumbs"],
+                              style: TextStyle(
+                                fontFamily: globals.font,
+                                fontSize:
+                                    mediaQuery.size.width * globals.fontSize12,
+                                color: Color.fromRGBO(102, 103, 108, 0.7),
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 1,
+                            margin: EdgeInsets.only(top: 6),
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                              color: Color(0xffB2B7D0),
+                            )),
+                          )
+                        ],
+                      )),
+                    ),
                   ),
                 );
               },

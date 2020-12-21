@@ -147,7 +147,7 @@ class _MainProfileState extends State<MainProfile> {
                           FontFeature.enable("lnum")
                         ],
                         color: Color(0xff66676C),
-                        fontSize: mediaQuery.size.width * globals.fontSize14,
+                        fontSize: mediaQuery.size.width * globals.fontSize12,
                         fontFamily: globals.font),
                   ),
                 ],

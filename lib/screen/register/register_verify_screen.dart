@@ -234,11 +234,54 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("check_code_title".tr().toString()),
-                            DefaultInput(
-                              hint: "check_code_hint".tr().toString(),
-                              textController: codeController,
-                              notifyParent: () {},
-                              inputType: TextInputType.number,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Color(0xffF5F6F9),
+                                borderRadius: BorderRadius.circular(22.5),
+                                border: Border.all(
+                                  color: Color.fromRGBO(178, 183, 208, 0.5),
+                                  style: BorderStyle.solid,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: (mediaQuery.size.width -
+                                            mediaQuery.padding.left -
+                                            mediaQuery.padding.right) *
+                                        0.71,
+                                    child: TextField(
+                                      maxLength: 6,
+                                      buildCounter: (BuildContext context,
+                                              {int currentLength,
+                                              int maxLength,
+                                              bool isFocused}) =>
+                                          null,
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {},
+                                      controller: codeController,
+                                      maxLines: 1,
+                                      decoration: InputDecoration.collapsed(
+                                        hintText:
+                                            "check_code_hint".tr().toString(),
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .display1
+                                            .copyWith(
+                                                fontSize:
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 10),

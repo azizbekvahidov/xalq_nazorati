@@ -8,6 +8,8 @@ import 'package:xalq_nazorati/widget/input/default_input.dart';
 import 'package:xalq_nazorati/widget/input/default_select.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+// import '../../flutter_typeahead/lib/flutter_typeahead.dart';
 
 class AddressSearch extends StatefulWidget {
   Function setAddress;
@@ -78,6 +80,9 @@ class _AddressSearchState extends State<AddressSearch> {
       if (_selectedDistrict == null) {
         url =
             'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/suggestions?q=$value';
+        if (!_all_type) {
+          url += "&type=$placeType";
+        }
         var r1 = await Requests.get(url, headers: headers);
         if (r1.statusCode == 200) {
           var json = r1.json();
@@ -129,6 +134,10 @@ class _AddressSearchState extends State<AddressSearch> {
 
   List<DropdownMenuItem<String>> convertToList(var json) {
     List<DropdownMenuItem<String>> res = [];
+    res.add(DropdownMenuItem<String>(
+      value: null,
+      child: Text("all_districts".tr().toString()),
+    ));
     json.forEach((val) {
       res.add(DropdownMenuItem<String>(
         value: val["id"].toString(),
@@ -137,6 +146,8 @@ class _AddressSearchState extends State<AddressSearch> {
     });
     return res;
   }
+
+  var _suggets;
 
   validate(var suggest) {
     if (mahallaController.text != "") {
@@ -391,6 +402,8 @@ class _AddressSearchState extends State<AddressSearch> {
                             mediaQuery.padding.right) *
                         0.74,
                     child: TypeAheadField(
+                      addWidth: 50,
+                      offsetLeft: 10,
                       textFieldConfiguration: TextFieldConfiguration(
                         controller: searchAddressController,
                         autofocus: false,
@@ -416,6 +429,8 @@ class _AddressSearchState extends State<AddressSearch> {
                                   "name_${(globals.lang).tr().toString()}"]),
                         );
                       },
+                      suggestionsBoxDecoration:
+                          SuggestionsBoxDecoration(offsetX: -20.0),
                       onSuggestionSelected: (suggestion) {
                         if (_selectedDistrict == null) {
                           print(suggestion);
@@ -492,6 +507,10 @@ class _AddressSearchState extends State<AddressSearch> {
                             mediaQuery.padding.right) *
                         0.74,
                     child: TypeAheadField(
+                      suggestionsBoxDecoration:
+                          SuggestionsBoxDecoration(offsetX: -20.0),
+                      addWidth: 50,
+                      offsetLeft: 10,
                       textFieldConfiguration: TextFieldConfiguration(
                         controller: houseController,
                         autofocus: false,
@@ -517,6 +536,7 @@ class _AddressSearchState extends State<AddressSearch> {
                             ["name_${(globals.lang).tr().toString()}"];
                         houseController.text = suggestion["number"];
                         validate(suggestion);
+                        _suggets = suggestion;
                       },
                       noItemsFoundBuilder: (context) {
                         return Text("not_found".tr().toString());
@@ -531,6 +551,9 @@ class _AddressSearchState extends State<AddressSearch> {
                   hint: "enter_flat".tr().toString(),
                   inputType: TextInputType.number,
                   textController: flatController,
+                  notifyParent: () {
+                    validate(_suggets);
+                  },
                 )
               : Container(),
           MainText("mahalla".tr().toString()),
