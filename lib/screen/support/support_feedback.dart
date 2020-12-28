@@ -18,23 +18,31 @@ class SupportFeedback extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 220,
-          height: 241,
-          child: Image.asset("assets/img/support.png"),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
-          child: Text(
-            "send_to_bot_message".tr().toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xff313B6C),
-              fontSize: width * globals.fontSize18,
-              fontWeight: FontWeight.bold,
-              fontFamily: globals.font,
-            ),
+          child: Column(
+            children: [
+              Container(
+                child: Image.asset(
+                  "assets/img/support.png",
+                  width: width * 0.4,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
+                child: Text(
+                  "send_to_bot_message".tr().toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xff313B6C),
+                    fontSize: width * globals.fontSize18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: globals.font,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         InkWell(
@@ -43,7 +51,7 @@ class SupportFeedback extends StatelessWidget {
           },
           child: Container(
             padding:
-                EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 30),
+                EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 20),
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 18),

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
@@ -8,9 +9,13 @@ class CustomCardList extends StatefulWidget {
   final String title;
   final String id;
   final Widget route;
+  final String notifyText;
+  final bool isNotify;
+
   bool divider = false;
 
-  CustomCardList(this.id, this.title, this.route, this.divider);
+  CustomCardList(this.id, this.title, this.route, this.divider, this.notifyText,
+      this.isNotify);
 
   @override
   _CustomCardListState createState() => _CustomCardListState();
@@ -68,19 +73,52 @@ class _CustomCardListState extends State<CustomCardList> {
                               mediaQuery.padding.left -
                               mediaQuery.padding.right) *
                           0.82,
-                      child: Container(
-                          child: RichText(
-                        text: TextSpan(
-                          text: widget.title,
-                          style: TextStyle(
-                            fontFamily: globals.font,
-                            color: Color(0xff050505),
-                            fontWeight: FontWeight.w600,
-                            fontSize:
-                                mediaQuery.size.width * globals.fontSize18,
+                      child: Row(
+                        children: [
+                          Container(
+                              child: RichText(
+                            text: TextSpan(
+                              text: widget.title,
+                              style: TextStyle(
+                                fontFamily: globals.font,
+                                color: Color(0xff050505),
+                                fontWeight: FontWeight.w600,
+                                fontSize:
+                                    mediaQuery.size.width * globals.fontSize18,
+                              ),
+                            ),
+                          )),
+                          Container(
+                            child: widget.isNotify
+                                ? Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.red),
+                                    alignment: Alignment.center,
+                                    width: 20,
+                                    height: 20,
+                                    // padding: EdgeInsets.symmetric(
+                                    //     vertical: 2, horizontal: 7),
+                                    child: Text(
+                                      widget.notifyText,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: globals.font,
+                                        fontSize: mediaQuery.size.width *
+                                            globals.fontSize10,
+                                        fontFeatures: [
+                                          FontFeature.enable("pnum"),
+                                          FontFeature.enable("lnum")
+                                        ],
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : Container(),
                           ),
-                        ),
-                      ))),
+                        ],
+                      )),
                   Container(
                     child: Icon(
                       Icons.arrow_forward_ios,

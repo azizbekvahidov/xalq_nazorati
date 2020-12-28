@@ -9,23 +9,47 @@ class FullScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: height,
-        viewportFraction: 1.0,
-        enlargeCenterPage: false,
-        // autoPlay: false,
-      ),
-      items: imgList
-          .map((item) => Container(
-                child: Center(
-                    child: CachedNetworkImage(
-                  imageUrl: item,
-                  fit: BoxFit.cover,
-                  height: height,
-                )),
-              ))
-          .toList(),
+    return Stack(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: height,
+            viewportFraction: 1.0,
+            enlargeCenterPage: false,
+            // autoPlay: false,
+          ),
+          items: imgList
+              .map((item) => Container(
+                    child: Center(
+                        child: CachedNetworkImage(
+                      imageUrl: item,
+                      fit: BoxFit.contain,
+                      height: height,
+                    )),
+                  ))
+              .toList(),
+        ),
+        Positioned(
+            top: 40,
+            right: 10,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  Icons.close,
+                  size: 40,
+                ),
+              ),
+            )),
+      ],
     );
   }
 }

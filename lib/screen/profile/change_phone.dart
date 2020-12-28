@@ -323,7 +323,7 @@ class _ChangePhoneState extends State<ChangePhone> {
                               alignment: FractionalOffset.bottomCenter,
                               child: !_value
                                   ? DefaultButton(
-                                      "change",
+                                      "change".tr().toString(),
                                       () {},
                                       Color(0xffB2B7D0),
                                     )

@@ -3,13 +3,15 @@ class ChatMessage {
   final String message;
   final String file;
   final String when;
-  final int user;
-  final int problem;
+  final Map<String, dynamic> user;
+  final Map<String, dynamic> problem;
+  final Map<String, dynamic> work_details;
 
   ChatMessage({
     this.id,
     this.message,
     this.file,
+    this.work_details,
     this.when,
     this.user,
     this.problem,
@@ -21,8 +23,9 @@ class ChatMessage {
       message: json["message"] as String,
       file: json["file"] as String,
       when: json["when"] as String,
-      user: json["user"] as int,
-      problem: json["problem"] as int,
+      user: json["user"] as Map<String, dynamic>,
+      work_details: json["work_details"] as Map<String, dynamic>,
+      problem: json["problem"] as Map<String, dynamic>,
     );
   }
 }

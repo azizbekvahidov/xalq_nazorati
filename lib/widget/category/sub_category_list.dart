@@ -96,7 +96,7 @@ class SubCategoryCardList extends StatelessWidget {
                 Navigator.of(context, rootNavigator: true).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) {
-                      return ProblemDesc(id, title, categoryId);
+                      return ProblemDesc(id, title, categoryId, "");
                     },
                   ),
                   // ModalRoute.withName(HomePage.routeName),

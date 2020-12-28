@@ -15,17 +15,21 @@ class BoxTextWarning extends StatelessWidget {
     Color _borderColor = Color.fromRGBO(255, 165, 21, 0.5);
     Color _txtColor = Color(0xffFFA515);
     if (status == 'warning') {
-      _bgcolor = Color(0xffFEF0DB);
+      _bgcolor = Color(0xffF99500);
       _borderColor = Color.fromRGBO(255, 165, 21, 0.5);
-      _txtColor = Color(0xffFFA515);
+      _txtColor = Color(0xffFFFFFF);
+    } else if (status == 'info') {
+      _bgcolor = Color(0xff0082F9);
+      _borderColor = Color(0xff0082F9);
+      _txtColor = Color(0xffFFFFFF);
     } else if (status == 'danger') {
-      _bgcolor = Color(0xffF5D7D7);
-      _borderColor = Color(0xffFF5555);
-      _txtColor = Color(0xffFF5555);
+      _bgcolor = Color(0xffFF2F2F);
+      _borderColor = Color(0xffFF2F2F);
+      _txtColor = Color(0xffFFFFFF);
     } else if (status == 'success') {
-      _bgcolor = Color(0xffCCEDE7);
+      _bgcolor = Color(0xff1ABC9C);
       _borderColor = Color(0xff1ABC9C);
-      _txtColor = Color(0xff1ABC9C);
+      _txtColor = Color(0xffFFFFFF);
     } else if (status == 'delayed') {
       _bgcolor = Color(0xffCCEDE7);
       _borderColor = Color(0xff1ABC9C);

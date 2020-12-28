@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/screen/main_page/problem/check_problem_category.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 import 'package:xalq_nazorati/widget/custom_expansion_tile.dart' as custom;
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
@@ -11,7 +13,9 @@ import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 class ExpanseListTile extends StatefulWidget {
   final Map<String, dynamic> data;
   final int subcategoryId;
-  ExpanseListTile({this.data, this.subcategoryId, Key key}) : super(key: key);
+  final String category_title;
+  ExpanseListTile({this.data, this.subcategoryId, this.category_title, Key key})
+      : super(key: key);
 
   @override
   _ExpanseListTileState createState() => _ExpanseListTileState();
@@ -41,6 +45,106 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
               padding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.05),
               child: GetLoginDialog(),
+            ),
+          );
+        });
+  }
+
+  customWarningDialog(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var dWidth = MediaQuery.of(context).size.width;
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.45,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/img/info.svg",
+                      height: height * 0.12,
+                    ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "problem_warning".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWidth * globals.fontSize16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 35),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                  style: BorderStyle.solid,
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                "close".tr().toString(),
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              )),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                        FlatButton(
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 35),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                  style: BorderStyle.solid,
+                                  color: Theme.of(context).primaryColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                "next".tr().toString(),
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              )),
+                          onPressed: () {},
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           );
         });
@@ -141,30 +245,62 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext context, int index) {
+                                  String breadCrumbs =
+                                      "${widget.category_title} → ${widget.data["api_title".tr().toString()]} → ${snap.data[index]["api_title".tr().toString()]}";
                                   return ListTile(
                                     title: Column(
                                       children: [
                                         InkWell(
                                           onTap: () {
                                             if (globals.token != null) {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .push(
-                                                MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return ProblemDesc(
-                                                        snap.data[index]["id"],
-                                                        snap.data[index][
-                                                            "api_title"
-                                                                .tr()
-                                                                .toString()],
-                                                        widget.data["category"]
-                                                            ["id"]);
-                                                  },
-                                                ),
-                                                // ModalRoute.withName(HomePage.routeName),
-                                              ).then(onGoBack);
+                                              // customWarningDialog(context);
+                                              if (snap.data[index]["id"] !=
+                                                  35) {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .push(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return ProblemDesc(
+                                                          snap.data[index]
+                                                              ["id"],
+                                                          snap.data[index][
+                                                              "api_title"
+                                                                  .tr()
+                                                                  .toString()],
+                                                          widget.data[
+                                                              "category"]["id"],
+                                                          breadCrumbs);
+                                                    },
+                                                  ),
+                                                  // ModalRoute.withName(HomePage.routeName),
+                                                ).then(onGoBack);
+                                              } else {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .push(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return CheckProblemCategory(
+                                                          id: snap.data[index]
+                                                              ["id"],
+                                                          title: snap
+                                                                  .data[index][
+                                                              "api_title"
+                                                                  .tr()
+                                                                  .toString()],
+                                                          category_id: widget
+                                                                  .data[
+                                                              "category"]["id"],
+                                                          breadcrumbs:
+                                                              breadCrumbs);
+                                                    },
+                                                  ),
+                                                  // ModalRoute.withName(HomePage.routeName),
+                                                ).then(onGoBack);
+                                              }
                                             } else {
                                               customDialog(context);
                                             }

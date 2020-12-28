@@ -121,6 +121,10 @@ PODS:
   - flashlight (0.1.1):
     - Flutter
   - Flutter (1.0.0)
+  - flutter_image_compress (0.0.1):
+    - Flutter
+    - Mantle
+    - SDWebImageWebPCoder
   - flutter_keyboard_visibility (0.0.1):
     - Flutter
   - flutter_local_notifications (0.0.1):
@@ -187,6 +191,18 @@ PODS:
     - GTMSessionFetcher/Core (= 1.5.0)
   - image_picker (0.0.1):
     - Flutter
+  - libwebp (1.1.0):
+    - libwebp/demux (= 1.1.0)
+    - libwebp/mux (= 1.1.0)
+    - libwebp/webp (= 1.1.0)
+  - libwebp/demux (1.1.0):
+    - libwebp/webp
+  - libwebp/mux (1.1.0):
+    - libwebp/demux
+  - libwebp/webp (1.1.0)
+  - Mantle (2.1.6):
+    - Mantle/extobjc (= 2.1.6)
+  - Mantle/extobjc (2.1.6)
   - nanopb (1.30905.0):
     - nanopb/decode (= 1.30905.0)
     - nanopb/encode (= 1.30905.0)
@@ -207,11 +223,16 @@ PODS:
   - SDWebImage (5.9.4):
     - SDWebImage/Core (= 5.9.4)
   - SDWebImage/Core (5.9.4)
+  - SDWebImageWebPCoder (0.6.1):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.7)
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - sms (0.0.1):
+    - Flutter
+  - sms_autofill (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
@@ -248,6 +269,7 @@ DEPENDENCIES:
   - firebase_ml_vision (from `.symlinks/plugins/firebase_ml_vision/ios`)
   - flashlight (from `.symlinks/plugins/flashlight/ios`)
   - Flutter (from `Flutter`)
+  - flutter_image_compress (from `.symlinks/plugins/flutter_image_compress/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_mrz_scanner (from `.symlinks/plugins/flutter_mrz_scanner/ios`)
@@ -262,6 +284,7 @@ DEPENDENCIES:
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sms (from `.symlinks/plugins/sms/ios`)
+  - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
@@ -291,10 +314,13 @@ SPEC REPOS:
     - GoogleToolboxForMac
     - GoogleUtilities
     - GTMSessionFetcher
+    - libwebp
+    - Mantle
     - nanopb
     - PromisesObjC
     - Protobuf
     - SDWebImage
+    - SDWebImageWebPCoder
     - SwiftyGif
     - SwiftyTesseract
     - Toast
@@ -319,6 +345,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flashlight/ios"
   Flutter:
     :path: Flutter
+  flutter_image_compress:
+    :path: ".symlinks/plugins/flutter_image_compress/ios"
   flutter_keyboard_visibility:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
@@ -347,6 +375,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   sms:
     :path: ".symlinks/plugins/sms/ios"
+  sms_autofill:
+    :path: ".symlinks/plugins/sms_autofill/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
@@ -382,6 +412,7 @@ SPEC CHECKSUMS:
   FirebaseMLVision: 485358b97d3332669ecc4fed55ee360aaef2813d
   flashlight: 2cc087674f54798feacb9d2220afcf20fd56d2d0
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_image_compress: 082f8daaf6c1b0c9fe798251c750ef0ecd98d7ae
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_mrz_scanner: dd007f835e78ff02bee317851e00331891ccdaaa
@@ -395,6 +426,8 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
+  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
+  Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
@@ -404,9 +437,11 @@ SPEC CHECKSUMS:
   rate_my_app: 3b64dd0876bd286001595ee2e69193e757c4d77c
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sms: 1e6c3082da09f2a4961d61bc254cc86865993ffd
+  sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
   SwiftyTesseract: 1f3d96668ae92dc2208d9842c8a59bea9fad2cbb

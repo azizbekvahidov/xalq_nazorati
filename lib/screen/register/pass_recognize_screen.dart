@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -137,6 +138,10 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             fontSize: dWidth * globals.fontSize10,
                             color: Color(0xff313B6C),
                             fontWeight: FontWeight.w700,
+                            fontFeatures: [
+                              FontFeature.enable("pnum"),
+                              FontFeature.enable("lnum")
+                            ],
                           ),
                         ),
                         TextSpan(
@@ -146,6 +151,10 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                             fontSize: dWidth * globals.fontSize10,
                             color: Colors.red,
                             fontWeight: FontWeight.w700,
+                            fontFeatures: [
+                              FontFeature.enable("pnum"),
+                              FontFeature.enable("lnum")
+                            ],
                           ),
                         ),
                       ],
@@ -232,13 +241,116 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("pas_series_title".tr().toString()),
-                          DefaultInput(
-                            hint: "pas_series_hint".tr().toString(),
-                            textController: seriesController,
-                            notifyParent: () {
-                              validate();
-                            },
+                          // DefaultInput(
+                          //   hint: "pas_series_hint".tr().toString(),
+                          //   textController: seriesController,
+                          //   notifyParent: () {
+                          //     validate();
+                          //   },
+                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 20),
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                width: (dWith <= 360)
+                                    ? dWith * 0.67
+                                    : dWith * 0.72,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffF5F6F9),
+                                  borderRadius: BorderRadius.circular(22.5),
+                                  border: Border.all(
+                                    color: Color.fromRGBO(178, 183, 208, 0.5),
+                                    style: BorderStyle.solid,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(vertical: 3),
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          ((dWith <= 360) ? 0.5 : 0.65),
+                                      child: TextField(
+                                        onChanged: (value) {
+                                          validate();
+                                        },
+                                        controller: seriesController,
+                                        maxLines: 1,
+                                        maxLength: 14,
+                                        buildCounter: (BuildContext context,
+                                                {int currentLength,
+                                                int maxLength,
+                                                bool isFocused}) =>
+                                            null,
+                                        keyboardType: TextInputType.text,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                              top: 0, bottom: 10),
+                                          border: InputBorder.none,
+                                          hintText:
+                                              "pas_series_hint".tr().toString(),
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .copyWith(
+                                                  fontSize: dWith *
+                                                      globals.fontSize14),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  final res = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PasRecognizeNotify()));
+                                  if (res != null) {
+                                    if (res is String) {
+                                      print(
+                                          "result of scan ==============> ${res.runtimeType}");
+                                      setState(() {
+                                        isError = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        pnflController.text =
+                                            res.personalNumber;
+                                        seriesController.text =
+                                            res.documentNumber;
+                                      });
+                                      validate();
+                                    }
+                                  }
+                                },
+                                child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    width: 45,
+                                    height: 45,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(22.5),
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      "assets/img/qr-code-scan.svg",
+                                      width: 15,
+                                    )),
+                              ),
+                            ],
                           ),
+
                           MainText("pnfl".tr().toString()),
                           Container(
                             child: Row(
@@ -248,8 +360,8 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                   padding: EdgeInsets.only(left: 20),
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   width: (dWith <= 360)
-                                      ? dWith * 0.70
-                                      : dWith * 0.74,
+                                      ? dWith * 0.80
+                                      : dWith * 0.89,
                                   height: 45,
                                   decoration: BoxDecoration(
                                     color: Color(0xffF5F6F9),
@@ -297,7 +409,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                                 .display1
                                                 .copyWith(
                                                     fontSize: dWith *
-                                                        globals.fontSize18),
+                                                        globals.fontSize14),
                                           ),
                                         ),
                                       ),
@@ -330,62 +442,6 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                     ],
                                   ),
                                 ),
-                                isError
-                                    ? Container()
-                                    : InkWell(
-                                        onTap: () async {
-                                          final res = await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PasRecognizeNotify()));
-                                          if (res != null) {
-                                            if (res is String) {
-                                              print(
-                                                  "result of scan ==============> ${res.runtimeType}");
-                                              setState(() {
-                                                isError = true;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                pnflController.text =
-                                                    res.personalNumber;
-                                                seriesController.text =
-                                                    res.documentNumber;
-                                              });
-                                              validate();
-                                            }
-                                          }
-                                          // createAlertDialog(context);
-                                          // final res = await Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) => Platform.isAndroid
-                                          //             ? AndroidCameraPage()
-                                          //             : CameraScreen()));
-                                          // if (res != null) {
-                                          //   setState(() {
-                                          //     pnflController.text = res.personalNumber;
-                                          //     seriesController.text = res.documentNumber;
-                                          //   });
-                                          // }
-                                        },
-                                        child: Container(
-                                            margin: EdgeInsets.only(left: 10),
-                                            width: 45,
-                                            height: 45,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(22.5),
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                            ),
-                                            child: SvgPicture.asset(
-                                              "assets/img/qr-code-scan.svg",
-                                              width: 15,
-                                            )),
-                                      ),
                               ],
                             ),
                           ),

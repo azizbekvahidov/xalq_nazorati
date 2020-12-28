@@ -4,10 +4,25 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 
-class ProblemFinish extends StatelessWidget {
+class ProblemFinish extends StatefulWidget {
+  final int id;
+  ProblemFinish({this.id});
+  @override
+  _ProblemFinishState createState() => _ProblemFinishState();
+}
+
+class _ProblemFinishState extends State<ProblemFinish> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    globals.routeProblemId = widget.id;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -48,6 +63,7 @@ class ProblemFinish extends StatelessWidget {
                       style: TextStyle(
                           color: Color(0xff66676C),
                           fontSize: dWidth * globals.fontSize14,
+                          fontWeight: FontWeight.w400,
                           fontFamily: globals.font),
                     ),
                     Padding(
@@ -69,6 +85,7 @@ class ProblemFinish extends StatelessWidget {
                     style: TextStyle(
                         color: Color(0xff66676C),
                         fontSize: dWidth * globals.fontSize14,
+                        fontWeight: FontWeight.w400,
                         fontFamily: globals.font),
                   ),
                   Container(
@@ -78,6 +95,7 @@ class ProblemFinish extends StatelessWidget {
                       style: TextStyle(
                           color: Color(0xff66676C),
                           fontSize: dWidth * globals.fontSize14,
+                          fontWeight: FontWeight.w400,
                           fontFamily: globals.font),
                     ),
                   ),
@@ -100,7 +118,7 @@ class ProblemFinish extends StatelessWidget {
                                     Color(0xffB2B7D0),
                                   )
                                 : */
-                              DefaultButton("back".tr().toString(), () {
+                              DefaultButton("understand".tr().toString(), () {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (BuildContext context) {

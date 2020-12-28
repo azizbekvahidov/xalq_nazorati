@@ -27,7 +27,7 @@ class _CheckboxCustomState extends State<CheckboxCustom> {
                 ? Theme.of(context).primaryColor
                 : Colors.transparent),
         child: Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(2.0),
           child: widget.value
               ? Icon(
                   Icons.check,

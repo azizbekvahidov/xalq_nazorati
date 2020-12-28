@@ -159,10 +159,10 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
                         children: [
                           MainText("pass_title".tr().toString()),
                           PassInput("come_up_pass_hint".tr().toString(),
-                              passController),
+                              passController, null),
                           MainText("confirm_pass_title".tr().toString()),
                           PassInput("confirm_pass_hint".tr().toString(),
-                              pass2Controller),
+                              pass2Controller, null),
                         ],
                       ),
                       Positioned(

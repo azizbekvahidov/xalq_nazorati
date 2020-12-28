@@ -185,6 +185,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       "change_pass".tr().toString(),
                       ChangePassword(),
                       true,
+                      "",
+                      false,
                     ),
 
                     Container(

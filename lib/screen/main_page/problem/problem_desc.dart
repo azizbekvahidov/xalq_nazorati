@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../main_page/problem/problem_locate.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
@@ -17,7 +18,8 @@ class ProblemDesc extends StatefulWidget {
   final int id;
   final String title;
   final int categoryId;
-  ProblemDesc(this.id, this.title, this.categoryId);
+  final String breadCrumbs;
+  ProblemDesc(this.id, this.title, this.categoryId, this.breadCrumbs);
   @override
   _ProblemDescState createState() => _ProblemDescState();
 }
@@ -29,6 +31,27 @@ class _ProblemDescState extends State<ProblemDesc> {
   File image4;
   var descController = TextEditingController();
   bool _value = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // getPermission();
+  }
+
+  getPermission() async {
+    var status = await Permission.camera.status;
+    if (status.isUndetermined || status.isDenied) {
+      Permission.camera.request();
+      // We didn't ask for permission yet.
+    }
+
+    status = await Permission.mediaLibrary.status;
+    if (status.isUndetermined || status.isDenied) {
+      Permission.mediaLibrary.request();
+      // We didn't ask for permission yet.
+    }
+  }
 
   Future sendData() async {}
   void clearImages() {
@@ -91,6 +114,17 @@ class _ProblemDescState extends State<ProblemDesc> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Container(
+                                child: Text(
+                                  widget.breadCrumbs,
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(102, 103, 108, 0.7),
+                                    fontFamily: globals.font,
+                                    fontSize: dWidth * globals.fontSize12,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
                               MainText("problem_describe".tr().toString()),
                               TextareaInput(
                                 hint: "problem_describe_hint".tr().toString(),
@@ -173,6 +207,9 @@ class _ProblemDescState extends State<ProblemDesc> {
                   ),
                 ),
                 Container(
+                  height: mediaQuery.size.height - mediaQuery.size.height < 560
+                      ? mediaQuery.size.height * 0.2
+                      : mediaQuery.size.height * 0.68,
                   child: Padding(
                     padding: EdgeInsets.all(15),
                     child: Stack(
@@ -190,8 +227,11 @@ class _ProblemDescState extends State<ProblemDesc> {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (BuildContext context) {
-                                      return ProblemLocate(descController.text,
-                                          widget.id, widget.categoryId);
+                                      return ProblemLocate(
+                                          descController.text,
+                                          widget.id,
+                                          widget.categoryId,
+                                          widget.breadCrumbs);
                                     }));
                                   }, Theme.of(context).primaryColor),
                           ),

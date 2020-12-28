@@ -8,17 +8,20 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/to_file.dart';
 import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/models/result.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_solved_decline_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_rate_screen.dart';
 import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_widget.dart';
 import 'package:xalq_nazorati/widget/problems/problem_solve_desc.dart';
+import 'package:xalq_nazorati/widget/res_content.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/shadow_box.dart';
 
 class SolveProblemScreen extends StatefulWidget {
   final String status;
   final int id;
-  SolveProblemScreen({this.status, this.id});
+  final String stat;
+  SolveProblemScreen({this.status, this.id, this.stat});
   @override
   _SolveProblemScreenState createState() => _SolveProblemScreenState();
 }
@@ -28,14 +31,23 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
   List files;
   Future<Map<String, dynamic>> getProblem(var id) async {
     try {
-      var url = '${globals.api_link}/problems/problem/$id';
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/problem/$id';
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response =
-          await Requests.get(url, headers: headers, timeoutSeconds: 5);
+      var response = await Requests.get(url, headers: headers);
 
       // String reply = await response.transform(utf8.decoder).join();
       // var temp = response.json();
       var res = response.json(); //parseProblems(response.content());
+      if (res["result"] != null) {
+        url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/check';
+        Map<String, dynamic> data = {"id": res["result"]["id"]};
+        var resp = await Requests.post(url, body: data, headers: headers);
+      }
+
+      // String reply = await response.transform(utf8.decoder).join();
+      // var temp = response.json();
       return res;
     } catch (e) {
       print(e);
@@ -180,7 +192,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
     var dWidth = mediaQuery.size.width;
     return Scaffold(
       appBar: CustomAppBar(
-        title: "problem_solved".tr().toString(),
+        title: "result".tr().toString(),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -194,114 +206,12 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
             if (snapshot.hasData) {
               var res = snapshot.data;
               var result = res['result'];
-              var executors =
-                  result != null ? res['problem']['executors'][0] : {};
+              var executors = result != null ? res['problem']['closed_by'] : {};
               List _files = result != null ? analyzeFiles(result) : [];
               List _images = res != null ? analyzeImages(res["problem"]) : [];
-              _widget = result != null
+              var res_widget = result != null
                   ? Column(
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 8),
-                          alignment: Alignment.center,
-                          width: dWidth,
-                          height: 50,
-                          color: Color(0xffC4C4C4),
-                          child: Text(
-                            "problem_solved".tr().toString(),
-                            style: TextStyle(
-                              fontFamily: globals.font,
-                              fontSize: dWidth * globals.fontSize18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        ShadowBox(
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 18),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Модератор (ФИО)",
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWidth * globals.fontSize14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        "12.12.2020",
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWidth * globals.fontSize14,
-                                          fontWeight: FontWeight.w500,
-                                          fontFeatures: [
-                                            FontFeature.enable("pnum"),
-                                            FontFeature.enable("lnum")
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 8),
-                                  child: Text(
-                                    "Городской хокимия, Зам. хокима по вопросам Жилищно-Коммунального хозяйства и архитектуры",
-                                    style: TextStyle(
-                                      fontFamily: globals.font,
-                                      fontSize: dWidth * globals.fontSize10,
-                                      fontWeight: FontWeight.w400,
-                                      fontFeatures: [
-                                        FontFeature.enable("pnum"),
-                                        FontFeature.enable("lnum")
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Divider(),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 18),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Проблема признана неактуальной",
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWidth * globals.fontSize14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        child: Text(
-                                          "Информация, направляемая пользователем на Портал, не содержит конкретных фактов, на основании которых возможно провести проверку, либо смысл информации, направляемой Пользователем на Портал, не ясен. ",
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize14,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
                         ShadowBox(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,58 +326,73 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                   ],
                                 ),
                               ),
-                              Divider(),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 19),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "docs".tr().toString(),
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWidth * globals.fontSize12,
-                                        fontWeight: FontWeight.w400,
+                              _files[1].length != 0 ? Divider() : Container(),
+                              _files[1].length != 0
+                                  ? Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 15, horizontal: 19),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "docs".tr().toString(),
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize12,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 10),
+                                          ),
+                                          Container(
+                                            height: 80,
+                                            child: GridView.builder(
+                                              padding: EdgeInsets.all(0),
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              gridDelegate:
+                                                  new SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio: 4,
+                                              ),
+                                              itemCount: _files[1].length,
+                                              itemBuilder:
+                                                  (BuildContext ctx, index) {
+                                                return PdfWidget(
+                                                    _files[1][index],
+                                                    "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}");
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                    ),
-                                    Container(
-                                      height: 80,
-                                      child: GridView.builder(
-                                        padding: EdgeInsets.all(0),
-                                        physics: NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 4,
-                                        ),
-                                        itemCount: _files[1].length,
-                                        itemBuilder: (BuildContext ctx, index) {
-                                          return PdfWidget(_files[1][index],
-                                              "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}");
-                                        },
+                                    )
+                                  : Container(),
+                              _files[0].length != 0 && _images.length != 0
+                                  ? Divider()
+                                  : Container(),
+                              _files[0].length != 0 && _images.length != 0
+                                  ? Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 15),
+                                      child: ImageCarousel(
+                                        "was".tr().toString(),
+                                        _images,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: ImageCarousel(
-                                  "was".tr().toString(),
-                                  _images,
-                                ),
-                              ),
-                              Divider(),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: ImageCarousel(
-                                    "be".tr().toString(), _files[0]),
-                              ),
+                                    )
+                                  : Container(),
+                              _files[0].length != 0 ? Divider() : Container(),
+                              _files[0].length != 0
+                                  ? Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 15),
+                                      child: ImageCarousel(
+                                          "be".tr().toString(), _files[0]),
+                                    )
+                                  : Container(),
                               Container(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 19, right: 19),
@@ -489,7 +414,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                             ],
                           ),
                         ),
-                        widget.status == 'warning'
+                        widget.stat == 'completed'
                             ? Container(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 20, horizontal: 19),
@@ -505,16 +430,17 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                               BorderRadius.circular(34),
                                         ),
                                         onPressed: () {
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(builder:
                                                   (BuildContext context) {
                                             return ProblemSolvedRateScreen(
-                                                widget.id,
-                                                "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
-                                                executors['user']['avatar'],
-                                                executors['id'],
-                                                executors['position'],
-                                                "accept");
+                                              widget.id,
+                                              "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
+                                              executors['user']['avatar'],
+                                              executors['id'],
+                                              executors['position'][
+                                                  "title_${(globals.lang).tr().toString()}"],
+                                            );
                                           }));
                                         },
                                         child: Text(
@@ -549,16 +475,16 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                               BorderRadius.circular(34),
                                         ),
                                         onPressed: () {
-                                          Navigator.of(context).push(
+                                          Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(builder:
                                                   (BuildContext context) {
-                                            return ProblemSolvedRateScreen(
+                                            return ProblemSolvedDeclineScreen(
                                                 widget.id,
                                                 "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
                                                 executors['user']['avatar'],
                                                 executors['id'],
-                                                executors['position'],
-                                                "deny");
+                                                executors['position'][
+                                                    "title_${(globals.lang).tr().toString()}"]);
                                           }));
                                         },
                                         child: Text(
@@ -577,13 +503,120 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                             : Container(),
                       ],
                     )
-                  : Container(
-                      height: mediaQuery.size.height * 0.8,
-                      width: mediaQuery.size.width,
-                      child: Center(
-                        child: Text("solve_warning".tr().toString()),
-                      ),
-                    );
+                  : widget.stat != "denied" &&
+                          widget.stat != "closed" &&
+                          widget.stat != "canceled"
+                      ? Container(
+                          height: mediaQuery.size.height * 0.8,
+                          width: mediaQuery.size.width,
+                          child: Center(
+                            child: Text("solve_warning".tr().toString()),
+                          ),
+                        )
+                      : Container();
+
+              var res_header = Container(
+                margin: EdgeInsets.only(top: 8),
+                alignment: Alignment.center,
+                width: dWidth,
+                height: 50,
+                color: Color(0xffC4C4C4),
+                child: Text(
+                  widget.stat == "denied" || widget.stat == "closed"
+                      ? "problem_solved".tr().toString()
+                      : widget.stat == "canceled"
+                          ? "not_actual_txt".tr().toString()
+                          : "Отклонено",
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontSize: dWidth * globals.fontSize18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+              print(widget.stat);
+              var answers = Column(children: [
+                widget.stat == "denied" ||
+                        widget.stat == "closed" ||
+                        widget.stat == "canceled"
+                    ? widget.stat == "canceled"
+                        ? ShadowBox(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 18),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Text(
+                                            res["problem"]
+                                                    ["user_cancellation_reason"]
+                                                ["reason"],
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize14,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : res["moderator_log"] != null
+                            ? ShadowBox(
+                                child: ResContent(
+                                  titleCol:
+                                      "${globals.capitalize(res["moderator_log"]["moderator"]["last_name"])} ${globals.capitalize(res["moderator_log"]["moderator"]["first_name"])}",
+                                  dateCol:
+                                      "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["moderator_log"]['updated_at']).toString()))}",
+                                  positionCol: "moderator".tr().toString(),
+                                  contentCol: widget.stat == "denied" ||
+                                          widget.stat == "closed"
+                                      ? widget.stat == "closed"
+                                          ? res["problem"]
+                                              ["moderator_closing_reason"]
+                                          : res["problem"]
+                                              ["moderator_cancellation_reason"]
+                                      : "",
+                                ),
+                              )
+                            : Container()
+                    : Container(),
+                res["problem"]["unsatisfactory_solution"] != null
+                    ? ShadowBox(
+                        child: ResContent(
+                          titleCol:
+                              "${globals.capitalize(res["problem"]["unsatisfactory_solution"]["user"]['last_name'])} ${globals.capitalize(res["problem"]["unsatisfactory_solution"]["user"]['first_name'])}",
+                          dateCol:
+                              "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
+                          positionCol: "liver".tr().toString(),
+                          contentCol: res["problem"]["unsatisfactory_solution"]
+                              ["reason"],
+                        ),
+                      )
+                    : Container(),
+              ]);
+
+              _widget = Column(
+                children: [
+                  res_header,
+                  answers,
+                  res_widget,
+                ],
+              );
             } else {
               _widget = Center(
                 child: Text("Loading".tr().toString()),

@@ -33,10 +33,13 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   Timer timers;
   String _status = "processing";
   String _title;
+  int _chat_messages = 0;
+  bool _is_result = false;
   Map<String, dynamic> _data;
   @override
   void initState() {
     super.initState();
+    globals.routeProblemId = null;
     try {
       timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
         refreshBells();
@@ -114,6 +117,36 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
           _alert = false;
         }
       }
+      url =
+          '${globals.api_link}/problems/chat-new-messages-count?problem_ids=$_list';
+
+      var resp = await Requests.get(url, headers: headers);
+      if (resp.statusCode == 200) {
+        var res = resp.json();
+        if (res.length != 0) {
+          for (var i = 0; i < res.length; i++) {
+            // var problem_id = res[i];
+            if (res[_data["id"].toString()] != 0)
+              _chat_messages = res[_data["id"].toString()];
+            else
+              _chat_messages = 0;
+          }
+        } else {
+          _chat_messages = 0;
+        }
+      }
+      url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/problems/${_data["id"]}';
+
+      var respResult = await Requests.get(url, headers: headers);
+      if (respResult.statusCode == 200) {
+        var res = respResult.json();
+        if (res["seen"] == false) {
+          _is_result = true;
+        } else {
+          _is_result = false;
+        }
+      }
 
       setState(() {});
       // String reply = await response.transform(utf8.decoder).join();
@@ -141,18 +174,20 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
         if (snapshot.hasError) print(snapshot.error);
         if (snapshot.hasData) {
           _data = snapshot.data;
-          if (_data["status"] == "completed" ||
-              _data["status"] == "processing" ||
-              _data["status"] == "moderating" ||
-              _data["status"] == "not confirmed") {
+          if (_data["status"] == "not confirmed") {
             _status = "warning";
             _title = "unresolved".tr().toString();
+          } else if (_data["status"] == "completed" ||
+              _data["status"] == "processing" ||
+              _data["status"] == "moderating") {
+            _status = "info";
+            _title = "unresolved".tr().toString();
           } else if (_data["status"] == "denied" ||
-              _data["status"] == "canceled") {
+              _data["status"] == "closed") {
             _status = "danger";
             _title = "take_off_problems".tr().toString();
           } else if (_data["status"] == "confirmed" ||
-              _data["status"] == "closed") {
+              _data["status"] == "canceled") {
             _status = "success";
             _title = "solved".tr().toString();
           } else if (_data["status"] == "planned") {
@@ -319,221 +354,319 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                           children: [
                                             Row(
                                               children: [
-                                                Container(
-                                                  margin: EdgeInsets.only(),
-                                                  width: mediaQuery.size.width *
-                                                      0.23,
-                                                  height: 90,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.cover,
-                                                      child: _data["file_1"] !=
-                                                              null
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true)
-                                                                    .push(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return FullScreen(
-                                                                          imgList);
+                                                _data["file_1"] == null
+                                                    ? Container()
+                                                    : Container(
+                                                        margin:
+                                                            EdgeInsets.only(),
+                                                        width: mediaQuery
+                                                                .size.width *
+                                                            0.20,
+                                                        height: 70,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: FittedBox(
+                                                            fit: BoxFit.cover,
+                                                            child: _data[
+                                                                        "file_1"] !=
+                                                                    null
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context,
+                                                                              rootNavigator: true)
+                                                                          .push(
+                                                                        MaterialPageRoute(
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return FullScreen(imgList);
+                                                                          },
+                                                                        ),
+                                                                      );
                                                                     },
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl:
-                                                                    "${globals.site_link}/${_data["file_1"]}",
-                                                              ),
-                                                              // Image.network(
-                                                              //     "),
-                                                            )
-                                                          : Container(),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: mediaQuery
-                                                              .size.width *
-                                                          0.024),
-                                                  width: mediaQuery.size.width *
-                                                      0.23,
-                                                  height: 90,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.cover,
-                                                      child: _data["file_2"] !=
-                                                              null
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true)
-                                                                    .push(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return FullScreen(
-                                                                          imgList);
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          "${globals.site_link}${_data["file_1"]}",
+                                                                    ),
+                                                                    // Image.network(
+                                                                    //     "),
+                                                                  )
+                                                                : Container(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                _data["file_2"] == null
+                                                    ? Container()
+                                                    : Container(
+                                                        margin: EdgeInsets.only(
+                                                            left: mediaQuery
+                                                                    .size
+                                                                    .width *
+                                                                0.024),
+                                                        width: mediaQuery
+                                                                .size.width *
+                                                            0.20,
+                                                        height: 70,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: FittedBox(
+                                                            fit: BoxFit.cover,
+                                                            child: _data[
+                                                                        "file_2"] !=
+                                                                    null
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context,
+                                                                              rootNavigator: true)
+                                                                          .push(
+                                                                        MaterialPageRoute(
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return FullScreen(imgList);
+                                                                          },
+                                                                        ),
+                                                                      );
                                                                     },
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child: CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      "${globals.site_link}/${_data["file_2"]}"),
-                                                            )
-                                                          : Container(),
-                                                    ),
-                                                  ),
-                                                ),
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            "${globals.site_link}${_data["file_2"]}"),
+                                                                  )
+                                                                : Container(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                _data["file_3"] == null
+                                                    ? Container()
+                                                    : Container(
+                                                        margin: EdgeInsets.only(
+                                                          left: mediaQuery
+                                                                  .size.width *
+                                                              0.024,
+                                                        ),
+                                                        width: mediaQuery
+                                                                .size.width *
+                                                            0.20,
+                                                        height: 70,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: FittedBox(
+                                                            fit: BoxFit.cover,
+                                                            child: _data[
+                                                                        "file_3"] !=
+                                                                    null
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context,
+                                                                              rootNavigator: true)
+                                                                          .push(
+                                                                        MaterialPageRoute(
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return FullScreen(imgList);
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            "${globals.site_link}${_data["file_3"]}"),
+                                                                  )
+                                                                : Container(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                _data["file_4"] == null
+                                                    ? Container()
+                                                    : Container(
+                                                        margin: EdgeInsets.only(
+                                                          left: mediaQuery
+                                                                  .size.width *
+                                                              0.024,
+                                                        ),
+                                                        width: mediaQuery
+                                                                .size.width *
+                                                            0.20,
+                                                        height: 70,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          child: FittedBox(
+                                                            fit: BoxFit.cover,
+                                                            child: _data[
+                                                                        "file_4"] !=
+                                                                    null
+                                                                ? GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator.of(
+                                                                              context,
+                                                                              rootNavigator: true)
+                                                                          .push(
+                                                                        MaterialPageRoute(
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            return FullScreen(imgList);
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            "${globals.site_link}${_data["file_4"]}"),
+                                                                  )
+                                                                : Container(),
+                                                          ),
+                                                        ),
+                                                      ),
                                               ],
                                             ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      top: mediaQuery
-                                                              .size.width *
-                                                          0.024),
-                                                  width: mediaQuery.size.width *
-                                                      0.23,
-                                                  height: 90,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.cover,
-                                                      child: _data["file_3"] !=
-                                                              null
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true)
-                                                                    .push(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return FullScreen(
-                                                                          imgList);
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child: CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      "${globals.site_link}/${_data["file_3"]}"),
-                                                            )
-                                                          : Container(),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: mediaQuery
-                                                              .size.width *
-                                                          0.024,
-                                                      top: mediaQuery
-                                                              .size.width *
-                                                          0.024),
-                                                  width: mediaQuery.size.width *
-                                                      0.23,
-                                                  height: 90,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.cover,
-                                                      child: _data["file_4"] !=
-                                                              null
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                Navigator.of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true)
-                                                                    .push(
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (BuildContext
-                                                                            context) {
-                                                                      return FullScreen(
-                                                                          imgList);
-                                                                    },
-                                                                  ),
-                                                                );
-                                                              },
-                                                              child: CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      "${globals.site_link}/${_data["file_4"]}"),
-                                                            )
-                                                          : Container(),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            // Row(
+                                            //   children: [
+                                            //     _data["file_3"] == null
+                                            //         ? Container()
+                                            //         : Container(
+                                            //             margin: EdgeInsets.only(
+                                            //                 top: mediaQuery.size
+                                            //                         .width *
+                                            //                     0.024),
+                                            //             width: mediaQuery
+                                            //                     .size.width *
+                                            //                 0.23,
+                                            //             height: 90,
+                                            //             child: ClipRRect(
+                                            //               borderRadius:
+                                            //                   BorderRadius
+                                            //                       .circular(5),
+                                            //               child: FittedBox(
+                                            //                 fit: BoxFit.cover,
+                                            //                 child: _data[
+                                            //                             "file_3"] !=
+                                            //                         null
+                                            //                     ? GestureDetector(
+                                            //                         onTap: () {
+                                            //                           Navigator.of(
+                                            //                                   context,
+                                            //                                   rootNavigator: true)
+                                            //                               .push(
+                                            //                             MaterialPageRoute(
+                                            //                               builder:
+                                            //                                   (BuildContext context) {
+                                            //                                 return FullScreen(imgList);
+                                            //                               },
+                                            //                             ),
+                                            //                           );
+                                            //                         },
+                                            //                         child: CachedNetworkImage(
+                                            //                             imageUrl:
+                                            //                                 "${globals.site_link}${_data["file_3"]}"),
+                                            //                       )
+                                            //                     : Container(),
+                                            //               ),
+                                            //             ),
+                                            //           ),
+                                            //     _data["file_4"] == null
+                                            //         ? Container()
+                                            //         : Container(
+                                            //             margin: EdgeInsets.only(
+                                            //                 left: mediaQuery
+                                            //                         .size
+                                            //                         .width *
+                                            //                     0.024,
+                                            //                 top: mediaQuery.size
+                                            //                         .width *
+                                            //                     0.024),
+                                            //             width: mediaQuery
+                                            //                     .size.width *
+                                            //                 0.23,
+                                            //             height: 90,
+                                            //             child: ClipRRect(
+                                            //               borderRadius:
+                                            //                   BorderRadius
+                                            //                       .circular(5),
+                                            //               child: FittedBox(
+                                            //                 fit: BoxFit.cover,
+                                            //                 child: _data[
+                                            //                             "file_4"] !=
+                                            //                         null
+                                            //                     ? GestureDetector(
+                                            //                         onTap: () {
+                                            //                           Navigator.of(
+                                            //                                   context,
+                                            //                                   rootNavigator: true)
+                                            //                               .push(
+                                            //                             MaterialPageRoute(
+                                            //                               builder:
+                                            //                                   (BuildContext context) {
+                                            //                                 return FullScreen(imgList);
+                                            //                               },
+                                            //                             ),
+                                            //                           );
+                                            //                         },
+                                            //                         child: CachedNetworkImage(
+                                            //                             imageUrl:
+                                            //                                 "${globals.site_link}${_data["file_4"]}"),
+                                            //                       )
+                                            //                     : Container(),
+                                            //               ),
+                                            //             ),
+                                            //           ),
+                                            //   ],
+                                            // ),
                                           ],
                                         ),
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(
-                                            left:
-                                                mediaQuery.size.width * 0.024),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        width: mediaQuery.size.width * 0.365,
-                                        height: 190,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: FittedBox(
-                                            fit: BoxFit.cover,
-                                            child: _data["file_5"] != null
-                                                ? GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.of(context,
-                                                              rootNavigator:
-                                                                  true)
-                                                          .push(
-                                                        MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                              context) {
-                                                            return FullScreen(
-                                                                imgList);
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            "${globals.site_link}/${_data["file_5"]}"))
-                                                : Container(),
-                                          ),
-                                        ),
-                                      ),
+                                      // _data["file_5"] == null
+                                      //     ? Container()
+                                      //     : Container(
+                                      //         margin: EdgeInsets.only(
+                                      //             left: mediaQuery.size.width *
+                                      //                 0.024),
+                                      //         decoration: BoxDecoration(
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(5),
+                                      //         ),
+                                      //         width:
+                                      //             mediaQuery.size.width * 0.365,
+                                      //         height: 190,
+                                      //         child: ClipRRect(
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(5),
+                                      //           child: FittedBox(
+                                      //             fit: BoxFit.cover,
+                                      //             child: _data["file_5"] != null
+                                      //                 ? GestureDetector(
+                                      //                     onTap: () {
+                                      //                       Navigator.of(
+                                      //                               context,
+                                      //                               rootNavigator:
+                                      //                                   true)
+                                      //                           .push(
+                                      //                         MaterialPageRoute(
+                                      //                           builder:
+                                      //                               (BuildContext
+                                      //                                   context) {
+                                      //                             return FullScreen(
+                                      //                                 imgList);
+                                      //                           },
+                                      //                         ),
+                                      //                       );
+                                      //                     },
+                                      //                     child: CachedNetworkImage(
+                                      //                         imageUrl:
+                                      //                             "${globals.site_link}${_data["file_5"]}"))
+                                      //                 : Container(),
+                                      //           ),
+                                      //         ),
+                                      //       ),
                                     ],
                                   ),
                                 ),
@@ -551,16 +684,28 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                 "status".tr().toString(),
                                 ProblemStatusScreen(_data["id"]),
                                 true,
+                                "",
+                                false,
                               ),
                               CustomCardList(
                                 "subcat2",
                                 "messages".tr().toString(),
                                 MainChat(_data["id"], _data["status"]),
                                 true,
+                                "$_chat_messages",
+                                _chat_messages != 0 ? true : false,
                               ),
+
+                              // CustomCardList(
+                              //   "subcat2",
+                              //   "messages".tr().toString(),
+                              //   MainChat(_data["id"], _data["status"]),
+                              //   true,
+                              // ),
                               (_data["status"] == "confirmed" ||
                                       _data["status"] == "denied" ||
-                                      _data["status"] == "closed")
+                                      _data["status"] == "closed" ||
+                                      _data["status"] == "canceled")
                                   ? Container()
                                   : Container(
                                       child: Column(
@@ -637,15 +782,20 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                         ],
                                       ),
                                     ),
-                              CustomCardList(
-                                "subcat2",
-                                "problem_solved".tr().toString(),
-                                SolveProblemScreen(
-                                  status: _status,
-                                  id: _data["id"],
-                                ),
-                                false,
-                              ),
+                              (_data["status"] != "processing")
+                                  ? CustomCardList(
+                                      "subcat2",
+                                      "result".tr().toString(),
+                                      SolveProblemScreen(
+                                        status: _status,
+                                        id: _data["id"],
+                                        stat: _data["status"],
+                                      ),
+                                      false,
+                                      "1",
+                                      _is_result,
+                                    )
+                                  : Container(),
                             ],
                           ),
                         ),

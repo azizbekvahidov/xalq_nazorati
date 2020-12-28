@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/register/register_verify_ios_screen.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
@@ -30,6 +31,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   String phoneWiew = "";
   bool isRegister = false;
   void getCode() async {
+    final signature = await SmsAutoFill().getAppSignature;
+    print(signature);
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     if (phoneController.text == "") phone = "";
@@ -63,23 +66,14 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                   _value = !_value;
                 });
                 isRegister = false;
-                if (Platform.isIOS) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      settings: const RouteSettings(
-                          name: RegisterVerifyIosScreen.routeName),
-                      builder: (context) => RegisterVerifyIosScreen(
-                            phoneView: phoneWiew,
-                            phone: phone,
-                          )));
-                } else if (Platform.isAndroid) {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      settings: const RouteSettings(
-                          name: RegisterVerifyScreen.routeName),
-                      builder: (context) => RegisterVerifyScreen(
-                            phoneView: phoneWiew,
-                            phone: phone,
-                          )));
-                }
+                Navigator.of(context).push(MaterialPageRoute(
+                    settings: const RouteSettings(
+                        name: RegisterVerifyScreen.routeName),
+                    builder: (context) => RegisterVerifyScreen(
+                          phoneView: phoneWiew,
+                          phone: phone,
+                          // signature: signature,
+                        )));
               }
             } else {
               dynamic json = r1.json();

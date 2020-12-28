@@ -6,7 +6,9 @@ import 'package:xalq_nazorati/widget/news/news_item_urgent.dart';
 class NewsList extends StatefulWidget {
   final List news;
   final bool breaking;
-  NewsList({Key key, this.news, this.breaking}) : super(key: key);
+  bool isMain;
+  NewsList({Key key, this.news, this.breaking, this.isMain = false})
+      : super(key: key);
   @override
   _NewsListState createState() => _NewsListState();
 }
@@ -14,11 +16,18 @@ class NewsList extends StatefulWidget {
 class _NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
     return Container(
-      height: 141.0 * widget.news.length,
+      height: height - 330,
+      constraints: widget.isMain
+          ? BoxConstraints(
+              maxHeight: 150.0 * widget.news.length,
+              minHeight: 120.0 * widget.news.length)
+          : null,
+      // height: 141.0 * widget.news.length,
       child: ListView.builder(
         padding: EdgeInsets.all(0),
-        physics: NeverScrollableScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         itemCount: widget.news.length,
         itemBuilder: (content, index) {
           String title = widget.news[index]["api_title".tr().toString()];
@@ -29,7 +38,9 @@ class _NewsListState extends State<NewsList> {
                   title,
                   widget.news[index]["location"],
                   widget.news[index]["date_time"],
-                  widget.news[index]["img"])
+                  widget.news[index]["img"],
+                  widget.news[index]["status"],
+                )
               : NewsItemPlanned(
                   widget.news[index]["id"].toString(),
                   title,

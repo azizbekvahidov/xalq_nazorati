@@ -128,8 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             MainText("tel_number_title".tr().toString()),
                             PhoneInput(phoneController),
                             MainText("pass_title".tr().toString()),
-                            PassInput(
-                                "pass_hint".tr().toString(), passController),
+                            PassInput("pass_hint".tr().toString(),
+                                passController, null),
                             InkWell(
                               onTap: () {
                                 Navigator.of(context)

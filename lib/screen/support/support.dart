@@ -47,6 +47,7 @@ class _SupportState extends State<Support> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var dHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: CustomAppBar(
         title: "technical_support".tr().toString(),
@@ -59,65 +60,74 @@ class _SupportState extends State<Support> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _selectTab(0);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: _bg1,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "call".tr().toString(),
-                        style: TextStyle(
-                          color: _txt1,
-                          fontFamily: globals.font,
-                          fontSize: width * globals.fontSize18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _selectTab(1);
-                    },
-                    child: Container(
-                      width: 150,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: _bg2,
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        "send_message".tr().toString(),
-                        style: TextStyle(
-                          color: _txt2,
-                          fontFamily: globals.font,
-                          fontSize: width * globals.fontSize18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(padding: EdgeInsets.only(top: 30)),
               Container(
-                child: _children[_index],
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 20),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _selectTab(0);
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: _bg1,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "call".tr().toString(),
+                              style: TextStyle(
+                                color: _txt1,
+                                fontFamily: globals.font,
+                                fontSize: width * globals.fontSize18,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _selectTab(1);
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: _bg2,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "send_message".tr().toString(),
+                              style: TextStyle(
+                                color: _txt2,
+                                fontFamily: globals.font,
+                                fontSize: width * globals.fontSize18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                child: Container(
+                  height: dHeight <= 560 ? dHeight - 160 : dHeight - 230,
+                  child: _children[_index],
+                ),
               ),
             ],
           ),

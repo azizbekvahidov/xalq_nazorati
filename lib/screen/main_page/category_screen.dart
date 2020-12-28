@@ -130,6 +130,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                                     return ExpanseListTile(
                                       data: snapshot.data[index],
                                       subcategoryId: widget.subcategoryId,
+                                      category_title: widget.title,
                                     );
                                   },
                                   itemScrollController: itemScrollController,

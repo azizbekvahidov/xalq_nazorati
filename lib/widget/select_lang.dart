@@ -36,7 +36,7 @@ class _SelectLangState extends State<SelectLang> {
           topRight: Radius.circular(15),
         ),
       ),
-      height: 290,
+      height: 300,
       padding: EdgeInsets.symmetric(vertical: dHeight * 0.025),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class _SelectLangState extends State<SelectLang> {
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
             title: Text(
-              'O‘zbek',
+              'O‘zbekcha',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",
@@ -92,7 +92,7 @@ class _SelectLangState extends State<SelectLang> {
           RadioListTile<String>(
             activeColor: Theme.of(context).primaryColor,
             title: Text(
-              'Ўзбек',
+              'Ўзбекча',
               style: TextStyle(
                 color: Color(0xff050505),
                 fontFamily: "Gilroy",

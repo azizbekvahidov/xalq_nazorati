@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/profile/problem/main_problem_page.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'profile/main_profile.dart';
@@ -21,6 +24,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isProblemNotify = false;
+  Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+    refreshBells();
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      refreshBells();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   Future<Map<String, dynamic>> getUser() async {
     var url = '${globals.api_link}/users/profile';
     HttpGet request = HttpGet();
@@ -30,6 +51,35 @@ class _HomePageState extends State<HomePage> {
 
     globals.userData = json.decode(reply);
     return globals.userData;
+  }
+
+  void refreshBells() async {
+    try {
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications-by-state';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        var cnt = 0;
+        var res = response.json();
+
+        cnt += res["processing"];
+        cnt += res["denied"];
+        cnt += res["confirmed"];
+        cnt += res["planned"];
+        if (cnt != 0)
+          isProblemNotify = true;
+        else
+          isProblemNotify = false;
+      }
+      setState(() {});
+      // String reply = await response.transform(utf8.decoder).join();
+
+      // var temp = parseProblems(reply);
+
+    } catch (e) {
+      print(e);
+    }
   }
 
   final List<Widget> _children = [
@@ -48,12 +98,6 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  @override
-  void initState() {
-    super.initState();
-    getUser();
-  }
 
   customDialog(BuildContext context) {
     return showGeneralDialog(
@@ -139,15 +183,32 @@ class _HomePageState extends State<HomePage> {
                           color: _colors[0]),
                     ),
                     BottomNavigationBarItem(
-                      // activeColor: Theme.of(context).primaryColor,
-                      title: Text(
-                        'problems'.tr().toString(),
-                        style: TextStyle(fontFamily: globals.font),
-                        textAlign: TextAlign.center,
-                      ),
-                      icon: SvgPicture.asset("assets/img/problem.svg",
-                          color: _colors[1]),
-                    ),
+                        // activeColor: Theme.of(context).primaryColor,
+                        title: Text(
+                          'problems'.tr().toString(),
+                          style: TextStyle(fontFamily: globals.font),
+                          textAlign: TextAlign.center,
+                        ),
+                        icon: Stack(
+                          children: [
+                            SvgPicture.asset("assets/img/problem.svg",
+                                color: _colors[1]),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: isProblemNotify
+                                  ? Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(4)),
+                                    )
+                                  : Container(),
+                            ),
+                          ],
+                        )),
                     BottomNavigationBarItem(
                       // activeColor: Theme.of(context).primaryColor,
                       title: Text(

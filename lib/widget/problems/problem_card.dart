@@ -33,9 +33,25 @@ class _ProblemCardState extends State<ProblemCard> {
   }
 
   String _showTime;
+  String _status = "";
 
   @override
   Widget build(BuildContext context) {
+    if (widget.data["status"] == "not confirmed") {
+      _status = "warning";
+    } else if (widget.data["status"] == "completed" ||
+        widget.data["status"] == "processing" ||
+        widget.data["status"] == "moderating") {
+      _status = "info";
+    } else if (widget.data["status"] == "denied" ||
+        widget.data["status"] == "closed") {
+      _status = "danger";
+    } else if (widget.data["status"] == "confirmed" ||
+        widget.data["status"] == "canceled") {
+      _status = "success";
+    } else if (widget.data["status"] == "planned") {
+      _status = "delayed";
+    }
     var deadline =
         DateTime.parse(widget.data["deadline"]).millisecondsSinceEpoch;
     int days = DateTime.fromMillisecondsSinceEpoch(deadline)
@@ -125,8 +141,8 @@ class _ProblemCardState extends State<ProblemCard> {
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                   ),
-                  BoxTextWarning("${widget.data["status"]}".tr().toString(),
-                      widget.status),
+                  BoxTextWarning(
+                      "${widget.data["status"]}".tr().toString(), _status),
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                   ),

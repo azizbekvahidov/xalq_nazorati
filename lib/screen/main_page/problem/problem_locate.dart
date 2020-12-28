@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:requests/requests.dart';
@@ -16,6 +18,7 @@ import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/addresses.dart';
 import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:xalq_nazorati/screen/main_page/problem/flat_warning_problem.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import '../../main_page/problem/problem_finish.dart';
@@ -30,14 +33,17 @@ class ProblemLocate extends StatefulWidget {
   final String desc;
   final int subSubCategoryId;
   final int categoryId;
+  final String breadcrumbs;
 
-  ProblemLocate(this.desc, this.subSubCategoryId, this.categoryId);
+  ProblemLocate(
+      this.desc, this.subSubCategoryId, this.categoryId, this.breadcrumbs);
 
   @override
   _ProblemLocateState createState() => _ProblemLocateState();
 }
 
-class _ProblemLocateState extends State<ProblemLocate> {
+class _ProblemLocateState extends State<ProblemLocate>
+    with SingleTickerProviderStateMixin {
   YandexMapController mapKitController;
 
   //static LatLng _center = LatLng(-15.4630239974464, 28.363397732282127);
@@ -55,8 +61,14 @@ class _ProblemLocateState extends State<ProblemLocate> {
   int _cnt = 40;
   String _btn_message = "continue".tr().toString();
   String address = "";
+  bool _isFlat = false;
+  int _curLoad = 0;
+  AnimationController _animationController;
+  int _val = 0;
 
   Placemark _placemark;
+  Timer _timer;
+  int problemId;
 
   @override
   void initState() {
@@ -73,6 +85,13 @@ class _ProblemLocateState extends State<ProblemLocate> {
     }
   }
 
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  double percentage;
   static List<Addresses> _address;
   changeAddress(String value) async {
     try {
@@ -251,12 +270,37 @@ class _ProblemLocateState extends State<ProblemLocate> {
         });
   }
 
+  void timerCencel() {
+    _timer.cancel();
+  }
+
+  void timerStart() {
+    _timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
+      setState(() {
+        _val += 1;
+      });
+      if (_val == 100 && problemId != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ProblemFinish(id: problemId);
+            },
+          ),
+          ModalRoute.withName(MainPage.routeName),
+        );
+      }
+    });
+  }
+
   Future insertData() async {
     try {
+      print(_val);
       setState(() {
         _sending = true;
         _btn_message = "Loading".tr().toString();
       });
+      timerStart();
+
       Map<String, String> sendData = {
         "subsubcategory": "${widget.subSubCategoryId}",
         "content": widget.desc,
@@ -268,8 +312,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
       Map<String, String> headers = {
         "Authorization": "token ${globals.token}",
       };
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/problem';
+      var url = '${globals.api_link}/problems/problem';
       HttpGet request = HttpGet();
       var response = await Requests.post(url, headers: headers, body: sendData);
 
@@ -279,7 +322,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
           _btn_message = "Loading".tr().toString();
         });
         var reply = response.json();
-
+        problemId = reply["problem"]['id'];
         var url2 =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/upload';
 
@@ -318,37 +361,44 @@ class _ProblemLocateState extends State<ProblemLocate> {
               globals.images['file4'].lengthSync(),
               filename: _fileName.split('/').last));
         }
-        var res = await req.send();
-
-        if (res.statusCode == 201) {
+        if (req.files.length != 0) {
+          var res = await req.send();
+          if (res.statusCode == 201) {
+            setState(() {
+              _val = 98;
+            });
+            globals.images['file1'] = null;
+            globals.images['file2'] = null;
+            globals.images['file3'] = null;
+            globals.images['file4'] = null;
+            globals.userLocation = null;
+          }
+        } else {
+          setState(() {
+            _val = 98;
+          });
           globals.images['file1'] = null;
           globals.images['file2'] = null;
           globals.images['file3'] = null;
           globals.images['file4'] = null;
           globals.userLocation = null;
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                return ProblemFinish();
-              },
-            ),
-            ModalRoute.withName(MainPage.routeName),
-          );
         }
       } else {
         setState(() {
           _sending = false;
           _btn_message = "continue".tr().toString();
+          _val = 0;
         });
-        var reply = response.json();
+        _timer.cancel();
         customDialog(context);
-        print(reply);
       }
     } catch (e) {
       setState(() {
         _sending = false;
         _btn_message = "continue".tr().toString();
+        _val = 0;
       });
+      _timer.cancel();
       print(e);
     }
   }
@@ -358,6 +408,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
         "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
     _latitude = double.tryParse(addr['latitude']);
     _longitude = double.tryParse(addr['longitude']);
+    _isFlat = addr["with_flats"];
+    if (flatController.text != "") {
+      address += ", ${flatController.text}";
+    }
     if (isChange)
       setState(() {
         _valid = true;
@@ -455,6 +509,10 @@ class _ProblemLocateState extends State<ProblemLocate> {
   // final _key = GlobalKey<GoogleMapStateBase>();
   @override
   Widget build(BuildContext context) {
+    var _user_address = "${globals.userData['address_str']}"
+        .replaceAll("\n", " ")
+        .replaceAll("\t", " ")
+        .replaceAll("\r", " ");
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -481,6 +539,85 @@ class _ProblemLocateState extends State<ProblemLocate> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  MainText("Ваш адрес"),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 16),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromRGBO(248, 249, 250, 1),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            width: 1,
+                                            color: Color.fromRGBO(
+                                                178, 183, 208, 0.25))),
+                                    child: Text(
+                                      _user_address,
+                                      style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: dWidth * globals.fontSize16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Color.fromRGBO(0, 0, 0, 0.5),
+                                        fontFeatures: [
+                                          FontFeature.enable("pnum"),
+                                          FontFeature.enable("lnum")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Использовать мой адрес",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      CheckboxCustom(true),
+                                    ],
+                                  ),
+                                  Padding(padding: EdgeInsets.only(top: 20)),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Выбрать Другой адрес",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize16,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      CheckboxCustom(true),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          ShadowBox(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      widget.breadcrumbs,
+                                      style: TextStyle(
+                                        color:
+                                            Color.fromRGBO(102, 103, 108, 0.7),
+                                        fontFamily: globals.font,
+                                        fontSize: dWidth * globals.fontSize12,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
                                   widget.categoryId != 18
                                       ? MainText("set_address".tr().toString())
                                       : Container(),
@@ -567,7 +704,7 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                         )
                                       : AddressSearch(
                                           setAddress: setAddress,
-                                          isFlat: false,
+                                          isFlat: true,
                                         ),
                                   MainText("notes".tr().toString()),
                                   Container(
@@ -690,27 +827,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                                         yandexMapController;
                                                   },
                                                 )),
-                                                // Positioned(
-                                                //   child: GoogleMap(
-                                                //     markers: _markers.values.toSet(),
-                                                //     mapType: _currentMapType,
-                                                //     initialCameraPosition: CameraPosition(
-                                                //       target: _initialPosition,
-                                                //       zoom: 10,
-                                                //     ),
-                                                //     onTap: (coord) {
-                                                //       _setLocation(coord);
-                                                //       print(coord);
-                                                //     },
-                                                //     onMapCreated: _onMapCreated,
-                                                //     zoomGesturesEnabled: true,
-                                                //     onCameraMove: _onCameraMove,
-                                                //     myLocationEnabled: true,
-                                                //     compassEnabled: true,
-                                                //     myLocationButtonEnabled: false,
-                                                //     zoomControlsEnabled: false,
-                                                //   ),
-                                                // ),
                                                 Positioned(
                                                   bottom: 10,
                                                   right: 10,
@@ -728,135 +844,6 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                           ),
                                         )
                                       : Container(),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.symmetric(vertical: 15),
-                                  //   child: Row(
-                                  //     mainAxisAlignment:
-                                  //         MainAxisAlignment.spaceBetween,
-                                  //     children: [
-                                  //       InkWell(
-                                  //         onTap: () {
-                                  //           setState(() {
-                                  //             _value = !_value;
-                                  //           });
-                                  //           checkChange();
-                                  //         },
-                                  //         child: Container(
-                                  //           decoration: BoxDecoration(
-                                  //               border: Border.all(
-                                  //                   width: 2,
-                                  //                   style: BorderStyle.solid,
-                                  //                   color: Theme.of(context)
-                                  //                       .primaryColor),
-                                  //               shape: BoxShape.circle,
-                                  //               color: _value
-                                  //                   ? Theme.of(context)
-                                  //                       .primaryColor
-                                  //                   : Colors.transparent),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(5.0),
-                                  //             child: _value
-                                  //                 ? Icon(
-                                  //                     Icons.check,
-                                  //                     size: 15.0,
-                                  //                     color: Colors.white,
-                                  //                   )
-                                  //                 : Icon(
-                                  //                     Icons
-                                  //                         .check_box_outline_blank,
-                                  //                     size: 15.0,
-                                  //                     color: Colors.transparent,
-                                  //                   ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //       Container(
-                                  //         padding: EdgeInsets.only(left: 20),
-                                  //         width: mediaQuery.size.width * 0.8,
-                                  //         child: RichText(
-                                  //           text: TextSpan(
-                                  //             children: [
-                                  //               TextSpan(
-                                  //                 text: "problem_aggreement_start"
-                                  //                     .tr()
-                                  //                     .toString(),
-                                  //                 style: TextStyle(
-                                  //                   fontFamily: globals.font,
-                                  //                   fontSize: 12,
-                                  //                   color: Colors.black,
-                                  //                   fontWeight: FontWeight.normal,
-                                  //                 ),
-                                  //               ),
-                                  //               TextSpan(
-                                  //                 recognizer:
-                                  //                     TapGestureRecognizer()
-                                  //                       ..onTap = () {
-                                  //                         Navigator.pushNamed(
-                                  //                             context,
-                                  //                             RulePage.routeName);
-                                  //                       },
-                                  //                 text: "user_aggreement"
-                                  //                     .tr()
-                                  //                     .toString(),
-                                  //                 style: TextStyle(
-                                  //                   decoration:
-                                  //                       TextDecoration.underline,
-                                  //                   fontFamily: globals.font,
-                                  //                   fontSize: 12,
-                                  //                   color: Theme.of(context)
-                                  //                       .primaryColor,
-                                  //                   fontWeight: FontWeight.normal,
-                                  //                 ),
-                                  //               ),
-                                  //               TextSpan(
-                                  //                 text: "and".tr().toString(),
-                                  //                 style: TextStyle(
-                                  //                   fontFamily: globals.font,
-                                  //                   fontSize: 12,
-                                  //                   color: Colors.black,
-                                  //                   fontWeight: FontWeight.normal,
-                                  //                 ),
-                                  //               ),
-                                  //               TextSpan(
-                                  //                 recognizer:
-                                  //                     TapGestureRecognizer()
-                                  //                       ..onTap = () {
-                                  //                         Navigator.pushNamed(
-                                  //                             context,
-                                  //                             RulePage.routeName);
-                                  //                       },
-                                  //                 text: "moderator_rule"
-                                  //                     .tr()
-                                  //                     .toString(),
-                                  //                 style: TextStyle(
-                                  //                   decoration:
-                                  //                       TextDecoration.underline,
-                                  //                   fontFamily: globals.font,
-                                  //                   fontSize: 12,
-                                  //                   color: Theme.of(context)
-                                  //                       .primaryColor,
-                                  //                   fontWeight: FontWeight.normal,
-                                  //                 ),
-                                  //               ),
-                                  //               TextSpan(
-                                  //                 text: "problem_aggreement_end"
-                                  //                     .tr()
-                                  //                     .toString(),
-                                  //                 style: TextStyle(
-                                  //                   fontFamily: globals.font,
-                                  //                   fontSize: 12,
-                                  //                   color: Colors.black,
-                                  //                   fontWeight: FontWeight.normal,
-                                  //                 ),
-                                  //               ),
-                                  //             ],
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ],
-                                  //   ),
-                                  // )
                                 ],
                               ),
                             ),
@@ -881,23 +868,48 @@ class _ProblemLocateState extends State<ProblemLocate> {
                                   () {},
                                   Color(0xffB2B7D0),
                                 )
-                              : DefaultButton(_btn_message, () {
-                                  if (!_sending)
-                                    insertData().then((value) {});
-                                  else
-                                    print('sending');
-                                  // Navigator.of(context).pushAndRemoveUntil(
-                                  //   MaterialPageRoute(
-                                  //     builder: (BuildContext context) {
-                                  //       return ProblemFinish();
-                                  //     },
-                                  //   ),
-                                  //   ModalRoute.withName(MainPage.routeName),
-                                  // );
-                                },
-                                  (!_sending)
-                                      ? Theme.of(context).primaryColor
-                                      : Color(0xffB2B7D0)),
+                              : !_sending
+                                  ? DefaultButton(_btn_message, () {
+                                      if (widget.subSubCategoryId != 35) {
+                                        insertData().then((value) {});
+                                      } else {
+                                        if (_isFlat) {
+                                          insertData().then((value) {});
+                                        } else {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(builder:
+                                                  (BuildContext context) {
+                                            return FlatWarningProblem();
+                                          }));
+                                        }
+                                      }
+                                    },
+                                      (!_sending)
+                                          ? Theme.of(context).primaryColor
+                                          : Color(0xffB2B7D0))
+                                  : Center(
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50.0,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.0),
+                                        child: LiquidLinearProgressIndicator(
+                                          value: _val / 100,
+                                          backgroundColor: Color(0xffB2B7D0),
+                                          valueColor: AlwaysStoppedAnimation(
+                                              Theme.of(context).primaryColor),
+                                          borderRadius: 25.0,
+                                          center: Text(
+                                            "${_val}",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                         ),
                       ),
                     ],

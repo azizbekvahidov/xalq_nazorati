@@ -43,77 +43,88 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
           ),
         );
       },
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 121,
-              width: 100,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: FittedBox(
-                    fit: BoxFit.cover, child: Image.network(widget.img)),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 15),
-              width: cWidth - 152,
-              height: 120,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title,
-                    maxLines: 3,
-                    style: TextStyle(
-                      color: Color(0xff313B6C),
-                      fontFamily: globals.font,
-                      fontSize: mediaQuery.size.width * globals.fontSize14,
-                      fontWeight: FontWeight.w600,
-                    ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 121,
+                  width: cWidth * 0.20,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: FittedBox(
+                        fit: BoxFit.cover, child: Image.network(widget.img)),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      "${data[0]}",
-                      maxLines: 3,
-                      style: TextStyle(
-                        fontFamily: globals.font,
-                        fontSize: mediaQuery.size.width * globals.fontSize12,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                ),
+                Container(
+                  padding: EdgeInsets.only(left: 15),
+                  width: cWidth * 0.65,
+                  height: 121,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        maxLines: 3,
+                        style: TextStyle(
+                          color: Color(0xff313B6C),
+                          fontFamily: globals.font,
+                          fontSize: mediaQuery.size.width * globals.fontSize14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Row(
-                      children: [
-                        Text(
-                          "${_publishDate}",
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          "${data[0]}",
+                          maxLines: 3,
                           style: TextStyle(
                             fontFamily: globals.font,
                             fontSize:
                                 mediaQuery.size.width * globals.fontSize12,
                             fontWeight: FontWeight.w400,
-                            color: Color(0xffB2B7D0),
-                            fontFeatures: [
-                              FontFeature.enable("pnum"),
-                              FontFeature.enable("lnum")
-                            ],
+                            color: Colors.black,
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: [
+                            Text(
+                              "${_publishDate}",
+                              style: TextStyle(
+                                fontFamily: globals.font,
+                                fontSize:
+                                    mediaQuery.size.width * globals.fontSize12,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xffB2B7D0),
+                                fontFeatures: [
+                                  FontFeature.enable("pnum"),
+                                  FontFeature.enable("lnum")
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Container(
+            width: cWidth,
+            height: 1,
+            color: Color.fromRGBO(102, 103, 108, 0.8),
+          )
+        ],
       ),
     );
   }

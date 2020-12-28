@@ -29,13 +29,27 @@ class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Container(
       child: FutureBuilder(
           future: getNews(),
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
             return snapshot.hasData
-                ? NewsList(news: snapshot.data, breaking: true)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "today".tr().toString().replaceAll("\n", " "),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: width * globals.fontSize16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      NewsList(news: snapshot.data, breaking: true),
+                    ],
+                  )
                 : Center(
                     child: Text("no_news".tr().toString()),
                   );

@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
@@ -13,8 +16,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/chatMessage.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
+import 'package:xalq_nazorati/widget/chat_box.dart';
 import 'package:xalq_nazorati/widget/full_screen.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_view.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class MainChat extends StatefulWidget {
   final int id;
@@ -30,13 +35,22 @@ class _MainChatState extends State<MainChat> {
   Timer timer;
   List<ChatMessage> _data;
   File _file = null;
+  bool _isHide = false;
 
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(seconds: 100), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 15), (Timer t) {
       refreshChat();
     });
+    if (widget.status == "canceled" ||
+        widget.status == "confirmed" ||
+        widget.status == "denied" ||
+        widget.status == "closed") {
+      setState(() {
+        _isHide = true;
+      });
+    }
   }
 
   @override
@@ -68,7 +82,7 @@ class _MainChatState extends State<MainChat> {
   Future refreshChat() async {
     try {
       var url =
-          '${globals.api_link}/problems/refresh-chat?problem_id=${widget.id}';
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/refresh-chat?problem_id=${widget.id}';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
 
@@ -89,7 +103,8 @@ class _MainChatState extends State<MainChat> {
 
   Future checkMessage(int id) async {
     try {
-      var url = '${globals.api_link}/problems/check-message?message_id=${id}';
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/check-message?message_id=${id}';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
 
@@ -107,10 +122,25 @@ class _MainChatState extends State<MainChat> {
         .toList();
   }
 
+  Future<File> testCompressAndGetFile(File file, String targetPath) async {
+    print("testCompressAndGetFile");
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 80,
+    );
+
+    print(file.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
+
   Future sendMessage() async {
     if (messageController.text != "" || _file != null) {
       try {
-        var url2 = '${globals.api_link}/problems/chat';
+        var url2 =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/chat';
 
         var req = http.MultipartRequest("POST", Uri.parse(url2));
         req.headers.addAll({"Authorization": "token ${globals.token}"});
@@ -149,8 +179,12 @@ class _MainChatState extends State<MainChat> {
             ? Container(
                 width: mediaQuery.size.width,
                 height: mediaQuery.size.height < 560
-                    ? mediaQuery.size.height * 0.58
-                    : mediaQuery.size.height * 0.67,
+                    ? _isHide
+                        ? mediaQuery.size.height * 0.66
+                        : mediaQuery.size.height * 0.58
+                    : _isHide
+                        ? mediaQuery.size.height * 0.75
+                        : mediaQuery.size.height * 0.67,
                 child: ListView.builder(
                     reverse: true,
                     physics: BouncingScrollPhysics(),
@@ -161,7 +195,8 @@ class _MainChatState extends State<MainChat> {
                           DateFormat("yyyy-MM-ddTHH:mm:ssZ")
                               .parseUTC(_data[index].when)
                               .toString()));
-                      var userId = _data[index].user;
+                      var userId = _data[index].user["id"];
+                      print(_data[index]);
                       return Row(
                         mainAxisAlignment: userId == globals.userData["id"]
                             ? MainAxisAlignment.end
@@ -185,6 +220,62 @@ class _MainChatState extends State<MainChat> {
                                   borderRadius: BorderRadius.circular(6.2)),
                               child: Column(
                                 children: [
+                                  userId != globals.userData["id"]
+                                      ? Container(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                child: Text(
+                                                  "${globals.capitalize(_data[index].user["last_name"])} ${globals.capitalize(_data[index].user["first_name"])}",
+                                                  style: TextStyle(
+                                                    color: Color(0xff3182CE),
+                                                    fontFamily: globals.font,
+                                                    fontSize:
+                                                        mediaQuery.size.width *
+                                                            globals.fontSize16,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFeatures: [
+                                                      FontFeature.enable(
+                                                          "pnum"),
+                                                      FontFeature.enable("lnum")
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    EdgeInsets.only(top: 5),
+                                                child: Row(
+                                                  children: [
+                                                    ChatBox(
+                                                        val: _data[index]
+                                                                .work_details[
+                                                            "organization"]),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 5)),
+                                                    ChatBox(
+                                                        val: _data[index]
+                                                                .work_details[
+                                                            "district"]),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                padding: EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                child: ChatBox(
+                                                    val: _data[index]
+                                                            .work_details[
+                                                        "position"]),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -195,7 +286,21 @@ class _MainChatState extends State<MainChat> {
                                             ? mediaQuery.size.width * 0.7
                                             : 64,
                                         child: _data[index].file == null
-                                            ? Text(_data[index].message)
+                                            ? Text(
+                                                _data[index].message,
+                                                style: TextStyle(
+                                                  fontFamily: globals.font,
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize12,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black,
+                                                  fontFeatures: [
+                                                    FontFeature.enable("pnum"),
+                                                    FontFeature.enable("lnum")
+                                                  ],
+                                                ),
+                                              )
                                             : ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(15),
@@ -237,8 +342,32 @@ class _MainChatState extends State<MainChat> {
                                                                           tag:
                                                                               'imageHero',
                                                                           child:
+                                                                              Stack(
+                                                                            children: [
                                                                               Image.network(
-                                                                            "${globals.site_link}${_data[index].file}",
+                                                                                "${globals.site_link}${_data[index].file}",
+                                                                              ),
+                                                                              Positioned(
+                                                                                  top: 40,
+                                                                                  right: 10,
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      Navigator.of(context).pop();
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 40,
+                                                                                      height: 40,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: Color(0xFFFFFFFF),
+                                                                                        borderRadius: BorderRadius.circular(20),
+                                                                                      ),
+                                                                                      child: Icon(
+                                                                                        Icons.close,
+                                                                                        size: 40,
+                                                                                      ),
+                                                                                    ),
+                                                                                  )),
+                                                                            ],
                                                                           ),
                                                                         ),
                                                                       ),
@@ -290,6 +419,16 @@ class _MainChatState extends State<MainChat> {
                                                                     fontFamily:
                                                                         globals
                                                                             .font,
+                                                                    fontSize: mediaQuery
+                                                                            .size
+                                                                            .width *
+                                                                        globals
+                                                                            .fontSize14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: Color(
+                                                                        0xff050505),
                                                                   ),
                                                                 ),
                                                               ),
@@ -316,7 +455,20 @@ class _MainChatState extends State<MainChat> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(messageTime),
+                                      Text(
+                                        messageTime,
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: mediaQuery.size.width *
+                                              globals.fontSize8,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   )
                                 ],
@@ -340,8 +492,16 @@ class _MainChatState extends State<MainChat> {
       PlatformFile file = result.files.first;
       if (file.extension == "jpg" ||
           file.extension == "png" ||
-          file.extension == "jpeg" ||
-          file.extension == "pdf") {
+          file.extension == "jpeg") {
+        _file = File(result.files.single.path);
+        final dir = await path_provider.getTemporaryDirectory();
+
+        final targetPath =
+            dir.absolute.path + "/${Time()}${_file.path.split("/").last}";
+
+        _file = await testCompressAndGetFile(_file, targetPath);
+        sendMessage();
+      } else if (file.extension == "pdf") {
         _file = File(result.files.single.path);
         sendMessage();
       } else {
@@ -397,16 +557,13 @@ class _MainChatState extends State<MainChat> {
           child: Stack(
             children: [
               Positioned(
-                bottom: 85,
+                bottom: _isHide ? 20 : 85,
                 child: Container(
                   width: mediaQuery.size.width,
                   child: generateList(context),
                 ),
               ),
-              (widget.status == "canceled" ||
-                      widget.status == "confirmed" ||
-                      widget.status == "denied" ||
-                      widget.status == "closed")
+              (_isHide)
                   ? Container()
                   : Positioned(
                       bottom: 30,

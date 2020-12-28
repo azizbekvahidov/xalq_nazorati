@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:requests/requests.dart';
@@ -33,6 +35,7 @@ class _AddressSearchState extends State<AddressSearch> {
   bool isSelectDistrict = true;
   bool isSelectStreet = true;
   bool isSelectHouse = true;
+  bool with_flats = false;
 
   // List<DropdownMenuItem<String>> _district;
   String _selectedType;
@@ -40,11 +43,14 @@ class _AddressSearchState extends State<AddressSearch> {
   List<DropdownMenuItem<String>> _district;
   String _selectedDistrict;
   String _selectedStreet;
+  String _selectedHouse;
+  bool _isHouse = false;
 
   TextEditingController searchAddressController = TextEditingController();
   TextEditingController houseController = TextEditingController();
   TextEditingController mahallaController = TextEditingController();
   TextEditingController flatController = TextEditingController();
+  Timer _timer;
 
   @override
   void initState() {
@@ -71,7 +77,7 @@ class _AddressSearchState extends State<AddressSearch> {
     }
   }
 
-  getStreet(String value) async {
+  getStreet(String value, String placeType) async {
     try {
       Map<String, String> headers = {
         "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
@@ -148,6 +154,11 @@ class _AddressSearchState extends State<AddressSearch> {
   }
 
   var _suggets;
+  SuggestionsBoxController suggestionsBoxController =
+      SuggestionsBoxController();
+
+  SuggestionsBoxController suggestionsHouseBoxController =
+      SuggestionsBoxController();
 
   validate(var suggest) {
     if (mahallaController.text != "") {
@@ -164,7 +175,7 @@ class _AddressSearchState extends State<AddressSearch> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MainText("district".tr().toString()),
+          MainText("${"district".tr().toString()}*"),
           DefaultSelect(
             child: DropdownButtonHideUnderline(
               child: DropdownButton(
@@ -174,11 +185,13 @@ class _AddressSearchState extends State<AddressSearch> {
                   setState(() {
                     _selectedDistrict = val;
                     setState(() {
+                      // _selectedStreet = "";
+                      // searchAddressController.text = "";
+                      houseController.text = "";
+                      widget.ischange = false;
+                      _selectedHouse = "";
                       _selectedStreet = "";
                       searchAddressController.text = "";
-                      houseController.text = "";
-                      mahallaController.text = "";
-                      widget.ischange = false;
                     });
                     validate(null);
                   });
@@ -193,7 +206,7 @@ class _AddressSearchState extends State<AddressSearch> {
               ),
             ),
           ),
-          MainText("placeType".tr().toString()),
+          MainText("${"placeType".tr().toString()}*"),
           Padding(padding: EdgeInsets.only(top: 10)),
           Container(
             child: Column(
@@ -209,11 +222,13 @@ class _AddressSearchState extends State<AddressSearch> {
                           _massiv_type = false;
                           placeType = "all";
 
-                          _selectedStreet = "";
-                          searchAddressController.text = "";
+                          // _selectedStreet = "";
+                          // searchAddressController.text = "";
                           houseController.text = "";
                           mahallaController.text = "";
+                          _selectedHouse = "";
                           widget.ischange = false;
+                          suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },
@@ -235,7 +250,7 @@ class _AddressSearchState extends State<AddressSearch> {
                                 color: _all_type ? Colors.white : Colors.black,
                                 fontFamily: globals.font,
                                 fontWeight: FontWeight.w500,
-                                fontSize: dWidth * globals.fontSize16),
+                                fontSize: dWidth * globals.fontSize14),
                           ),
                         ),
                       ),
@@ -250,11 +265,13 @@ class _AddressSearchState extends State<AddressSearch> {
                           _massiv_type = false;
                           placeType = "street";
 
-                          _selectedStreet = "";
-                          searchAddressController.text = "";
+                          // _selectedStreet = "";
+                          // searchAddressController.text = "";
                           houseController.text = "";
                           mahallaController.text = "";
+                          _selectedHouse = "";
                           widget.ischange = false;
+                          suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },
@@ -278,7 +295,7 @@ class _AddressSearchState extends State<AddressSearch> {
                                     _street_type ? Colors.white : Colors.black,
                                 fontFamily: globals.font,
                                 fontWeight: FontWeight.w500,
-                                fontSize: dWidth * globals.fontSize16),
+                                fontSize: dWidth * globals.fontSize14),
                           ),
                         ),
                       ),
@@ -297,12 +314,15 @@ class _AddressSearchState extends State<AddressSearch> {
                           _massiv_type = false;
                           placeType = "quarter";
 
-                          _selectedStreet = "";
-                          searchAddressController.text = "";
+                          // _selectedStreet = "";
+                          // searchAddressController.text = "";
                           houseController.text = "";
                           mahallaController.text = "";
+                          _selectedHouse = "";
                           widget.ischange = false;
+                          suggestionsBoxController.toggle();
                         });
+
                         validate(null);
                       },
                       child: Container(
@@ -325,7 +345,7 @@ class _AddressSearchState extends State<AddressSearch> {
                                     _quarter_type ? Colors.white : Colors.black,
                                 fontFamily: globals.font,
                                 fontWeight: FontWeight.w500,
-                                fontSize: dWidth * globals.fontSize16),
+                                fontSize: dWidth * globals.fontSize14),
                           ),
                         ),
                       ),
@@ -340,11 +360,13 @@ class _AddressSearchState extends State<AddressSearch> {
                           _massiv_type = true;
                           placeType = "massif";
 
-                          _selectedStreet = "";
-                          searchAddressController.text = "";
+                          // _selectedStreet = "";
+                          // searchAddressController.text = "";
                           houseController.text = "";
                           mahallaController.text = "";
+                          _selectedHouse = "";
                           widget.ischange = false;
+                          suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },
@@ -368,7 +390,7 @@ class _AddressSearchState extends State<AddressSearch> {
                                     _massiv_type ? Colors.white : Colors.black,
                                 fontFamily: globals.font,
                                 fontWeight: FontWeight.w500,
-                                fontSize: dWidth * globals.fontSize16),
+                                fontSize: dWidth * globals.fontSize14),
                           ),
                         ),
                       ),
@@ -417,42 +439,64 @@ class _AddressSearchState extends State<AddressSearch> {
                       ),
                       hideOnEmpty: true,
                       suggestionsCallback: (pattern) async {
-                        return await getStreet(pattern);
+                        return await getStreet(pattern, placeType);
                       },
+                      suggestionsBoxController: suggestionsBoxController,
                       itemBuilder: (context, suggestion) {
-                        print(suggestion);
+                        var tempDistrict = suggestion["district"][
+                                    "name_${(globals.lang).tr().toString()}"] ==
+                                ""
+                            ? ""
+                            : suggestion["district"]
+                                    ["name_${(globals.lang).tr().toString()}"] +
+                                ", ";
                         return ListTile(
                           title: _selectedDistrict == null
                               ? Text(suggestion[
                                   "address_${(globals.lang).tr().toString()}"])
-                              : Text(suggestion[
-                                  "name_${(globals.lang).tr().toString()}"]),
+                              : Text(tempDistrict +
+                                  suggestion[
+                                      "full_name_${(globals.lang).tr().toString()}"]),
                         );
                       },
                       suggestionsBoxDecoration:
                           SuggestionsBoxDecoration(offsetX: -20.0),
                       onSuggestionSelected: (suggestion) {
                         if (_selectedDistrict == null) {
-                          print(suggestion);
                           setState(() {
+                            _selectedHouse = "";
+
                             _selectedDistrict =
                                 suggestion["district"]["id"].toString();
-                            // _selectedStreet = suggestion["district"]["name"];
-                            searchAddressController.text = suggestion[
-                                "name_${(globals.lang).tr().toString()}"];
-                            mahallaController.text = suggestion["community"]
-                                ["name_${(globals.lang).tr().toString()}"];
+                            _selectedStreet = suggestion["id"].toString();
                           });
+                          // _selectedStreet = suggestion["district"]["name"];
+                          searchAddressController.text = suggestion[
+                                  "name_${(globals.lang).tr().toString()}"] +
+                              (suggestion["tags_${(globals.lang).tr().toString()}"] ==
+                                          null ||
+                                      suggestion[
+                                              "tags_${(globals.lang).tr().toString()}"] ==
+                                          ""
+                                  ? ""
+                                  : " (" +
+                                      suggestion[
+                                          "tags_${(globals.lang).tr().toString()}"] +
+                                      ")");
+                          // mahallaController.text = suggestion["community"]
+                          //     ["name_${(globals.lang).tr().toString()}"];
+
                           validate(suggestion);
                         } else {
                           _selectedStreet = suggestion["id"].toString();
                           searchAddressController.text = suggestion[
-                              "name_${(globals.lang).tr().toString()}"];
+                              "full_name_${(globals.lang).tr().toString()}"];
 
                           setState(() {
                             houseController.text = "";
                             mahallaController.text = "";
                             widget.ischange = false;
+                            _selectedHouse = "";
                           });
                           validate(null);
                         }
@@ -464,89 +508,232 @@ class _AddressSearchState extends State<AddressSearch> {
               ],
             ),
           ),
-          MainText("houses".tr().toString()),
-          // DefaultSelect(
-          //   child: DropdownButtonHideUnderline(
-          //     child: DropdownButton(
-          //       isExpanded: true,
-          //       items: _district,
-          //       onChanged: (val) {
-          //         setState(() {
-          //           _selectedDistrict = val;
-          //         });
-          //       },
-          //       hint: Text(
-          //         "select_district".tr().toString(),
-          //         style: TextStyle(
-          //             fontFamily: globals.font,
-          //             fontSize: dWidth * globals.fontSize18),
+
+          // Stack(
+          //   alignment: AlignmentDirectional.topStart,
+          //   fit: StackFit.loose,
+          //   overflow: Overflow.visible,
+          //   children: [
+          //     Container(
+          //       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          //       margin: EdgeInsets.symmetric(vertical: 10),
+          //       width: double.infinity,
+          //       height: 45,
+          //       decoration: BoxDecoration(
+          //         color: Color(0xffF5F6F9),
+          //         borderRadius: BorderRadius.circular(22.5),
+          //         border: Border.all(
+          //           color: Color.fromRGBO(178, 183, 208, 0.5),
+          //           style: BorderStyle.solid,
+          //           width: 0.5,
+          //         ),
           //       ),
-          //       value: _selectedDistrict,
+          //       child: Row(
+          //         children: [
+          //           Container(
+          //             width: (mediaQuery.size.width -
+          //                     mediaQuery.padding.left -
+          //                     mediaQuery.padding.right) *
+          //                 0.74,
+          //             child: TextField(
+          //               onChanged: (value) async {
+          //                 await getStreet(value, placeType);
+          //               },
+          //               controller: searchAddressController,
+          //               maxLines: 1,
+          //               decoration: InputDecoration.collapsed(
+          //                 hintText: "",
+          //                 hintStyle: Theme.of(context)
+          //                     .textTheme
+          //                     .display1
+          //                     .copyWith(
+          //                         fontSize: mediaQuery.size.width *
+          //                             globals.fontSize18),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
           //     ),
-          //   ),
+          //     Positioned(
+          //       top: 60,
+          //       child: Container(
+          //         color: Colors.red,
+          //         width: dWidth - 40,
+          //         height: 200,
+          //         child: Text("asdasda"),
+          //       ),
+          //     ),
+          //   ],
           // ),
+          MainText("${"houses".tr().toString()}*"),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            margin: EdgeInsets.symmetric(vertical: 10),
-            width: double.infinity,
-            height: 45,
-            decoration: BoxDecoration(
-              color: Color(0xffF5F6F9),
-              borderRadius: BorderRadius.circular(22.5),
-              border: Border.all(
-                color: Color.fromRGBO(178, 183, 208, 0.5),
-                style: BorderStyle.solid,
-                width: 0.5,
-              ),
-            ),
-            child: Row(
+            // decoration: BoxDecoration(
+            //     border: Border.all(color: Theme.of(context).primaryColor)),
+            child: Column(
               children: [
                 Container(
-                    width: (mediaQuery.size.width -
-                            mediaQuery.padding.left -
-                            mediaQuery.padding.right) *
-                        0.74,
-                    child: TypeAheadField(
-                      suggestionsBoxDecoration:
-                          SuggestionsBoxDecoration(offsetX: -20.0),
-                      addWidth: 50,
-                      offsetLeft: 10,
-                      textFieldConfiguration: TextFieldConfiguration(
-                        controller: houseController,
-                        autofocus: false,
-                        decoration: InputDecoration.collapsed(
-                          hintText: "select_houses".tr().toString(),
-                          hintStyle: Theme.of(context)
-                              .textTheme
-                              .display1
-                              .copyWith(fontSize: dWidth * globals.fontSize18),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  width: double.infinity,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Color(0xffF5F6F9),
+                    borderRadius: BorderRadius.circular(22.5),
+                    border: Border.all(
+                      color: Color.fromRGBO(178, 183, 208, 0.5),
+                      style: BorderStyle.solid,
+                      width: 0.5,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (_isHouse) {
+                            setState(() {
+                              _isHouse = false;
+                            });
+                          } else {
+                            setState(() {
+                              _isHouse = true;
+                            });
+                          }
+                          Timer(Duration(milliseconds: 300), () {
+                            suggestionsHouseBoxController.open();
+                          });
+                        },
+                        child: Container(
+                          width: (mediaQuery.size.width -
+                                  mediaQuery.padding.left -
+                                  mediaQuery.padding.right) *
+                              (mediaQuery.size.width <= 360 ? 0.74 : 0.78),
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _selectedHouse == null
+                                    ? Text(
+                                        "select_houses".tr().toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display1
+                                            .copyWith(
+                                                fontSize: dWidth *
+                                                    globals.fontSize18),
+                                      )
+                                    : Text(
+                                        _selectedHouse,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display1
+                                            .copyWith(
+                                                fontSize:
+                                                    dWidth * globals.fontSize18,
+                                                color: Colors.black),
+                                      ),
+                                Icon(Icons.arrow_drop_down),
+                              ],
+                            ),
+                          ),
+                          // );
                         ),
                       ),
-                      hideOnEmpty: true,
-                      suggestionsCallback: (pattern) async {
-                        return await getHouse(pattern);
-                      },
-                      itemBuilder: (context, suggestion) {
-                        return ListTile(
-                          title: Text(suggestion["number"]),
-                        );
-                      },
-                      onSuggestionSelected: (suggestion) {
-                        mahallaController.text = suggestion["community"]
-                            ["name_${(globals.lang).tr().toString()}"];
-                        houseController.text = suggestion["number"];
-                        validate(suggestion);
-                        _suggets = suggestion;
-                      },
-                      noItemsFoundBuilder: (context) {
-                        return Text("not_found".tr().toString());
-                      },
-                    )),
+                    ],
+                  ),
+                ),
+                _isHouse
+                    ? Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        margin: EdgeInsets.symmetric(),
+                        width: double.infinity,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Color(0xffF5F6F9),
+                          borderRadius: BorderRadius.circular(22.5),
+                          border: Border.all(
+                            color: Color.fromRGBO(178, 183, 208, 0.5),
+                            style: BorderStyle.solid,
+                            width: 0.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                                width: (mediaQuery.size.width -
+                                        mediaQuery.padding.left -
+                                        mediaQuery.padding.right) *
+                                    0.74,
+                                child: TypeAheadField(
+                                  suggestionsBoxController:
+                                      suggestionsHouseBoxController,
+                                  suggestionsBoxDecoration:
+                                      SuggestionsBoxDecoration(offsetX: -20.0),
+                                  addWidth: 55,
+                                  offsetLeft: 10,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    controller: houseController,
+                                    autofocus: false,
+                                    decoration: InputDecoration.collapsed(
+                                      hintText: "",
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .display1
+                                          .copyWith(
+                                              fontSize:
+                                                  dWidth * globals.fontSize18),
+                                    ),
+                                  ),
+                                  hideOnEmpty: true,
+                                  suggestionsCallback: (pattern) async {
+                                    return await getHouse(pattern);
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      title: Text(suggestion["number"]),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    mahallaController.text = suggestion[
+                                            "community"][
+                                        "name_${(globals.lang).tr().toString()}"];
+                                    // houseController.text = suggestion["number"];
+                                    setState(() {
+                                      _selectedHouse = suggestion["number"];
+                                      _isHouse = false;
+                                    });
+                                    houseController.text = "";
+                                    print(suggestion["with_flats"]);
+                                    if (suggestion["with_flats"]) {
+                                      setState(() {
+                                        with_flats = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        with_flats = false;
+                                      });
+                                    }
+
+                                    validate(suggestion);
+                                    _suggets = suggestion;
+                                  },
+                                  noItemsFoundBuilder: (context) {
+                                    return Text("not_found".tr().toString());
+                                  },
+                                )),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
-          widget.isFlat ? MainText("flat".tr().toString()) : Container(),
-          widget.isFlat
+          widget.isFlat && with_flats
+              ? MainText("flat".tr().toString())
+              : Container(),
+          widget.isFlat && with_flats
               ? DefaultInput(
                   hint: "enter_flat".tr().toString(),
                   inputType: TextInputType.number,

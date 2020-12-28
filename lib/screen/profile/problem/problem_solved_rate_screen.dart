@@ -19,9 +19,8 @@ class ProblemSolvedRateScreen extends StatefulWidget {
   final String executorAvatar;
   final int executorId;
   final String position;
-  final String choose;
   ProblemSolvedRateScreen(this.id, this.executorName, this.executorAvatar,
-      this.executorId, this.position, this.choose);
+      this.executorId, this.position);
   @override
   _ProblemSolvedRateScreenState createState() =>
       _ProblemSolvedRateScreenState();
@@ -36,70 +35,27 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
 
   Future sendData() async {
     String desc = descController.text;
-    if (widget.choose != "deny") {
-      if (desc != "" && rated != 0) {
-        var url = '${globals.api_link}/problems/confirm';
-        Map<String, String> headers = {
-          "Authorization": "token ${globals.token}"
-        };
-        Map<String, dynamic> data = {
-          "problem_id": widget.id,
-          "executor_id": widget.executorId,
-          "message": "$desc",
-          "rating": rated,
-        };
-        var response = await Requests.post(url, body: data, headers: headers);
+    if (desc != "" && rated != 0) {
+      var url = '${globals.api_link}/problems/confirm';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      Map<String, dynamic> data = {
+        "problem_id": widget.id,
+        "executor_id": widget.executorId,
+        "message": "$desc",
+        "rating": rated,
+      };
+      var response = await Requests.post(url, body: data, headers: headers);
 
-        // String reply = await response.transform(utf8.decoder).join();
-        // var temp = response.json();
-        if (response.statusCode == 200) {
-          setState(() {
-            dataSended = true;
-          });
-          Timer(Duration(seconds: 3), () {
-            Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
-                HomePage.routeName, (Route<dynamic> route) => false);
-          });
-        }
-      }
-    } else {
-      if (desc != "") {
-        try {
-          var url = '${globals.api_link}/problems/deny';
-          Map<String, String> headers = {
-            "Authorization": "token ${globals.token}"
-          };
-          Map<String, dynamic> data = {
-            "problem_id": widget.id,
-            "reason": "$desc",
-          };
-          var response = await Requests.post(url, body: data, headers: headers);
-          print("sended");
-          // String reply = await response.transform(utf8.decoder).join();
-          // var temp = response.json();
-          if (response.statusCode == 201) {
-            print("sended2");
-            // var res = response.json(); //parseProblems(response.content());
-
-            setState(() {
-              dataSended = true;
-            });
-            Timer(Duration(seconds: 3), () {
-              Navigator.of(context, rootNavigator: true)
-                  .pushNamedAndRemoveUntil(
-                      HomePage.routeName, (Route<dynamic> route) => false);
-            });
-          }
-        } catch (e) {
-          Fluttertoast.showToast(
-              msg: e.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
-        }
+      // String reply = await response.transform(utf8.decoder).join();
+      // var temp = response.json();
+      if (response.statusCode == 200) {
+        setState(() {
+          dataSended = true;
+        });
+        Timer(Duration(seconds: 1), () {
+          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+              HomePage.routeName, (Route<dynamic> route) => false);
+        });
       }
     }
   }
@@ -107,7 +63,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
   checkChange() {
     String descValue = descController.text;
     setState(() {
-      if (descValue != "")
+      if (descValue != "" && rated != 0)
         _value = true;
       else
         _value = false;
@@ -141,7 +97,8 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                     child: FittedBox(
                       fit: BoxFit.cover,
                       child: widget.executorAvatar != null
-                          ? Image.asset("assets/img/newsPic.jpg")
+                          ? Image.network(
+                              "${globals.site_link}${widget.executorAvatar}")
                           : Container(
                               color: Colors.grey,
                             ),
@@ -165,12 +122,13 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                   padding: EdgeInsets.only(top: 7),
                 ),
                 Text(
-                  widget.position,
+                  widget.position ?? "",
                   style: TextStyle(
                     fontFamily: globals.font,
                     fontWeight: FontWeight.w400,
-                    fontSize: dWidth * globals.fontSize18,
+                    fontSize: dWidth * globals.fontSize12,
                   ),
+                  textAlign: TextAlign.center,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 30),
@@ -198,23 +156,21 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                           Padding(
                             padding: EdgeInsets.only(top: 18),
                           ),
-                          (widget.choose == "accept")
-                              ? SmoothStarRating(
-                                  allowHalfRating: false,
-                                  onRated: (v) {
-                                    setState(() {
-                                      rated = v.toInt();
-                                      print(rated);
-                                    });
-                                  },
-                                  starCount: 5,
-                                  rating: rating,
-                                  size: 40.0,
-                                  color: Theme.of(context).primaryColor,
-                                  borderColor: Color(0xffEBEDF3),
-                                  spacing: 0.0,
-                                )
-                              : Container(),
+                          SmoothStarRating(
+                            allowHalfRating: false,
+                            onRated: (v) {
+                              setState(() {
+                                rated = v.toInt();
+                                checkChange();
+                              });
+                            },
+                            starCount: 5,
+                            rating: rating,
+                            size: 40.0,
+                            color: Theme.of(context).primaryColor,
+                            borderColor: Color(0xffEBEDF3),
+                            spacing: 0.0,
+                          ),
                           Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 20, horizontal: 19),
@@ -228,24 +184,41 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                             child: SizedBox(
                               width: double.infinity,
                               height: 50,
-                              child: FlatButton(
-                                color: globals.activeButtonColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(34),
-                                ),
-                                onPressed: () {
-                                  sendData();
-                                },
-                                child: Text(
-                                  "accept".tr().toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      .copyWith(
-                                          fontSize:
-                                              dWidth * globals.fontSize18),
-                                ),
-                              ),
+                              child: _value
+                                  ? FlatButton(
+                                      color: globals.activeButtonColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(34),
+                                      ),
+                                      onPressed: () {
+                                        sendData();
+                                      },
+                                      child: Text(
+                                        "send".tr().toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button
+                                            .copyWith(
+                                                fontSize: dWidth *
+                                                    globals.fontSize18),
+                                      ),
+                                    )
+                                  : FlatButton(
+                                      onPressed: () {},
+                                      color: globals.deactiveButtonColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(34),
+                                      ),
+                                      child: Text(
+                                        "accept".tr().toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .button
+                                            .copyWith(
+                                                fontSize: dWidth *
+                                                    globals.fontSize18),
+                                      ),
+                                    ),
                             ),
                           ),
                         ],

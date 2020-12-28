@@ -35,6 +35,7 @@ class _RegisterPersonalDataScreenState
   bool isLogin = false;
   bool _value = false;
   String address = "";
+  Map bigData = {};
 
   Future sendData() async {
     String email = emailController.text;
@@ -100,8 +101,9 @@ class _RegisterPersonalDataScreenState
       "password": pass,
       "fcm_token": globals.deviceToken,
       "device_type": globals.device,
-      "lang": globals.lang.tr().toString()
+      "lang": globals.lang.tr().toString(),
     };
+    map.addAll(bigData);
     var response = await Requests.post(
       url,
       body: map,
@@ -141,14 +143,35 @@ class _RegisterPersonalDataScreenState
   }
 
   setAddress(var addr, flatController, isChanged) {
+    print(addr);
     address =
         "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
+    bigData = {
+      "district_id": addr['community']['district']["id"],
+      "community_id": addr['community']["id"],
+      "street_id": addr['street']["id"],
+      "house_id": addr["id"]
+    };
     if (flatController.text != "") {
       address += ", ${flatController.text}";
+      bigData.addAll({"apartment": flatController.text});
     }
+
+    validate();
     // latlang = Point(
     //     latitude: double.tryParse(addr['latitude']),
     //     longitude: double.tryParse(addr['longitude']));
+  }
+
+  void validate() {
+    if (address != "" &&
+        passController.text != "" &&
+        repassController.text != "") {
+      setState(() {
+        _value = true;
+      });
+    }
+    print("validate");
   }
 
   @override
@@ -240,107 +263,117 @@ class _RegisterPersonalDataScreenState
                           //     ],
                           //   ),
                           // ),
-                          MainText("email_title".tr().toString()),
-                          DefaultInput(
-                            hint: "email_hint".tr().toString(),
-                            textController: emailController,
-                            notifyParent: () {},
-                            inputType: TextInputType.emailAddress,
+                          // MainText("email_title".tr().toString()),
+                          // DefaultInput(
+                          //   hint: "email_hint".tr().toString(),
+                          //   textController: emailController,
+                          //   notifyParent: () {},
+                          //   inputType: TextInputType.emailAddress,
+                          // ),
+                          MainText("${"pass_title".tr().toString()}*"),
+                          PassInput(
+                            "come_up_pass_hint".tr().toString(),
+                            passController,
+                            () {
+                              validate();
+                            },
                           ),
-                          MainText("pass_title".tr().toString()),
-                          PassInput("come_up_pass_hint".tr().toString(),
-                              passController),
-                          MainText("confirm_pass_title".tr().toString()),
-                          PassInput("confirm_pass_hint".tr().toString(),
-                              repassController),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
+                          MainText("${"confirm_pass_title".tr().toString()}*"),
+                          PassInput(
+                            "confirm_pass_hint".tr().toString(),
+                            repassController,
+                            () {
+                              validate();
+                            },
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _value = !_value;
-                                  });
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 2,
-                                          style: BorderStyle.solid,
-                                          color:
-                                              Theme.of(context).primaryColor),
-                                      shape: BoxShape.circle,
-                                      color: _value
-                                          ? Theme.of(context).primaryColor
-                                          : Colors.transparent),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: _value
-                                        ? Icon(
-                                            Icons.check,
-                                            size: 15.0,
-                                            color: Colors.white,
-                                          )
-                                        : Icon(
-                                            Icons.check_box_outline_blank,
-                                            size: 15.0,
-                                            color: Colors.transparent,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                width: mediaQuery.size.width * 0.76,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "agree_agreements_start"
-                                            .tr()
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWith * globals.fontSize12,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushNamed(
-                                                context, RulePage.routeName);
-                                          },
-                                        text: "agreement".tr().toString(),
-                                        style: TextStyle(
-                                          decoration: TextDecoration.underline,
-                                          fontFamily: globals.font,
-                                          fontSize: dWith * globals.fontSize12,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: "agree_agreements_end"
-                                            .tr()
-                                            .toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: 12,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                          // Padding(
+                          //   padding: EdgeInsets.only(top: 10),
+                          // ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     InkWell(
+                          //       onTap: () {
+                          //         setState(() {
+                          //           _value = !_value;
+                          //         });
+                          //       },
+                          //       child: Container(
+                          //         decoration: BoxDecoration(
+                          //             border: Border.all(
+                          //                 width: 2,
+                          //                 style: BorderStyle.solid,
+                          //                 color:
+                          //                     Theme.of(context).primaryColor),
+                          //             shape: BoxShape.circle,
+                          //             color: _value
+                          //                 ? Theme.of(context).primaryColor
+                          //                 : Colors.transparent),
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.all(5.0),
+                          //           child: _value
+                          //               ? Icon(
+                          //                   Icons.check,
+                          //                   size: 15.0,
+                          //                   color: Colors.white,
+                          //                 )
+                          //               : Icon(
+                          //                   Icons.check_box_outline_blank,
+                          //                   size: 15.0,
+                          //                   color: Colors.transparent,
+                          //                 ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     Container(
+                          //       padding: EdgeInsets.only(left: 20),
+                          //       width: mediaQuery.size.width * 0.76,
+                          //       child: RichText(
+                          //         text: TextSpan(
+                          //           children: [
+                          //             TextSpan(
+                          //               text: "agree_agreements_start"
+                          //                   .tr()
+                          //                   .toString(),
+                          //               style: TextStyle(
+                          //                 fontFamily: globals.font,
+                          //                 fontSize: dWith * globals.fontSize12,
+                          //                 color: Colors.black,
+                          //                 fontWeight: FontWeight.normal,
+                          //               ),
+                          //             ),
+                          //             TextSpan(
+                          //               recognizer: TapGestureRecognizer()
+                          //                 ..onTap = () {
+                          //                   Navigator.pushNamed(
+                          //                       context, RulePage.routeName);
+                          //                 },
+                          //               text: "agreement".tr().toString(),
+                          //               style: TextStyle(
+                          //                 decoration: TextDecoration.underline,
+                          //                 fontFamily: globals.font,
+                          //                 fontSize: dWith * globals.fontSize12,
+                          //                 color: Theme.of(context).primaryColor,
+                          //                 fontWeight: FontWeight.normal,
+                          //               ),
+                          //             ),
+                          //             TextSpan(
+                          //               text: "agree_agreements_end"
+                          //                   .tr()
+                          //                   .toString(),
+                          //               style: TextStyle(
+                          //                 fontFamily: globals.font,
+                          //                 fontSize: 12,
+                          //                 color: Colors.black,
+                          //                 fontWeight: FontWeight.normal,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // )
                         ],
                       ),
                     ),

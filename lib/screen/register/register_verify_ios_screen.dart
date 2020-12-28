@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:platform_inputs/ui_text_field.dart';
 import 'package:requests/requests.dart';
 import 'package:sms/sms.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
@@ -19,7 +20,8 @@ class RegisterVerifyIosScreen extends StatefulWidget {
   static const routeName = "/register-phone-verify";
   final phoneView;
   final phone;
-  RegisterVerifyIosScreen({this.phoneView, this.phone});
+  final signature;
+  RegisterVerifyIosScreen({this.phoneView, this.phone, this.signature});
 
   @override
   _RegisterVerifyIosScreenState createState() =>
@@ -32,6 +34,10 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
   Timer _timer;
   final codeController = TextEditingController();
   int _start = 180;
+  PinDecoration _decoration = UnderlineDecoration(
+    colorBuilder: PinListenColorBuilder(Colors.cyan, Colors.green),
+    gapSpace: 0,
+  );
 
   // void getSMS() async {
   //   // Create SMS Receiver Listener
@@ -55,8 +61,13 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
   void initState() {
     super.initState();
     startTimer();
+    _listenForCode();
 
     // getSMS();
+  }
+
+  void _listenForCode() async {
+    await SmsAutoFill().listenForCode;
   }
 
   @override
@@ -277,24 +288,36 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
                                         //     print("$value");
                                         //   },
                                         // ),\
+                                        PinFieldAutoFill(
+                                            keyboardType: TextInputType.number,
+                                            // controller: codeController,
+                                            onCodeChanged: (val) {
+                                              print(val);
+                                              _listenForCode();
+                                            },
+                                            decoration: _decoration,
+                                            // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
 
-                                        TextField(
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (value) {},
-                                      controller: codeController,
-                                      maxLines: 1,
-                                      decoration: InputDecoration.collapsed(
-                                        hintText:
-                                            "check_code_hint".tr().toString(),
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .display1
-                                            .copyWith(
-                                                fontSize:
-                                                    mediaQuery.size.width *
-                                                        globals.fontSize18),
-                                      ),
-                                    ),
+                                            codeLength:
+                                                6 //code length, default 6
+                                            ),
+                                    //     TextField(
+                                    //   keyboardType: TextInputType.number,
+                                    //   onChanged: (value) {},
+                                    //   controller: codeController,
+                                    //   maxLines: 1,
+                                    //   decoration: InputDecoration.collapsed(
+                                    //     hintText:
+                                    //         "check_code_hint".tr().toString(),
+                                    //     hintStyle: Theme.of(context)
+                                    //         .textTheme
+                                    //         .display1
+                                    //         .copyWith(
+                                    //             fontSize:
+                                    //                 mediaQuery.size.width *
+                                    //                     globals.fontSize18),
+                                    //   ),
+                                    // ),
                                   ),
                                 ],
                               ),

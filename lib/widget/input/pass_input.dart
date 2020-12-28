@@ -5,8 +5,9 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 
 class PassInput extends StatefulWidget {
   final String hint;
+  Function notifyParent;
   final passController;
-  PassInput(this.hint, this.passController);
+  PassInput(this.hint, this.passController, this.notifyParent);
 
   @override
   _PassInputState createState() => _PassInputState();
@@ -40,6 +41,9 @@ class _PassInputState extends State<PassInput> {
                     mediaQuery.padding.right) *
                 (mediaQuery.size.width <= 360 ? 0.64 : 0.69),
             child: TextField(
+              onChanged: (value) {
+                widget.notifyParent();
+              },
               controller: widget.passController,
               obscureText: !_passShow,
               maxLines: 1,

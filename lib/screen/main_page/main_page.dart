@@ -13,6 +13,7 @@ import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
+import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
@@ -20,6 +21,7 @@ import '../../widget/input/search_input.dart';
 
 class MainPage extends StatefulWidget {
   static const routeName = "/main-page";
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -32,7 +34,7 @@ class _MainPageState extends State<MainPage> {
     var response = await Requests.get(url);
 
     var reply = response.json();
-    reply = overrideCategory(reply);
+    // reply = overrideCategory(reply);
 
     return reply;
   }
@@ -98,6 +100,14 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    if (globals.routeProblemId != null) {
+      Timer(Duration(milliseconds: 500), () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext ctx) {
+          return ProblemContentScreen(id: globals.routeProblemId);
+        }));
+      });
+    }
   }
 
   Future<List> getNews() async {
@@ -352,6 +362,32 @@ class _MainPageState extends State<MainPage> {
         });
   }
 
+  customLoginDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.5,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: GetLoginDialog(),
+            ),
+          );
+        });
+  }
+
   overrideCategory(List<dynamic> data) {
     List<dynamic> res = [];
     for (int i = data.length - 1; i >= 0; i--) {
@@ -362,7 +398,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    // getNotification();
+    getNotification();
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -400,36 +436,36 @@ class _MainPageState extends State<MainPage> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${"welcome".tr().toString()},",
+                                  "${"welcome".tr().toString()}${globals.token != null ? "," : ""}",
                                   style: TextStyle(
                                       fontFamily: globals.font,
                                       color: Colors.white,
-                                      fontSize: dWidth * globals.fontSize26,
+                                      fontSize: dWidth * globals.fontSize22,
                                       fontWeight: FontWeight.w600),
                                 ),
                                 Text(
                                   globals.token != null
                                       ? "${globals.capitalize(globals.userData['last_name'])} ${globals.capitalize(globals.userData['first_name'])}"
-                                      : "",
+                                      : "xalq_nazorati".tr().toString(),
                                   style: TextStyle(
                                       fontFamily: globals.font,
                                       color: Colors.white,
-                                      fontSize: dWidth * globals.fontSize26,
+                                      fontSize: dWidth * globals.fontSize22,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
                             globals.token != null
                                 ? Container(
-                                    width: 48,
-                                    height: 48,
+                                    width: 44,
+                                    height: 44,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(24),
                                       color: Color.fromRGBO(255, 255, 255, 0.3),
@@ -443,7 +479,7 @@ class _MainPageState extends State<MainPage> {
                                           children: [
                                             SvgPicture.asset(
                                               "assets/img/bell.svg",
-                                              height: 28,
+                                              height: 25,
                                               color: Colors.white,
                                             ),
                                             Positioned(
@@ -451,8 +487,8 @@ class _MainPageState extends State<MainPage> {
                                               top: 0,
                                               child: notificationCnt != 0
                                                   ? Container(
-                                                      width: 16,
-                                                      height: 16,
+                                                      width: 15,
+                                                      height: 15,
                                                       alignment:
                                                           Alignment.center,
                                                       decoration: BoxDecoration(
@@ -491,7 +527,19 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                     ),
                                   )
-                                : Container(),
+                                : InkWell(
+                                    onTap: () {
+                                      customLoginDialog(context);
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      child: SvgPicture.asset(
+                                        "assets/img/user_main.svg",
+                                        height: 40,
+                                      ),
+                                    ),
+                                  ),
                           ],
                         ),
                         SearchtInput("search"),
@@ -545,7 +593,7 @@ class _MainPageState extends State<MainPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "today".tr().toString(),
+                              "today".tr().toString().replaceAll("\n", " "),
                               style: TextStyle(
                                   fontFamily: globals.font,
                                   color: Color(0xff313B6C),
@@ -583,6 +631,7 @@ class _MainPageState extends State<MainPage> {
                                     ? NewsList(
                                         news: snapshot.data,
                                         breaking: true,
+                                        isMain: true,
                                       )
                                     : Center(
                                         child: Text("no_news".tr().toString()),

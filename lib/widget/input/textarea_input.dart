@@ -6,8 +6,13 @@ class TextareaInput extends StatefulWidget {
   final String hint;
   final textareaController;
   Function notifyParent;
+  final maxCnt;
   TextareaInput(
-      {Key key, this.hint, this.textareaController, this.notifyParent})
+      {Key key,
+      this.hint,
+      this.textareaController,
+      this.notifyParent,
+      this.maxCnt})
       : super(key: key);
 
   @override
@@ -15,11 +20,19 @@ class TextareaInput extends StatefulWidget {
 }
 
 class _TextareaInputState extends State<TextareaInput> {
-  var cnt = 1200;
+  var cnt;
+  var _maxCnt;
+  @override
+  void initState() {
+    super.initState();
+    _maxCnt = widget.maxCnt == null ? 1200 : widget.maxCnt;
+    cnt = _maxCnt;
+  }
+
   void changeTxt(String value) {
     setState(() {
       widget.notifyParent();
-      cnt = 1200 - value.length;
+      cnt = _maxCnt - value.length;
     });
   }
 
@@ -52,8 +65,8 @@ class _TextareaInputState extends State<TextareaInput> {
                 child: TextField(
                   onChanged: (text) {
                     String result = text;
-                    if (result.length > 1200) {
-                      result = result.substring(0, 1200);
+                    if (result.length > _maxCnt) {
+                      result = result.substring(0, _maxCnt);
 
                       widget.textareaController.text = result;
                       widget.textareaController.selection =

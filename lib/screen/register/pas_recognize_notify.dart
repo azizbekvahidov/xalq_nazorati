@@ -35,7 +35,6 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                 right: 28,
                 top: meduaQuery.height * 0.05,
                 bottom: meduaQuery.height * 0.05),
-            height: meduaQuery.height,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,7 +43,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                   style: TextStyle(
                     color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: dWidth * globals.fontSize14,
+                    fontSize: dWidth * globals.fontSize12,
                     fontWeight: FontWeight.w500,
                     fontFeatures: [
                       FontFeature.enable("pnum"),
@@ -58,7 +57,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                   style: TextStyle(
                     color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: dWidth * globals.fontSize14,
+                    fontSize: dWidth * globals.fontSize12,
                     fontWeight: FontWeight.w500,
                     fontFeatures: [
                       FontFeature.enable("pnum"),
@@ -72,7 +71,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                   style: TextStyle(
                     color: Color(0xff313B6C),
                     fontFamily: globals.font,
-                    fontSize: dWidth * globals.fontSize14,
+                    fontSize: dWidth * globals.fontSize12,
                     fontWeight: FontWeight.w500,
                     fontFeatures: [
                       FontFeature.enable("pnum"),
@@ -89,7 +88,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                         text: "4) ",
                         style: TextStyle(
                           fontFamily: globals.font,
-                          fontSize: dWidth * globals.fontSize14,
+                          fontSize: dWidth * globals.fontSize12,
                           color: Color(0xff313B6C),
                           fontWeight: FontWeight.w500,
                           fontFeatures: [
@@ -102,7 +101,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                         text: "${"pas_notify_text_4-1".tr().toString()}",
                         style: TextStyle(
                           fontFamily: globals.font,
-                          fontSize: dWidth * globals.fontSize14,
+                          fontSize: dWidth * globals.fontSize12,
                           color: Color(0xffDE1B1B),
                           fontWeight: FontWeight.w700,
                           fontFeatures: [
@@ -115,7 +114,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                         text: "pas_notify_text_4-2".tr().toString(),
                         style: TextStyle(
                           fontFamily: globals.font,
-                          fontSize: dWidth * globals.fontSize14,
+                          fontSize: dWidth * globals.fontSize12,
                           color: Color(0xff313B6C),
                           fontWeight: FontWeight.w500,
                           fontFeatures: [
@@ -132,7 +131,7 @@ class _PasRecognizeNotifyState extends State<PasRecognizeNotify> {
                   padding: EdgeInsets.only(top: 27),
                   child: Image.asset(
                     "assets/img/iPhone11.png",
-                    height: meduaQuery.height * 0.40,
+                    height: meduaQuery.height * 0.30,
                   ),
                 ),
                 Padding(padding: EdgeInsets.only(top: 40)),

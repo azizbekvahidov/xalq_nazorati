@@ -26,42 +26,50 @@ class _SupportInfoState extends State<SupportInfo> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
-          width: 220,
-          height: 241,
-          child: Image.asset("assets/img/support.png"),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
-          child: Text(
-            "call_message".tr().toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xff313B6C),
-              fontSize: width * globals.fontSize18,
-              fontWeight: FontWeight.bold,
-              fontFamily: globals.font,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 25, bottom: 20),
-          child: Text(
-            "1055",
-            style: TextStyle(
-                fontSize: 42,
-                fontWeight: FontWeight.w700,
-                fontFamily: globals.font,
-                fontFeatures: [
-                  FontFeature.enable("pnum"),
-                  FontFeature.enable("lnum")
-                ],
-                foreground: Paint()..shader = linearGradient),
+          child: Column(
+            children: [
+              Container(
+                child: Image.asset(
+                  "assets/img/support.png",
+                  width: width * 0.4,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
+                child: Text(
+                  "call_message".tr().toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xff313B6C),
+                    fontSize: width * globals.fontSize16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: globals.font,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "1055",
+                  style: TextStyle(
+                      fontSize: width * 0.112,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: globals.font,
+                      fontFeatures: [
+                        FontFeature.enable("pnum"),
+                        FontFeature.enable("lnum")
+                      ],
+                      foreground: Paint()..shader = linearGradient),
+                ),
+              ),
+            ],
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 30),
+          padding: EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 20),
           child: InkWell(
             onTap: () {
               launchUrl("tel://1055");

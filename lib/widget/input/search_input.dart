@@ -7,6 +7,7 @@ import 'package:requests/requests.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/search-category.dart';
 import 'package:xalq_nazorati/screen/main_page/category_screen.dart';
+import 'package:xalq_nazorati/screen/main_page/problem/check_problem_category.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 
@@ -165,7 +166,10 @@ class _SearchtInputState extends State<SearchtInput> {
                     mediaQuery.padding.right) *
                 0.68,
             child: TypeAheadField(
-              addWidth: 75,
+              addWidth: (mediaQuery.size.width -
+                      mediaQuery.padding.left -
+                      mediaQuery.padding.right) *
+                  0.22,
               offsetLeft: 20,
               getImmediateSuggestions: true,
               textFieldConfiguration: TextFieldConfiguration(
@@ -179,13 +183,25 @@ class _SearchtInputState extends State<SearchtInput> {
               ),
               hideOnEmpty: false,
               suggestionsCallback: (pattern) async {
-                // if (pattern.length >= 3) {
-                return await changeAddressMap(pattern);
-                // } else
-                //   return null;
+                if (pattern.length >= 1) {
+                  return await changeAddressMap(pattern);
+                } else
+                  return null;
               },
               noItemsFoundBuilder: (context) {
-                return Text("not_found".tr().toString());
+                return Container(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Text(
+                    "not_found".tr().toString(),
+                    style: TextStyle(
+                      fontFamily: globals.font,
+                      fontSize: mediaQuery.size.width * globals.fontSize14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
               },
               suggestionsBoxDecoration: SuggestionsBoxDecoration(
                   borderRadius: BorderRadius.circular(10)),
@@ -222,16 +238,32 @@ class _SearchtInputState extends State<SearchtInput> {
                     if (suggestion["type"] == "subsubcategories") {
                       searchController.text = "";
                       if (globals.token != null) {
-                        Navigator.of(context, rootNavigator: true).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return ProblemDesc(
-                                  suggestion["id"],
-                                  suggestion["name"],
-                                  suggestion["category_id"]);
-                            },
-                          ),
-                        ).then(onGoBack);
+                        if (suggestion["id"] != 35) {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return ProblemDesc(
+                                    suggestion["id"],
+                                    suggestion["name"],
+                                    suggestion["category_id"],
+                                    suggestion["breadcrumbs"]);
+                              },
+                            ),
+                          ).then(onGoBack);
+                        } else {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return CheckProblemCategory(
+                                    id: suggestion["id"],
+                                    title: suggestion["name"],
+                                    category_id: suggestion["category_id"],
+                                    breadcrumbs: suggestion["breadcrumbs"]);
+                              },
+                            ),
+                            // ModalRoute.withName(HomePage.routeName),
+                          ).then(onGoBack);
+                        }
                       } else {
                         customDialog(context);
                       }

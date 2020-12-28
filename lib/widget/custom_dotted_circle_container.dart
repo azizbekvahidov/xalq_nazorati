@@ -1,14 +1,18 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../widget/default_button.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class CustomDottedCircleContainer extends StatefulWidget {
   final double boxSize;
@@ -49,13 +53,32 @@ class _CustomDottedCircleContainerState
         desiredAccuracy: LocationAccuracy.bestForNavigation);
   }
 
+  Future<File> testCompressAndGetFile(File file, String targetPath) async {
+    print("testCompressAndGetFile");
+    final result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 80,
+    );
+
+    print(file.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
+
   pickerCam() async {
     // ignore: deprecated_member_use
     File _img = await ImagePicker.pickImage(source: ImageSource.camera);
     if (_img != null && globals.validateFile(_img)) {
       // widget.image = _img;
       print("take shot");
-      await _getLocation();
+      // await _getLocation();
+      final dir = await path_provider.getTemporaryDirectory();
+
+      final targetPath =
+          dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+      _img = await testCompressAndGetFile(_img, targetPath);
       setState(() {
         globals.images.addAll({widget.img: _img});
       });
@@ -66,6 +89,12 @@ class _CustomDottedCircleContainerState
     File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (_img != null && globals.validateFile(_img)) {
       // widget.image = _img;
+
+      final dir = await path_provider.getTemporaryDirectory();
+
+      final targetPath =
+          dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+      _img = await testCompressAndGetFile(_img, targetPath);
       globals.images.addAll({widget.img: _img});
       setState(() {});
     }

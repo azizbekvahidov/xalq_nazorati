@@ -27,14 +27,18 @@ bool isGetProblem = false;
 String deviceToken = "";
 String device = "";
 var userLocation = null;
+var fontSize8 = 0.0213;
 var fontSize10 = 0.027;
 var fontSize12 = 0.032;
 var fontSize14 = 0.0374;
 var fontSize16 = 0.0427;
 var fontSize18 = 0.048;
 var fontSize20 = 0.0534;
+var fontSize22 = 0.0587;
 var fontSize24 = 0.064;
 var fontSize26 = 0.0694;
+
+int routeProblemId;
 
 String capitalize(String stringVal) {
   if (stringVal == null) {

@@ -30,13 +30,27 @@ class _NewsPlannedScreenState extends State<NewsPlannedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Container(
       child: FutureBuilder(
           future: getNews(),
           builder: (context, snapshot) {
             if (snapshot.hasError) print(snapshot.error);
             return snapshot.hasData
-                ? NewsList(news: snapshot.data, breaking: false)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "planning".tr().toString().replaceAll("\n", " "),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: width * globals.fontSize16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      NewsList(news: snapshot.data, breaking: false),
+                    ],
+                  )
                 : Center(
                     child: Text("no_news".tr().toString()),
                   );

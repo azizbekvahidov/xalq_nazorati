@@ -127,7 +127,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         title: "problem_not_actual".tr().toString(),
         centerTitle: true,
       ),
-      body: widget.status == "completed" || widget.status == "cenceled"
+      body: widget.status == "completed"
           ? Center(
               child: Text(
                 widget.status == "completed"
@@ -173,82 +173,6 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                                       textareaController: descController,
                                       notifyParent: checkChange,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        MainText(
-                                            "upload_photo".tr().toString()),
-                                        InkWell(
-                                          onTap: () {
-                                            clearImages();
-                                          },
-                                          child: Text(
-                                            "clear".tr().toString(),
-                                            style: TextStyle(
-                                              color: Color(0xffB2B7D0),
-                                              fontSize:
-                                                  dWidth * globals.fontSize14,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: globals.font,
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      padding:
-                                          EdgeInsets.only(top: 20, bottom: 15),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          CustomDottedCircleContainer(
-                                              size, image1, "file1"),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                          ),
-                                          CustomDottedCircleContainer(
-                                              size, image2, "file2"),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                          ),
-                                          CustomDottedCircleContainer(
-                                              size, image3, "file3"),
-                                          Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                          ),
-                                          CustomDottedCircleContainer(
-                                              size, image4, "file4"),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: SvgPicture.asset(
-                                              "assets/img/warning.svg"),
-                                        ),
-                                        Expanded(
-                                          flex: 9,
-                                          child: Text(
-                                            "upload_warning".tr().toString(),
-                                            style: TextStyle(
-                                                color: Color(0xffFF8F27),
-                                                fontSize:
-                                                    dWidth * globals.fontSize12,
-                                                fontFamily: globals.font),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
                               ),
@@ -264,23 +188,21 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                               Positioned(
                                 child: Align(
                                   alignment: FractionalOffset.bottomCenter,
-                                  child:
-                                      /*!_value
-                                ? DefaultButton(
-                                    "Продолжить",
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : */
-                                      DefaultButton("take_off".tr().toString(),
+                                  child: !_value
+                                      ? DefaultButton(
+                                          "send".tr().toString(),
+                                          () {},
+                                          Color(0xffB2B7D0),
+                                        )
+                                      : DefaultButton("send".tr().toString(),
                                           () {
-                                    insertData();
-                                    // Navigator.of(context).push(MaterialPageRoute(
-                                    //     builder: (BuildContext context) {
-                                    //   return ProblemLocate(
-                                    //       descController.text, widget.id);
-                                    // }));
-                                  }, Theme.of(context).primaryColor),
+                                          insertData();
+                                          // Navigator.of(context).push(MaterialPageRoute(
+                                          //     builder: (BuildContext context) {
+                                          //   return ProblemLocate(
+                                          //       descController.text, widget.id);
+                                          // }));
+                                        }, Theme.of(context).primaryColor),
                                 ),
                               ),
                             ],
