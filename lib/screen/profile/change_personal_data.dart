@@ -27,6 +27,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
   final emailController = TextEditingController();
   String address;
   bool _value = false;
+  Map<String, dynamic> bigData = {};
 
   final codeController = TextEditingController();
 
@@ -56,16 +57,17 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         var url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/profile';
 
-        Map<String, String> map = {};
+        Map<String, dynamic> map = {};
         if (address != '') map.addAll({"address_str": address});
         if (email != '') map.addAll({"email": email});
         Map<String, String> headers = {
           "Authorization": "token ${globals.token}",
         };
+        map.addAll(bigData);
         // var req = await http.put(Uri.parse(url), headers: headers, body: map);
         var r1 =
             await Requests.put(url, body: map, headers: headers, verify: false);
-        print(r1.json());
+
         if (r1.statusCode == 200) {
           r1.raiseForStatus();
           Map<String, dynamic> reply = await r1.json();
@@ -73,7 +75,8 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
           globals.userData = reply;
           Navigator.pop(context, address);
         } else {
-          print(json);
+          var res = r1.json();
+          print(res);
         }
       } else {
         Fluttertoast.showToast(
@@ -94,8 +97,15 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
     if (addr != null) {
       address =
           "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
+      bigData = {
+        "district_id": addr['community']['district']["id"],
+        "community_id": addr['community']["id"],
+        "street_id": addr['street']["id"],
+        "house_id": addr["id"]
+      };
       if (flatController.text != "") {
         address += ", ${flatController.text}";
+        bigData.addAll({"apartment": flatController.text});
       }
     }
 
@@ -118,8 +128,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
 
   @override
   Widget build(BuildContext context) {
-    var maskFormatter = new MaskTextInputFormatter(
-        mask: '__ ___ __ __', filter: {"_": RegExp(r'[0-9]')});
+    print(globals.userData);
     final mediaQuery = MediaQuery.of(context);
     final appbar = CustomAppBar(
       title: "change_address".tr().toString(),

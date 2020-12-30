@@ -1,5 +1,7 @@
 library xalq_nazorati.globals;
 
+import 'package:easy_localization/easy_localization.dart';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -62,4 +64,13 @@ bool validateFile(File img) {
   } else {
     return true;
   }
+}
+
+generateAddrStr(var addr) {
+  var district = addr["district"]["name_${lang.tr().toString()}"];
+  var community = addr["neighborhood"]["name_${lang.tr().toString()}"];
+  var street = addr["street"]["name_${lang.tr().toString()}"];
+  var house = addr["house"]["number"];
+  var apart = addr["apartment"] != null ? ", ${addr["apartment"]}" : "";
+  return "$district, $community, $street, $house$apart";
 }

@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _country = null;
   Timer timer;
 
-  Future<void> getStringValuesSF() async {
+  getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
     String stringValue = prefs.getString('lang');
@@ -177,10 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
     _lang = stringValue;
     _token = token;
     _country = countryValue;
+    await getUser();
     // });
   }
 
-  Future getUser() async {
+  getUser() async {
     var url = '${globals.api_link}/users/profile';
     Map<String, String> headers = {"Authorization": "token $_token"};
     HttpGet request = HttpGet();
@@ -190,17 +191,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
       globals.userData = response.json();
       globals.token = _token;
+      print(globals.userData);
     } else {
       globals.token = null;
       dynamic json = response.json();
-      Fluttertoast.showToast(
-          msg: json['detail'],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      // Fluttertoast.showToast(
+      //     msg: json['detail'],
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.BOTTOM,
+      //     timeInSecForIosWeb: 2,
+      //     backgroundColor: Colors.grey,
+      //     textColor: Colors.white,
+      //     fontSize: 15.0);
     }
     // String reply = await response.transform(utf8.decoder).join();
     // print(response.statusCode);
@@ -323,7 +325,6 @@ class _MyHomePageState extends State<MyHomePage> {
       assert(token != null);
       globals.deviceToken = token;
     });
-    print(globals.deviceToken);
     getStringValuesSF();
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
@@ -338,7 +339,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.pushReplacementNamed(context, HomePage.routeName);
         } else {
           // globals.token = _token;
-          getUser();
+
           if (globals.token != null) {
             Navigator.pushReplacementNamed(context, HomePage.routeName);
           } else {

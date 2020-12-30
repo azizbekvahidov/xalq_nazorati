@@ -515,25 +515,26 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                         )
                       : Container();
 
-              var res_header = Container(
-                margin: EdgeInsets.only(top: 8),
-                alignment: Alignment.center,
-                width: dWidth,
-                height: 50,
-                color: Color(0xffC4C4C4),
-                child: Text(
-                  widget.stat == "denied" || widget.stat == "closed"
-                      ? "problem_solved".tr().toString()
-                      : widget.stat == "canceled"
-                          ? "not_actual_txt".tr().toString()
-                          : "Отклонено",
-                  style: TextStyle(
-                    fontFamily: globals.font,
-                    fontSize: dWidth * globals.fontSize18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              );
+              var res_header = result != null ||
+                      res["problem"]["unsatisfactory_solution"] != null ||
+                      res["moderator_log"] != null ||
+                      res["problem"]["user_cancellation_reason"] != null
+                  ? Container(
+                      margin: EdgeInsets.only(top: 8),
+                      alignment: Alignment.center,
+                      width: dWidth,
+                      height: 50,
+                      color: Color(0xffC4C4C4),
+                      child: Text(
+                        "${widget.stat}_solve".tr().toString(),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  : Container();
               print(widget.stat);
               var answers = Column(children: [
                 widget.stat == "denied" ||

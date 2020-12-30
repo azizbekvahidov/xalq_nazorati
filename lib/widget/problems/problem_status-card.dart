@@ -7,9 +7,11 @@ class ProblemStatusCard extends StatelessWidget {
   ProblemStatusCard(this.data);
   @override
   Widget build(BuildContext context) {
-    DateFormat formatter = DateFormat('dd.MM.yyyy, hh:mm');
-    return Container(
-      height: 100.0 * data.length,
+    DateFormat formatter = DateFormat('dd.MM.yyyy');
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+          minHeight: 80.0 * data.length, maxHeight: 100.0 * data.length),
+      // height: 100.0 * data.length,
       child: ListView.builder(
           reverse: true,
           physics: NeverScrollableScrollPhysics(),

@@ -136,8 +136,11 @@ class _MainChatState extends State<MainChat> {
     return result;
   }
 
+  bool isSended = false;
+
   Future sendMessage() async {
-    if (messageController.text != "" || _file != null) {
+    if (messageController.text != "" || _file != null && isSended == false) {
+      isSended = true;
       try {
         var url2 =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/chat';
@@ -159,10 +162,13 @@ class _MainChatState extends State<MainChat> {
           setState(() {
             generateList(context);
           });
+          isSended = false;
         } else {
+          isSended = false;
           print(res);
         }
       } catch (e) {
+        isSended = false;
         print(e);
       }
     }
@@ -227,6 +233,8 @@ class _MainChatState extends State<MainChat> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Container(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 5),
                                                 child: Text(
                                                   "${globals.capitalize(_data[index].user["last_name"])} ${globals.capitalize(_data[index].user["first_name"])}",
                                                   style: TextStyle(
@@ -244,34 +252,36 @@ class _MainChatState extends State<MainChat> {
                                                   ),
                                                 ),
                                               ),
-                                              Container(
-                                                padding:
-                                                    EdgeInsets.only(top: 5),
-                                                child: Row(
-                                                  children: [
-                                                    ChatBox(
-                                                        val: _data[index]
-                                                                .work_details[
-                                                            "organization"]),
-                                                    Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 5)),
-                                                    ChatBox(
-                                                        val: _data[index]
-                                                                .work_details[
-                                                            "district"]),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                padding: EdgeInsets.only(
-                                                    top: 5, bottom: 5),
-                                                child: ChatBox(
-                                                    val: _data[index]
-                                                            .work_details[
-                                                        "position"]),
-                                              ),
+                                              _data[index].moderator
+                                                  ? Container()
+                                                  : Container(
+                                                      child: Row(
+                                                        children: [
+                                                          ChatBox(
+                                                              val: _data[index]
+                                                                      .work_details[
+                                                                  "organization"]),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 5)),
+                                                          ChatBox(
+                                                              val: _data[index]
+                                                                      .work_details[
+                                                                  "district"]),
+                                                        ],
+                                                      ),
+                                                    ),
+                                              _data[index].moderator
+                                                  ? Container()
+                                                  : Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5, bottom: 5),
+                                                      child: ChatBox(
+                                                          val: _data[index]
+                                                                  .work_details[
+                                                              "position"]),
+                                                    ),
                                             ],
                                           ),
                                         )

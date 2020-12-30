@@ -31,9 +31,9 @@ class BoxTextWarning extends StatelessWidget {
       _borderColor = Color(0xff1ABC9C);
       _txtColor = Color(0xffFFFFFF);
     } else if (status == 'delayed') {
-      _bgcolor = Color(0xffCCEDE7);
-      _borderColor = Color(0xff1ABC9C);
-      _txtColor = Color(0xff1ABC9C);
+      _bgcolor = Color(0xff0082F9);
+      _borderColor = Color(0xff0082F9);
+      _txtColor = Color(0xffFFFFFF);
     }
 
     return Container(

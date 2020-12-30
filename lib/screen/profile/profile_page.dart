@@ -25,10 +25,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _user_address = "${globals.userData['address_str']}"
-        .replaceAll("\n", " ")
-        .replaceAll("\t", " ")
-        .replaceAll("\r", " ");
+    _user_address = globals.userData["address"] == null
+        ? ""
+        : globals.generateAddrStr(globals.userData["address"]);
     _user_phone = "${globals.userData['phone']}";
   }
 
@@ -256,6 +255,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     //   "id",
                     //   "delete_profile".tr().toString(),
                     //   DeleteProfile(),
+                    //   false,
+                    //   "",
                     //   false,
                     // ),
                   ],

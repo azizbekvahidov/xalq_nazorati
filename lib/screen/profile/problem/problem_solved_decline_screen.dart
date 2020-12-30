@@ -34,11 +34,12 @@ class _ProblemSolvedDeclineScreenState
   var rated = 0;
   var dataSended = false;
   bool _value = false;
-
+  bool isSending = false;
   Future sendData() async {
     String desc = descController.text;
 
-    if (desc != "") {
+    if (desc != "" && isSending == false) {
+      isSending = true;
       try {
         var url = '${globals.api_link}/problems/deny';
         Map<String, String> headers = {
@@ -55,7 +56,7 @@ class _ProblemSolvedDeclineScreenState
         if (response.statusCode == 201) {
           print("sended2");
           // var res = response.json(); //parseProblems(response.content());
-
+          isSending = false;
           setState(() {
             dataSended = true;
           });

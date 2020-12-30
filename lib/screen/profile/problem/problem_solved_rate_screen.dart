@@ -32,10 +32,12 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
   var rated = 0;
   var dataSended = false;
   bool _value = false;
+  bool isSending = false;
 
   Future sendData() async {
     String desc = descController.text;
-    if (desc != "" && rated != 0) {
+    if (desc != "" && rated != 0 && isSending == false) {
+      isSending = true;
       var url = '${globals.api_link}/problems/confirm';
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       Map<String, dynamic> data = {
@@ -52,6 +54,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
         setState(() {
           dataSended = true;
         });
+        isSending = false;
         Timer(Duration(seconds: 1), () {
           Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
               HomePage.routeName, (Route<dynamic> route) => false);

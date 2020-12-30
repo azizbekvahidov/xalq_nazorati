@@ -100,14 +100,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    if (globals.routeProblemId != null) {
-      Timer(Duration(milliseconds: 500), () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (BuildContext ctx) {
-          return ProblemContentScreen(id: globals.routeProblemId);
-        }));
-      });
-    }
   }
 
   Future<List> getNews() async {
@@ -398,7 +390,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    getNotification();
+    // getNotification();
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(

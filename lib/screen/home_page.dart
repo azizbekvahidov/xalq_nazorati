@@ -29,11 +29,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getUser();
+    // getUser();
     refreshBells();
     timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
       refreshBells();
     });
+    if (globals.routeProblemId != null) {
+      Timer(Duration(milliseconds: 500), () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext ctx) {
+          return ProblemContentScreen(id: globals.routeProblemId);
+        }));
+      });
+    }
   }
 
   @override
@@ -127,171 +135,105 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getUser(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) print(snapshot.error);
-        return snapshot.hasData
-            ? Scaffold(
-                bottomNavigationBar: BottomNavigationBar(
-                  selectedItemColor: Theme.of(context).primaryColor,
-                  onTap: (index) {
-                    if (index == 1) {
-                      if (globals.token == null) {
-                        customDialog(context);
-                      } else {
-                        setState(() {
-                          _colors[0] = Color(0xff66676C);
-                          _colors[1] = Color(0xff66676C);
-                          _colors[2] = Color(0xff66676C);
-                          _colors[3] = Color(0xff66676C);
-                          _page = _children[index];
-                          _colors[index] = Theme.of(context).primaryColor;
-                        });
-                        navigatorKey.currentState
-                            .popUntil((route) => route.isFirst);
-                        _currentIndex = index;
-                      }
-                    } else {
-                      setState(() {
-                        _colors[0] = Color(0xff66676C);
-                        _colors[1] = Color(0xff66676C);
-                        _colors[2] = Color(0xff66676C);
-                        _colors[3] = Color(0xff66676C);
-                        _page = _children[index];
-                        _colors[index] = Theme.of(context).primaryColor;
-                      });
-                      navigatorKey.currentState
-                          .popUntil((route) => route.isFirst);
-                      _currentIndex = index;
-                    }
-                  },
-                  type: BottomNavigationBarType.fixed,
-                  selectedFontSize:
-                      MediaQuery.of(context).size.width * globals.fontSize12,
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      // inactiveColor: Color(0xffFF8F27),
-                      // activeColor: Theme.of(context).primaryColor,
-                      title: Text(
-                        'main'.tr().toString(),
-                        style: TextStyle(fontFamily: globals.font),
-                        textAlign: TextAlign.center,
-                      ),
-                      icon: SvgPicture.asset("assets/img/home.svg",
-                          color: _colors[0]),
-                    ),
-                    BottomNavigationBarItem(
-                        // activeColor: Theme.of(context).primaryColor,
-                        title: Text(
-                          'problems'.tr().toString(),
-                          style: TextStyle(fontFamily: globals.font),
-                          textAlign: TextAlign.center,
-                        ),
-                        icon: Stack(
-                          children: [
-                            SvgPicture.asset("assets/img/problem.svg",
-                                color: _colors[1]),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: isProblemNotify
-                                  ? Container(
-                                      width: 8,
-                                      height: 8,
-                                      decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                              BorderRadius.circular(4)),
-                                    )
-                                  : Container(),
-                            ),
-                          ],
-                        )),
-                    BottomNavigationBarItem(
-                      // activeColor: Theme.of(context).primaryColor,
-                      title: Text(
-                        'help'.tr().toString(),
-                        style: TextStyle(fontFamily: globals.font),
-                        textAlign: TextAlign.center,
-                      ),
-                      icon: SvgPicture.asset("assets/img/support.svg",
-                          color: _colors[2]),
-                    ),
-                    BottomNavigationBarItem(
-                      // activeColor: Theme.of(context).primaryColor,
-                      title: Text(
-                        'profile'.tr().toString(),
-                        style: TextStyle(fontFamily: globals.font),
-                        textAlign: TextAlign.center,
-                      ),
-                      icon: SvgPicture.asset("assets/img/profile.svg",
-                          color: _colors[3]),
-                    ),
-                  ],
-                  // selectedIndex: _currentIndex,
-                  currentIndex: _currentIndex,
-                ),
-
-                // bottomNavigationBar: BottomNavyBar(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //   items: <BottomNavyBarItem>[
-                //     BottomNavyBarItem(
-                //       inactiveColor: Color(0xffFF8F27),
-                //       activeColor: Theme.of(context).primaryColor,
-                //       title: Text(
-                //         'Главная',
-                //         textAlign: TextAlign.center,
-                //       ),
-                //       icon: SvgPicture.asset("assets/img/home.svg",
-                //           color: _colors[0]),
-                //     ),
-                //     BottomNavyBarItem(
-                //       activeColor: Theme.of(context).primaryColor,
-                //       title: Text(
-                //         'Проблемы',
-                //         textAlign: TextAlign.center,
-                //       ),
-                //       icon: SvgPicture.asset("assets/img/problem.svg",
-                //           color: _colors[1]),
-                //     ),
-                //     BottomNavyBarItem(
-                //       activeColor: Theme.of(context).primaryColor,
-                //       title: Text(
-                //         'Профиль',
-                //         textAlign: TextAlign.center,
-                //       ),
-                //       icon: SvgPicture.asset("assets/img/profile.svg",
-                //           color: _colors[2]),
-                //     ),
-                //   ],
-                //   onItemSelected: (index) {
-                //     setState(() {
-                //       _colors[0] = Color(0xff66676C);
-                //       _colors[1] = Color(0xff66676C);
-                //       _colors[2] = Color(0xff66676C);
-                //       _page = _children[index];
-                //       _colors[index] = Theme.of(context).primaryColor;
-                //     });
-                //     navigatorKey.currentState
-                //         .popUntil((route) => route.isFirst);
-                //     _currentIndex = index;
-                //   },
-                //   selectedIndex: _currentIndex,
-                // ),
-                body: CustomNavigator(
-                  navigatorKey: navigatorKey,
-                  home: _page,
-                  pageRoute: PageRoutes.materialPageRoute,
-                ),
-              )
-            : Scaffold(
-                body: Center(
-                  child: Text("Loading".tr().toString()),
-                ),
-              );
-      },
+    return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).primaryColor,
+        onTap: (index) {
+          if (index == 1) {
+            if (globals.token == null) {
+              customDialog(context);
+            } else {
+              setState(() {
+                _colors[0] = Color(0xff66676C);
+                _colors[1] = Color(0xff66676C);
+                _colors[2] = Color(0xff66676C);
+                _colors[3] = Color(0xff66676C);
+                _page = _children[index];
+                _colors[index] = Theme.of(context).primaryColor;
+              });
+              navigatorKey.currentState.popUntil((route) => route.isFirst);
+              _currentIndex = index;
+            }
+          } else {
+            setState(() {
+              _colors[0] = Color(0xff66676C);
+              _colors[1] = Color(0xff66676C);
+              _colors[2] = Color(0xff66676C);
+              _colors[3] = Color(0xff66676C);
+              _page = _children[index];
+              _colors[index] = Theme.of(context).primaryColor;
+            });
+            navigatorKey.currentState.popUntil((route) => route.isFirst);
+            _currentIndex = index;
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize:
+            MediaQuery.of(context).size.width * globals.fontSize12,
+        // mainAxisAlignment: MainAxisAlignment.spaceAround,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            // inactiveColor: Color(0xffFF8F27),
+            // activeColor: Theme.of(context).primaryColor,
+            title: Text(
+              'main'.tr().toString(),
+              style: TextStyle(fontFamily: globals.font),
+              textAlign: TextAlign.center,
+            ),
+            icon: SvgPicture.asset("assets/img/home.svg", color: _colors[0]),
+          ),
+          BottomNavigationBarItem(
+              // activeColor: Theme.of(context).primaryColor,
+              title: Text(
+                'problems'.tr().toString(),
+                style: TextStyle(fontFamily: globals.font),
+                textAlign: TextAlign.center,
+              ),
+              icon: Stack(
+                children: [
+                  SvgPicture.asset("assets/img/problem.svg", color: _colors[1]),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: isProblemNotify
+                        ? Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(4)),
+                          )
+                        : Container(),
+                  ),
+                ],
+              )),
+          BottomNavigationBarItem(
+            // activeColor: Theme.of(context).primaryColor,
+            title: Text(
+              'help'.tr().toString(),
+              style: TextStyle(fontFamily: globals.font),
+              textAlign: TextAlign.center,
+            ),
+            icon: SvgPicture.asset("assets/img/support.svg", color: _colors[2]),
+          ),
+          BottomNavigationBarItem(
+            // activeColor: Theme.of(context).primaryColor,
+            title: Text(
+              'profile'.tr().toString(),
+              style: TextStyle(fontFamily: globals.font),
+              textAlign: TextAlign.center,
+            ),
+            icon: SvgPicture.asset("assets/img/profile.svg", color: _colors[3]),
+          ),
+        ],
+        // selectedIndex: _currentIndex,
+        currentIndex: _currentIndex,
+      ),
+      body: CustomNavigator(
+        navigatorKey: navigatorKey,
+        home: _page,
+        pageRoute: PageRoutes.materialPageRoute,
+      ),
     );
   }
 }

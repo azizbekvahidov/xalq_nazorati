@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -34,11 +35,14 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   String _status = "processing";
   String _title;
   int _chat_messages = 0;
+  int _event_messages = 0;
   bool _is_result = false;
   Map<String, dynamic> _data;
+  Future<Map<String, dynamic>> _problem;
   @override
   void initState() {
     super.initState();
+    _problem = getProblems(widget.id);
     globals.routeProblemId = null;
     try {
       timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
@@ -71,20 +75,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
     super.dispose();
   }
 
-  getProblems(id) async {
-    // String _type = "processing";
-    // switch (widget.status) {
-    //   case "warning":
-    //     _type = "processing";
-    //     break;
-    //   case "success":
-    //     _type = "confirmed";
-    //     break;
-    //   case "danger":
-    //     _type = "denied";
-    //     break;
-    // }
-
+  Future<Map<String, dynamic>> getProblems(id) async {
     try {
       var reply;
       var url = '${globals.api_link}/problems/problem/$id';
@@ -92,70 +83,89 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
       var response = await Requests.get(url, headers: headers);
       if (response.statusCode == 200) {
         reply = response.json();
+        _data = reply;
+        return reply["problem"];
       }
-      return reply["problem"];
     } catch (e) {
       print(e);
     }
   }
 
   void refreshBells() async {
-    try {
-      String _list = "${_data["id"]}";
-      var url =
-          '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
-      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var res = response.json();
-        if (res['result'].length != 0) {
-          for (var i = 0; i < res['result'].length; i++) {
-            var problem_id = res['result'][i];
-            if (problem_id == _data["id"]) _alert = true;
-          }
-        } else {
-          _alert = false;
+    // try {
+    String _list = "${_data["id"]}";
+    var url =
+        '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      var res = response.json();
+      if (res['result'].length != 0) {
+        for (var i = 0; i < res['result'].length; i++) {
+          var problem_id = res['result'][i];
+          if (problem_id == _data["id"]) _alert = true;
         }
+      } else {
+        _alert = false;
       }
-      url =
-          '${globals.api_link}/problems/chat-new-messages-count?problem_ids=$_list';
-
-      var resp = await Requests.get(url, headers: headers);
-      if (resp.statusCode == 200) {
-        var res = resp.json();
-        if (res.length != 0) {
-          for (var i = 0; i < res.length; i++) {
-            // var problem_id = res[i];
-            if (res[_data["id"].toString()] != 0)
-              _chat_messages = res[_data["id"].toString()];
-            else
-              _chat_messages = 0;
-          }
-        } else {
-          _chat_messages = 0;
-        }
-      }
-      url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/problems/${_data["id"]}';
-
-      var respResult = await Requests.get(url, headers: headers);
-      if (respResult.statusCode == 200) {
-        var res = respResult.json();
-        if (res["seen"] == false) {
-          _is_result = true;
-        } else {
-          _is_result = false;
-        }
-      }
-
-      setState(() {});
-      // String reply = await response.transform(utf8.decoder).join();
-
-      // var temp = parseProblems(reply);
-
-    } catch (e) {
-      print(e);
     }
+    url =
+        '${globals.api_link}/problems/chat-new-messages-count?problem_ids=$_list';
+
+    var resp = await Requests.get(url, headers: headers);
+    if (resp.statusCode == 200) {
+      var res = resp.json();
+      if (res.length != 0) {
+        for (var i = 0; i < res.length; i++) {
+          // var problem_id = res[i];
+          if (res[_data["id"].toString()] != 0)
+            _chat_messages = res[_data["id"].toString()];
+          else
+            _chat_messages = 0;
+        }
+      } else {
+        _chat_messages = 0;
+      }
+    }
+    url =
+        '${globals.api_link}/problems/event-log-new-events-count?problem_ids=$_list';
+
+    var respEvent = await Requests.get(url, headers: headers);
+    if (respEvent.statusCode == 200) {
+      var res = respEvent.json();
+      if (res.length != 0) {
+        for (var i = 0; i < res.length; i++) {
+          // var problem_id = res[i];
+          if (res[_data["id"].toString()] != 0)
+            _event_messages = res[_data["id"].toString()];
+          else
+            _event_messages = 0;
+        }
+      } else {
+        _event_messages = 0;
+      }
+    }
+    url =
+        '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/problems/${_data["id"]}';
+
+    var respResult = await Requests.get(url, headers: headers);
+    if (respResult.statusCode == 200) {
+      var res = respResult.json();
+      if (res["seen"] == false) {
+        _is_result = true;
+      } else {
+        _is_result = false;
+      }
+    }
+
+    setState(() {});
+    // String reply = await response.transform(utf8.decoder).join();
+
+    // var temp = parseProblems(reply);
+
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   List<String> imgList = [];
@@ -164,12 +174,13 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
     if (img != null) imgList.add("${globals.site_link}$img");
   }
 
+  DateFormat dateF = DateFormat('dd.MM.yyyy hh.mm');
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var dWidth = mediaQuery.size.width;
     return FutureBuilder(
-      future: getProblems(widget.id),
+      future: _problem,
       builder: (context, snapshot) {
         if (snapshot.hasError) print(snapshot.error);
         if (snapshot.hasData) {
@@ -322,13 +333,46 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                         Padding(
                                           padding: EdgeInsets.only(left: 5),
                                         ),
-                                        BoxTextDefault(_showTime),
+                                        BoxTextDefault(
+                                          "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}",
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
                               Divider(),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 19),
+                                child: Text(
+                                  "${'send_data'.tr().toString()}: ${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(_data["created_at"]).toString()))}",
+                                  style: TextStyle(
+                                    fontFamily: globals.font,
+                                    fontSize: dWidth * globals.fontSize12,
+                                    fontWeight: FontWeight.w400,
+                                    fontFeatures: [
+                                      FontFeature.enable("pnum"),
+                                      FontFeature.enable("lnum")
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(
+                                    left: 19, right: 19, top: 5),
+                                child: Text(
+                                  "${'address'.tr().toString()}: ${_data["address"]}",
+                                  style: TextStyle(
+                                    fontFamily: globals.font,
+                                    fontSize: dWidth * globals.fontSize12,
+                                    fontWeight: FontWeight.w400,
+                                    fontFeatures: [
+                                      FontFeature.enable("pnum"),
+                                      FontFeature.enable("lnum")
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 19, vertical: 15),
@@ -684,8 +728,8 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                 "status".tr().toString(),
                                 ProblemStatusScreen(_data["id"]),
                                 true,
-                                "",
-                                false,
+                                "$_event_messages",
+                                _event_messages != 0 ? true : false,
                               ),
                               CustomCardList(
                                 "subcat2",

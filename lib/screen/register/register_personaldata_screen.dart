@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
@@ -115,6 +116,7 @@ class _RegisterPersonalDataScreenState
       Map<String, dynamic> responseBody = response.json();
       addStringToSF(responseBody["token"]);
       globals.token = responseBody["token"];
+      await getUser();
       isLogin = true;
     } else {
       Map<String, dynamic> responseBody = response.json();
@@ -135,6 +137,33 @@ class _RegisterPersonalDataScreenState
       }),
           (Route<dynamic> route) =>
               false); //Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+  }
+
+  getUser() async {
+    var url = '${globals.api_link}/users/profile';
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      // dynamic json = response.json();
+
+      globals.userData = response.json();
+      print(globals.userData);
+    } else {
+      globals.token = null;
+      dynamic json = response.json();
+      Fluttertoast.showToast(
+          msg: json['detail'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+    // String reply = await response.transform(utf8.decoder).join();
+    // print(response.statusCode);
+    // globals.userData = json.decode(reply);
   }
 
   addStringToSF(String token) async {
@@ -174,6 +203,78 @@ class _RegisterPersonalDataScreenState
     print("validate");
   }
 
+  customDialog(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var dWidth = MediaQuery.of(context).size.width;
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.45,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "warning_fact_address".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWidth * globals.fontSize16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // FlatButton(
+                    //   child: Container(
+                    //       padding: EdgeInsets.symmetric(
+                    //           vertical: 10, horizontal: 35),
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(25),
+                    //         border: Border.all(
+                    //           style: BorderStyle.solid,
+                    //           color: Theme.of(context).primaryColor,
+                    //           width: 1,
+                    //         ),
+                    //       ),
+                    //       child: Text(
+                    //         "close".tr().toString(),
+                    //         style: TextStyle(
+                    //             color: Theme.of(context).primaryColor),
+                    //       )),
+                    //   onPressed: () {
+                    //     Navigator.pop(context, true);
+                    //   },
+                    // )
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var appbar = CustomAppBar(
@@ -206,6 +307,31 @@ class _RegisterPersonalDataScreenState
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            "set_fact_address".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWith * globals.fontSize16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              customDialog(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                "why_fact_address".tr().toString(),
+                                style: TextStyle(
+                                  fontFamily: globals.font,
+                                  fontSize: dWith * globals.fontSize10,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff0AB394),
+                                ),
+                              ),
+                            ),
+                          ),
                           AddressSearch(
                             setAddress: setAddress,
                             isFlat: true,

@@ -736,7 +736,7 @@ class _AddressSearchState extends State<AddressSearch> {
           widget.isFlat && with_flats
               ? DefaultInput(
                   hint: "enter_flat".tr().toString(),
-                  inputType: TextInputType.number,
+                  inputType: TextInputType.text,
                   textController: flatController,
                   notifyParent: () {
                     validate(_suggets);
@@ -777,6 +777,7 @@ class _AddressSearchState extends State<AddressSearch> {
                           .display1
                           .copyWith(fontSize: dWidth * globals.fontSize18),
                     ),
+                    style: TextStyle(color: Color.fromRGBO(0, 0, 0, 0.7)),
                   ),
                 ),
               ],

@@ -146,7 +146,8 @@ class _ProblemCardState extends State<ProblemCard> {
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                   ),
-                  BoxTextDefault("${_showTime}"),
+                  BoxTextDefault(
+                      "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}"),
                 ],
               ),
             ],

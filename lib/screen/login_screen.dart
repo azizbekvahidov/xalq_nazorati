@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Map<String, dynamic> responseBody = response.json();
       addStringToSF(responseBody["token"]);
       globals.token = responseBody["token"];
+      await getUser();
       isLogin = true;
     } else {
       Map<String, dynamic> responseBody = response.json();
@@ -68,6 +69,33 @@ class _LoginScreenState extends State<LoginScreen> {
     if (isLogin)
       Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
           HomePage.routeName, (Route<dynamic> route) => false);
+  }
+
+  getUser() async {
+    var url = '${globals.api_link}/users/profile';
+    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+
+    var response = await Requests.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      // dynamic json = response.json();
+
+      globals.userData = response.json();
+      print(globals.userData);
+    } else {
+      globals.token = null;
+      dynamic json = response.json();
+      Fluttertoast.showToast(
+          msg: json['detail'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.grey,
+          textColor: Colors.white,
+          fontSize: 15.0);
+    }
+    // String reply = await response.transform(utf8.decoder).join();
+    // print(response.statusCode);
+    // globals.userData = json.decode(reply);
   }
 
   addStringToSF(String token) async {

@@ -30,60 +30,65 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
   File image4;
   var descController = TextEditingController();
   bool _value = false;
+  bool isSending = false;
 
   Future insertData() async {
     try {
-      var url2 = '${globals.api_link}/problems/cancel';
+      if (isSending == false) {
+        isSending = true;
+        var url2 = '${globals.api_link}/problems/cancel';
 
-      var req = http.MultipartRequest("POST", Uri.parse(url2));
-      req.headers.addAll({"Authorization": "token ${globals.token}"});
-      req.fields.addAll({"problem_id": "${widget.id}"});
-      req.fields.addAll({"reason": "${descController.text}"});
-      if (globals.images['file1'] != null) {
-        String _fileName = globals.images['file1'].path;
-        req.files.add(http.MultipartFile(
-            "file1",
-            globals.images['file1'].readAsBytes().asStream(),
-            globals.images['file1'].lengthSync(),
-            filename: _fileName.split('/').last));
-      }
-      if (globals.images['file2'] != null) {
-        String _fileName = globals.images['file2'].path;
-        req.files.add(http.MultipartFile(
-            "file2",
-            globals.images['file2'].readAsBytes().asStream(),
-            globals.images['file2'].lengthSync(),
-            filename: _fileName.split('/').last));
-      }
-      if (globals.images['file3'] != null) {
-        String _fileName = globals.images['file3'].path;
-        req.files.add(http.MultipartFile(
-            "file3",
-            globals.images['file3'].readAsBytes().asStream(),
-            globals.images['file3'].lengthSync(),
-            filename: _fileName.split('/').last));
-      }
-      if (globals.images['file4'] != null) {
-        String _fileName = globals.images['file4'].path;
-        req.files.add(http.MultipartFile(
-            "file4",
-            globals.images['file4'].readAsBytes().asStream(),
-            globals.images['file4'].lengthSync(),
-            filename: _fileName.split('/').last));
-      }
-      var res = await req.send();
+        var req = http.MultipartRequest("POST", Uri.parse(url2));
+        req.headers.addAll({"Authorization": "token ${globals.token}"});
+        req.fields.addAll({"problem_id": "${widget.id}"});
+        req.fields.addAll({"reason": "${descController.text}"});
+        if (globals.images['file1'] != null) {
+          String _fileName = globals.images['file1'].path;
+          req.files.add(http.MultipartFile(
+              "file1",
+              globals.images['file1'].readAsBytes().asStream(),
+              globals.images['file1'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        if (globals.images['file2'] != null) {
+          String _fileName = globals.images['file2'].path;
+          req.files.add(http.MultipartFile(
+              "file2",
+              globals.images['file2'].readAsBytes().asStream(),
+              globals.images['file2'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        if (globals.images['file3'] != null) {
+          String _fileName = globals.images['file3'].path;
+          req.files.add(http.MultipartFile(
+              "file3",
+              globals.images['file3'].readAsBytes().asStream(),
+              globals.images['file3'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        if (globals.images['file4'] != null) {
+          String _fileName = globals.images['file4'].path;
+          req.files.add(http.MultipartFile(
+              "file4",
+              globals.images['file4'].readAsBytes().asStream(),
+              globals.images['file4'].lengthSync(),
+              filename: _fileName.split('/').last));
+        }
+        var res = await req.send();
 
-      if (res.statusCode == 200) {
-        globals.images['file1'] = null;
-        globals.images['file2'] = null;
-        globals.images['file3'] = null;
-        globals.images['file4'] = null;
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext context) {
-          return HomePage();
-        }), (Route<dynamic> route) => false);
-      } else {
-        print(res);
+        if (res.statusCode == 200) {
+          globals.images['file1'] = null;
+          globals.images['file2'] = null;
+          globals.images['file3'] = null;
+          globals.images['file4'] = null;
+          isSending = false;
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) {
+            return HomePage();
+          }), (Route<dynamic> route) => false);
+        } else {
+          print(res);
+        }
       }
     } catch (e) {
       print(e);
