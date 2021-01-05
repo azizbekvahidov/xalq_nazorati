@@ -259,6 +259,8 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                       102 ||
                                                   snap.data[index]["id"] ==
                                                       35 ||
+                                                  snap.data[index]["id"] ==
+                                                      99 ||
                                                   widget.data["id"] == 66 ||
                                                   widget.data["id"] == 80) {
                                                 Navigator.of(context,

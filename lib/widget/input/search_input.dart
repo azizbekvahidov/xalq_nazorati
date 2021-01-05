@@ -240,7 +240,9 @@ class _SearchtInputState extends State<SearchtInput> {
                       searchController.text = "";
                       if (globals.token != null) {
                         print(suggestion);
-                        if (suggestion["id"] == 102 || suggestion["id"] == 35) {
+                        if (suggestion["id"] == 102 ||
+                            suggestion["id"] == 35 ||
+                            suggestion["id"] == 99) {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) {

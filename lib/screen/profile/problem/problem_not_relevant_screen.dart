@@ -36,7 +36,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
   int _val = 0;
   Timer _timer;
   void timerCencel() {
-    _timer.cancel();
+    _timer?.cancel();
   }
 
   void timerStart() {

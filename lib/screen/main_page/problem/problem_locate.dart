@@ -102,7 +102,7 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -287,7 +287,7 @@ class _ProblemLocateState extends State<ProblemLocate>
   }
 
   void timerCencel() {
-    _timer.cancel();
+    _timer?.cancel();
   }
 
   void timerStart() {
@@ -423,7 +423,7 @@ class _ProblemLocateState extends State<ProblemLocate>
           _btn_message = "continue".tr().toString();
           _val = 0;
         });
-        _timer.cancel();
+        _timer?.cancel();
         customDialog(context);
       }
     } catch (e) {
@@ -432,7 +432,7 @@ class _ProblemLocateState extends State<ProblemLocate>
         _btn_message = "continue".tr().toString();
         _val = 0;
       });
-      _timer.cancel();
+      _timer?.cancel();
       print(e);
     }
   }
@@ -1087,6 +1087,7 @@ class _ProblemLocateState extends State<ProblemLocate>
                                     ? DefaultButton(_btn_message, () {
                                         if (widget.subSubCategoryId == 35 ||
                                             widget.subSubCategoryId == 102 ||
+                                            widget.subSubCategoryId == 99 ||
                                             widget.subcategoryId == 66 ||
                                             widget.subcategoryId == 80) {
                                           if (_isFlat) {

@@ -37,6 +37,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   int _chat_messages = 0;
   int _event_messages = 0;
   bool _is_result = false;
+  bool _hasResult = false;
   Map<String, dynamic> _data;
   Future<Map<String, dynamic>> _problem;
   @override
@@ -44,8 +45,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
     super.initState();
     _problem = getProblems(widget.id);
     globals.routeProblemId = null;
+
     try {
-      timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      timers = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
         refreshBells();
       });
     } catch (e) {
@@ -54,7 +56,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   }
 
   FutureOr onGoBack(dynamic value) {
-    timers = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    timers = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
       refreshBells();
     });
     clearImages();
@@ -80,7 +82,8 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
       var reply;
       var url = '${globals.api_link}/problems/problem/$id';
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response =
+          await Requests.get(url, headers: headers, timeoutSeconds: 1);
       if (response.statusCode == 200) {
         reply = response.json();
         _data = reply;
@@ -92,80 +95,80 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   }
 
   void refreshBells() async {
-    // try {
-    String _list = "${_data["id"]}";
-    var url =
-        '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-    var response = await Requests.get(url, headers: headers);
-    if (response.statusCode == 200) {
-      var res = response.json();
-      if (res['result'].length != 0) {
-        for (var i = 0; i < res['result'].length; i++) {
-          var problem_id = res['result'][i];
-          if (problem_id == _data["id"]) _alert = true;
+    try {
+      String _list = "${_data["id"]}";
+      var url =
+          '${globals.api_link}/problems/refresh-user-bells?problem_ids=$_list';
+      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response =
+          await Requests.get(url, headers: headers, timeoutSeconds: 1);
+      if (response.statusCode == 200) {
+        var res = response.json();
+        if (res['result'].length != 0) {
+          for (var i = 0; i < res['result'].length; i++) {
+            var problem_id = res['result'][i];
+            if (problem_id == _data["id"]) _alert = true;
+          }
+        } else {
+          _alert = false;
         }
-      } else {
-        _alert = false;
       }
-    }
-    url =
-        '${globals.api_link}/problems/chat-new-messages-count?problem_ids=$_list';
+      url =
+          '${globals.api_link}/problems/chat-new-messages-count?problem_ids=$_list';
 
-    var resp = await Requests.get(url, headers: headers);
-    if (resp.statusCode == 200) {
-      var res = resp.json();
-      if (res.length != 0) {
-        for (var i = 0; i < res.length; i++) {
-          // var problem_id = res[i];
-          if (res[_data["id"].toString()] != 0)
-            _chat_messages = res[_data["id"].toString()];
-          else
-            _chat_messages = 0;
+      var resp = await Requests.get(url, headers: headers, timeoutSeconds: 1);
+      if (resp.statusCode == 200) {
+        var res = resp.json();
+        if (res.length != 0) {
+          for (var i = 0; i < res.length; i++) {
+            // var problem_id = res[i];
+            if (res[_data["id"].toString()] != 0)
+              _chat_messages = res[_data["id"].toString()];
+            else
+              _chat_messages = 0;
+          }
+        } else {
+          _chat_messages = 0;
         }
-      } else {
-        _chat_messages = 0;
       }
-    }
-    url =
-        '${globals.api_link}/problems/event-log-new-events-count?problem_ids=$_list';
+      url =
+          '${globals.api_link}/problems/event-log-new-events-count?problem_ids=$_list';
 
-    var respEvent = await Requests.get(url, headers: headers);
-    if (respEvent.statusCode == 200) {
-      var res = respEvent.json();
-      if (res.length != 0) {
-        for (var i = 0; i < res.length; i++) {
-          // var problem_id = res[i];
-          if (res[_data["id"].toString()] != 0)
-            _event_messages = res[_data["id"].toString()];
-          else
-            _event_messages = 0;
+      var respEvent =
+          await Requests.get(url, headers: headers, timeoutSeconds: 1);
+      if (respEvent.statusCode == 200) {
+        var res = respEvent.json();
+        if (res.length != 0) {
+          for (var i = 0; i < res.length; i++) {
+            // var problem_id = res[i];
+            if (res[_data["id"].toString()] != 0)
+              _event_messages = res[_data["id"].toString()];
+            else
+              _event_messages = 0;
+          }
+        } else {
+          _event_messages = 0;
         }
-      } else {
-        _event_messages = 0;
       }
-    }
-    url =
-        '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/problems/${_data["id"]}';
+      url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/problems/${_data["id"]}';
 
-    var respResult = await Requests.get(url, headers: headers);
-    if (respResult.statusCode == 200) {
-      var res = respResult.json();
-      if (res["seen"] == false) {
-        _is_result = true;
-      } else {
-        _is_result = false;
+      var respResult =
+          await Requests.get(url, headers: headers, timeoutSeconds: 1);
+      if (respResult.statusCode == 200) {
+        var res = respResult.json();
+        _hasResult = true;
+        if (res["seen"] == false) {
+          _is_result = true;
+        } else {
+          _is_result = false;
+        }
       }
+
+      setState(() {});
+    } catch (e) {
+      print(e);
     }
-
-    setState(() {});
-    // String reply = await response.transform(utf8.decoder).join();
-
-    // var temp = parseProblems(reply);
-
-    // } catch (e) {
-    //   print(e);
-    // }
   }
 
   List<String> imgList = [];
@@ -185,6 +188,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
         if (snapshot.hasError) print(snapshot.error);
         if (snapshot.hasData) {
           _data = snapshot.data;
+          if (_data["status"] != "processing") {
+            _hasResult = true;
+          }
           if (_data["status"] == "not confirmed") {
             _status = "warning";
             _title = "unresolved".tr().toString();
@@ -607,144 +613,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                       ),
                                               ],
                                             ),
-                                            // Row(
-                                            //   children: [
-                                            //     _data["file_3"] == null
-                                            //         ? Container()
-                                            //         : Container(
-                                            //             margin: EdgeInsets.only(
-                                            //                 top: mediaQuery.size
-                                            //                         .width *
-                                            //                     0.024),
-                                            //             width: mediaQuery
-                                            //                     .size.width *
-                                            //                 0.23,
-                                            //             height: 90,
-                                            //             child: ClipRRect(
-                                            //               borderRadius:
-                                            //                   BorderRadius
-                                            //                       .circular(5),
-                                            //               child: FittedBox(
-                                            //                 fit: BoxFit.cover,
-                                            //                 child: _data[
-                                            //                             "file_3"] !=
-                                            //                         null
-                                            //                     ? GestureDetector(
-                                            //                         onTap: () {
-                                            //                           Navigator.of(
-                                            //                                   context,
-                                            //                                   rootNavigator: true)
-                                            //                               .push(
-                                            //                             MaterialPageRoute(
-                                            //                               builder:
-                                            //                                   (BuildContext context) {
-                                            //                                 return FullScreen(imgList);
-                                            //                               },
-                                            //                             ),
-                                            //                           );
-                                            //                         },
-                                            //                         child: CachedNetworkImage(
-                                            //                             imageUrl:
-                                            //                                 "${globals.site_link}${_data["file_3"]}"),
-                                            //                       )
-                                            //                     : Container(),
-                                            //               ),
-                                            //             ),
-                                            //           ),
-                                            //     _data["file_4"] == null
-                                            //         ? Container()
-                                            //         : Container(
-                                            //             margin: EdgeInsets.only(
-                                            //                 left: mediaQuery
-                                            //                         .size
-                                            //                         .width *
-                                            //                     0.024,
-                                            //                 top: mediaQuery.size
-                                            //                         .width *
-                                            //                     0.024),
-                                            //             width: mediaQuery
-                                            //                     .size.width *
-                                            //                 0.23,
-                                            //             height: 90,
-                                            //             child: ClipRRect(
-                                            //               borderRadius:
-                                            //                   BorderRadius
-                                            //                       .circular(5),
-                                            //               child: FittedBox(
-                                            //                 fit: BoxFit.cover,
-                                            //                 child: _data[
-                                            //                             "file_4"] !=
-                                            //                         null
-                                            //                     ? GestureDetector(
-                                            //                         onTap: () {
-                                            //                           Navigator.of(
-                                            //                                   context,
-                                            //                                   rootNavigator: true)
-                                            //                               .push(
-                                            //                             MaterialPageRoute(
-                                            //                               builder:
-                                            //                                   (BuildContext context) {
-                                            //                                 return FullScreen(imgList);
-                                            //                               },
-                                            //                             ),
-                                            //                           );
-                                            //                         },
-                                            //                         child: CachedNetworkImage(
-                                            //                             imageUrl:
-                                            //                                 "${globals.site_link}${_data["file_4"]}"),
-                                            //                       )
-                                            //                     : Container(),
-                                            //               ),
-                                            //             ),
-                                            //           ),
-                                            //   ],
-                                            // ),
                                           ],
                                         ),
                                       ),
-                                      // _data["file_5"] == null
-                                      //     ? Container()
-                                      //     : Container(
-                                      //         margin: EdgeInsets.only(
-                                      //             left: mediaQuery.size.width *
-                                      //                 0.024),
-                                      //         decoration: BoxDecoration(
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(5),
-                                      //         ),
-                                      //         width:
-                                      //             mediaQuery.size.width * 0.365,
-                                      //         height: 190,
-                                      //         child: ClipRRect(
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(5),
-                                      //           child: FittedBox(
-                                      //             fit: BoxFit.cover,
-                                      //             child: _data["file_5"] != null
-                                      //                 ? GestureDetector(
-                                      //                     onTap: () {
-                                      //                       Navigator.of(
-                                      //                               context,
-                                      //                               rootNavigator:
-                                      //                                   true)
-                                      //                           .push(
-                                      //                         MaterialPageRoute(
-                                      //                           builder:
-                                      //                               (BuildContext
-                                      //                                   context) {
-                                      //                             return FullScreen(
-                                      //                                 imgList);
-                                      //                           },
-                                      //                         ),
-                                      //                       );
-                                      //                     },
-                                      //                     child: CachedNetworkImage(
-                                      //                         imageUrl:
-                                      //                             "${globals.site_link}${_data["file_5"]}"))
-                                      //                 : Container(),
-                                      //           ),
-                                      //         ),
-                                      //       ),
                                     ],
                                   ),
                                 ),
@@ -773,13 +644,6 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                 "$_chat_messages",
                                 _chat_messages != 0 ? true : false,
                               ),
-
-                              // CustomCardList(
-                              //   "subcat2",
-                              //   "messages".tr().toString(),
-                              //   MainChat(_data["id"], _data["status"]),
-                              //   true,
-                              // ),
                               (_data["status"] == "confirmed" ||
                                       _data["status"] == "denied" ||
                                       _data["status"] == "closed" ||
@@ -841,7 +705,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                               ),
                                             ),
                                             onTap: () {
-                                              timers.cancel();
+                                              timers?.cancel();
                                               Navigator.of(context,
                                                       rootNavigator: true)
                                                   .push(
@@ -860,7 +724,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                         ],
                                       ),
                                     ),
-                              (_data["status"] != "processing")
+                              _hasResult
                                   ? CustomCardList(
                                       "subcat2",
                                       "result".tr().toString(),
