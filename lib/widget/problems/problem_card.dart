@@ -146,8 +146,11 @@ class _ProblemCardState extends State<ProblemCard> {
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                   ),
-                  BoxTextDefault(
-                      "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}"),
+                  widget.data["status"] == "not confirmed" ||
+                          widget.data["status"] == "processing"
+                      ? BoxTextDefault(
+                          "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}")
+                      : Container(),
                 ],
               ),
             ],

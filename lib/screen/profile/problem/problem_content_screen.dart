@@ -333,9 +333,12 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                         Padding(
                                           padding: EdgeInsets.only(left: 5),
                                         ),
-                                        BoxTextDefault(
-                                          "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}",
-                                        ),
+                                        _data["status"] == "not confirmed" ||
+                                                _data["status"] == "processing"
+                                            ? BoxTextDefault(
+                                                "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}",
+                                              )
+                                            : Container(),
                                       ],
                                     ),
                                   ],
@@ -344,35 +347,66 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                               Divider(),
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 19),
-                                child: Text(
-                                  "${'send_data'.tr().toString()}: ${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(_data["created_at"]).toString()))}",
-                                  style: TextStyle(
-                                    fontFamily: globals.font,
-                                    fontSize: dWidth * globals.fontSize12,
-                                    fontWeight: FontWeight.w400,
-                                    fontFeatures: [
-                                      FontFeature.enable("pnum"),
-                                      FontFeature.enable("lnum")
-                                    ],
-                                  ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "${'send_data'.tr().toString()}: ",
+                                      style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: dWidth * globals.fontSize12,
+                                        fontWeight: FontWeight.bold,
+                                        fontFeatures: [
+                                          FontFeature.enable("pnum"),
+                                          FontFeature.enable("lnum")
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(_data["created_at"]).toString()))}",
+                                      style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: dWidth * globals.fontSize12,
+                                        fontWeight: FontWeight.w400,
+                                        fontFeatures: [
+                                          FontFeature.enable("pnum"),
+                                          FontFeature.enable("lnum")
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.only(
-                                    left: 19, right: 19, top: 5),
-                                child: Text(
-                                  "${'address'.tr().toString()}: ${_data["address"]}",
-                                  style: TextStyle(
-                                    fontFamily: globals.font,
-                                    fontSize: dWidth * globals.fontSize12,
-                                    fontWeight: FontWeight.w400,
-                                    fontFeatures: [
-                                      FontFeature.enable("pnum"),
-                                      FontFeature.enable("lnum")
+                                  padding: EdgeInsets.only(
+                                      left: 19, right: 19, top: 5),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "${'address'.tr().toString()}: ",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize12,
+                                          fontWeight: FontWeight.bold,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        "${_data["address"]}",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize12,
+                                          fontWeight: FontWeight.w400,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                ),
-                              ),
+                                  )),
                               Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 19, vertical: 15),

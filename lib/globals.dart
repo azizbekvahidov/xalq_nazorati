@@ -72,5 +72,5 @@ generateAddrStr(var addr) {
   var street = addr["street"]["name_${lang.tr().toString()}"];
   var house = addr["house"]["number"];
   var apart = addr["apartment"] != null ? ", ${addr["apartment"]}" : "";
-  return "$district, $community, $street, $house$apart";
+  return "$district, $street, $house$apart, $community";
 }

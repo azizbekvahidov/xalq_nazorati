@@ -400,7 +400,6 @@ class _AddressSearchState extends State<AddressSearch> {
               ],
             ),
           ),
-
           Padding(padding: EdgeInsets.only(top: 10)),
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -508,64 +507,6 @@ class _AddressSearchState extends State<AddressSearch> {
               ],
             ),
           ),
-
-          // Stack(
-          //   alignment: AlignmentDirectional.topStart,
-          //   fit: StackFit.loose,
-          //   overflow: Overflow.visible,
-          //   children: [
-          //     Container(
-          //       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          //       margin: EdgeInsets.symmetric(vertical: 10),
-          //       width: double.infinity,
-          //       height: 45,
-          //       decoration: BoxDecoration(
-          //         color: Color(0xffF5F6F9),
-          //         borderRadius: BorderRadius.circular(22.5),
-          //         border: Border.all(
-          //           color: Color.fromRGBO(178, 183, 208, 0.5),
-          //           style: BorderStyle.solid,
-          //           width: 0.5,
-          //         ),
-          //       ),
-          //       child: Row(
-          //         children: [
-          //           Container(
-          //             width: (mediaQuery.size.width -
-          //                     mediaQuery.padding.left -
-          //                     mediaQuery.padding.right) *
-          //                 0.74,
-          //             child: TextField(
-          //               onChanged: (value) async {
-          //                 await getStreet(value, placeType);
-          //               },
-          //               controller: searchAddressController,
-          //               maxLines: 1,
-          //               decoration: InputDecoration.collapsed(
-          //                 hintText: "",
-          //                 hintStyle: Theme.of(context)
-          //                     .textTheme
-          //                     .display1
-          //                     .copyWith(
-          //                         fontSize: mediaQuery.size.width *
-          //                             globals.fontSize18),
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //     Positioned(
-          //       top: 60,
-          //       child: Container(
-          //         color: Colors.red,
-          //         width: dWidth - 40,
-          //         height: 200,
-          //         child: Text("asdasda"),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           MainText("${"houses".tr().toString()}*"),
           Container(
             // decoration: BoxDecoration(

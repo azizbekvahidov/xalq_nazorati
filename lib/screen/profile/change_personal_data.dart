@@ -53,13 +53,13 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
     try {
       String email = emailController.text;
       String code = "${codeController.text}";
-      if (address != "" || email != "") {
+      if (address != "") {
         var url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/profile';
 
         Map<String, dynamic> map = {};
-        if (address != '') map.addAll({"address_str": address});
-        if (email != '') map.addAll({"email": email});
+        // if (address != '') map.addAll({"address_str": address});
+        // if (email != '') map.addAll({"email": email});
         Map<String, String> headers = {
           "Authorization": "token ${globals.token}",
         };

@@ -48,12 +48,13 @@ class _RegisterPersonalDataScreenState
         String url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup';
         Map map = {
-          "email": email,
-          'address_str': address,
+          // "email": email,
+          // 'address_str': address,
           'password': pass,
           'password2': repass,
           'agreement': _value,
         };
+        map.addAll(bigData);
         // String url = '${globals.api_link}/users/get-phone';
         var r1 = await Requests.post(url,
             body: map, verify: false, persistCookies: true);
@@ -104,7 +105,6 @@ class _RegisterPersonalDataScreenState
       "device_type": globals.device,
       "lang": globals.lang.tr().toString(),
     };
-    map.addAll(bigData);
     var response = await Requests.post(
       url,
       body: map,

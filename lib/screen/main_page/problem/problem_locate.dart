@@ -76,9 +76,11 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   bool getLocalAddress = false;
   bool getCustomAddress = true;
+  ScrollController _scControl;
   @override
   void initState() {
     super.initState();
+    _scControl = ScrollController();
     if (widget.categoryId == 18) {
       getCustomAddress = false;
       getLocalAddress = true;
@@ -436,13 +438,15 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   setAddress(var addr, flatController, isChange) {
     address =
-        "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['community']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
+        "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
     _latitude = double.tryParse(addr['latitude']);
     _longitude = double.tryParse(addr['longitude']);
     _isFlat = addr["with_flats"];
     if (flatController.text != "") {
       address += ", ${flatController.text}";
     }
+    address +=
+        ", ${addr['community']["name_${(globals.lang).tr().toString()}"]}";
     if (isChange)
       setState(() {
         _valid = true;
@@ -536,6 +540,24 @@ class _ProblemLocateState extends State<ProblemLocate>
     });
   }
 
+  setMyaddress() {
+    setState(() {
+      getLocalAddress = true;
+      getCustomAddress = false;
+      getLocalData();
+      checkChange();
+    });
+  }
+
+  setOtherAddress() {
+    setState(() {
+      getLocalAddress = false;
+      getCustomAddress = true;
+      address = "";
+      checkChange();
+    });
+  }
+
   getLocalData() {
     address = _user_address;
     _longitude =
@@ -559,6 +581,7 @@ class _ProblemLocateState extends State<ProblemLocate>
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: SingleChildScrollView(
+          controller: _scControl,
           physics: BouncingScrollPhysics(),
           child: ConstrainedBox(
             constraints: BoxConstraints(
@@ -589,16 +612,16 @@ class _ProblemLocateState extends State<ProblemLocate>
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          MainText(
-                                              "your_address".tr().toString()),
                                           InkWell(
                                             onTap: () {
-                                              setState(() {
-                                                getCustomAddress = false;
-                                                getLocalAddress = true;
-                                                getLocalData();
-                                                checkChange();
-                                              });
+                                              setMyaddress();
+                                            },
+                                            child: MainText(
+                                                "your_address".tr().toString()),
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              setMyaddress();
                                             },
                                             child: Container(
                                               margin: EdgeInsets.symmetric(
@@ -631,31 +654,27 @@ class _ProblemLocateState extends State<ProblemLocate>
                                               ),
                                             ),
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "use_my_address"
-                                                    .tr()
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontFamily: globals.font,
-                                                  fontSize: dWidth *
-                                                      globals.fontSize16,
-                                                  fontWeight: FontWeight.w400,
+                                          InkWell(
+                                            onTap: () {
+                                              setMyaddress();
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "use_my_address"
+                                                      .tr()
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    fontFamily: globals.font,
+                                                    fontSize: dWidth *
+                                                        globals.fontSize16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    getLocalAddress = true;
-                                                    getCustomAddress = false;
-                                                    getLocalData();
-                                                    checkChange();
-                                                  });
-                                                },
-                                                child: Container(
+                                                Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(
                                                           width: 2,
@@ -688,37 +707,33 @@ class _ProblemLocateState extends State<ProblemLocate>
                                                           ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                           Padding(
                                               padding:
                                                   EdgeInsets.only(top: 20)),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "use_other_address"
-                                                    .tr()
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontFamily: globals.font,
-                                                  fontSize: dWidth *
-                                                      globals.fontSize16,
-                                                  fontWeight: FontWeight.w400,
+                                          InkWell(
+                                            onTap: () {
+                                              setOtherAddress();
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "use_other_address"
+                                                      .tr()
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    fontFamily: globals.font,
+                                                    fontSize: dWidth *
+                                                        globals.fontSize16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
                                                 ),
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    getLocalAddress = false;
-                                                    getCustomAddress = true;
-                                                    address = "";
-                                                    checkChange();
-                                                  });
-                                                },
-                                                child: Container(
+                                                Container(
                                                   decoration: BoxDecoration(
                                                       border: Border.all(
                                                           width: 2,
@@ -751,8 +766,8 @@ class _ProblemLocateState extends State<ProblemLocate>
                                                           ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
