@@ -457,7 +457,7 @@ class _MainProfileState extends State<MainProfile> {
                                                     false);
                                       });
                                     }),
-                                Divider(),
+                                // Divider(),
                               ],
                             ),
                           )

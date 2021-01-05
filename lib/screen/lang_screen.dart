@@ -133,11 +133,11 @@ class _LangScreenState extends State<LangScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 80),
+            margin: EdgeInsets.only(bottom: 100),
             child: SvgPicture.asset("assets/img/Frame.svg"),
           ),
           Container(
@@ -238,43 +238,43 @@ class _LangScreenState extends State<LangScreen> {
               ],
             ),
           ),
-          Column(
-            children: [
-              Container(
-                child: FlatButton(
-                  onPressed: null,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          customDialog();
-                          // createAlertDialog(context);
-                        },
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          margin: EdgeInsets.only(bottom: 10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Color(0xff66676C),
-                          ),
-                          child: Text(
-                            "?",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      Text("about".tr().toString()),
-                    ],
-                  ),
-                  color: Colors.transparent,
-                ),
-              ),
-            ],
-          ),
+          // Column(
+          //   children: [
+          //     Container(
+          //       child: FlatButton(
+          //         onPressed: null,
+          //         child: Column(
+          //           crossAxisAlignment: CrossAxisAlignment.center,
+          //           mainAxisAlignment: MainAxisAlignment.end,
+          //           children: [
+          //             InkWell(
+          //               onTap: () {
+          //                 customDialog();
+          //                 // createAlertDialog(context);
+          //               },
+          //               child: Container(
+          //                 height: 30,
+          //                 width: 30,
+          //                 margin: EdgeInsets.only(bottom: 10),
+          //                 alignment: Alignment.center,
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.circular(15),
+          //                   color: Color(0xff66676C),
+          //                 ),
+          //                 child: Text(
+          //                   "?",
+          //                   style: TextStyle(color: Colors.white),
+          //                 ),
+          //               ),
+          //             ),
+          //             Text("about".tr().toString()),
+          //           ],
+          //         ),
+          //         color: Colors.transparent,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

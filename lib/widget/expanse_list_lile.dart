@@ -252,31 +252,15 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                       children: [
                                         InkWell(
                                           onTap: () {
+                                            print(widget.data["id"]);
                                             if (globals.token != null) {
                                               // customWarningDialog(context);
-                                              if (snap.data[index]["id"] !=
-                                                  35) {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .push(
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return ProblemDesc(
-                                                          snap.data[index]
-                                                              ["id"],
-                                                          snap.data[index][
-                                                              "api_title"
-                                                                  .tr()
-                                                                  .toString()],
-                                                          widget.data[
-                                                              "category"]["id"],
-                                                          breadCrumbs);
-                                                    },
-                                                  ),
-                                                  // ModalRoute.withName(HomePage.routeName),
-                                                ).then(onGoBack);
-                                              } else {
+                                              if (snap.data[index]["id"] ==
+                                                      102 ||
+                                                  snap.data[index]["id"] ==
+                                                      35 ||
+                                                  widget.data["id"] == 66 ||
+                                                  widget.data["id"] == 80) {
                                                 Navigator.of(context,
                                                         rootNavigator: true)
                                                     .push(
@@ -294,8 +278,32 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                           category_id: widget
                                                                   .data[
                                                               "category"]["id"],
+                                                          subcategoryId:
+                                                              widget.data["id"],
                                                           breadcrumbs:
                                                               breadCrumbs);
+                                                    },
+                                                  ),
+                                                  // ModalRoute.withName(HomePage.routeName),
+                                                ).then(onGoBack);
+                                              } else {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .push(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return ProblemDesc(
+                                                          snap.data[index]
+                                                              ["id"],
+                                                          snap.data[index][
+                                                              "api_title"
+                                                                  .tr()
+                                                                  .toString()],
+                                                          widget.data[
+                                                              "category"]["id"],
+                                                          widget.data["id"],
+                                                          breadCrumbs);
                                                     },
                                                   ),
                                                   // ModalRoute.withName(HomePage.routeName),

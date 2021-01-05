@@ -18,8 +18,10 @@ class ProblemDesc extends StatefulWidget {
   final int id;
   final String title;
   final int categoryId;
+  final int subcategoryId;
   final String breadCrumbs;
-  ProblemDesc(this.id, this.title, this.categoryId, this.breadCrumbs);
+  ProblemDesc(this.id, this.title, this.categoryId, this.subcategoryId,
+      this.breadCrumbs);
   @override
   _ProblemDescState createState() => _ProblemDescState();
 }
@@ -231,6 +233,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                                           descController.text,
                                           widget.id,
                                           widget.categoryId,
+                                          widget.subcategoryId,
                                           widget.breadCrumbs);
                                     }));
                                   }, Theme.of(context).primaryColor),

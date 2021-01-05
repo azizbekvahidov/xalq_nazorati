@@ -27,6 +27,7 @@ class PassRecognizeScreen extends StatefulWidget {
 class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   final pnflController = TextEditingController();
   final seriesController = TextEditingController();
+  final seriesNumController = TextEditingController();
 
   bool _value = false;
   bool isError = false;
@@ -34,10 +35,11 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   Future sendData() async {
     String pnfl = pnflController.text;
     String series = seriesController.text;
-    if (_value && pnfl != "" && series != "") {
+    String seriesNum = seriesNumController.text;
+    if (_value && pnfl != "" && series != "" && seriesNum != "") {
       String url =
           '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
-      Map map = {"pinpp": pnfl, 'document': series};
+      Map map = {"pinpp": pnfl, 'document': "$seriesNum$series"};
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,
           body: map, verify: false, persistCookies: true);
@@ -255,12 +257,14 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                 padding: EdgeInsets.only(left: 20),
                                 margin: EdgeInsets.symmetric(vertical: 10),
                                 width: (dWith <= 360)
-                                    ? dWith * 0.67
-                                    : dWith * 0.72,
+                                    ? dWith * 0.14
+                                    : dWith * 0.16,
                                 height: 45,
                                 decoration: BoxDecoration(
                                   color: Color(0xffF5F6F9),
-                                  borderRadius: BorderRadius.circular(22.5),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(22.5),
+                                      bottomLeft: Radius.circular(22.5)),
                                   border: Border.all(
                                     color: Color.fromRGBO(178, 183, 208, 0.5),
                                     style: BorderStyle.solid,
@@ -277,12 +281,12 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                       width: (mediaQuery.size.width -
                                               mediaQuery.padding.left -
                                               mediaQuery.padding.right) *
-                                          ((dWith <= 360) ? 0.5 : 0.65),
+                                          ((dWith <= 360) ? 0.08 : 0.08),
                                       child: TextField(
                                         onChanged: (value) {
                                           validate();
                                         },
-                                        controller: seriesController,
+                                        controller: seriesNumController,
                                         maxLines: 1,
                                         maxLength: 14,
                                         buildCounter: (BuildContext context,
@@ -295,14 +299,72 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                           contentPadding: EdgeInsets.only(
                                               top: 0, bottom: 10),
                                           border: InputBorder.none,
-                                          hintText:
-                                              "pas_series_hint".tr().toString(),
+                                          hintText: "AA".tr().toString(),
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .display1
                                               .copyWith(
                                                   fontSize: dWith *
-                                                      globals.fontSize14),
+                                                      globals.fontSize16),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: 20),
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                width: (dWith <= 360)
+                                    ? dWith * 0.50
+                                    : dWith * 0.53,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffF5F6F9),
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(22.5),
+                                      bottomRight: Radius.circular(22.5)),
+                                  border: Border.all(
+                                    color: Color.fromRGBO(178, 183, 208, 0.5),
+                                    style: BorderStyle.solid,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(vertical: 3),
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          ((dWith <= 360) ? 0.42 : 0.42),
+                                      child: TextField(
+                                        onChanged: (value) {
+                                          validate();
+                                        },
+                                        controller: seriesController,
+                                        maxLines: 1,
+                                        maxLength: 14,
+                                        buildCounter: (BuildContext context,
+                                                {int currentLength,
+                                                int maxLength,
+                                                bool isFocused}) =>
+                                            null,
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(
+                                              top: 0, bottom: 10),
+                                          border: InputBorder.none,
+                                          hintText: "123456".tr().toString(),
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .copyWith(
+                                                  fontSize: dWith *
+                                                      globals.fontSize16),
                                         ),
                                       ),
                                     ),
@@ -327,8 +389,10 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                       setState(() {
                                         pnflController.text =
                                             res.personalNumber;
+                                        seriesNumController.text =
+                                            res.documentNumber.substring(0, 2);
                                         seriesController.text =
-                                            res.documentNumber;
+                                            res.documentNumber.substring(2);
                                       });
                                       validate();
                                     }
@@ -409,7 +473,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                                 .display1
                                                 .copyWith(
                                                     fontSize: dWith *
-                                                        globals.fontSize14),
+                                                        globals.fontSize16),
                                           ),
                                         ),
                                       ),

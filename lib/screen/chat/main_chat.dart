@@ -61,7 +61,8 @@ class _MainChatState extends State<MainChat> {
 
   Future<List<ChatMessage>> getAllMessage() async {
     try {
-      var url = '${globals.api_link}/problems/chat/${widget.id}';
+      var url =
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/chat/${widget.id}';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
 
@@ -123,15 +124,11 @@ class _MainChatState extends State<MainChat> {
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    print("testCompressAndGetFile");
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
       quality: 80,
     );
-
-    print(file.lengthSync());
-    print(result.lengthSync());
 
     return result;
   }
@@ -165,7 +162,6 @@ class _MainChatState extends State<MainChat> {
           isSended = false;
         } else {
           isSended = false;
-          print(res);
         }
       } catch (e) {
         isSended = false;
@@ -202,7 +198,6 @@ class _MainChatState extends State<MainChat> {
                               .parseUTC(_data[index].when)
                               .toString()));
                       var userId = _data[index].user["id"];
-                      print(_data[index]);
                       return Row(
                         mainAxisAlignment: userId == globals.userData["id"]
                             ? MainAxisAlignment.end
@@ -253,7 +248,14 @@ class _MainChatState extends State<MainChat> {
                                                 ),
                                               ),
                                               _data[index].moderator
-                                                  ? Container()
+                                                  ? Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5, bottom: 5),
+                                                      child: ChatBox(
+                                                          val: "moderator"
+                                                              .tr()
+                                                              .toString()),
+                                                    )
                                                   : Container(
                                                       child: Row(
                                                         children: [

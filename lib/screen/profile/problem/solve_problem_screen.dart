@@ -219,80 +219,101 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                               Container(
                                 padding: EdgeInsets.only(
                                     left: 19, top: 5, right: 19, bottom: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          "executor".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize12,
-                                            fontWeight: FontWeight.w400,
-                                            fontFeatures: [
-                                              FontFeature.enable("pnum"),
-                                              FontFeature.enable("lnum")
-                                            ],
-                                          ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "executor".tr().toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                fontSize:
+                                                    dWidth * globals.fontSize12,
+                                                fontWeight: FontWeight.w400,
+                                                fontFeatures: [
+                                                  FontFeature.enable("pnum"),
+                                                  FontFeature.enable("lnum")
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                            ),
+                                            Text(
+                                              "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                fontSize:
+                                                    dWidth * globals.fontSize14,
+                                                fontWeight: FontWeight.w600,
+                                                fontFeatures: [
+                                                  FontFeature.enable("pnum"),
+                                                  FontFeature.enable("lnum")
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                        ),
-                                        Text(
-                                          "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize14,
-                                            fontWeight: FontWeight.w600,
-                                            fontFeatures: [
-                                              FontFeature.enable("pnum"),
-                                              FontFeature.enable("lnum")
-                                            ],
-                                          ),
-                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "execute_date".tr().toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                fontSize:
+                                                    dWidth * globals.fontSize12,
+                                                fontWeight: FontWeight.w400,
+                                                fontFeatures: [
+                                                  FontFeature.enable("pnum"),
+                                                  FontFeature.enable("lnum")
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(top: 10),
+                                            ),
+                                            Text(
+                                              "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                fontSize:
+                                                    dWidth * globals.fontSize14,
+                                                fontWeight: FontWeight.w600,
+                                                fontFeatures: [
+                                                  FontFeature.enable("pnum"),
+                                                  FontFeature.enable("lnum")
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "execute_date".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize12,
-                                            fontWeight: FontWeight.w400,
-                                            fontFeatures: [
-                                              FontFeature.enable("pnum"),
-                                              FontFeature.enable("lnum")
-                                            ],
-                                          ),
+                                    Container(
+                                      width: dWidth * 0.8,
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: Text(
+                                        "Районный хокимият, Юнусабадский район. Зам. хокима по вопросам Жилищно-Коммунального хозяйства и архитектуры",
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWidth * globals.fontSize10,
+                                          fontWeight: FontWeight.w400,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 10),
-                                        ),
-                                        Text(
-                                          "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize14,
-                                            fontWeight: FontWeight.w600,
-                                            fontFeatures: [
-                                              FontFeature.enable("pnum"),
-                                              FontFeature.enable("lnum")
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -532,6 +553,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                           fontSize: dWidth * globals.fontSize18,
                           fontWeight: FontWeight.w600,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     )
                   : Container();

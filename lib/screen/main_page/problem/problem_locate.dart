@@ -34,10 +34,11 @@ class ProblemLocate extends StatefulWidget {
   final String desc;
   final int subSubCategoryId;
   final int categoryId;
+  final int subcategoryId;
   final String breadcrumbs;
 
-  ProblemLocate(
-      this.desc, this.subSubCategoryId, this.categoryId, this.breadcrumbs);
+  ProblemLocate(this.desc, this.subSubCategoryId, this.categoryId,
+      this.subcategoryId, this.breadcrumbs);
 
   @override
   _ProblemLocateState createState() => _ProblemLocateState();
@@ -1084,9 +1085,10 @@ class _ProblemLocateState extends State<ProblemLocate>
                                   )
                                 : !_sending
                                     ? DefaultButton(_btn_message, () {
-                                        if (widget.subSubCategoryId != 35) {
-                                          insertData().then((value) {});
-                                        } else {
+                                        if (widget.subSubCategoryId == 35 ||
+                                            widget.subSubCategoryId == 102 ||
+                                            widget.subcategoryId == 66 ||
+                                            widget.subcategoryId == 80) {
                                           if (_isFlat) {
                                             insertData().then((value) {});
                                           } else {
@@ -1096,6 +1098,8 @@ class _ProblemLocateState extends State<ProblemLocate>
                                               return FlatWarningProblem();
                                             }));
                                           }
+                                        } else {
+                                          insertData().then((value) {});
                                         }
                                       },
                                         (!_sending)

@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
@@ -31,62 +33,88 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
   var descController = TextEditingController();
   bool _value = false;
   bool isSending = false;
+  int _val = 0;
+  Timer _timer;
+  void timerCencel() {
+    _timer.cancel();
+  }
+
+  void timerStart() {
+    _timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
+      setState(() {
+        _val += 1;
+      });
+      if (_val == 100) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (BuildContext context) {
+          return HomePage();
+        }), (Route<dynamic> route) => false);
+      }
+    });
+  }
 
   Future insertData() async {
     try {
       if (isSending == false) {
-        isSending = true;
+        setState(() {
+          isSending = true;
+          // _btn_message = "Loading".tr().toString();
+        });
+        timerStart();
         var url2 = '${globals.api_link}/problems/cancel';
 
         var req = http.MultipartRequest("POST", Uri.parse(url2));
         req.headers.addAll({"Authorization": "token ${globals.token}"});
         req.fields.addAll({"problem_id": "${widget.id}"});
         req.fields.addAll({"reason": "${descController.text}"});
-        if (globals.images['file1'] != null) {
-          String _fileName = globals.images['file1'].path;
-          req.files.add(http.MultipartFile(
-              "file1",
-              globals.images['file1'].readAsBytes().asStream(),
-              globals.images['file1'].lengthSync(),
-              filename: _fileName.split('/').last));
-        }
-        if (globals.images['file2'] != null) {
-          String _fileName = globals.images['file2'].path;
-          req.files.add(http.MultipartFile(
-              "file2",
-              globals.images['file2'].readAsBytes().asStream(),
-              globals.images['file2'].lengthSync(),
-              filename: _fileName.split('/').last));
-        }
-        if (globals.images['file3'] != null) {
-          String _fileName = globals.images['file3'].path;
-          req.files.add(http.MultipartFile(
-              "file3",
-              globals.images['file3'].readAsBytes().asStream(),
-              globals.images['file3'].lengthSync(),
-              filename: _fileName.split('/').last));
-        }
-        if (globals.images['file4'] != null) {
-          String _fileName = globals.images['file4'].path;
-          req.files.add(http.MultipartFile(
-              "file4",
-              globals.images['file4'].readAsBytes().asStream(),
-              globals.images['file4'].lengthSync(),
-              filename: _fileName.split('/').last));
-        }
+        // if (globals.images['file1'] != null) {
+        //   String _fileName = globals.images['file1'].path;
+        //   req.files.add(http.MultipartFile(
+        //       "file1",
+        //       globals.images['file1'].readAsBytes().asStream(),
+        //       globals.images['file1'].lengthSync(),
+        //       filename: _fileName.split('/').last));
+        // }
+        // if (globals.images['file2'] != null) {
+        //   String _fileName = globals.images['file2'].path;
+        //   req.files.add(http.MultipartFile(
+        //       "file2",
+        //       globals.images['file2'].readAsBytes().asStream(),
+        //       globals.images['file2'].lengthSync(),
+        //       filename: _fileName.split('/').last));
+        // }
+        // if (globals.images['file3'] != null) {
+        //   String _fileName = globals.images['file3'].path;
+        //   req.files.add(http.MultipartFile(
+        //       "file3",
+        //       globals.images['file3'].readAsBytes().asStream(),
+        //       globals.images['file3'].lengthSync(),
+        //       filename: _fileName.split('/').last));
+        // }
+        // if (globals.images['file4'] != null) {
+        //   String _fileName = globals.images['file4'].path;
+        //   req.files.add(http.MultipartFile(
+        //       "file4",
+        //       globals.images['file4'].readAsBytes().asStream(),
+        //       globals.images['file4'].lengthSync(),
+        //       filename: _fileName.split('/').last));
+        // }
         var res = await req.send();
 
         if (res.statusCode == 200) {
-          globals.images['file1'] = null;
-          globals.images['file2'] = null;
-          globals.images['file3'] = null;
-          globals.images['file4'] = null;
+          // globals.images['file1'] = null;
+          // globals.images['file2'] = null;
+          // globals.images['file3'] = null;
+          // globals.images['file4'] = null;
           isSending = false;
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) {
-            return HomePage();
-          }), (Route<dynamic> route) => false);
+          setState(() {
+            _val = 98;
+          });
         } else {
+          isSending = false;
+          // _btn_message = "continue".tr().toString();
+          _val = 0;
+          _timer.cancel();
           print(res);
         }
       }
@@ -104,6 +132,12 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         "file4": null,
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   checkChange() {
@@ -193,21 +227,49 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                               Positioned(
                                 child: Align(
                                   alignment: FractionalOffset.bottomCenter,
-                                  child: !_value
-                                      ? DefaultButton(
-                                          "send".tr().toString(),
-                                          () {},
-                                          Color(0xffB2B7D0),
+                                  child: isSending
+                                      ? Center(
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 50.0,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child:
+                                                LiquidLinearProgressIndicator(
+                                              value: _val / 100,
+                                              backgroundColor:
+                                                  Color(0xffB2B7D0),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      Theme.of(context)
+                                                          .primaryColor),
+                                              borderRadius: 25.0,
+                                              center: Text(
+                                                "${_val}",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         )
-                                      : DefaultButton("send".tr().toString(),
-                                          () {
-                                          insertData();
-                                          // Navigator.of(context).push(MaterialPageRoute(
-                                          //     builder: (BuildContext context) {
-                                          //   return ProblemLocate(
-                                          //       descController.text, widget.id);
-                                          // }));
-                                        }, Theme.of(context).primaryColor),
+                                      : _value != true
+                                          ? DefaultButton(
+                                              "send".tr().toString(),
+                                              () {},
+                                              Color(0xffB2B7D0),
+                                            )
+                                          : DefaultButton(
+                                              "send".tr().toString(), () {
+                                              insertData();
+                                              // Navigator.of(context).push(MaterialPageRoute(
+                                              //     builder: (BuildContext context) {
+                                              //   return ProblemLocate(
+                                              //       descController.text, widget.id);
+                                              // }));
+                                            }, Theme.of(context).primaryColor),
                                 ),
                               ),
                             ],

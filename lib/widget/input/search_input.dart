@@ -124,6 +124,7 @@ class _SearchtInputState extends State<SearchtInput> {
             "type": "subsubcategories",
             "category_id": list["subsubcategories"][i]["subcategory"]
                 ["category"]["id"],
+            "subcategory_id": list["subsubcategories"][i]["subcategory"]["id"],
             "breadcrumbs":
                 "${list["subsubcategories"][i]["subcategory"]["category"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["subcategory"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["api_title".tr().toString()]}",
           }
@@ -238,19 +239,8 @@ class _SearchtInputState extends State<SearchtInput> {
                     if (suggestion["type"] == "subsubcategories") {
                       searchController.text = "";
                       if (globals.token != null) {
-                        if (suggestion["id"] != 35) {
-                          Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) {
-                                return ProblemDesc(
-                                    suggestion["id"],
-                                    suggestion["name"],
-                                    suggestion["category_id"],
-                                    suggestion["breadcrumbs"]);
-                              },
-                            ),
-                          ).then(onGoBack);
-                        } else {
+                        print(suggestion);
+                        if (suggestion["id"] == 102 || suggestion["id"] == 35) {
                           Navigator.of(context, rootNavigator: true).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) {
@@ -258,10 +248,24 @@ class _SearchtInputState extends State<SearchtInput> {
                                     id: suggestion["id"],
                                     title: suggestion["name"],
                                     category_id: suggestion["category_id"],
+                                    subcategoryId: suggestion["subcategory_id"],
                                     breadcrumbs: suggestion["breadcrumbs"]);
                               },
                             ),
                             // ModalRoute.withName(HomePage.routeName),
+                          ).then(onGoBack);
+                        } else {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return ProblemDesc(
+                                    suggestion["id"],
+                                    suggestion["name"],
+                                    suggestion["category_id"],
+                                    suggestion["subcategory_id"],
+                                    suggestion["breadcrumbs"]);
+                              },
+                            ),
                           ).then(onGoBack);
                         }
                       } else {

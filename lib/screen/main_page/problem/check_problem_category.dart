@@ -10,9 +10,15 @@ class CheckProblemCategory extends StatefulWidget {
   final int id;
   final String title;
   final int category_id;
+  final int subcategoryId;
   final String breadcrumbs;
   CheckProblemCategory(
-      {this.id, this.title, this.category_id, this.breadcrumbs, Key key})
+      {this.id,
+      this.title,
+      this.category_id,
+      this.subcategoryId,
+      this.breadcrumbs,
+      Key key})
       : super(key: key);
 
   @override
@@ -73,8 +79,12 @@ class _CheckProblemCategoryState extends State<CheckProblemCategory> {
                                 .pushReplacement(
                               MaterialPageRoute(
                                 builder: (BuildContext context) {
-                                  return ProblemDesc(widget.id, widget.title,
-                                      widget.category_id, widget.breadcrumbs);
+                                  return ProblemDesc(
+                                      widget.id,
+                                      widget.title,
+                                      widget.category_id,
+                                      widget.subcategoryId,
+                                      widget.breadcrumbs);
                                 },
                               ),
                               // ModalRoute.withName(HomePage.routeName),
@@ -136,8 +146,12 @@ class _CheckProblemCategoryState extends State<CheckProblemCategory> {
                               .pushReplacement(
                             MaterialPageRoute(
                               builder: (BuildContext context) {
-                                return ProblemDesc(widget.id, widget.title,
-                                    widget.category_id, widget.breadcrumbs);
+                                return ProblemDesc(
+                                    widget.id,
+                                    widget.title,
+                                    widget.category_id,
+                                    widget.subcategoryId,
+                                    widget.breadcrumbs);
                               },
                             ),
                             // ModalRoute.withName(HomePage.routeName),
