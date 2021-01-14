@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:sms/sms.dart';
@@ -125,6 +126,54 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
   }
 
   checkChange() {}
+  FocusNode _streetNode = FocusNode();
+  FocusNode _houseNode = FocusNode();
+  FocusNode _apartNode = FocusNode();
+  FocusNode _passNode = FocusNode();
+  FocusNode _repassNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: _streetNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: _houseNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: _apartNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,22 +205,32 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
                       ShadowBox(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AddressSearch(
-                                setAddress: setAddress,
-                                isFlat: true,
-                                ischange: _value,
-                              ),
+                          child: Container(
+                            child: KeyboardActions(
+                              disableScroll: true,
+                              isDialog: true,
+                              config: _buildConfig(context),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  AddressSearch(
+                                    setAddress: setAddress,
+                                    isFlat: true,
+                                    ischange: _value,
+                                    streetNode: _streetNode,
+                                    houseNode: _houseNode,
+                                    apartNode: _apartNode,
+                                  ),
 
-                              // MainText("email_title".tr().toString()),
-                              // DefaultInput(
-                              //   hint: "email_hint".tr().toString(),
-                              //   textController: emailController,
-                              //   notifyParent: checkChange,
-                              // ),
-                            ],
+                                  // MainText("email_title".tr().toString()),
+                                  // DefaultInput(
+                                  //   hint: "email_hint".tr().toString(),
+                                  //   textController: emailController,
+                                  //   notifyParent: checkChange,
+                                  // ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),

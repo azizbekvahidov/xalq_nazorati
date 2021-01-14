@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -568,6 +569,93 @@ class _ProblemLocateState extends State<ProblemLocate>
     getHouse();
   }
 
+  FocusNode _streetNode = FocusNode();
+  FocusNode _houseNode = FocusNode();
+  FocusNode _apartNode = FocusNode();
+  FocusNode _yandexAddressNode = FocusNode();
+  FocusNode _noteNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: widget.categoryId != 18
+          ? [
+              KeyboardActionsItem(
+                  focusNode: _yandexAddressNode,
+                  toolbarButtons: [
+                    (node) {
+                      return GestureDetector(
+                        onTap: () => node.unfocus(),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.close),
+                        ),
+                      );
+                    }
+                  ]),
+              KeyboardActionsItem(focusNode: _noteNode, toolbarButtons: [
+                (node) {
+                  return GestureDetector(
+                    onTap: () => node.unfocus(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
+                  );
+                }
+              ]),
+            ]
+          : [
+              KeyboardActionsItem(focusNode: _streetNode, toolbarButtons: [
+                (node) {
+                  return GestureDetector(
+                    onTap: () => node.unfocus(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
+                  );
+                }
+              ]),
+              KeyboardActionsItem(focusNode: _houseNode, toolbarButtons: [
+                (node) {
+                  return GestureDetector(
+                    onTap: () => node.unfocus(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
+                  );
+                }
+              ]),
+              KeyboardActionsItem(focusNode: _apartNode, toolbarButtons: [
+                (node) {
+                  return GestureDetector(
+                    onTap: () => node.unfocus(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
+                  );
+                }
+              ]),
+              KeyboardActionsItem(focusNode: _noteNode, toolbarButtons: [
+                (node) {
+                  return GestureDetector(
+                    onTap: () => node.unfocus(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.close),
+                    ),
+                  );
+                }
+              ]),
+            ],
+    );
+  }
+
   // final _scaffoldKey = GlobalKey<ScaffoldState>();
   // final _key = GlobalKey<GoogleMapStateBase>();
   @override
@@ -589,553 +677,595 @@ class _ProblemLocateState extends State<ProblemLocate>
                 minHeight: mediaQuery.size.height -
                     appBar.preferredSize.height -
                     mediaQuery.padding.top),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            widget.categoryId != 18
-                                ? Container()
-                                : ShadowBox(
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                        left: 20,
-                                        right: 20,
-                                        bottom: 10,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              setMyaddress();
-                                            },
-                                            child: MainText(
-                                                "your_address".tr().toString()),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              setMyaddress();
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  vertical: 10),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10, horizontal: 16),
-                                              decoration: BoxDecoration(
-                                                  color: Color.fromRGBO(
-                                                      248, 249, 250, 1),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color: Color.fromRGBO(178,
-                                                          183, 208, 0.25))),
-                                              child: Text(
-                                                _user_address,
-                                                style: TextStyle(
-                                                  fontFamily: globals.font,
-                                                  fontSize: dWidth *
-                                                      globals.fontSize16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 0.5),
-                                                  fontFeatures: [
-                                                    FontFeature.enable("pnum"),
-                                                    FontFeature.enable("lnum")
-                                                  ],
-                                                ),
-                                              ),
+            child: KeyboardActions(
+              disableScroll: true,
+              isDialog: true,
+              config: _buildConfig(context),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              widget.categoryId != 18
+                                  ? Container()
+                                  : ShadowBox(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          left: 20,
+                                          right: 20,
+                                          bottom: 10,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                setMyaddress();
+                                              },
+                                              child: MainText("your_address"
+                                                  .tr()
+                                                  .toString()),
                                             ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              setMyaddress();
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "use_my_address"
-                                                      .tr()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontFamily: globals.font,
-                                                    fontSize: dWidth *
-                                                        globals.fontSize16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 2,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor),
-                                                      shape: BoxShape.circle,
-                                                      color: getLocalAddress
-                                                          ? Theme.of(context)
-                                                              .primaryColor
-                                                          : Colors.transparent),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            2.0),
-                                                    child: getLocalAddress
-                                                        ? Icon(
-                                                            Icons.check,
-                                                            size: 15.0,
-                                                            color: Colors.white,
-                                                          )
-                                                        : Icon(
-                                                            Icons
-                                                                .check_box_outline_blank,
-                                                            size: 15.0,
-                                                            color: Colors
-                                                                .transparent,
-                                                          ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 20)),
-                                          InkWell(
-                                            onTap: () {
-                                              setOtherAddress();
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "use_other_address"
-                                                      .tr()
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontFamily: globals.font,
-                                                    fontSize: dWidth *
-                                                        globals.fontSize16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 2,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColor),
-                                                      shape: BoxShape.circle,
-                                                      color: getCustomAddress
-                                                          ? Theme.of(context)
-                                                              .primaryColor
-                                                          : Colors.transparent),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            2.0),
-                                                    child: getCustomAddress
-                                                        ? Icon(
-                                                            Icons.check,
-                                                            size: 15.0,
-                                                            color: Colors.white,
-                                                          )
-                                                        : Icon(
-                                                            Icons
-                                                                .check_box_outline_blank,
-                                                            size: 15.0,
-                                                            color: Colors
-                                                                .transparent,
-                                                          ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                            getCustomAddress
-                                ? ShadowBox(
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            child: Text(
-                                              widget.breadcrumbs,
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    102, 103, 108, 0.7),
-                                                fontFamily: globals.font,
-                                                fontSize:
-                                                    dWidth * globals.fontSize12,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ),
-                                          widget.categoryId != 18
-                                              ? MainText(
-                                                  "set_address".tr().toString())
-                                              : Container(),
-                                          widget.categoryId != 18
-                                              ? Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 10,
-                                                      horizontal: 20),
-                                                  margin: EdgeInsets.symmetric(
-                                                      vertical: 10),
-                                                  width: double.infinity,
-                                                  height: 45,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xffF5F6F9),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            22.5),
-                                                    border: Border.all(
-                                                      color: Color.fromRGBO(
-                                                          178, 183, 208, 0.5),
-                                                      style: BorderStyle.solid,
-                                                      width: 0.5,
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        width:
-                                                            (mediaQuery.size
-                                                                        .width -
-                                                                    mediaQuery
-                                                                        .padding
-                                                                        .left -
-                                                                    mediaQuery
-                                                                        .padding
-                                                                        .right) *
-                                                                0.74,
-                                                        child: TypeAheadField(
-                                                          suggestionsBoxDecoration:
-                                                              SuggestionsBoxDecoration(
-                                                                  offsetX:
-                                                                      -20.0),
-                                                          addWidth: 50,
-                                                          offsetLeft: 10,
-                                                          textFieldConfiguration:
-                                                              TextFieldConfiguration(
-                                                            controller:
-                                                                addressController,
-                                                            autofocus: true,
-                                                            decoration:
-                                                                InputDecoration
-                                                                    .collapsed(
-                                                              hintText:
-                                                                  "address_example"
-                                                                      .tr()
-                                                                      .toString(),
-                                                              hintStyle: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .display1
-                                                                  .copyWith(
-                                                                      fontSize:
-                                                                          dWidth *
-                                                                              globals.fontSize18),
-                                                            ),
-                                                          ),
-                                                          hideOnEmpty: true,
-                                                          suggestionsCallback:
-                                                              (pattern) async {
-                                                            await changeAddressMap(
-                                                                pattern);
-                                                            return response;
-                                                          },
-                                                          itemBuilder: (context,
-                                                              suggestion) {
-                                                            return ListTile(
-                                                              title: Text(
-                                                                  suggestion
-                                                                      .title),
-                                                            );
-                                                          },
-                                                          onSuggestionSelected:
-                                                              (suggestion) {
-                                                            getLocateFromAddress(
-                                                                suggestion
-                                                                    .title);
-                                                            addressController
-                                                                    .text =
-                                                                suggestion
-                                                                    .title;
-                                                          },
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              : AddressSearch(
-                                                  setAddress: setAddress,
-                                                  isFlat: true,
-                                                ),
-                                          MainText("notes".tr().toString()),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 20),
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            width: double.infinity,
-                                            height: 45,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xffF5F6F9),
-                                              borderRadius:
-                                                  BorderRadius.circular(22.5),
-                                              border: Border.all(
-                                                color: Color.fromRGBO(
-                                                    178, 183, 208, 0.5),
-                                                style: BorderStyle.solid,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Container(
-                                                  width:
-                                                      (mediaQuery.size.width -
-                                                              mediaQuery.padding
-                                                                  .left -
-                                                              mediaQuery.padding
-                                                                  .right) *
-                                                          0.74,
-                                                  child: TextField(
-                                                    maxLength: 40,
-                                                    buildCounter: (BuildContext
-                                                                context,
-                                                            {int currentLength,
-                                                            int maxLength,
-                                                            bool isFocused}) =>
-                                                        null,
-                                                    onChanged: (value) {
-                                                      var result = value;
-                                                      if (result.length > 40) {
-                                                        result = result
-                                                            .substring(0, 40);
-                                                        extraController.text =
-                                                            result;
-                                                        extraController
-                                                                .selection =
-                                                            TextSelection.fromPosition(
-                                                                TextPosition(
-                                                                    offset: result
-                                                                        .length));
-                                                      }
-                                                      changeTxt(result);
-                                                    },
-                                                    controller: extraController,
-                                                    maxLines: 1,
-                                                    decoration: InputDecoration
-                                                        .collapsed(
-                                                      hintText: "note_example"
-                                                          .tr()
-                                                          .toString(),
-                                                      hintStyle: Theme.of(
-                                                              context)
-                                                          .textTheme
-                                                          .display1
-                                                          .copyWith(
-                                                              fontSize: dWidth *
-                                                                  globals
-                                                                      .fontSize18),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    102, 103, 108, 0.6),
-                                                fontSize:
-                                                    dWidth * globals.fontSize10,
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: globals.font,
-                                              ),
-                                            ),
-                                          ),
-                                          widget.categoryId != 18
-                                              ? Container(
-                                                  margin:
-                                                      EdgeInsets.only(top: 20),
-                                                  width: double.infinity,
-                                                  height: 335,
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Color.fromRGBO(
-                                                              178,
-                                                              183,
-                                                              208,
-                                                              0.5),
-                                                          width: 1),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: ClipRRect(
+                                            InkWell(
+                                              onTap: () {
+                                                setMyaddress();
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    vertical: 10),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10,
+                                                    horizontal: 16),
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromRGBO(
+                                                        248, 249, 250, 1),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10),
-                                                    child: Stack(
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: Color.fromRGBO(
+                                                            178,
+                                                            183,
+                                                            208,
+                                                            0.25))),
+                                                child: Text(
+                                                  _user_address,
+                                                  style: TextStyle(
+                                                    fontFamily: globals.font,
+                                                    fontSize: dWidth *
+                                                        globals.fontSize16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 0.5),
+                                                    fontFeatures: [
+                                                      FontFeature.enable(
+                                                          "pnum"),
+                                                      FontFeature.enable("lnum")
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                setMyaddress();
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "use_my_address"
+                                                        .tr()
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontFamily: globals.font,
+                                                      fontSize: dWidth *
+                                                          globals.fontSize16,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 2,
+                                                            style: BorderStyle
+                                                                .solid,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor),
+                                                        shape: BoxShape.circle,
+                                                        color: getLocalAddress
+                                                            ? Theme.of(context)
+                                                                .primaryColor
+                                                            : Colors
+                                                                .transparent),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2.0),
+                                                      child: getLocalAddress
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 15.0,
+                                                              color:
+                                                                  Colors.white,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                              size: 15.0,
+                                                              color: Colors
+                                                                  .transparent,
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 20)),
+                                            InkWell(
+                                              onTap: () {
+                                                setOtherAddress();
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "use_other_address"
+                                                        .tr()
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                      fontFamily: globals.font,
+                                                      fontSize: dWidth *
+                                                          globals.fontSize16,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 2,
+                                                            style: BorderStyle
+                                                                .solid,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColor),
+                                                        shape: BoxShape.circle,
+                                                        color: getCustomAddress
+                                                            ? Theme.of(context)
+                                                                .primaryColor
+                                                            : Colors
+                                                                .transparent),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2.0),
+                                                      child: getCustomAddress
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 15.0,
+                                                              color:
+                                                                  Colors.white,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .check_box_outline_blank,
+                                                              size: 15.0,
+                                                              color: Colors
+                                                                  .transparent,
+                                                            ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                              getCustomAddress
+                                  ? ShadowBox(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                widget.breadcrumbs,
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      102, 103, 108, 0.7),
+                                                  fontFamily: globals.font,
+                                                  fontSize: dWidth *
+                                                      globals.fontSize12,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
+                                            widget.categoryId != 18
+                                                ? MainText("set_address"
+                                                    .tr()
+                                                    .toString())
+                                                : Container(),
+                                            widget.categoryId != 18
+                                                ? Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10,
+                                                            horizontal: 20),
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10),
+                                                    width: double.infinity,
+                                                    height: 45,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xffF5F6F9),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22.5),
+                                                      border: Border.all(
+                                                        color: Color.fromRGBO(
+                                                            178, 183, 208, 0.5),
+                                                        style:
+                                                            BorderStyle.solid,
+                                                        width: 0.5,
+                                                      ),
+                                                    ),
+                                                    child: Row(
                                                       children: [
-                                                        Positioned(
-                                                            child: YandexMap(
-                                                          onMapTap: (coords) {
-                                                            _setLocation(
-                                                                coords);
-                                                            getAddressFromLatLng(
-                                                                coords);
-                                                          },
-                                                          onMapCreated:
-                                                              (YandexMapController
-                                                                  yandexMapController) async {
-                                                            yandexMapController.move(
-                                                                point: Point(
-                                                                    latitude: _initialPosition
-                                                                        .latitude,
-                                                                    longitude:
-                                                                        _initialPosition
-                                                                            .longitude),
-                                                                zoom: 11,
-                                                                animation:
-                                                                    const MapAnimation(
-                                                                        smooth:
-                                                                            true,
-                                                                        duration:
-                                                                            1.0));
-                                                            mapKitController =
-                                                                yandexMapController;
-                                                          },
-                                                        )),
-                                                        Positioned(
-                                                          bottom: 10,
-                                                          right: 10,
-                                                          child:
-                                                              FloatingActionButton(
-                                                            backgroundColor:
-                                                                Theme.of(
+                                                        Container(
+                                                          width: (mediaQuery
+                                                                      .size
+                                                                      .width -
+                                                                  mediaQuery
+                                                                      .padding
+                                                                      .left -
+                                                                  mediaQuery
+                                                                      .padding
+                                                                      .right) *
+                                                              0.74,
+                                                          child: TypeAheadField(
+                                                            suggestionsBoxDecoration:
+                                                                SuggestionsBoxDecoration(
+                                                                    offsetX:
+                                                                        -20.0),
+                                                            addWidth: 50,
+                                                            offsetLeft: 10,
+                                                            textFieldConfiguration:
+                                                                TextFieldConfiguration(
+                                                              focusNode:
+                                                                  _yandexAddressNode,
+                                                              controller:
+                                                                  addressController,
+                                                              autofocus: true,
+                                                              decoration:
+                                                                  InputDecoration
+                                                                      .collapsed(
+                                                                hintText:
+                                                                    "address_example"
+                                                                        .tr()
+                                                                        .toString(),
+                                                                hintStyle: Theme.of(
                                                                         context)
-                                                                    .primaryColor,
-                                                            child: SvgPicture.asset(
-                                                                "assets/img/locate.svg"),
-                                                            onPressed:
-                                                                _getLocation,
+                                                                    .textTheme
+                                                                    .display1
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            dWidth *
+                                                                                globals.fontSize18),
+                                                              ),
+                                                            ),
+                                                            hideOnEmpty: true,
+                                                            suggestionsCallback:
+                                                                (pattern) async {
+                                                              await changeAddressMap(
+                                                                  pattern);
+                                                              return response;
+                                                            },
+                                                            itemBuilder:
+                                                                (context,
+                                                                    suggestion) {
+                                                              return ListTile(
+                                                                title: Text(
+                                                                    suggestion
+                                                                        .title),
+                                                              );
+                                                            },
+                                                            onSuggestionSelected:
+                                                                (suggestion) {
+                                                              getLocateFromAddress(
+                                                                  suggestion
+                                                                      .title);
+                                                              addressController
+                                                                      .text =
+                                                                  suggestion
+                                                                      .title;
+                                                            },
                                                           ),
                                                         ),
                                                       ],
                                                     ),
+                                                  )
+                                                : AddressSearch(
+                                                    setAddress: setAddress,
+                                                    isFlat: true,
+                                                    streetNode: _streetNode,
+                                                    houseNode: _houseNode,
+                                                    apartNode: _apartNode,
                                                   ),
-                                                )
-                                              : Container(),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: !_valid
-                                ? DefaultButton(
-                                    "continue".tr().toString(),
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : !_sending
-                                    ? DefaultButton(_btn_message, () {
-                                        if (widget.subSubCategoryId == 35 ||
-                                            widget.subSubCategoryId == 102 ||
-                                            widget.subSubCategoryId == 99 ||
-                                            widget.subcategoryId == 66 ||
-                                            widget.subcategoryId == 80) {
-                                          if (_isFlat) {
-                                            insertData().then((value) {});
-                                          } else {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(builder:
-                                                    (BuildContext context) {
-                                              return FlatWarningProblem();
-                                            }));
-                                          }
-                                        } else {
-                                          insertData().then((value) {});
-                                        }
-                                      },
-                                        (!_sending)
-                                            ? Theme.of(context).primaryColor
-                                            : Color(0xffB2B7D0))
-                                    : Center(
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 50.0,
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 15.0),
-                                          child: LiquidLinearProgressIndicator(
-                                            value: _val / 100,
-                                            backgroundColor: Color(0xffB2B7D0),
-                                            valueColor: AlwaysStoppedAnimation(
-                                                Theme.of(context).primaryColor),
-                                            borderRadius: 25.0,
-                                            center: Text(
-                                              "${_val}",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20.0,
-                                                fontWeight: FontWeight.bold,
+                                            MainText("notes".tr().toString()),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 10, horizontal: 20),
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 10),
+                                              width: double.infinity,
+                                              height: 45,
+                                              decoration: BoxDecoration(
+                                                color: Color(0xffF5F6F9),
+                                                borderRadius:
+                                                    BorderRadius.circular(22.5),
+                                                border: Border.all(
+                                                  color: Color.fromRGBO(
+                                                      178, 183, 208, 0.5),
+                                                  style: BorderStyle.solid,
+                                                  width: 0.5,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width:
+                                                        (mediaQuery.size.width -
+                                                                mediaQuery
+                                                                    .padding
+                                                                    .left -
+                                                                mediaQuery
+                                                                    .padding
+                                                                    .right) *
+                                                            0.74,
+                                                    child: TextField(
+                                                      focusNode: _noteNode,
+                                                      maxLength: 40,
+                                                      buildCounter: (BuildContext
+                                                                  context,
+                                                              {int
+                                                                  currentLength,
+                                                              int maxLength,
+                                                              bool
+                                                                  isFocused}) =>
+                                                          null,
+                                                      onChanged: (value) {
+                                                        var result = value;
+                                                        if (result.length >
+                                                            40) {
+                                                          result = result
+                                                              .substring(0, 40);
+                                                          extraController.text =
+                                                              result;
+                                                          extraController
+                                                                  .selection =
+                                                              TextSelection.fromPosition(
+                                                                  TextPosition(
+                                                                      offset: result
+                                                                          .length));
+                                                        }
+                                                        changeTxt(result);
+                                                      },
+                                                      controller:
+                                                          extraController,
+                                                      maxLines: 1,
+                                                      decoration:
+                                                          InputDecoration
+                                                              .collapsed(
+                                                        hintText: "note_example"
+                                                            .tr()
+                                                            .toString(),
+                                                        hintStyle: Theme.of(
+                                                                context)
+                                                            .textTheme
+                                                            .display1
+                                                            .copyWith(
+                                                                fontSize: dWidth *
+                                                                    globals
+                                                                        .fontSize18),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ),
+                                            Container(
+                                              width: double.infinity,
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                "${"textarea_counter_start".tr().toString()}$_cnt ${"textarea_counter_end".tr().toString()}",
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      102, 103, 108, 0.6),
+                                                  fontSize: dWidth *
+                                                      globals.fontSize10,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: globals.font,
+                                                ),
+                                              ),
+                                            ),
+                                            widget.categoryId != 18
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        top: 20),
+                                                    width: double.infinity,
+                                                    height: 335,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    178,
+                                                                    183,
+                                                                    208,
+                                                                    0.5),
+                                                            width: 1),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: Stack(
+                                                        children: [
+                                                          Positioned(
+                                                              child: YandexMap(
+                                                            onMapTap: (coords) {
+                                                              _setLocation(
+                                                                  coords);
+                                                              getAddressFromLatLng(
+                                                                  coords);
+                                                            },
+                                                            onMapCreated:
+                                                                (YandexMapController
+                                                                    yandexMapController) async {
+                                                              yandexMapController.move(
+                                                                  point: Point(
+                                                                      latitude:
+                                                                          _initialPosition
+                                                                              .latitude,
+                                                                      longitude:
+                                                                          _initialPosition
+                                                                              .longitude),
+                                                                  zoom: 11,
+                                                                  animation: const MapAnimation(
+                                                                      smooth:
+                                                                          true,
+                                                                      duration:
+                                                                          1.0));
+                                                              mapKitController =
+                                                                  yandexMapController;
+                                                            },
+                                                          )),
+                                                          Positioned(
+                                                            bottom: 10,
+                                                            right: 10,
+                                                            child:
+                                                                FloatingActionButton(
+                                                              backgroundColor:
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .primaryColor,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                      "assets/img/locate.svg"),
+                                                              onPressed:
+                                                                  _getLocation,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ],
                                         ),
                                       ),
+                                    )
+                                  : Container(),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: !_valid
+                                  ? DefaultButton(
+                                      "continue".tr().toString(),
+                                      () {},
+                                      Color(0xffB2B7D0),
+                                    )
+                                  : !_sending
+                                      ? DefaultButton(_btn_message, () {
+                                          if (widget.subSubCategoryId == 35 ||
+                                              widget.subSubCategoryId == 102 ||
+                                              widget.subSubCategoryId == 99 ||
+                                              widget.subcategoryId == 66 ||
+                                              widget.subcategoryId == 80) {
+                                            if (_isFlat) {
+                                              insertData().then((value) {});
+                                            } else {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(builder:
+                                                      (BuildContext context) {
+                                                return FlatWarningProblem();
+                                              }));
+                                            }
+                                          } else {
+                                            insertData().then((value) {});
+                                          }
+                                        },
+                                          (!_sending)
+                                              ? Theme.of(context).primaryColor
+                                              : Color(0xffB2B7D0))
+                                      : Center(
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: 50.0,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child:
+                                                LiquidLinearProgressIndicator(
+                                              value: _val / 100,
+                                              backgroundColor:
+                                                  Color(0xffB2B7D0),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      Theme.of(context)
+                                                          .primaryColor),
+                                              borderRadius: 25.0,
+                                              center: Text(
+                                                "${_val}",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

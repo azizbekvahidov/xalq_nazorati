@@ -251,12 +251,12 @@
   "decline_result":"Javob qoniqarsiz",
   "your_message_sended":"Sizning xabaringiz Moderatorga o'rganish uchun yuborildi",
   "for_info":"Ma'lumot uchun!",
-  "for_text_1":"Ushbu muammo haqida xabar faqat markaziy isitish tizimiga ulangan ko'p qavatli uylarga yuborilishi mumkin.",
+  "for_text_1":"Ushbu muammo haqida xabar faqat ko'p qavatli uylarga yuborilishi mumkin.",
   "not_actual_txt":"Arizachi muammonı actual emas deb belgiladi",
   "moderator":"Moderator",
   "liver":"Fuqaro",
   "ups_sorry":"Аfsusdamiz!",
-  "flat_warning_txt":"Ushbu muammo haqida xabar faqat markaziy isitish tizimiga ulangan ko'p qavatli uylarga yuborilishi mumkin.",
+  "flat_warning_txt":"Ushbu muammo haqida xabar faqat ko'p qavatli uylarga yuborilishi mumkin.",
   "set_fact_address":"Haqiqiy manzilni kiriting",
   "why_fact_address":"Nima uchun bizga haqiqiy manzilingiz kerak?",
   "warning_fact_address":"Mobil ilova orqali siz haqiqatda yashayatgan joyingizda sodir bo’lgan avariyalar haqida push xabarnoma olishingis mumkin",
@@ -275,6 +275,10 @@
   "not confirmed_solve": "Siz ijrochining javobi bilan rozi bo'lmadingiz",
   "denied_solve": "Muammoni hal qilish rad etildi",
   "closed_solve": "Moderator tomonidan yopilgan",
+  "planned_solve": "Muammo kechiktirildis",
+  "no_conn":"Internet yo`q",
+  "good_conn":"Internet zo`r",
+  "bad_conn":"Internet yomon",
 
 
 

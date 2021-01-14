@@ -8,6 +8,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/to_file.dart';
 import 'package:xalq_nazorati/models/problems.dart';
 import 'package:xalq_nazorati/models/result.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_decline_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_rate_screen.dart';
 import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
@@ -44,6 +45,10 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/check';
         Map<String, dynamic> data = {"id": res["result"]["id"]};
         var resp = await Requests.post(url, body: data, headers: headers);
+        if (resp.statusCode == 200) {
+          globals.cardAlert[widget.id]["res_seen"] = false;
+          cardContentState.setState(() {});
+        }
       }
 
       // String reply = await response.transform(utf8.decoder).join();
@@ -302,7 +307,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       width: dWidth * 0.8,
                                       padding: EdgeInsets.only(top: 10),
                                       child: Text(
-                                        "Районный хокимият, Юнусабадский район. Зам. хокима по вопросам Жилищно-Коммунального хозяйства и архитектуры",
+                                        "${res["closed_by"]['organization']}, ${res["closed_by"]['district']} ${res["closed_by"]['position']}",
                                         style: TextStyle(
                                           fontFamily: globals.font,
                                           fontSize: dWidth * globals.fontSize10,
@@ -457,10 +462,12 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                             return ProblemSolvedRateScreen(
                                               widget.id,
                                               "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
-                                              executors['user']['avatar'],
+                                              null, // executors['user']['avatar'],
                                               executors['id'],
-                                              executors['position'][
-                                                  "title_${(globals.lang).tr().toString()}"],
+                                              res["closed_by"]['position']
+                                                  .toString(),
+                                              // executors['position'][
+                                              //     "title_${(globals.lang).tr().toString()}"],
                                             );
                                           }));
                                         },
@@ -500,12 +507,15 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                               MaterialPageRoute(builder:
                                                   (BuildContext context) {
                                             return ProblemSolvedDeclineScreen(
-                                                widget.id,
-                                                "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
-                                                executors['user']['avatar'],
-                                                executors['id'],
-                                                executors['position'][
-                                                    "title_${(globals.lang).tr().toString()}"]);
+                                              widget.id,
+                                              "${globals.capitalize(executors['last_name'])} ${globals.capitalize(executors['name'])}",
+                                              null, // executors['user']['avatar'],
+                                              executors['id'],
+                                              res["closed_by"]['position']
+                                                  .toString(),
+                                              // [
+                                              //     "title_${(globals.lang).tr().toString()}"]
+                                            );
                                           }));
                                         },
                                         child: Text(
@@ -622,7 +632,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                     ? ShadowBox(
                         child: ResContent(
                           titleCol:
-                              "${globals.capitalize(res["problem"]["unsatisfactory_solution"]["user"]['last_name'])} ${globals.capitalize(res["problem"]["unsatisfactory_solution"]["user"]['first_name'])}",
+                              "${globals.capitalize(res["problem"]["user"]['last_name'])} ${globals.capitalize(res["problem"]["user"]['first_name'])}",
                           dateCol:
                               "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
                           positionCol: "liver".tr().toString(),

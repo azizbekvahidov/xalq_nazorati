@@ -20,6 +20,7 @@ class SubCategoryScreen extends StatefulWidget {
 }
 
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
+  Future<dynamic> _subsubCategories;
   Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/subsubcategories/${widget.id}';
 
@@ -38,6 +39,27 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     return parsed
         .map<SubCategories>((json) => SubCategories.fromJson(json))
         .toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (globals.subsubcategoryList.isEmpty) {
+      if (globals.subsubcategoryList[widget.id] == null) {
+        _subsubCategories = getCategory();
+        globals.subcategoryList.addAll({widget.id: _subsubCategories});
+      } else {
+        _subsubCategories = globals.subsubcategoryList[widget.id];
+      }
+    } else {
+      if (globals.subsubcategoryList[widget.id] == null) {
+        _subsubCategories = getCategory();
+        globals.subcategoryList.addAll({widget.id: _subsubCategories});
+      } else {
+        _subsubCategories = globals.subsubcategoryList[widget.id];
+      }
+    }
   }
 
   @override
@@ -77,7 +99,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     FutureBuilder(
-                        future: getCategory(),
+                        future: _subsubCategories,
                         builder: (context, snapshot) {
                           if (snapshot.hasError) print(snapshot.error);
                           return snapshot.hasData

@@ -10,7 +10,7 @@ import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ProblemCard extends StatefulWidget {
-  bool alert = false;
+  Map<dynamic, dynamic> alert;
   final String status;
   final String title;
   final Map<String, dynamic> data;
@@ -37,19 +37,19 @@ class _ProblemCardState extends State<ProblemCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.data["status"] == "not confirmed") {
+    if (widget.alert["status"] == "not confirmed") {
       _status = "warning";
-    } else if (widget.data["status"] == "completed" ||
-        widget.data["status"] == "processing" ||
-        widget.data["status"] == "moderating") {
+    } else if (widget.alert["status"] == "completed" ||
+        widget.alert["status"] == "processing" ||
+        widget.alert["status"] == "moderating") {
       _status = "info";
-    } else if (widget.data["status"] == "denied" ||
-        widget.data["status"] == "closed") {
+    } else if (widget.alert["status"] == "denied" ||
+        widget.alert["status"] == "closed") {
       _status = "danger";
-    } else if (widget.data["status"] == "confirmed" ||
-        widget.data["status"] == "canceled") {
+    } else if (widget.alert["status"] == "confirmed" ||
+        widget.alert["status"] == "canceled") {
       _status = "success";
-    } else if (widget.data["status"] == "planned") {
+    } else if (widget.alert["status"] == "planned") {
       _status = "delayed";
     }
     var deadline =
@@ -67,7 +67,8 @@ class _ProblemCardState extends State<ProblemCard> {
         .inMinutes;
     _showTime =
         "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
-    bool _alert = widget.alert == null ? false : widget.alert;
+    bool _alert =
+        widget.alert['notify'] == null ? false : widget.alert["notify"];
     var mediaQuery = MediaQuery.of(context);
     return InkWell(
       onTap: () {
@@ -142,12 +143,12 @@ class _ProblemCardState extends State<ProblemCard> {
                     padding: EdgeInsets.only(left: 5),
                   ),
                   BoxTextWarning(
-                      "${widget.data["status"]}".tr().toString(), _status),
+                      "${widget.alert["status"]}".tr().toString(), _status),
                   Padding(
                     padding: EdgeInsets.only(left: 5),
                   ),
-                  widget.data["status"] == "not confirmed" ||
-                          widget.data["status"] == "processing"
+                  widget.alert["status"] == "not confirmed" ||
+                          widget.alert["status"] == "processing"
                       ? BoxTextDefault(
                           "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}")
                       : Container(),

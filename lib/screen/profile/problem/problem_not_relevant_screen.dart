@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -150,6 +151,29 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
     });
   }
 
+  FocusNode descNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: descNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -190,93 +214,101 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                   height: mediaQuery.size.height < 560
                       ? mediaQuery.size.height
                       : mediaQuery.size.height * 0.8,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ShadowBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    MainText(
-                                        "problem_describe".tr().toString()),
-                                    TextareaInput(
-                                      hint: "problem_describe_hint"
-                                          .tr()
-                                          .toString(),
-                                      textareaController: descController,
-                                      notifyParent: checkChange,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Stack(
+                  child: KeyboardActions(
+                    isDialog: true,
+                    disableScroll: true,
+                    config: _buildConfig(context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Positioned(
-                                child: Align(
-                                  alignment: FractionalOffset.bottomCenter,
-                                  child: isSending
-                                      ? Center(
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: 50.0,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15.0),
-                                            child:
-                                                LiquidLinearProgressIndicator(
-                                              value: _val / 100,
-                                              backgroundColor:
-                                                  Color(0xffB2B7D0),
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                      Theme.of(context)
-                                                          .primaryColor),
-                                              borderRadius: 25.0,
-                                              center: Text(
-                                                "${_val}",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : _value != true
-                                          ? DefaultButton(
-                                              "send".tr().toString(),
-                                              () {},
-                                              Color(0xffB2B7D0),
-                                            )
-                                          : DefaultButton(
-                                              "send".tr().toString(), () {
-                                              insertData();
-                                              // Navigator.of(context).push(MaterialPageRoute(
-                                              //     builder: (BuildContext context) {
-                                              //   return ProblemLocate(
-                                              //       descController.text, widget.id);
-                                              // }));
-                                            }, Theme.of(context).primaryColor),
+                              ShadowBox(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MainText(
+                                          "problem_describe".tr().toString()),
+                                      TextareaInput(
+                                        descNode: descNode,
+                                        hint: "problem_describe_hint"
+                                            .tr()
+                                            .toString(),
+                                        textareaController: descController,
+                                        notifyParent: checkChange,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: Align(
+                                    alignment: FractionalOffset.bottomCenter,
+                                    child: isSending
+                                        ? Center(
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 50.0,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15.0),
+                                              child:
+                                                  LiquidLinearProgressIndicator(
+                                                value: _val / 100,
+                                                backgroundColor:
+                                                    Color(0xffB2B7D0),
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        Theme.of(context)
+                                                            .primaryColor),
+                                                borderRadius: 25.0,
+                                                center: Text(
+                                                  "${_val}",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : _value != true
+                                            ? DefaultButton(
+                                                "send".tr().toString(),
+                                                () {},
+                                                Color(0xffB2B7D0),
+                                              )
+                                            : DefaultButton(
+                                                "send".tr().toString(), () {
+                                                insertData();
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //     builder: (BuildContext context) {
+                                                //   return ProblemLocate(
+                                                //       descController.text, widget.id);
+                                                // }));
+                                              },
+                                                Theme.of(context).primaryColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

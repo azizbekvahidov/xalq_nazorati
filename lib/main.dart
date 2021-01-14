@@ -1,15 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:internet_speed_test/callbacks_enum.dart';
+import 'package:internet_speed_test/internet_speed_test.dart';
 import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
-// import 'package:workmanager/workmanager.dart';
-import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass_phone.dart';
@@ -39,6 +38,9 @@ const simpleTaskKey = "simpleTask";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // close listener after 30 seconds, so the program doesn't run forever
+  // await Future.delayed(Duration(seconds: 30));
+  // await listener.cancel();
   await Firebase.initializeApp();
   runApp(EasyLocalization(
     child: MyApp(),
@@ -52,9 +54,18 @@ void main() async {
   ));
 }
 
+void setErrorBuilder() {
+  ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+    return Scaffold(
+        body:
+            Center(child: Text("Unexpected error. See console for details.")));
+  };
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // setErrorBuilder();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -65,6 +76,10 @@ class MyApp extends StatelessWidget {
       locale: context.locale,
       title: 'Xalq Nazorati',
       navigatorKey: NavigationService.navigationKey,
+      // builder: (BuildContext context, Widget widget) {
+      //   setErrorBuilder();
+      //   return widget;
+      // },
       theme: ThemeData(
         primaryColor: Color(0xff1ABC9C),
         fontFamily: 'Gilroy',
@@ -182,31 +197,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   getUser() async {
-    var url = '${globals.api_link}/users/profile';
-    Map<String, String> headers = {"Authorization": "token $_token"};
-    HttpGet request = HttpGet();
-    var response = await Requests.get(url, headers: headers);
-    if (response.statusCode == 200) {
-      // dynamic json = response.json();
+    try {
+      var url = '${globals.api_link}/users/profile';
+      Map<String, String> headers = {"Authorization": "token $_token"};
+      var response = await Requests.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        // dynamic json = response.json();
 
-      globals.userData = response.json();
-      globals.token = _token;
-      print(globals.userData);
-    } else {
-      globals.token = null;
-      dynamic json = response.json();
-      // Fluttertoast.showToast(
-      //     msg: json['detail'],
-      //     toastLength: Toast.LENGTH_SHORT,
-      //     gravity: ToastGravity.BOTTOM,
-      //     timeInSecForIosWeb: 2,
-      //     backgroundColor: Colors.grey,
-      //     textColor: Colors.white,
-      //     fontSize: 15.0);
+        globals.userData = response.json();
+        globals.token = _token;
+        print(globals.userData);
+      } else {
+        globals.token = null;
+        dynamic json = response.json();
+      }
+    } catch (e) {
+      print(e);
     }
-    // String reply = await response.transform(utf8.decoder).join();
-    // print(response.statusCode);
-    // globals.userData = json.decode(reply);
   }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -275,6 +282,34 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  customDialog(BuildContext context, txt) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.5,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: Center(
+                child: Text(txt),
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -326,6 +361,30 @@ class _MyHomePageState extends State<MyHomePage> {
       globals.deviceToken = token;
     });
     getStringValuesSF();
+    // globals.startTimer();
+    // globals.connectTimer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+    //   globals.startTimer();
+    // });
+    // var listener = DataConnectionChecker().onStatusChange.listen((status) {
+    //   switch (status) {
+    //     case DataConnectionStatus.connected:
+    //       print('Data connection is available.');
+    //       globals.startTimer();
+
+    //       // customDialog(context);
+    //       break;
+    //     case DataConnectionStatus.disconnected:
+    //       print('You are disconnected from the internet.');
+    //       // globals.connectTimer.cancel();
+    //       mainPageState.setState(() {
+    //         globals.internetStatus = "no_conn".tr().toString();
+    //         globals.imgStatus = "assets/img/no_connection.svg";
+    //         globals.colorStatus = Color(0xffF61010);
+    //       });
+    //       customDialog(context, "No internet");
+    //       break;
+    //   }
+    // });
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
         globals.lang = _lang;

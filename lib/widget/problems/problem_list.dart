@@ -8,7 +8,7 @@ class ProblemList extends StatefulWidget {
   final List data;
   final String title;
   final String status;
-  final Map<int, bool> alertList;
+  final Map<int, dynamic> alertList;
   Timer timer;
   Function refreshBells;
   ProblemList({this.data, this.title, this.status, this.alertList, Key key})

@@ -33,6 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen>
   final ItemPositionsListener itemPositionsListener =
       ItemPositionsListener.create();
   int _index = 0;
+  Future<dynamic> _subCategories;
 
   Future<List> getCategory() async {
     var url = '${globals.api_link}/problems/subcategories/${widget.id}';
@@ -58,6 +59,21 @@ class _CategoryScreenState extends State<CategoryScreen>
   @override
   void initState() {
     super.initState();
+    if (globals.subcategoryList.isEmpty) {
+      if (globals.subcategoryList[widget.id] == null) {
+        _subCategories = getCategory();
+        globals.subcategoryList.addAll({widget.id: _subCategories});
+      } else {
+        _subCategories = globals.subcategoryList[widget.id];
+      }
+    } else {
+      if (globals.subcategoryList[widget.id] == null) {
+        _subCategories = getCategory();
+        globals.subcategoryList.addAll({widget.id: _subCategories});
+      } else {
+        _subCategories = globals.subcategoryList[widget.id];
+      }
+    }
     timers = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       scrollToIndex();
     });
@@ -108,7 +124,7 @@ class _CategoryScreenState extends State<CategoryScreen>
                 Container(
                   margin: EdgeInsets.only(top: 15),
                   child: FutureBuilder(
-                      future: getCategory(),
+                      future: _subCategories,
                       builder: (context, snapshot) {
                         if (snapshot.hasError) print(snapshot.error);
                         return snapshot.hasData

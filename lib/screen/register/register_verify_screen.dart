@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -29,6 +30,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   Timer _timer;
   final codeController = TextEditingController();
   int _start = 180;
+  FocusNode codeNode = FocusNode();
 
   void getSMS() async {
     // Create SMS Receiver Listener
@@ -95,6 +97,27 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
       // _startListening();
       // print(responseBody["detail"]);
     }
+  }
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: codeNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
   }
 
   bool isSend = false;
@@ -230,86 +253,93 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                     padding: EdgeInsets.all(25),
                     child: Stack(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MainText("check_code_title".tr().toString()),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              margin: EdgeInsets.symmetric(vertical: 10),
-                              width: double.infinity,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                color: Color(0xffF5F6F9),
-                                borderRadius: BorderRadius.circular(22.5),
-                                border: Border.all(
-                                  color: Color.fromRGBO(178, 183, 208, 0.5),
-                                  style: BorderStyle.solid,
-                                  width: 0.5,
+                        KeyboardActions(
+                          isDialog: true,
+                          config: _buildConfig(context),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("check_code_title".tr().toString()),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                width: double.infinity,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  color: Color(0xffF5F6F9),
+                                  borderRadius: BorderRadius.circular(22.5),
+                                  border: Border.all(
+                                    color: Color.fromRGBO(178, 183, 208, 0.5),
+                                    style: BorderStyle.solid,
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          0.71,
+                                      child: TextField(
+                                        focusNode: codeNode,
+                                        maxLength: 6,
+                                        buildCounter: (BuildContext context,
+                                                {int currentLength,
+                                                int maxLength,
+                                                bool isFocused}) =>
+                                            null,
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) {},
+                                        controller: codeController,
+                                        maxLines: 1,
+                                        decoration: InputDecoration.collapsed(
+                                          hintText:
+                                              "check_code_hint".tr().toString(),
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .copyWith(
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize18),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Row(
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    width: (mediaQuery.size.width -
-                                            mediaQuery.padding.left -
-                                            mediaQuery.padding.right) *
-                                        0.71,
-                                    child: TextField(
-                                      maxLength: 6,
-                                      buildCounter: (BuildContext context,
-                                              {int currentLength,
-                                              int maxLength,
-                                              bool isFocused}) =>
-                                          null,
-                                      keyboardType: TextInputType.number,
-                                      onChanged: (value) {},
-                                      controller: codeController,
-                                      maxLines: 1,
-                                      decoration: InputDecoration.collapsed(
-                                        hintText:
-                                            "check_code_hint".tr().toString(),
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .display1
-                                            .copyWith(
-                                                fontSize:
-                                                    mediaQuery.size.width *
-                                                        globals.fontSize18),
-                                      ),
+                                    padding: EdgeInsets.only(left: 20),
+                                    width: mediaQuery.size.width * 0.83,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          _showTime,
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            fontSize:
+                                                dWith * globals.fontSize18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(left: 20),
-                                  width: mediaQuery.size.width * 0.83,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        _showTime,
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWith * globals.fontSize18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                         Positioned(
                           child: Align(

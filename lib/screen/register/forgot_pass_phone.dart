@@ -215,7 +215,7 @@ class _ForgotPassPhoneState extends State<ForgotPassPhone> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("tel_number_title".tr().toString()),
-                          PhoneInput(phoneController),
+                          PhoneInput(myController: phoneController),
                         ],
                       ),
                       Positioned(

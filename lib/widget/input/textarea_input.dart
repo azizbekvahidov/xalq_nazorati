@@ -7,13 +7,15 @@ class TextareaInput extends StatefulWidget {
   final textareaController;
   Function notifyParent;
   final maxCnt;
-  TextareaInput(
-      {Key key,
-      this.hint,
-      this.textareaController,
-      this.notifyParent,
-      this.maxCnt})
-      : super(key: key);
+  FocusNode descNode;
+  TextareaInput({
+    Key key,
+    this.hint,
+    this.textareaController,
+    this.notifyParent,
+    this.maxCnt,
+    this.descNode,
+  }) : super(key: key);
 
   @override
   _TextareaInputState createState() => _TextareaInputState();
@@ -63,6 +65,7 @@ class _TextareaInputState extends State<TextareaInput> {
                         mediaQuery.padding.right) *
                     0.74,
                 child: TextField(
+                  focusNode: widget.descNode,
                   onChanged: (text) {
                     String result = text;
                     if (result.length > _maxCnt) {

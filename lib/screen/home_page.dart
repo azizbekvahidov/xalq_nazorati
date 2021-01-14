@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:internet_speed_test/internet_speed_test.dart';
+import 'package:internet_speed_test/callbacks_enum.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
@@ -51,14 +53,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Map<String, dynamic>> getUser() async {
-    var url = '${globals.api_link}/users/profile';
-    HttpGet request = HttpGet();
-    var response = await request.methodGet(url);
+    try {
+      var url = '${globals.api_link}/users/profile';
+      HttpGet request = HttpGet();
+      var response = await request.methodGet(url);
 
-    String reply = await response.transform(utf8.decoder).join();
+      String reply = await response.transform(utf8.decoder).join();
 
-    globals.userData = json.decode(reply);
-    return globals.userData;
+      globals.userData = json.decode(reply);
+      return globals.userData;
+    } catch (e) {
+      print(e);
+    }
   }
 
   void refreshBells() async {

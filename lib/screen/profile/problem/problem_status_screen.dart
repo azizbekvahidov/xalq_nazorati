@@ -7,6 +7,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/problem_info.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/problems/problem_status-card.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
@@ -81,7 +82,10 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
       var url = '${globals.api_link}/problems/check-event?event_id=$id';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
-
+      if (response.statusCode == 200) {
+        globals.cardAlert[widget.id]["event_cnt"] = 0;
+        cardContentState.setState(() {});
+      }
       String reply = await response.transform(utf8.decoder).join();
     } catch (e) {
       print(e);
@@ -98,11 +102,12 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var appbar = CustomAppBar(
+      title: "problem_status".tr().toString(),
+      centerTitle: true,
+    );
     return Scaffold(
-      appBar: CustomAppBar(
-        title: "problem_status".tr().toString(),
-        centerTitle: true,
-      ),
+      appBar: appbar,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
@@ -130,7 +135,8 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
                         if (snapshot.hasError) print(snapshot.error);
                         _data = snapshot.data;
                         return snapshot.hasData
-                            ? ProblemStatusCard(_data)
+                            ? ProblemStatusCard(
+                                _data, appbar.preferredSize.height)
                             : Center(
                                 child: Text("Loading".tr().toString()),
                               );

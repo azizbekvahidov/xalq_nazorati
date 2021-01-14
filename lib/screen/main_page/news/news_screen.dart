@@ -204,7 +204,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
             ShadowBox(
               child: Container(
-                height: height - 310,
+                height: height - 315,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: _children[_index],
               ),

@@ -132,7 +132,7 @@ class _MainProfileState extends State<MainProfile> {
               child: Column(
                 children: [
                   Text(
-                    globals.token != null
+                    globals.userData != null
                         ? "${globals.capitalize(globals.userData['last_name'])} ${globals.capitalize(globals.userData['first_name'])}"
                         : "",
                     style: Theme.of(context).textTheme.display2.copyWith(
@@ -140,7 +140,9 @@ class _MainProfileState extends State<MainProfile> {
                         ),
                   ),
                   Text(
-                    globals.token != null ? "${globals.userData['phone']}" : "",
+                    globals.userData != null
+                        ? "${globals.userData['phone']}"
+                        : "",
                     style: TextStyle(
                         fontFeatures: [
                           FontFeature.enable("pnum"),
@@ -248,7 +250,7 @@ class _MainProfileState extends State<MainProfile> {
                               ),
                             ),
                             onTap: () {
-                              if (globals.token != null) {
+                              if (globals.userData != null) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) {

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -71,6 +72,29 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
       else
         _value = false;
     });
+  }
+
+  FocusNode descNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: descNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
   }
 
   @override
@@ -141,90 +165,101 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                   padding: EdgeInsets.only(top: 30),
                 ),
                 !dataSended
-                    ? Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Text(
-                              "rate_executor".tr().toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: globals.font,
-                                fontWeight: FontWeight.w600,
-                                fontSize: dWidth * globals.fontSize16,
+                    ? Container(
+                        height: 400,
+                        child: KeyboardActions(
+                          isDialog: true,
+                          disableScroll: true,
+                          config: _buildConfig(context),
+                          child: Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  "rate_executor".tr().toString(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: globals.font,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: dWidth * globals.fontSize16,
+                                  ),
+                                ),
                               ),
-                            ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 18),
+                              ),
+                              SmoothStarRating(
+                                allowHalfRating: false,
+                                onRated: (v) {
+                                  setState(() {
+                                    rated = v.toInt();
+                                    checkChange();
+                                  });
+                                },
+                                starCount: 5,
+                                rating: rating,
+                                size: 40.0,
+                                color: Theme.of(context).primaryColor,
+                                borderColor: Color(0xffEBEDF3),
+                                spacing: 0.0,
+                              ),
+                              Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 20, horizontal: 19),
+                                  child: TextareaInput(
+                                    descNode: descNode,
+                                    hint: "",
+                                    textareaController: descController,
+                                    notifyParent: checkChange,
+                                  )),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 19),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: _value
+                                      ? FlatButton(
+                                          color: globals.activeButtonColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(34),
+                                          ),
+                                          onPressed: () {
+                                            sendData();
+                                          },
+                                          child: Text(
+                                            "send".tr().toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .button
+                                                .copyWith(
+                                                    fontSize: dWidth *
+                                                        globals.fontSize18),
+                                          ),
+                                        )
+                                      : FlatButton(
+                                          onPressed: () {},
+                                          color: globals.deactiveButtonColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(34),
+                                          ),
+                                          child: Text(
+                                            "accept".tr().toString(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .button
+                                                .copyWith(
+                                                    fontSize: dWidth *
+                                                        globals.fontSize18),
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 18),
-                          ),
-                          SmoothStarRating(
-                            allowHalfRating: false,
-                            onRated: (v) {
-                              setState(() {
-                                rated = v.toInt();
-                                checkChange();
-                              });
-                            },
-                            starCount: 5,
-                            rating: rating,
-                            size: 40.0,
-                            color: Theme.of(context).primaryColor,
-                            borderColor: Color(0xffEBEDF3),
-                            spacing: 0.0,
-                          ),
-                          Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 19),
-                              child: TextareaInput(
-                                hint: "",
-                                textareaController: descController,
-                                notifyParent: checkChange,
-                              )),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 19),
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: _value
-                                  ? FlatButton(
-                                      color: globals.activeButtonColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(34),
-                                      ),
-                                      onPressed: () {
-                                        sendData();
-                                      },
-                                      child: Text(
-                                        "send".tr().toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .copyWith(
-                                                fontSize: dWidth *
-                                                    globals.fontSize18),
-                                      ),
-                                    )
-                                  : FlatButton(
-                                      onPressed: () {},
-                                      color: globals.deactiveButtonColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(34),
-                                      ),
-                                      child: Text(
-                                        "accept".tr().toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .button
-                                            .copyWith(
-                                                fontSize: dWidth *
-                                                    globals.fontSize18),
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ],
+                        ),
                       )
                     : Container(
                         alignment: Alignment.center,

@@ -18,7 +18,7 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Container(
-      height: height - 330,
+      height: height - 335,
       constraints: widget.isMain
           ? BoxConstraints(
               maxHeight: 150.0 * widget.news.length,

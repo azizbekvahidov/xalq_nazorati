@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/chatMessage.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/chat_box.dart';
 import 'package:xalq_nazorati/widget/full_screen.dart';
@@ -108,7 +109,10 @@ class _MainChatState extends State<MainChat> {
           '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/check-message?message_id=${id}';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
-
+      if (response.statusCode == 200) {
+        globals.cardAlert[widget.id]["chat_cnt"] = 0;
+        cardContentState.setState(() {});
+      }
       String reply = await response.transform(utf8.decoder).join();
     } catch (e) {
       print(e);

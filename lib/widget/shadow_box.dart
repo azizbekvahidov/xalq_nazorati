@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class ShadowBox extends StatelessWidget {
   final Widget child;
-  ShadowBox({this.child});
+  Color bgColor;
+  ShadowBox({this.child, this.bgColor = Colors.white});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,7 +11,7 @@ class ShadowBox extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xffD5D8E5), width: 0.5),
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
+        color: bgColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),

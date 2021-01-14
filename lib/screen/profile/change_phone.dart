@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:requests/requests.dart';
 import 'package:sms/sms.dart';
@@ -212,6 +213,41 @@ class _ChangePhoneState extends State<ChangePhone> {
     }
   }
 
+  FocusNode _phoneNode = FocusNode();
+  FocusNode _codeNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: _phoneNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: _codeNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var maskFormatter = new MaskTextInputFormatter(
@@ -243,72 +279,89 @@ class _ChangePhoneState extends State<ChangePhone> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    MainText(
-                                        "tel_number_title".tr().toString()),
-                                    PhoneInput(phoneController),
-                                    InkWell(
-                                      onTap: () {
-                                        sendMessage();
-                                      },
-                                      child: Container(
-                                        margin:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        width: mediaQuery.size.width,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(26, 188, 156, 0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              width: 1),
-                                        ),
-                                        child: Center(
-                                            child: Text(
-                                                "get_code".tr().toString())),
-                                      ),
-                                    ),
-                                    MainText(
-                                        "check_code_title".tr().toString()),
-                                    DefaultInput(
-                                      inputType: TextInputType.number,
-                                      hint: "check_code_hint".tr().toString(),
-                                      textController: codeController,
-                                      notifyParent: () {
-                                        validate();
-                                      },
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                              child: Container(
+                                child: KeyboardActions(
+                                  disableScroll: true,
+                                  isDialog: true,
+                                  config: _buildConfig(context),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          padding: EdgeInsets.only(left: 20),
-                                          width: mediaQuery.size.width * 0.85,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                _showTime,
-                                                style: TextStyle(
-                                                  fontFamily: globals.font,
-                                                  fontSize: 18,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
+                                        MainText(
+                                            "tel_number_title".tr().toString()),
+                                        PhoneInput(
+                                          myController: phoneController,
+                                          textFocusNode: _phoneNode,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            sendMessage();
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            width: mediaQuery.size.width,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  26, 188, 156, 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  width: 1),
+                                            ),
+                                            child: Center(
+                                                child: Text("get_code"
+                                                    .tr()
+                                                    .toString())),
                                           ),
                                         ),
-                                      ],
-                                    )
-                                  ]),
+                                        MainText(
+                                            "check_code_title".tr().toString()),
+                                        DefaultInput(
+                                          inputType: TextInputType.number,
+                                          hint:
+                                              "check_code_hint".tr().toString(),
+                                          textController: codeController,
+                                          notifyParent: () {
+                                            validate();
+                                          },
+                                          textFocusNode: _codeNode,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding:
+                                                  EdgeInsets.only(left: 20),
+                                              width:
+                                                  mediaQuery.size.width * 0.85,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    _showTime,
+                                                    style: TextStyle(
+                                                      fontFamily: globals.font,
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ]),
+                                ),
+                              ),
                             ),
                           ),
                         ]),

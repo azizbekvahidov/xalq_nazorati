@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
 class DefaultInput extends StatefulWidget {
@@ -6,13 +7,15 @@ class DefaultInput extends StatefulWidget {
   final String hint;
   Function notifyParent;
   var inputType = TextInputType.text;
-  DefaultInput(
-      {Key key,
-      this.hint,
-      this.textController,
-      this.notifyParent,
-      this.inputType})
-      : super(key: key);
+  FocusNode textFocusNode;
+  DefaultInput({
+    Key key,
+    this.hint,
+    this.textController,
+    this.notifyParent,
+    this.inputType,
+    this.textFocusNode,
+  }) : super(key: key);
 
   @override
   _DefaultInputState createState() => _DefaultInputState();
@@ -45,6 +48,7 @@ class _DefaultInputState extends State<DefaultInput> {
                 0.71,
             child: TextField(
               keyboardType: widget.inputType,
+              focusNode: widget.textFocusNode,
               onChanged: (value) {
                 widget.notifyParent();
               },

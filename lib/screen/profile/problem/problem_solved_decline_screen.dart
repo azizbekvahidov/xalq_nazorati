@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -91,6 +92,29 @@ class _ProblemSolvedDeclineScreenState
     });
   }
 
+  FocusNode descNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: descNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var dWidth = MediaQuery.of(context).size.width;
@@ -109,105 +133,115 @@ class _ProblemSolvedDeclineScreenState
                 physics: BouncingScrollPhysics(),
                 child: Container(
                   height: dHeight < 560 ? dHeight : dHeight * 0.8,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ShadowBox(
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    MainText(
-                                        "problem_describe".tr().toString()),
-                                    TextareaInput(
-                                      hint: "problem_describe_hint"
-                                          .tr()
-                                          .toString(),
-                                      textareaController: descController,
-                                      notifyParent: checkChange,
-                                      maxCnt: 100,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        child: Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Stack(
+                  child: KeyboardActions(
+                    isDialog: true,
+                    disableScroll: true,
+                    config: _buildConfig(context),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Positioned(
-                                child: Align(
-                                  alignment: FractionalOffset.bottomCenter,
-                                  child:
-                                      /*!_value
-                                ? DefaultButton(
-                                    "Продолжить",
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : */
-                                      Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 19),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: _value
-                                          ? FlatButton(
-                                              color: globals.activeButtonColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(34),
-                                              ),
-                                              onPressed: () {
-                                                sendData();
-                                              },
-                                              child: Text(
-                                                "send".tr().toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .button
-                                                    .copyWith(
-                                                        fontSize: dWidth *
-                                                            globals.fontSize18),
-                                              ),
-                                            )
-                                          : FlatButton(
-                                              onPressed: () {},
-                                              color:
-                                                  globals.deactiveButtonColor,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(34),
-                                              ),
-                                              child: Text(
-                                                "send".tr().toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .button
-                                                    .copyWith(
-                                                        fontSize: dWidth *
-                                                            globals.fontSize18),
-                                              ),
-                                            ),
-                                    ),
+                              ShadowBox(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MainText(
+                                          "problem_describe".tr().toString()),
+                                      TextareaInput(
+                                        descNode: descNode,
+                                        hint: "problem_describe_hint"
+                                            .tr()
+                                            .toString(),
+                                        textareaController: descController,
+                                        notifyParent: checkChange,
+                                        maxCnt: 100,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          child: Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  child: Align(
+                                    alignment: FractionalOffset.bottomCenter,
+                                    child:
+                                        /*!_value
+                                  ? DefaultButton(
+                                      "Продолжить",
+                                      () {},
+                                      Color(0xffB2B7D0),
+                                    )
+                                  : */
+                                        Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 19),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: _value
+                                            ? FlatButton(
+                                                color:
+                                                    globals.activeButtonColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(34),
+                                                ),
+                                                onPressed: () {
+                                                  sendData();
+                                                },
+                                                child: Text(
+                                                  "send".tr().toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .button
+                                                      .copyWith(
+                                                          fontSize: dWidth *
+                                                              globals
+                                                                  .fontSize18),
+                                                ),
+                                              )
+                                            : FlatButton(
+                                                onPressed: () {},
+                                                color:
+                                                    globals.deactiveButtonColor,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(34),
+                                                ),
+                                                child: Text(
+                                                  "send".tr().toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .button
+                                                      .copyWith(
+                                                          fontSize: dWidth *
+                                                              globals
+                                                                  .fontSize18),
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )

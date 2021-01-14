@@ -6,9 +6,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+// import 'package:sms_retriever/sms_retriever.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/register/register_verify_ios_screen.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
@@ -30,9 +33,39 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   bool _value = false;
   String phoneWiew = "";
   bool isRegister = false;
+  String optCode;
+  String appSignature;
+  FocusNode phoneNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _getAppSignature();
+    getAppSignature();
+  }
+
+  _getAppSignature() async {
+    String signature = await SmsRetrieved.getAppSignature();
+    print("App Hash Key:  $signature");
+    setState(() {
+      optCode = signature;
+    });
+  }
+
+  getAppSignature() async {
+    String signature = await SmsAutoFill().getAppSignature;
+    setState(() {
+      appSignature = signature;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void getCode() async {
-    final signature = await SmsAutoFill().getAppSignature;
-    print(signature);
+    // String signature = await SmsRetrieved.getAppSignature();
+    // print(signature);
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     if (phoneController.text == "") phone = "";
@@ -46,14 +79,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
         var status = await Permission.sms.status;
         if (status.isUndetermined || status.isDenied) {
           if (Platform.isIOS) {
+            // map.addAll({"passcode": signature});
             var r1 = await Requests.post(url, body: map);
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     settings:
-            //         const RouteSettings(name: RegisterVerifyScreen.routeName),
-            //     builder: (context) => RegisterVerifyScreen(
-            //           phoneView: phoneWiew,
-            //           phone: phone,
-            //         )));
             if (r1.statusCode == 200) {
               dynamic json = r1.json();
               r1.raiseForStatus();
@@ -68,8 +95,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                 isRegister = false;
                 Navigator.of(context).push(MaterialPageRoute(
                     settings: const RouteSettings(
-                        name: RegisterVerifyScreen.routeName),
-                    builder: (context) => RegisterVerifyScreen(
+                        name: RegisterVerifyIosScreen.routeName),
+                    builder: (context) => RegisterVerifyIosScreen(
                           phoneView: phoneWiew,
                           phone: phone,
                           // signature: signature,
@@ -180,6 +207,27 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     }
   }
 
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: phoneNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -271,105 +319,112 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                     padding: EdgeInsets.all(25),
                     child: Stack(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MainText("tel_number_title".tr().toString()),
-                            PhoneInput(phoneController),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _value = !_value;
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 2,
-                                            style: BorderStyle.solid,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                        shape: BoxShape.circle,
-                                        color: _value
-                                            ? Theme.of(context).primaryColor
-                                            : Colors.transparent),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: _value
-                                          ? Icon(
-                                              Icons.check,
-                                              size: 15.0,
-                                              color: Colors.white,
-                                            )
-                                          : Icon(
-                                              Icons.check_box_outline_blank,
-                                              size: 15.0,
-                                              color: Colors.transparent,
+                        KeyboardActions(
+                          isDialog: true,
+                          config: _buildConfig(context),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("tel_number_title".tr().toString()),
+                              PhoneInput(
+                                myController: phoneController,
+                                textFocusNode: phoneNode,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 10),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _value = !_value;
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                              color: Theme.of(context)
+                                                  .primaryColor),
+                                          shape: BoxShape.circle,
+                                          color: _value
+                                              ? Theme.of(context).primaryColor
+                                              : Colors.transparent),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: _value
+                                            ? Icon(
+                                                Icons.check,
+                                                size: 15.0,
+                                                color: Colors.white,
+                                              )
+                                            : Icon(
+                                                Icons.check_box_outline_blank,
+                                                size: 15.0,
+                                                color: Colors.transparent,
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 20),
+                                    width: mediaQuery.size.width * 0.75,
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: "reg_offer_aggreement_start"
+                                                .tr()
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize12,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
                                             ),
+                                          ),
+                                          TextSpan(
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Navigator.pushNamed(context,
+                                                    RulePage.routeName);
+                                              },
+                                            text: "offer".tr().toString(),
+                                            style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize12,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: "reg_offer_aggreement_end"
+                                                .tr()
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize12,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 20),
-                                  width: mediaQuery.size.width * 0.75,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: "reg_offer_aggreement_start"
-                                              .tr()
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize12,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.pushNamed(
-                                                  context, RulePage.routeName);
-                                            },
-                                          text: "offer".tr().toString(),
-                                          style: TextStyle(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize12,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: "reg_offer_aggreement_end"
-                                              .tr()
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize12,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         Positioned(
                           child: Align(

@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
@@ -29,8 +30,54 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   final seriesController = TextEditingController();
   final seriesNumController = TextEditingController();
 
+  FocusNode passSeriesNode = FocusNode();
+  FocusNode passNumNode = FocusNode();
+  FocusNode passpnflNode = FocusNode();
+
   bool _value = false;
   bool isError = false;
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: passSeriesNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: passNumNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: passpnflNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
 
   Future sendData() async {
     String pnfl = pnflController.text;
@@ -232,6 +279,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
+                      height: 250,
                       margin: EdgeInsets.only(top: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -239,197 +287,28 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                       ),
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MainText("pas_series_title".tr().toString()),
-                          // DefaultInput(
-                          //   hint: "pas_series_hint".tr().toString(),
-                          //   textController: seriesController,
-                          //   notifyParent: () {
-                          //     validate();
-                          //   },
-                          // ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                width: (dWith <= 360)
-                                    ? dWith * 0.14
-                                    : dWith * 0.16,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Color(0xffF5F6F9),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(22.5),
-                                      bottomLeft: Radius.circular(22.5)),
-                                  border: Border.all(
-                                    color: Color.fromRGBO(178, 183, 208, 0.5),
-                                    style: BorderStyle.solid,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 3),
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          ((dWith <= 360) ? 0.08 : 0.08),
-                                      child: TextField(
-                                        onChanged: (value) {
-                                          validate();
-                                        },
-                                        controller: seriesNumController,
-                                        maxLines: 1,
-                                        maxLength: 14,
-                                        buildCounter: (BuildContext context,
-                                                {int currentLength,
-                                                int maxLength,
-                                                bool isFocused}) =>
-                                            null,
-                                        keyboardType: TextInputType.text,
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(
-                                              top: 0, bottom: 10),
-                                          border: InputBorder.none,
-                                          hintText: "AA".tr().toString(),
-                                          hintStyle: Theme.of(context)
-                                              .textTheme
-                                              .display1
-                                              .copyWith(
-                                                  fontSize: dWith *
-                                                      globals.fontSize16),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(left: 20),
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                width: (dWith <= 360)
-                                    ? dWith * 0.50
-                                    : dWith * 0.53,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Color(0xffF5F6F9),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(22.5),
-                                      bottomRight: Radius.circular(22.5)),
-                                  border: Border.all(
-                                    color: Color.fromRGBO(178, 183, 208, 0.5),
-                                    style: BorderStyle.solid,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.symmetric(vertical: 3),
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          ((dWith <= 360) ? 0.42 : 0.42),
-                                      child: TextField(
-                                        onChanged: (value) {
-                                          validate();
-                                        },
-                                        controller: seriesController,
-                                        maxLines: 1,
-                                        maxLength: 14,
-                                        buildCounter: (BuildContext context,
-                                                {int currentLength,
-                                                int maxLength,
-                                                bool isFocused}) =>
-                                            null,
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(
-                                              top: 0, bottom: 10),
-                                          border: InputBorder.none,
-                                          hintText: "123456".tr().toString(),
-                                          hintStyle: Theme.of(context)
-                                              .textTheme
-                                              .display1
-                                              .copyWith(
-                                                  fontSize: dWith *
-                                                      globals.fontSize16),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () async {
-                                  final res = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PasRecognizeNotify()));
-                                  if (res != null) {
-                                    if (res is String) {
-                                      print(
-                                          "result of scan ==============> ${res.runtimeType}");
-                                      setState(() {
-                                        isError = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        pnflController.text =
-                                            res.personalNumber;
-                                        seriesNumController.text =
-                                            res.documentNumber.substring(0, 2);
-                                        seriesController.text =
-                                            res.documentNumber.substring(2);
-                                      });
-                                      validate();
-                                    }
-                                  }
-                                },
-                                child: Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    width: 45,
-                                    height: 45,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(22.5),
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    child: SvgPicture.asset(
-                                      "assets/img/qr-code-scan.svg",
-                                      width: 15,
-                                    )),
-                              ),
-                            ],
-                          ),
-
-                          MainText("pnfl".tr().toString()),
-                          Container(
-                            child: Row(
+                      child: KeyboardActions(
+                        isDialog: true,
+                        config: _buildConfig(context),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MainText("pas_series_title".tr().toString()),
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
                                   padding: EdgeInsets.only(left: 20),
                                   margin: EdgeInsets.symmetric(vertical: 10),
                                   width: (dWith <= 360)
-                                      ? dWith * 0.80
-                                      : dWith * 0.89,
+                                      ? dWith * 0.14
+                                      : dWith * 0.16,
                                   height: 45,
                                   decoration: BoxDecoration(
                                     color: Color(0xffF5F6F9),
-                                    borderRadius: BorderRadius.circular(22.5),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(22.5),
+                                        bottomLeft: Radius.circular(22.5)),
                                     border: Border.all(
                                       color: Color.fromRGBO(178, 183, 208, 0.5),
                                       style: BorderStyle.solid,
@@ -448,14 +327,77 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                         width: (mediaQuery.size.width -
                                                 mediaQuery.padding.left -
                                                 mediaQuery.padding.right) *
-                                            ((dWith <= 360) ? 0.5 : 0.4),
+                                            ((dWith <= 360) ? 0.08 : 0.08),
                                         child: TextField(
+                                          focusNode: passSeriesNode,
                                           onChanged: (value) {
                                             validate();
                                           },
-                                          controller: pnflController,
+                                          controller: seriesNumController,
                                           maxLines: 1,
-                                          maxLength: 14,
+                                          maxLength: 2,
+                                          buildCounter: (BuildContext context,
+                                                  {int currentLength,
+                                                  int maxLength,
+                                                  bool isFocused}) =>
+                                              null,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                                top: 0, bottom: 10),
+                                            border: InputBorder.none,
+                                            hintText: "AA",
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .display1
+                                                .copyWith(
+                                                    fontSize: dWith *
+                                                        globals.fontSize16),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width: (dWith <= 360)
+                                      ? dWith * 0.50
+                                      : dWith * 0.53,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffF5F6F9),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(22.5),
+                                        bottomRight: Radius.circular(22.5)),
+                                    border: Border.all(
+                                      color: Color.fromRGBO(178, 183, 208, 0.5),
+                                      style: BorderStyle.solid,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 3),
+                                        width: (mediaQuery.size.width -
+                                                mediaQuery.padding.left -
+                                                mediaQuery.padding.right) *
+                                            ((dWith <= 360) ? 0.42 : 0.42),
+                                        child: TextField(
+                                          focusNode: passNumNode,
+                                          onChanged: (value) {
+                                            validate();
+                                          },
+                                          controller: seriesController,
+                                          maxLines: 1,
+                                          maxLength: 7,
                                           buildCounter: (BuildContext context,
                                                   {int currentLength,
                                                   int maxLength,
@@ -466,8 +408,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                             contentPadding: EdgeInsets.only(
                                                 top: 0, bottom: 10),
                                             border: InputBorder.none,
-                                            hintText:
-                                                "enter_pnfl".tr().toString(),
+                                            hintText: "1234567",
                                             hintStyle: Theme.of(context)
                                                 .textTheme
                                                 .display1
@@ -477,97 +418,157 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                           ),
                                         ),
                                       ),
-                                      InkWell(
-                                        onTap: () {
-                                          customDialog(context);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Color(0xffE5E7EC),
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(22.5),
-                                                bottomRight:
-                                                    Radius.circular(22.5)),
-                                            border: Border.all(
-                                              color: Color.fromRGBO(
-                                                  178, 183, 208, 1),
-                                              style: BorderStyle.solid,
-                                              width: 0.5,
-                                            ),
-                                          ),
-                                          width: 45,
-                                          height: 45,
-                                          child: Center(
-                                            child: SvgPicture.asset(
-                                                "assets/img/ques.svg"),
-                                          ),
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 ),
+                                InkWell(
+                                  onTap: () async {
+                                    final res = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PasRecognizeNotify()));
+                                    if (res != null) {
+                                      if (res is String) {
+                                        print(
+                                            "result of scan ==============> ${res.runtimeType}");
+                                        setState(() {
+                                          isError = true;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          pnflController.text =
+                                              res.personalNumber;
+                                          seriesNumController.text = res
+                                              .documentNumber
+                                              .substring(0, 2);
+                                          seriesController.text =
+                                              res.documentNumber.substring(2);
+                                        });
+                                        validate();
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.only(left: 10),
+                                      width: 45,
+                                      height: 45,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(22.5),
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        "assets/img/qr-code-scan.svg",
+                                        width: 15,
+                                      )),
+                                ),
                               ],
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     InkWell(
-                          //       onTap: () {
-                          //         setState(() {
-                          //           _value = !_value;
-                          //         });
-                          //       },
-                          //       child: Container(
-                          //         decoration: BoxDecoration(
-                          //             border: Border.all(
-                          //                 width: 2,
-                          //                 style: BorderStyle.solid,
-                          //                 color: Theme.of(context).primaryColor),
-                          //             shape: BoxShape.circle,
-                          //             color: _value
-                          //                 ? Theme.of(context).primaryColor
-                          //                 : Colors.transparent),
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.all(5.0),
-                          //           child: _value
-                          //               ? Icon(
-                          //                   Icons.check,
-                          //                   size: 15.0,
-                          //                   color: Colors.white,
-                          //                 )
-                          //               : Icon(
-                          //                   Icons.check_box_outline_blank,
-                          //                   size: 15.0,
-                          //                   color: Colors.transparent,
-                          //                 ),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       padding: EdgeInsets.only(left: 20),
-                          //       width: mediaQuery.size.width * 0.75,
-                          //       child: Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: [
-                          //           Text(
-                          //             "personal_data_use_agree".tr().toString(),
-                          //             style: TextStyle(
-                          //               fontFamily: globals.font,
-                          //               fontSize: dWith * globals.fontSize12,
-                          //               color: Colors.black,
-                          //               fontWeight: FontWeight.normal,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ],
-                          // )
-                        ],
+                            MainText("pnfl".tr().toString()),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.only(left: 20),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    width: (dWith <= 360)
+                                        ? dWith * 0.80
+                                        : dWith * 0.89,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xffF5F6F9),
+                                      borderRadius: BorderRadius.circular(22.5),
+                                      border: Border.all(
+                                        color:
+                                            Color.fromRGBO(178, 183, 208, 0.5),
+                                        style: BorderStyle.solid,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              EdgeInsets.symmetric(vertical: 3),
+                                          width: (mediaQuery.size.width -
+                                                  mediaQuery.padding.left -
+                                                  mediaQuery.padding.right) *
+                                              ((dWith <= 360) ? 0.5 : 0.4),
+                                          child: TextField(
+                                            focusNode: passpnflNode,
+                                            onChanged: (value) {
+                                              validate();
+                                            },
+                                            controller: pnflController,
+                                            maxLines: 1,
+                                            maxLength: 14,
+                                            buildCounter: (BuildContext context,
+                                                    {int currentLength,
+                                                    int maxLength,
+                                                    bool isFocused}) =>
+                                                null,
+                                            keyboardType: TextInputType.number,
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.only(
+                                                  top: 0, bottom: 10),
+                                              border: InputBorder.none,
+                                              hintText:
+                                                  "enter_pnfl".tr().toString(),
+                                              hintStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .display1
+                                                  .copyWith(
+                                                      fontSize: dWith *
+                                                          globals.fontSize16),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            customDialog(context);
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Color(0xffE5E7EC),
+                                              borderRadius: BorderRadius.only(
+                                                  topRight:
+                                                      Radius.circular(22.5),
+                                                  bottomRight:
+                                                      Radius.circular(22.5)),
+                                              border: Border.all(
+                                                color: Color.fromRGBO(
+                                                    178, 183, 208, 1),
+                                                style: BorderStyle.solid,
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            width: 45,
+                                            height: 45,
+                                            child: Center(
+                                              child: SvgPicture.asset(
+                                                  "assets/img/ques.svg"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     Container(

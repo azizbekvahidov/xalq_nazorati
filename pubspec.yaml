@@ -40,8 +40,6 @@ dependencies:
   permission_handler: ^5.0.1+1
   shared_preferences: ^0.5.10
   easy_localization: ^2.3.3
-  # google_maps_flutter: ^0.5.32
-  # flutter_google_maps: ^4.0.0
   geolocator: ^6.0.0+4
   intl: ^0.16.1
   flutter_html: ^1.0.2
@@ -53,14 +51,14 @@ dependencies:
   url_launcher: ^5.7.5
   path_provider: ^1.6.7
   fluttertoast: ^7.1.1
-  # library for scanner
+  
   flutter_mrz_scanner: ^1.0.0+3
   camera: ^0.5.8+9
   image: ^2.1.18
   firebase_ml_vision: ^0.9.7
   firebase_core: ^0.5.0+1
   yandex_mapkit: ^0.4.0
-  # sms: ^0.2.4
+  
   share: ^0.6.5+4
   rate_my_app: ^0.7.2
   flutter_local_notifications: ^3.0.1+2
@@ -77,9 +75,15 @@ dependencies:
   sms_autofill: ^1.2.7
   flutter_image_compress: ^0.7.0
   liquid_progress_indicator: ^0.3.2
-  # flutter_sms_inbox: ^0.1.1+1
-  
-
+  internet_speed_test: ^1.1.2+1
+  # connectivity: ^2.0.2
+  keyboard_actions: ^3.3.1+1
+  data_connection_checker: ^0.3.4
+  sms_otp_auto_verify: ^1.2.2
+  skeleton_text: ^1.0.0
+  # sms_retriever: ^0.0.2
+  pull_to_refresh: ^1.6.3
+  lazy_load_scrollview: ^1.2.0
   # workmanager: ^0.2.3
 
 
@@ -190,6 +194,11 @@ flutter:
     - assets/img/news_archive.svg
     - assets/img/user_main.svg
     - assets/img/dont_men.svg
+    
+    - assets/img/no_connection.svg
+    - assets/img/bad_connection.svg
+    - assets/img/good_connection.svg
+
 
   #   - images/a_dot_ham.jpeg
 

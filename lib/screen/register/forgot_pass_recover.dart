@@ -158,11 +158,15 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MainText("pass_title".tr().toString()),
-                          PassInput("come_up_pass_hint".tr().toString(),
-                              passController, null),
+                          PassInput(
+                              hint: "come_up_pass_hint".tr().toString(),
+                              passController: passController,
+                              notifyParent: null),
                           MainText("confirm_pass_title".tr().toString()),
-                          PassInput("confirm_pass_hint".tr().toString(),
-                              pass2Controller, null),
+                          PassInput(
+                              hint: "confirm_pass_hint".tr().toString(),
+                              passController: pass2Controller,
+                              notifyParent: null),
                         ],
                       ),
                       Positioned(

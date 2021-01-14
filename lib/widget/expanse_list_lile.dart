@@ -24,6 +24,7 @@ class ExpanseListTile extends StatefulWidget {
 class _ExpanseListTileState extends State<ExpanseListTile> {
   bool isExpanded;
 
+  Future<dynamic> _subsubCategories;
   customDialog(BuildContext context) {
     return showGeneralDialog(
         context: context,
@@ -158,6 +159,23 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
     if (widget.subcategoryId != null) {
       if (widget.data["id"] == widget.subcategoryId) {}
     }
+    if (globals.subsubcategoryList.isEmpty) {
+      if (globals.subsubcategoryList[widget.data["id"]] == null) {
+        _subsubCategories = getSubCategory(widget.data["id"]);
+        globals.subsubcategoryList
+            .addAll({widget.data["id"]: _subsubCategories});
+      } else {
+        _subsubCategories = globals.subsubcategoryList[widget.data["id"]];
+      }
+    } else {
+      if (globals.subsubcategoryList[widget.data["id"]] == null) {
+        _subsubCategories = getSubCategory(widget.data["id"]);
+        globals.subsubcategoryList
+            .addAll({widget.data["id"]: _subsubCategories});
+      } else {
+        _subsubCategories = globals.subsubcategoryList[widget.data["id"]];
+      }
+    }
   }
 
   Future<List> getSubCategory(int id) async {
@@ -233,7 +251,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
               Container(
                 color: Colors.white,
                 child: FutureBuilder(
-                    future: getSubCategory(widget.data["id"]),
+                    future: _subsubCategories,
                     builder: (context, snap) {
                       if (snap.hasError) print(snap.error);
                       return snap.hasData

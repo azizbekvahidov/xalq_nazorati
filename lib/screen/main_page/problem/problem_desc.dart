@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../main_page/problem/problem_locate.dart';
@@ -33,12 +34,34 @@ class _ProblemDescState extends State<ProblemDesc> {
   File image4;
   var descController = TextEditingController();
   bool _value = false;
+  FocusNode descNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
 
     // getPermission();
+  }
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: descNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
   }
 
   getPermission() async {
@@ -111,97 +134,113 @@ class _ProblemDescState extends State<ProblemDesc> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShadowBox(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Text(
-                                  widget.breadCrumbs,
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(102, 103, 108, 0.7),
-                                    fontFamily: globals.font,
-                                    fontSize: dWidth * globals.fontSize12,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                              MainText("problem_describe".tr().toString()),
-                              TextareaInput(
-                                hint: "problem_describe_hint".tr().toString(),
-                                textareaController: descController,
-                                notifyParent: checkChange,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(minHeight: 420, maxHeight: 465),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: KeyboardActions(
+                              disableScroll: true,
+                              isDialog: true,
+                              config: _buildConfig(context),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  MainText("upload_photo".tr().toString()),
-                                  InkWell(
-                                    onTap: () {
-                                      clearImages();
-                                    },
+                                  Container(
                                     child: Text(
-                                      "clear".tr().toString(),
+                                      widget.breadCrumbs,
                                       style: TextStyle(
-                                        color: Color(0xffB2B7D0),
-                                        fontSize: dWidth * globals.fontSize14,
-                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            Color.fromRGBO(102, 103, 108, 0.7),
                                         fontFamily: globals.font,
+                                        fontSize: dWidth * globals.fontSize12,
+                                        fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  MainText("problem_describe".tr().toString()),
+                                  TextareaInput(
+                                    hint:
+                                        "problem_describe_hint".tr().toString(),
+                                    textareaController: descController,
+                                    notifyParent: checkChange,
+                                    descNode: descNode,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      MainText("upload_photo".tr().toString()),
+                                      InkWell(
+                                        onTap: () {
+                                          clearImages();
+                                        },
+                                        child: Text(
+                                          "clear".tr().toString(),
+                                          style: TextStyle(
+                                            color: Color(0xffB2B7D0),
+                                            fontSize:
+                                                dWidth * globals.fontSize14,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: globals.font,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(top: 20, bottom: 15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CustomDottedCircleContainer(
+                                            size, image1, "file1"),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                        ),
+                                        CustomDottedCircleContainer(
+                                            size, image2, "file2"),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                        ),
+                                        CustomDottedCircleContainer(
+                                            size, image3, "file3"),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                        ),
+                                        CustomDottedCircleContainer(
+                                            size, image4, "file4"),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: SvgPicture.asset(
+                                            "assets/img/warning.svg"),
+                                      ),
+                                      Expanded(
+                                        flex: 9,
+                                        child: Text(
+                                          "upload_warning".tr().toString(),
+                                          style: TextStyle(
+                                              color: Color(0xffFF8F27),
+                                              fontSize: 12,
+                                              fontFamily: globals.font),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              Container(
-                                padding: EdgeInsets.only(top: 20, bottom: 15),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CustomDottedCircleContainer(
-                                        size, image1, "file1"),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                    ),
-                                    CustomDottedCircleContainer(
-                                        size, image2, "file2"),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                    ),
-                                    CustomDottedCircleContainer(
-                                        size, image3, "file3"),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                    ),
-                                    CustomDottedCircleContainer(
-                                        size, image4, "file4"),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: SvgPicture.asset(
-                                        "assets/img/warning.svg"),
-                                  ),
-                                  Expanded(
-                                    flex: 9,
-                                    child: Text(
-                                      "upload_warning".tr().toString(),
-                                      style: TextStyle(
-                                          color: Color(0xffFF8F27),
-                                          fontSize: 12,
-                                          fontFamily: globals.font),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),

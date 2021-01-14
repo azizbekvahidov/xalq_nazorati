@@ -1,4 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
@@ -25,6 +26,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final phoneController = TextEditingController();
   final passController = TextEditingController();
+  FocusNode phoneNode = FocusNode();
+  FocusNode passNode = FocusNode();
   bool isLogin = false;
   void getLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,6 +101,38 @@ class _LoginScreenState extends State<LoginScreen> {
     // globals.userData = json.decode(reply);
   }
 
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: phoneNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: passNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   addStringToSF(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', token);
@@ -150,31 +185,42 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: EdgeInsets.all(25),
                     child: Stack(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MainText("tel_number_title".tr().toString()),
-                            PhoneInput(phoneController),
-                            MainText("pass_title".tr().toString()),
-                            PassInput("pass_hint".tr().toString(),
-                                passController, null),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context)
-                                    .pushNamed(ForgotPassPhone.routeName);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Text(
-                                  "forgot_pass".tr().toString(),
-                                  style: TextStyle(
-                                      fontFamily: globals.font,
-                                      fontSize: 16,
-                                      color: Color(0xff858589)),
+                        KeyboardActions(
+                          isDialog: true,
+                          config: _buildConfig(context),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("tel_number_title".tr().toString()),
+                              PhoneInput(
+                                myController: phoneController,
+                                textFocusNode: phoneNode,
+                              ),
+                              MainText("pass_title".tr().toString()),
+                              PassInput(
+                                hint: "pass_hint".tr().toString(),
+                                passController: passController,
+                                notifyParent: null,
+                                textFocusNode: passNode,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .pushNamed(ForgotPassPhone.routeName);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Text(
+                                    "forgot_pass".tr().toString(),
+                                    style: TextStyle(
+                                        fontFamily: globals.font,
+                                        fontSize: 16,
+                                        color: Color(0xff858589)),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         Positioned(
                           child: Align(

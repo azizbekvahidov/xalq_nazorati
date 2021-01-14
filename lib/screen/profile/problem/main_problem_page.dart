@@ -25,6 +25,7 @@ class _MainProblemPageState extends State<MainProblemPage> {
   @override
   void initState() {
     super.initState();
+    // globals.connectTimer?.cancel();
     refreshBells();
     timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
       refreshBells();

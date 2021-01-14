@@ -1,13 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 
 class PhoneInput extends StatefulWidget {
   final myController;
-  PhoneInput(this.myController);
+  FocusNode textFocusNode;
+  PhoneInput({this.myController, this.textFocusNode});
 
   @override
   _PhoneInputState createState() => _PhoneInputState();
@@ -60,6 +62,7 @@ class _PhoneInputState extends State<PhoneInput> {
                     mediaQuery.padding.right) *
                 0.55,
             child: TextField(
+              focusNode: widget.textFocusNode,
               inputFormatters: [maskFormatter],
               controller: widget.myController,
               maxLines: 1,
