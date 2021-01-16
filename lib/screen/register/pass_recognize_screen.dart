@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -23,6 +24,17 @@ class PassRecognizeScreen extends StatefulWidget {
 
   @override
   _PassRecognizeScreenState createState() => _PassRecognizeScreenState();
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text?.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
 }
 
 class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
@@ -329,6 +341,9 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                                 mediaQuery.padding.right) *
                                             ((dWith <= 360) ? 0.08 : 0.08),
                                         child: TextField(
+                                          inputFormatters: [
+                                            UpperCaseTextFormatter(),
+                                          ],
                                           focusNode: passSeriesNode,
                                           onChanged: (value) {
                                             validate();

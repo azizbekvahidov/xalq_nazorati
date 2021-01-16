@@ -347,6 +347,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   id: int.parse(message["data"]["problem_id"]));
             }));
           });
+        else if (message["data"].containsKey("update"))
+          Timer(Duration(seconds: 3), () {
+            customDialog(context, "txt");
+          });
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
     );

@@ -204,7 +204,6 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   DateFormat dateF = DateFormat('dd.MM.yyyy hh.mm');
   @override
   Widget build(BuildContext context) {
-    print(problemStatus);
     var mediaQuery = MediaQuery.of(context);
     var dWidth = mediaQuery.size.width;
     return SmartRefresher(

@@ -17,8 +17,8 @@ class ProblemStatusCard extends StatelessWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: ListView.builder(
-            shrinkWrap: true,
-            reverse: true,
+            // shrinkWrap: true,
+            // reverse: true,
             physics: BouncingScrollPhysics(),
             itemCount: data.length,
             itemBuilder: (BuildContext ctx, index) {

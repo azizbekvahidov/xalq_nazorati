@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode passNode = FocusNode();
   bool isLogin = false;
   void getLogin() async {
+    // print(globals.deviceToken);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userToken', null);
     String phone = "+998${phoneController.text}";

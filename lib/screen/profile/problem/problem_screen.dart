@@ -75,7 +75,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
               _problems[problem_id]["res_seen"] = res[i]['result']["seen"];
               if (res[i]['result']["seen"] == false) _notify = true;
             }
-            print('$problem_id ==> ${res[i]['status']} ==> $_notify');
+            // print('$problem_id ==> ${res[i]['status']} ==> $_notify');
             if (_notify != _problems[problem_id]["notify"]) {
               setState(() {
                 _problems[problem_id]["notify"] = _notify;

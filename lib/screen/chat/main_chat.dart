@@ -140,7 +140,8 @@ class _MainChatState extends State<MainChat> {
   bool isSended = false;
 
   Future sendMessage() async {
-    if (messageController.text != "" || _file != null && isSended == false) {
+    if ((messageController.text != "" && isSended == false) ||
+        (_file != null && isSended == false)) {
       isSended = true;
       try {
         var url2 =
