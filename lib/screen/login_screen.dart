@@ -164,12 +164,20 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  color: Colors.transparent,
-                  height: dHeight * 0.35, //mediaQuery.size.height,
-                  width: double.infinity,
-                  child: Center(
-                    child: SvgPicture.asset("assets/img/FrameW.svg"),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      return HomePage();
+                    }), (Route<dynamic> route) => false);
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    height: dHeight * 0.35, //mediaQuery.size.height,
+                    width: double.infinity,
+                    child: Center(
+                      child: SvgPicture.asset("assets/img/FrameW.svg"),
+                    ),
                   ),
                 ),
                 Container(

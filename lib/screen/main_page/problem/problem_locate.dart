@@ -76,6 +76,12 @@ class _ProblemLocateState extends State<ProblemLocate>
   Timer _timer;
   int problemId;
 
+  FocusNode _streetNode = FocusNode();
+  FocusNode _houseNode = FocusNode();
+  FocusNode _apartNode = FocusNode();
+  FocusNode _yandexAddressNode = FocusNode();
+  FocusNode _noteNode = FocusNode();
+
   bool getLocalAddress = false;
   bool getCustomAddress = true;
   ScrollController _scControl;
@@ -89,6 +95,9 @@ class _ProblemLocateState extends State<ProblemLocate>
       getLocalData();
       checkChange();
     }
+    _streetNode.addListener(() {
+      print("street");
+    });
     if (globals.userLocation != null) {
       getAddressFromLatLng(Point(
           latitude: globals.userLocation.latitude,
@@ -99,6 +108,10 @@ class _ProblemLocateState extends State<ProblemLocate>
             longitude: globals.userLocation.longitude));
       });
     }
+
+    _streetNode.addListener(() {
+      print(this);
+    });
   }
 
   @override
@@ -569,12 +582,6 @@ class _ProblemLocateState extends State<ProblemLocate>
     getHouse();
   }
 
-  FocusNode _streetNode = FocusNode();
-  FocusNode _houseNode = FocusNode();
-  FocusNode _apartNode = FocusNode();
-  FocusNode _yandexAddressNode = FocusNode();
-  FocusNode _noteNode = FocusNode();
-
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
@@ -611,7 +618,10 @@ class _ProblemLocateState extends State<ProblemLocate>
               KeyboardActionsItem(focusNode: _streetNode, toolbarButtons: [
                 (node) {
                   return GestureDetector(
-                    onTap: () => node.unfocus(),
+                    onTap: () {
+                      node.unfocus();
+                      Navigator.pop(context, false);
+                    },
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.close),
@@ -622,7 +632,10 @@ class _ProblemLocateState extends State<ProblemLocate>
               KeyboardActionsItem(focusNode: _houseNode, toolbarButtons: [
                 (node) {
                   return GestureDetector(
-                    onTap: () => node.unfocus(),
+                    onTap: () {
+                      node.unfocus();
+                      Navigator.pop(context, false);
+                    },
                     child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Icon(Icons.close),

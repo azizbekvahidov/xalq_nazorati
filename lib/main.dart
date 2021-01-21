@@ -9,6 +9,7 @@ import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass_phone.dart';
@@ -146,6 +147,7 @@ class MyApp extends StatelessWidget {
         ForgotPassRecover.routeName: (ctx) => ForgotPassRecover(),
         RegisterPersonalDataScreen.routeName: (ctx) =>
             RegisterPersonalDataScreen(),
+        ChangePersonalData.routeName: (ctx) => ChangePersonalData(),
         HomePage.routeName: (ctx) => HomePage(),
         RulePage.routeName: (ctx) => RulePage(),
         MainPage.routeName: (ctx) => MainPage(),

@@ -270,7 +270,10 @@ class _RegisterPersonalDataScreenState
         KeyboardActionsItem(focusNode: _streetNode, toolbarButtons: [
           (node) {
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              onTap: () {
+                node.unfocus();
+                Navigator.pop(context, false);
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
@@ -281,7 +284,10 @@ class _RegisterPersonalDataScreenState
         KeyboardActionsItem(focusNode: _houseNode, toolbarButtons: [
           (node) {
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              onTap: () {
+                node.unfocus();
+                Navigator.pop(context, false);
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),

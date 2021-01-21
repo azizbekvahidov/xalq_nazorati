@@ -75,7 +75,7 @@ class _SupportState extends State<Support> {
                             _selectTab(0);
                           },
                           child: Container(
-                            width: 150,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
                             height: 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
@@ -87,7 +87,7 @@ class _SupportState extends State<Support> {
                               style: TextStyle(
                                 color: _txt1,
                                 fontFamily: globals.font,
-                                fontSize: width * globals.fontSize18,
+                                fontSize: width * globals.fontSize16,
                               ),
                             ),
                           ),
@@ -100,7 +100,7 @@ class _SupportState extends State<Support> {
                             _selectTab(1);
                           },
                           child: Container(
-                            width: 150,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
                             height: 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(25),
@@ -112,7 +112,7 @@ class _SupportState extends State<Support> {
                               style: TextStyle(
                                 color: _txt2,
                                 fontFamily: globals.font,
-                                fontSize: width * globals.fontSize18,
+                                fontSize: width * globals.fontSize16,
                               ),
                             ),
                           ),

@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
@@ -67,6 +68,41 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
     }
   }
 
+  FocusNode _passNode = FocusNode();
+  FocusNode _repassNode = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      actions: [
+        KeyboardActionsItem(focusNode: _passNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: _repassNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
@@ -91,127 +127,50 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
       child: Scaffold(
         appBar: appBar,
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              Container(
-                color: Colors.transparent,
-                height: dHeight * 0.3 -
-                    appBar.preferredSize.height, //mediaQuery.size.height,
-                width: double.infinity,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Container(
-                          padding: EdgeInsets.only(bottom: 30, left: 25),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                "reset_txt".tr().toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 26,
-                                  fontFamily: globals.font,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 15),
-                              ),
-                              Text(
-                                "reset_desc".tr().toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 18,
-                                  fontFamily: globals.font,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: mediaQuery.size.height - dHeight * 0.3,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(25),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Container(
+                  color: Colors.transparent,
+                  height: dHeight * 0.3 -
+                      appBar.preferredSize.height, //mediaQuery.size.height,
+                  width: double.infinity,
                   child: Stack(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MainText("pass_title".tr().toString()),
-                          PassInput(
-                              hint: "come_up_pass_hint".tr().toString(),
-                              passController: passController,
-                              notifyParent: null),
-                          MainText("confirm_pass_title".tr().toString()),
-                          PassInput(
-                              hint: "confirm_pass_hint".tr().toString(),
-                              passController: pass2Controller,
-                              notifyParent: null),
-                        ],
-                      ),
                       Positioned(
                         child: Align(
-                          alignment: FractionalOffset.bottomCenter,
+                          alignment: Alignment.bottomLeft,
                           child: Container(
-                            margin: EdgeInsets.only(bottom: 30),
+                            padding: EdgeInsets.only(bottom: 30, left: 25),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                DefaultButton(
-                                  "send".tr().toString(),
-                                  () {
-                                    getCode();
-                                    // Navigator.of(context).pushNamed(
-                                    //     RegisterVerifyScreen.routeName);
-                                  },
-                                  Theme.of(context).primaryColor,
+                                Text(
+                                  "reset_txt".tr().toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 26,
+                                    fontFamily: globals.font,
+                                  ),
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "",
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        fontSize: dWith < 400 ? 13 : 14,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    FlatButton(
-                                      onPressed: () => null,
-                                      child: Text(
-                                        "",
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWith < 400 ? 13 : 14,
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.only(top: 15),
+                                ),
+                                Text(
+                                  "reset_desc".tr().toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 18,
+                                    fontFamily: globals.font,
+                                  ),
                                 ),
                               ],
                             ),
@@ -221,8 +180,98 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
                     ],
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: double.infinity,
+                  height: mediaQuery.size.height - dHeight * 0.3,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25),
+                    ),
+                  ),
+                  child: KeyboardActions(
+                    disableScroll: true,
+                    isDialog: true,
+                    config: _buildConfig(context),
+                    child: Padding(
+                      padding: EdgeInsets.all(25),
+                      child: Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              MainText("pass_title".tr().toString()),
+                              PassInput(
+                                  textFocusNode: _passNode,
+                                  hint: "come_up_pass_hint".tr().toString(),
+                                  passController: passController,
+                                  notifyParent: null),
+                              MainText("confirm_pass_title".tr().toString()),
+                              PassInput(
+                                  textFocusNode: _repassNode,
+                                  hint: "confirm_pass_hint".tr().toString(),
+                                  passController: pass2Controller,
+                                  notifyParent: null),
+                            ],
+                          ),
+                          Positioned(
+                            child: Align(
+                              alignment: FractionalOffset.bottomCenter,
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 30),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    DefaultButton(
+                                      "send".tr().toString(),
+                                      () {
+                                        getCode();
+                                        // Navigator.of(context).pushNamed(
+                                        //     RegisterVerifyScreen.routeName);
+                                      },
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "",
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            fontSize: dWith < 400 ? 13 : 14,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
+                                        FlatButton(
+                                          onPressed: () => null,
+                                          child: Text(
+                                            "",
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize: dWith < 400 ? 13 : 14,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -821,25 +821,25 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            Positioned(
-                bottom: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Theme.of(context).primaryColor,
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: Text(
-                    // "${globals.internetStatus}",
-                    "test_notify".tr().toString(),
-                    style: TextStyle(
-                        fontFamily: globals.font,
-                        color: Colors.white,
-                        fontSize: dWidth *
-                            globals
-                                .fontSize16, //(mediaQuery.size.width < 360) ? 14 : 16,
-                        fontWeight: FontWeight.w500),
-                  ),
-                )),
+            // Positioned(
+            //     bottom: 0,
+            //     child: Container(
+            //       width: MediaQuery.of(context).size.width,
+            //       color: Theme.of(context).primaryColor,
+            //       height: 40,
+            //       alignment: Alignment.center,
+            //       child: Text(
+            //         // "${globals.internetStatus}",
+            //         "test_notify".tr().toString(),
+            //         style: TextStyle(
+            //             fontFamily: globals.font,
+            //             color: Colors.white,
+            //             fontSize: dWidth *
+            //                 globals
+            //                     .fontSize16, //(mediaQuery.size.width < 360) ? 14 : 16,
+            //             fontWeight: FontWeight.w500),
+            //       ),
+            //     )),
           ],
         ),
       ),

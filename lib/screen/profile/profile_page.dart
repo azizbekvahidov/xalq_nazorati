@@ -25,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    print(globals.userData['gender']);
     _user_address = globals.userData["address"] == null
         ? ""
         : globals.generateAddrStr(globals.userData["address"]);
@@ -77,8 +78,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     DateFormat formatter = DateFormat('dd.MM.yyyy');
-    String birthDate =
-        formatter.format(DateTime.parse(globals.userData['birth_date']));
+    String birthDate = globals.userData['birth_date'] == null
+        ? ""
+        : formatter.format(DateTime.parse(globals.userData['birth_date']));
     return Scaffold(
       appBar: CustomAppBar(
         title: "profile".tr().toString(),
@@ -96,15 +98,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: [
-                      CardList("name".tr().toString(),
-                          capitalize("${globals.userData['first_name']}")),
+                      CardList(
+                          "name".tr().toString(),
+                          capitalize(
+                              "${globals.userData['first_name'] ?? ""}")),
                       CardList("surname".tr().toString(),
-                          capitalize("${globals.userData['last_name']}")),
-                      CardList("lastname".tr().toString(),
-                          capitalize("${globals.userData['patronymic']}")),
+                          capitalize("${globals.userData['last_name'] ?? ""}")),
+                      CardList(
+                          "lastname".tr().toString(),
+                          capitalize(
+                              "${globals.userData['patronymic'] ?? ""}")),
                       CardList("birthday".tr().toString(), "${birthDate}"),
-                      CardList("gender".tr().toString(),
-                          "${globals.userData['gender']}".tr().toString()),
+                      CardList(
+                          "gender".tr().toString(),
+                          "${globals.userData['gender'] ?? ""}"
+                              .tr()
+                              .toString()),
                       CardList("fact_accress".tr().toString(), _user_address),
                       CardList("tel_number_hint".tr().toString(), _user_phone),
                     ],
@@ -158,7 +167,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             onTap: () async {
                               if (globals.token != null) {
-                                var res = await Navigator.of(context).push(
+                                var res = await Navigator.of(context,
+                                        rootNavigator: true)
+                                    .push(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) {
                                       return ChangePersonalData();
@@ -179,15 +190,74 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    CustomCardList(
-                      "id",
-                      "change_pass".tr().toString(),
-                      ChangePassword(),
-                      true,
-                      "",
-                      false,
+                    // CustomCardList(
+                    //   "id",
+                    //   "change_pass".tr().toString(),
+                    //   ChangePassword(),
+                    //   true,
+                    //   "",
+                    //   false,
+                    // ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                      width: (mediaQuery.size.width -
+                                              mediaQuery.padding.left -
+                                              mediaQuery.padding.right) *
+                                          0.82,
+                                      child: Container(
+                                          child: RichText(
+                                        text: TextSpan(
+                                          text: "change_pass".tr().toString(),
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            color: Color(0xff050505),
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: mediaQuery.size.width *
+                                                globals.fontSize18,
+                                          ),
+                                        ),
+                                      ))),
+                                  Container(
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () async {
+                              if (globals.token != null) {
+                                await Navigator.of(context, rootNavigator: true)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return ChangePassword();
+                                    },
+                                  ),
+                                );
+                              } else {
+                                customDialog(context);
+                              }
+                            },
+                          ),
+                          Divider(),
+                          // Divider(),
+                        ],
+                      ),
                     ),
-
                     Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +300,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             onTap: () async {
                               if (globals.token != null) {
-                                var res = await Navigator.of(context).push(
+                                var res = await Navigator.of(context,
+                                        rootNavigator: true)
+                                    .push(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) {
                                       return ChangePhone();

@@ -19,6 +19,7 @@ import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ChangePersonalData extends StatefulWidget {
+  static const routeName = "/change-profilepersonal-data";
   @override
   _ChangePersonalDataState createState() => _ChangePersonalDataState();
 }
@@ -141,7 +142,10 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         KeyboardActionsItem(focusNode: _streetNode, toolbarButtons: [
           (node) {
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              onTap: () {
+                node.unfocus();
+                Navigator.pop(context, false);
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
@@ -152,7 +156,10 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
         KeyboardActionsItem(focusNode: _houseNode, toolbarButtons: [
           (node) {
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              onTap: () {
+                node.unfocus();
+                Navigator.pop(context, false);
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
