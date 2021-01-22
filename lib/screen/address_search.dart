@@ -548,7 +548,7 @@ class _AddressSearchState extends State<AddressSearch> {
                           mahallaController.text = "";
                           _selectedHouse = "";
                           widget.ischange = false;
-                          suggestionsBoxController.toggle();
+                          // suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },
@@ -591,7 +591,7 @@ class _AddressSearchState extends State<AddressSearch> {
                           mahallaController.text = "";
                           _selectedHouse = "";
                           widget.ischange = false;
-                          suggestionsBoxController.toggle();
+                          // suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },
@@ -640,7 +640,7 @@ class _AddressSearchState extends State<AddressSearch> {
                           mahallaController.text = "";
                           _selectedHouse = "";
                           widget.ischange = false;
-                          suggestionsBoxController.toggle();
+                          // suggestionsBoxController.toggle();
                         });
 
                         validate(null);
@@ -686,7 +686,7 @@ class _AddressSearchState extends State<AddressSearch> {
                           mahallaController.text = "";
                           _selectedHouse = "";
                           widget.ischange = false;
-                          suggestionsBoxController.toggle();
+                          // suggestionsBoxController.toggle();
                         });
                         validate(null);
                       },

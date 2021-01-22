@@ -15,11 +15,11 @@ import 'package:xalq_nazorati/screen/main_page/main_page.dart';
 String token = null;
 String lang = null;
 String country = null;
-String api_link = "https://new.xalqnazorati.uz/ru/api";
-String site_link = "https://new.xalqnazorati.uz";
+// String api_link = "https://new.xalqnazorati.uz/ru/api";
+// String site_link = "https://new.xalqnazorati.uz";
 
-// String api_link = "https://test.xalqnazorati.uz/ru/api";
-// String site_link = "https://test.xalqnazorati.uz";
+String api_link = "https://test.xalqnazorati.uz/ru/api";
+String site_link = "https://test.xalqnazorati.uz";
 Map<String, dynamic> userData;
 String font = "Raleway";
 Color activeButtonColor = Color(0xff00AC8A);
