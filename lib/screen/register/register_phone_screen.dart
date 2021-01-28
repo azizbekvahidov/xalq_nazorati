@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -29,7 +30,8 @@ class RegisterPhoneScreen extends StatefulWidget {
 }
 
 class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
-  final phoneController = TextEditingController();
+  final MaskedTextController phoneController = MaskedTextController(
+      mask: '00 000 00 00', translator: {"0": RegExp(r'[0-9]')});
   bool _value = false;
   String phoneWiew = "";
   bool isRegister = false;
