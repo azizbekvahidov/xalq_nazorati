@@ -30,6 +30,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>FirebaseScreenReportingEnabled</key>
+	<true/>
 	<key>LSApplicationCategoryType</key>
 	<string>Applications to eliminate probdem in Tashkent</string>
 	<key>LSApplicationQueriesSchemes</key>

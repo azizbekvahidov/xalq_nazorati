@@ -56,7 +56,9 @@ dependencies:
   camera: ^0.5.8+9
   image: ^2.1.18
   firebase_ml_vision: ^0.9.7
+  
   firebase_core: ^0.5.0+1
+  
   yandex_mapkit: ^0.4.0
   
   share: ^0.6.5+4
