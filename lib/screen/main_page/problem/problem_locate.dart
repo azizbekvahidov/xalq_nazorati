@@ -90,8 +90,13 @@ class _ProblemLocateState extends State<ProblemLocate>
     super.initState();
     _scControl = ScrollController();
     if (widget.categoryId == 18) {
-      getCustomAddress = false;
-      getLocalAddress = true;
+      if (globals.userData["address"] != null) {
+        getCustomAddress = false;
+        getLocalAddress = true;
+      } else {
+        getCustomAddress = true;
+        getLocalAddress = false;
+      }
       getLocalData();
       checkChange();
     }
@@ -324,16 +329,18 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   getHouse() async {
     try {
-      Map<String, String> headers = {
-        "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
-      };
-      var url =
-          'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/houses/${globals.userData["address"]["house"]["bigdata_id"]}';
+      if (globals.userData["address"] != "") {
+        Map<String, String> headers = {
+          "Authorization": "token 156d860c1900e489b21bf6ef55b75957974e514c",
+        };
+        var url =
+            'https://data2.xalqnazorati.uz/${(globals.lang).tr().toString()}/v1/houses/${globals.userData["address"]["house"]["bigdata_id"]}';
 
-      var r1 = await Requests.get(url, headers: headers);
-      if (r1.statusCode == 200) {
-        var json = r1.json();
-        _isFlat = json["with_flats"];
+        var r1 = await Requests.get(url, headers: headers);
+        if (r1.statusCode == 200) {
+          var json = r1.json();
+          _isFlat = json["with_flats"];
+        }
       }
     } catch (e) {
       print(e);
@@ -557,10 +564,12 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   setMyaddress() {
     setState(() {
-      getLocalAddress = true;
-      getCustomAddress = false;
-      getLocalData();
-      checkChange();
+      if (globals.userData["address"] != null) {
+        getLocalAddress = true;
+        getCustomAddress = false;
+        getLocalData();
+        checkChange();
+      }
     });
   }
 
@@ -575,10 +584,12 @@ class _ProblemLocateState extends State<ProblemLocate>
 
   getLocalData() {
     address = _user_address;
-    _longitude =
-        double.tryParse(globals.userData["address"]["house"]["longitude"]);
-    _latitude =
-        double.tryParse(globals.userData["address"]["house"]["latitude"]);
+    if (_user_address != "") {
+      _longitude =
+          double.tryParse(globals.userData["address"]["house"]["longitude"]);
+      _latitude =
+          double.tryParse(globals.userData["address"]["house"]["latitude"]);
+    }
     getHouse();
   }
 
@@ -749,83 +760,120 @@ class _ProblemLocateState extends State<ProblemLocate>
                                                             183,
                                                             208,
                                                             0.25))),
-                                                child: Text(
-                                                  _user_address,
-                                                  style: TextStyle(
-                                                    fontFamily: globals.font,
-                                                    fontSize: dWidth *
-                                                        globals.fontSize16,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 0.5),
-                                                    fontFeatures: [
-                                                      FontFeature.enable(
-                                                          "pnum"),
-                                                      FontFeature.enable("lnum")
-                                                    ],
-                                                  ),
-                                                ),
+                                                child: _user_address == ""
+                                                    ? Text(
+                                                        "user_address_warning"
+                                                            .tr()
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              globals.font,
+                                                          fontSize: dWidth *
+                                                              globals
+                                                                  .fontSize16,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Colors.red,
+                                                          fontFeatures: [
+                                                            FontFeature.enable(
+                                                                "pnum"),
+                                                            FontFeature.enable(
+                                                                "lnum")
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        _user_address,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              globals.font,
+                                                          fontSize: dWidth *
+                                                              globals
+                                                                  .fontSize16,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 0.5),
+                                                          fontFeatures: [
+                                                            FontFeature.enable(
+                                                                "pnum"),
+                                                            FontFeature.enable(
+                                                                "lnum")
+                                                          ],
+                                                        ),
+                                                      ),
                                               ),
                                             ),
-                                            InkWell(
-                                              onTap: () {
-                                                setMyaddress();
-                                              },
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "use_my_address"
-                                                        .tr()
-                                                        .toString(),
-                                                    style: TextStyle(
-                                                      fontFamily: globals.font,
-                                                      fontSize: dWidth *
-                                                          globals.fontSize16,
-                                                      fontWeight:
-                                                          FontWeight.w400,
+                                            _user_address != ""
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      setMyaddress();
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "use_my_address"
+                                                              .tr()
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                globals.font,
+                                                            fontSize: dWidth *
+                                                                globals
+                                                                    .fontSize16,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  width: 2,
+                                                                  style:
+                                                                      BorderStyle
+                                                                          .solid,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColor),
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                              color: getLocalAddress
+                                                                  ? Theme.of(
+                                                                          context)
+                                                                      .primaryColor
+                                                                  : Colors
+                                                                      .transparent),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2.0),
+                                                            child:
+                                                                getLocalAddress
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .check,
+                                                                        size:
+                                                                            15.0,
+                                                                        color: Colors
+                                                                            .white,
+                                                                      )
+                                                                    : Icon(
+                                                                        Icons
+                                                                            .check_box_outline_blank,
+                                                                        size:
+                                                                            15.0,
+                                                                        color: Colors
+                                                                            .transparent,
+                                                                      ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            width: 2,
-                                                            style: BorderStyle
-                                                                .solid,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColor),
-                                                        shape: BoxShape.circle,
-                                                        color: getLocalAddress
-                                                            ? Theme.of(context)
-                                                                .primaryColor
-                                                            : Colors
-                                                                .transparent),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              2.0),
-                                                      child: getLocalAddress
-                                                          ? Icon(
-                                                              Icons.check,
-                                                              size: 15.0,
-                                                              color:
-                                                                  Colors.white,
-                                                            )
-                                                          : Icon(
-                                                              Icons
-                                                                  .check_box_outline_blank,
-                                                              size: 15.0,
-                                                              color: Colors
-                                                                  .transparent,
-                                                            ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                                  )
+                                                : Container(),
                                             Padding(
                                                 padding:
                                                     EdgeInsets.only(top: 20)),

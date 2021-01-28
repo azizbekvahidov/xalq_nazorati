@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
-import 'package:sms/sms.dart';
+// import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import '../../screen/register/pass_recognize_screen.dart';
 import '../../widget/input/default_input.dart';
@@ -32,29 +32,29 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
   int _start = 180;
   FocusNode codeNode = FocusNode();
 
-  void getSMS() async {
-    // Create SMS Receiver Listener
-    SmsReceiver receiver = new SmsReceiver();
-    // msg has New Incoming Message
-    receiver.onSmsReceived.listen((SmsMessage msg) {
-      print(msg.address);
-      print(msg.body);
-      print(msg.date);
-      print(msg.isRead);
-      print(msg.sender);
-      print(msg.threadId);
-      print(msg.state);
-      final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
+  // void getSMS() async {
+  //   // Create SMS Receiver Listener
+  //   SmsReceiver receiver = new SmsReceiver();
+  //   // msg has New Incoming Message
+  //   receiver.onSmsReceived.listen((SmsMessage msg) {
+  //     print(msg.address);
+  //     print(msg.body);
+  //     print(msg.date);
+  //     print(msg.isRead);
+  //     print(msg.sender);
+  //     print(msg.threadId);
+  //     print(msg.state);
+  //     final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
 
-      codeController.text = intValue.toString();
-    });
-  }
+  //     codeController.text = intValue.toString();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
     startTimer();
-    getSMS();
+    // getSMS();
   }
 
   @override

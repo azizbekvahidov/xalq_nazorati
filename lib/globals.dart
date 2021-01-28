@@ -7,19 +7,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:internet_speed_test/callbacks_enum.dart';
-import 'package:internet_speed_test/internet_speed_test.dart';
-import 'package:xalq_nazorati/screen/main_page/main_page.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 
+enum ConnectionStatus { good, bad, disconnected }
 String token = null;
 String lang = null;
 String country = null;
-// String api_link = "https://new.xalqnazorati.uz/ru/api";
-// String site_link = "https://new.xalqnazorati.uz";
+String api_link = "https://new.xalqnazorati.uz/ru/api";
+String site_link = "https://new.xalqnazorati.uz";
 
-String api_link = "https://test.xalqnazorati.uz/ru/api";
-String site_link = "https://test.xalqnazorati.uz";
+// String api_link = "https://test.xalqnazorati.uz/ru/api";
+// String site_link = "https://test.xalqnazorati.uz";
 Map<String, dynamic> userData;
 String font = "Raleway";
 Color activeButtonColor = Color(0xff00AC8A);
@@ -53,6 +51,22 @@ Map<int, Future<dynamic>> subcategoryList = {};
 Map<int, Future<dynamic>> subsubcategoryList = {};
 
 Map<dynamic, dynamic> cardAlert = {};
+
+checkCardAler(id) {
+  if (cardAlert[id]["chat_cnt"] == 0 &&
+      cardAlert[id]["event_cnt"] == 0 &&
+      cardAlert[id]["res_seen"] == true) {
+    cardContentState.setState(() {
+      cardAlert[id]["notify"] = false;
+    });
+  } else {
+    cardContentState.setState(() {
+      cardAlert[id]["notify"] = true;
+    });
+  }
+}
+
+String signature = "b86nXDNdKYB";
 
 int routeProblemId;
 
@@ -89,46 +103,8 @@ generateAddrStr(var addr) {
   return "$district, $street, $house$apart, $community";
 }
 
+ConnectionStatus connectionStatus = ConnectionStatus.good;
 String internetStatus = "good_conn".tr().toString();
 String imgStatus = "assets/img/good_connection.svg";
 Color colorStatus = Color(0xff1AFE91);
 Timer connectTimer;
-
-final internetSpeedTest = InternetSpeedTest();
-startTimer() {
-  try {
-    internetSpeedTest.startDownloadTesting(
-      onDone: (double transferRate, SpeedUnit unit) {
-        mainPageState.setState(() {
-          if (transferRate < 1.4) {
-            internetStatus = "bad_conn".tr().toString();
-            imgStatus = "assets/img/bad_connection.svg";
-            colorStatus = Color(0xffECD821);
-          } else {
-            internetStatus = "good_conn".tr().toString();
-            imgStatus = "assets/img/good_connection.svg";
-            colorStatus = Color(0xff1AFE91);
-          }
-        });
-      },
-      onProgress: (double percent, double transferRate, SpeedUnit unit) {
-        mainPageState.setState(() {
-          if (transferRate < 1.4) {
-            internetStatus = "${"bad_conn".tr().toString()}";
-            imgStatus = "assets/img/bad_connection.svg";
-            colorStatus = Color(0xffECD821);
-          } else {
-            internetStatus = "${"good_conn".tr().toString()}";
-            imgStatus = "assets/img/good_connection.svg";
-            colorStatus = Color(0xff1AFE91);
-          }
-        });
-      },
-      onError: (String errorMessage, String speedTestError) {},
-      testServer: "http://ipv4.ikoula.testdebit.info/1M.iso",
-      fileSize: 1000,
-    );
-  } catch (e) {
-    print(e);
-  }
-}

@@ -84,7 +84,7 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
       var response = await request.methodGet(url);
       if (response.statusCode == 200) {
         globals.cardAlert[widget.id]["event_cnt"] = 0;
-        cardContentState.setState(() {});
+        globals.checkCardAler(widget.id);
       }
       String reply = await response.transform(utf8.decoder).join();
     } catch (e) {

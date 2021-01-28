@@ -116,7 +116,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
         break;
     }
     try {
-      var url = '${globals.api_link}/problems/list/$_type?limit=10';
+      var url = '${globals.api_link}/problems/list/$_type?limit=20';
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await Requests.get(url, headers: headers);
 
@@ -132,7 +132,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
               "chat_cnt": 0,
               "event_cnt": 0,
               "res": null,
-              "res_seen": false,
+              "res_seen": true,
               "status": "processing"
             }
           };

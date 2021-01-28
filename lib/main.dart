@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:internet_speed_test/callbacks_enum.dart';
-import 'package:internet_speed_test/internet_speed_test.dart';
 import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -238,6 +235,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Future displayNotificationNews(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'channel-id', 'fcm', 'androidcoding.in',
+        importance: Importance.max, priority: Priority.high);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message['notification']['title'],
+      message['notification']['body'],
+      platformChannelSpecifics,
+      // payload: message["data"]["problem_id"],
+    );
+  }
+
   Future onSelectNotification(String payload) async {
     if (payload != null) {
       try {
@@ -333,6 +347,9 @@ class _MyHomePageState extends State<MyHomePage> {
       onMessage: (Map<String, dynamic> message) {
         if (message["data"].containsKey("problem_id"))
           displayNotification(message);
+        else {
+          displayNotificationNews(message);
+        }
       },
       onResume: (Map<String, dynamic> message) {
         if (message["data"].containsKey("problem_id"))
@@ -365,6 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _firebaseMessaging.getToken().then((String token) {
       assert(token != null);
       globals.deviceToken = token;
+      print(token);
     });
     getStringValuesSF();
     // globals.startTimer();

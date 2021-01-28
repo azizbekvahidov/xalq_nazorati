@@ -1,19 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
-import 'package:data_connection_checker/data_connection_checker.dart';
+import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:internet_speed_test/callbacks_enum.dart';
-import 'package:internet_speed_test/internet_speed_test.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:requests/requests.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:xalq_nazorati/models/category.dart';
-import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
@@ -43,7 +38,11 @@ class _MainPageState extends State<MainPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
+  StreamSubscription<ConnectivityResult> _connectionSubscription;
+
+  bool _loadingConnection = false;
   void _onRefresh() async {
+    // getSignalStrength();
     _category = getCategory();
     globals.categoryList = _category;
 
@@ -86,6 +85,91 @@ class _MainPageState extends State<MainPage> {
   int notificationCnt = 0;
   List notifyList = [];
   var _newNotifyList;
+
+  Future getSignalStrength() async {
+    try {
+      final res = await InternetAddress.lookup('dns.google',
+          type: InternetAddressType.IPv4);
+      if (res.isNotEmpty && res[0].rawAddress.isNotEmpty) {
+        if (!_loadingConnection) {
+          _loadingConnection = true;
+          int count = 5;
+          int ms = 0;
+          for (int i = 0; i < count; i++) {
+            final time = DateTime.now();
+            try {
+              await Requests.get('https://dns.google', timeoutSeconds: 2);
+              ms += DateTime.now().millisecondsSinceEpoch -
+                  time.millisecondsSinceEpoch;
+            } catch (ex) {}
+          }
+          // 500 - based on average speed (0-400) is good
+          final total = ms / count;
+          print('average response time: ${total}');
+          if (total > 600) {
+            setState(() {
+              globals.connectionStatus = globals.ConnectionStatus.bad;
+            });
+          } else if (total == 0) {
+            setState(() {
+              globals.connectionStatus = globals.ConnectionStatus.disconnected;
+            });
+          } else {
+            setState(() {
+              globals.connectionStatus = globals.ConnectionStatus.good;
+            });
+          }
+          _loadingConnection = false;
+        }
+        // you can use it to check speed also but it not working correctly because of servers
+        // final internetSpeedTest = InternetSpeedTest();
+        // if (!_loadingConnection) {
+        //   _loadingConnection = true;
+        //   try {
+        //     internetSpeedTest.startDownloadTesting(
+        //       onDone: (double transferRate, SpeedUnit unit) {
+        //         mainPageState.setState(() {
+        //           print(transferRate);
+        //           print(unit);
+        //           if (transferRate < 1.4) {
+        //             setState(() {
+        //               globals.connectionStatus = globals.ConnectionStatus.bad;
+        //             });
+        //           } else {
+        //             setState(() {
+        //               globals.connectionStatus = globals.ConnectionStatus.good;
+        //             });
+        //           }
+        //         });
+        //       },
+        //       onProgress: (double percent, double transferRate, SpeedUnit unit) {
+        //       },
+        //       onError: (String errorMessage, String speedTestError) {
+        //         setState(() {
+        //           globals.connectionStatus = globals.ConnectionStatus.bad;
+        //         });
+        //       },
+        //       testServer: "http://ipv4.scaleway.testdebit.info/1k.iso",
+        //       fileSize: 1,
+        //     );
+        //   } catch (e) {
+        //     setState(() {
+        //       globals.connectionStatus = globals.ConnectionStatus.bad;
+        //     });
+        //   }
+        //   _loadingConnection = false;
+        // }
+      } else {
+        setState(() {
+          globals.connectionStatus = globals.ConnectionStatus.disconnected;
+        });
+      }
+    } catch (ex) {
+      // setState(() {
+      //   globals.connectionStatus = globals.ConnectionStatus.disconnected;
+      // });
+    }
+  }
 
   getNotification() async {
     try {
@@ -163,11 +247,19 @@ class _MainPageState extends State<MainPage> {
     if (globals.userData == null) {
       getUser();
     }
+
+    // getSignalStrength();
+
+    // _connectionSubscription = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult result) {
+    //   getSignalStrength();
+    // });
   }
 
   @override
   void dispose() {
-    globals.connectTimer?.cancel();
+    _connectionSubscription?.cancel();
     super.dispose();
   }
 
@@ -524,26 +616,49 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                              // padding: EdgeInsets.only(top: 50),
+                              // decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(15),
+                              //     color: globals.connectionStatus ==
+                              //             globals.ConnectionStatus.good
+                              //         ? Color(0xFF007BEC)
+                              //         : (globals.connectionStatus ==
+                              //                 globals
+                              //                     .ConnectionStatus.disconnected
+                              //             ? Color(0xFFFF5555)
+                              //             : Color(0xFFFFA515))),
+                              // margin: const EdgeInsets.only(top: 50),
+                              // padding: const EdgeInsets.only(
+                              //     left: 16, right: 16, top: 7, bottom: 7),
                               // child: Row(
-                              //   crossAxisAlignment: CrossAxisAlignment.center,
                               //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   mainAxisSize: MainAxisSize.min,
                               //   children: [
-                              //     SvgPicture.asset(globals.imgStatus),
-                              //     Container(
-                              //       padding: EdgeInsets.symmetric(
-                              //           vertical: 4, horizontal: 6),
-                              //       decoration: BoxDecoration(
-                              //           color: globals.colorStatus,
-                              //           borderRadius: BorderRadius.circular(30)),
-                              //       child: Text(
-                              //         globals.internetStatus,
-                              //         style: TextStyle(
-                              //           color: Colors.white,
-                              //           fontFamily: globals.font,
-                              //           fontSize: dWidth * globals.fontSize12,
-                              //           fontWeight: FontWeight.w400,
-                              //         ),
+                              //     SvgPicture.asset(
+                              //       globals.connectionStatus ==
+                              //               globals.ConnectionStatus.good
+                              //           ? 'assets/img/good_connection.svg'
+                              //           : (globals.connectionStatus ==
+                              //                   globals
+                              //                       .ConnectionStatus.disconnected
+                              //               ? 'assets/img/no_connection.svg'
+                              //               : 'assets/img/bad_connection.svg'),
+                              //       height: 15,
+                              //     ),
+                              //     Padding(
+                              //       padding: const EdgeInsets.only(right: 10),
+                              //     ),
+                              //     Text(
+                              //       globals.connectionStatus ==
+                              //               globals.ConnectionStatus.good
+                              //           ? 'good_conn'.tr()
+                              //           : (globals.connectionStatus ==
+                              //                   globals
+                              //                       .ConnectionStatus.disconnected
+                              //               ? 'no_conn'.tr()
+                              //               : 'bad_conn'.tr()),
+                              //       style: TextStyle(
+                              //         color: Colors.white,
+                              //         fontFamily: globals.font,
                               //       ),
                               //     ),
                               //   ],

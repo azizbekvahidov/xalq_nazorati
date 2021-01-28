@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:internet_speed_test/internet_speed_test.dart';
-import 'package:internet_speed_test/callbacks_enum.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';

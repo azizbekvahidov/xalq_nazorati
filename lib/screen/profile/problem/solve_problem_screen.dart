@@ -47,7 +47,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
         var resp = await Requests.post(url, body: data, headers: headers);
         if (resp.statusCode == 200) {
           globals.cardAlert[widget.id]["res_seen"] = false;
-          cardContentState.setState(() {});
+          globals.checkCardAler(widget.id);
         }
       }
 

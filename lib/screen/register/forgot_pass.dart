@@ -7,7 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
-import 'package:sms/sms.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+// import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/register/forgot_pass_recover.dart';
 import 'pass_recognize_screen.dart';
@@ -32,29 +33,35 @@ class _ForgotPassState extends State<ForgotPass> {
   final codeController = TextEditingController();
   int _start = 180;
 
-  void getSMS() async {
-    // Create SMS Receiver Listener
-    SmsReceiver receiver = new SmsReceiver();
-    // msg has New Incoming Message
-    receiver.onSmsReceived.listen((SmsMessage msg) {
-      print(msg.address);
-      print(msg.body);
-      print(msg.date);
-      print(msg.isRead);
-      print(msg.sender);
-      print(msg.threadId);
-      print(msg.state);
-      final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
+  // void getSMS() async {
+  //   // Create SMS Receiver Listener
+  //   SmsReceiver receiver = new SmsReceiver();
+  //   // msg has New Incoming Message
+  //   receiver.onSmsReceived.listen((SmsMessage msg) {
+  //     print(msg.address);
+  //     print(msg.body);
+  //     print(msg.date);
+  //     print(msg.isRead);
+  //     print(msg.sender);
+  //     print(msg.threadId);
+  //     print(msg.state);
+  //     final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
 
-      codeController.text = intValue.toString();
-    });
-  }
+  //     codeController.text = intValue.toString();
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
     startTimer();
-    getSMS();
+    _listenForCode();
+
+    // getSMS();
+  }
+
+  void _listenForCode() async {
+    await SmsAutoFill().listenForCode;
   }
 
   @override
@@ -261,12 +268,52 @@ class _ForgotPassState extends State<ForgotPass> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("check_code_title".tr().toString()),
-                            DefaultInput(
-                              hint: "check_code_hint".tr().toString(),
-                              textController: codeController,
-                              notifyParent: () {},
-                              inputType: TextInputType.number,
-                              textFocusNode: codeNode,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Color(0xffF5F6F9),
+                                borderRadius: BorderRadius.circular(22.5),
+                                border: Border.all(
+                                  color: Color.fromRGBO(178, 183, 208, 0.5),
+                                  style: BorderStyle.solid,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: (mediaQuery.size.width -
+                                            mediaQuery.padding.left -
+                                            mediaQuery.padding.right) *
+                                        0.71,
+                                    child: TextFieldPinAutoFill(
+                                      focusNode: codeNode,
+                                      currentCode: codeController.text,
+                                      onCodeChanged: (val) {
+                                        print(val);
+                                        codeController.text = val;
+                                        // _listenForCode();
+                                      },
+                                      decoration: InputDecoration(
+                                          counterText: "",
+                                          disabledBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          focusColor: Colors.black,
+                                          focusedBorder: InputBorder.none,
+                                          counterStyle:
+                                              TextStyle(color: Colors.black)),
+                                      // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+
+                                      codeLength: 6,
+                                      //code length, default 6
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 10),

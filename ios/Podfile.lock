@@ -3,6 +3,9 @@ PODS:
     - Flutter
   - camera (0.0.1):
     - Flutter
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -193,8 +196,6 @@ PODS:
     - Flutter
   - in_app_review (0.2.0):
     - Flutter
-  - internet_speed_test (0.0.1):
-    - Flutter
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -220,6 +221,7 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.11)
   - Protobuf (3.13.0)
+  - Reachability (3.2)
   - screen (0.0.1):
     - Flutter
   - SDWebImage (5.9.4):
@@ -231,8 +233,6 @@ PODS:
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
-    - Flutter
-  - sms (0.0.1):
     - Flutter
   - sms_autofill (0.0.1):
     - Flutter
@@ -267,6 +267,7 @@ PODS:
 DEPENDENCIES:
   - advance_pdf_viewer (from `.symlinks/plugins/advance_pdf_viewer/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -281,14 +282,12 @@ DEPENDENCIES:
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
-  - internet_speed_test (from `.symlinks/plugins/internet_speed_test/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - platform_inputs (from `.symlinks/plugins/platform_inputs/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - sms (from `.symlinks/plugins/sms/ios`)
   - sms_autofill (from `.symlinks/plugins/sms_autofill/ios`)
   - sms_otp_auto_verify (from `.symlinks/plugins/sms_otp_auto_verify/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
@@ -325,6 +324,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Protobuf
+    - Reachability
     - SDWebImage
     - SDWebImageWebPCoder
     - SwiftyGif
@@ -339,6 +339,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/advance_pdf_viewer/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   firebase_core:
@@ -367,8 +369,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker/ios"
   in_app_review:
     :path: ".symlinks/plugins/in_app_review/ios"
-  internet_speed_test:
-    :path: ".symlinks/plugins/internet_speed_test/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   permission_handler:
@@ -381,8 +381,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/share/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
-  sms:
-    :path: ".symlinks/plugins/sms/ios"
   sms_autofill:
     :path: ".symlinks/plugins/sms_autofill/ios"
   sms_otp_auto_verify:
@@ -403,6 +401,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   advance_pdf_viewer: 5c832f382b4ca84fe735f893b7e91aa830c27d7b
   camera: a0ca5080336f7af47b88436e5e26da3dee5568f0
+  connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
@@ -437,7 +436,6 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   image_picker: 9c3312491f862b28d21ecd8fdf0ee14e601b3f09
   in_app_review: 4a97249f7a2f539a0f294c2d9196b7fe35e49541
-  internet_speed_test: ab8c9ed9b7b4747c8ebd3f549bdbfa778655fd68
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   Mantle: 4c0ed6ce47c96eccc4dc3bb071deb3def0e2c3be
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
@@ -446,12 +444,12 @@ SPEC CHECKSUMS:
   platform_inputs: 5b1af413729f05955ffe4510e391454307e116c6
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   screen: abd91ca7bf3426e1cc3646d27e9b2358d6bf07b0
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
-  sms: 1e6c3082da09f2a4961d61bc254cc86865993ffd
   sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
   sms_otp_auto_verify: 201803ac25e13feedaae96eda8b70b10c55b3338
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904

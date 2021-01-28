@@ -25,7 +25,8 @@ class RegisterVerifyIosScreen extends StatefulWidget {
       _RegisterVerifyIosScreenState();
 }
 
-class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
+class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
+    with CodeAutoFill {
   bool _value = false;
   String _showTime = "03:00";
   Timer _timer;
@@ -36,6 +37,11 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
     colorBuilder: PinListenColorBuilder(Colors.cyan, Colors.green),
     gapSpace: 0,
   );
+
+  @override
+  void codeUpdated() {
+    // validate();
+  }
 
   // void getSMS() async {
   //   // Create SMS Receiver Listener
@@ -87,6 +93,10 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
     // getSMS();
   }
 
+  void _listenForCode() async {
+    await SmsAutoFill().listenForCode;
+  }
+
   getCode(String sms) {
     if (sms != null) {
       final intRegex = RegExp(r'\d+', multiLine: true);
@@ -94,10 +104,6 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen> {
       return code;
     }
     return "NO SMS";
-  }
-
-  void _listenForCode() async {
-    await SmsAutoFill().listenForCode;
   }
 
   @override

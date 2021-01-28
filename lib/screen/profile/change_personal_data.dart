@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:sms/sms.dart';
+// import 'package:sms/sms.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/address_search.dart';

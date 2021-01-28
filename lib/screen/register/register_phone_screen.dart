@@ -64,8 +64,8 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   }
 
   void getCode() async {
-    // String signature = await SmsRetrieved.getAppSignature();
-    // print(signature);
+    String signature = await SmsRetrieved.getAppSignature();
+    print(signature);
     String phone = "+998${phoneController.text}";
     phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
     if (phoneController.text == "") phone = "";
@@ -76,131 +76,131 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-code';
         Map map = {"phone": phone};
 
-        var status = await Permission.sms.status;
-        if (status.isUndetermined || status.isDenied) {
-          if (Platform.isIOS) {
-            // map.addAll({"passcode": signature});
-            var r1 = await Requests.post(url, body: map);
-            if (r1.statusCode == 200) {
-              dynamic json = r1.json();
-              r1.raiseForStatus();
-              print(r1.content());
-              isRegister = true;
-              phoneWiew = json["phone_view"];
-              if (isRegister && _value) {
-                setState(() {
-                  phoneController.text = "";
-                  _value = !_value;
-                });
-                isRegister = false;
-                Navigator.of(context).push(MaterialPageRoute(
-                    settings: const RouteSettings(
-                        name: RegisterVerifyIosScreen.routeName),
-                    builder: (context) => RegisterVerifyIosScreen(
-                          phoneView: phoneWiew,
-                          phone: phone,
-                          // signature: signature,
-                        )));
-              }
-            } else {
-              dynamic json = r1.json();
-              print(json['detail']);
-              Fluttertoast.showToast(
-                  msg: json['detail'],
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 2,
-                  backgroundColor: Colors.grey,
-                  textColor: Colors.white,
-                  fontSize: 15.0);
-              print(json);
-            }
-          } else {
-            Permission.sms.request().then((value) async {
-              status = await Permission.sms.status;
-              if (status.isGranted) {
-                var r1 = await Requests.post(url, body: map);
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     settings:
-                //         const RouteSettings(name: RegisterVerifyScreen.routeName),
-                //     builder: (context) => RegisterVerifyScreen(
-                //           phoneView: phoneWiew,
-                //           phone: phone,
-                //         )));
-                if (r1.statusCode == 200) {
-                  dynamic json = r1.json();
-                  r1.raiseForStatus();
-                  print(r1.content());
-                  isRegister = true;
-                  phoneWiew = json["phone_view"];
-                  if (isRegister && _value) {
-                    setState(() {
-                      phoneController.text = "";
-                      _value = !_value;
-                    });
-                    isRegister = false;
-                    Navigator.of(context).push(MaterialPageRoute(
-                        settings: const RouteSettings(
-                            name: RegisterVerifyScreen.routeName),
-                        builder: (context) => RegisterVerifyScreen(
-                              phoneView: phoneWiew,
-                              phone: phone,
-                            )));
-                  }
-                } else {
-                  dynamic json = r1.json();
-                  print(json['detail']);
-                  Fluttertoast.showToast(
-                      msg: json['detail'],
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: Colors.grey,
-                      textColor: Colors.white,
-                      fontSize: 15.0);
-                  print(json);
-                }
-              }
+        // var status = await Permission.sms.status;
+        // if (status.isUndetermined || status.isDenied) {
+        // if (Platform.isIOS) {
+        if (signature != null) map.addAll({"passcode": signature});
+        var r1 = await Requests.post(url, body: map);
+        if (r1.statusCode == 200) {
+          dynamic json = r1.json();
+          r1.raiseForStatus();
+          print(r1.content());
+          isRegister = true;
+          phoneWiew = json["phone_view"];
+          if (isRegister && _value) {
+            setState(() {
+              phoneController.text = "";
+              _value = !_value;
             });
+            isRegister = false;
+            Navigator.of(context).push(MaterialPageRoute(
+                settings: const RouteSettings(
+                    name: RegisterVerifyIosScreen.routeName),
+                builder: (context) => RegisterVerifyIosScreen(
+                      phoneView: phoneWiew,
+                      phone: phone,
+                      // signature: signature,
+                    )));
           }
-          // We didn't ask for permission yet.
         } else {
-          var r1 = await Requests.post(url, body: map);
-
-          if (r1.statusCode == 200) {
-            dynamic json = r1.json();
-            r1.raiseForStatus();
-            print(r1.content());
-            isRegister = true;
-            phoneWiew = json["phone_view"];
-            if (isRegister && _value) {
-              setState(() {
-                phoneController.text = "";
-                _value = !_value;
-              });
-              isRegister = false;
-              Navigator.of(context).push(MaterialPageRoute(
-                  settings:
-                      const RouteSettings(name: RegisterVerifyScreen.routeName),
-                  builder: (context) => RegisterVerifyScreen(
-                        phoneView: phoneWiew,
-                        phone: phone,
-                      )));
-            }
-          } else {
-            dynamic json = r1.json();
-            print(json['detail']);
-            Fluttertoast.showToast(
-                msg: json['detail'],
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 15.0);
-            print(json);
-          }
+          dynamic json = r1.json();
+          print(json['detail']);
+          Fluttertoast.showToast(
+              msg: json['detail'],
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 2,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 15.0);
+          print(json);
         }
+        // } else {
+        // Permission.sms.request().then((value) async {
+        //   status = await Permission.sms.status;
+        //   if (status.isGranted) {
+        // var r1 = await Requests.post(url, body: map);
+        // Navigator.of(context).push(MaterialPageRoute(
+        //     settings:
+        //         const RouteSettings(name: RegisterVerifyScreen.routeName),
+        //     builder: (context) => RegisterVerifyScreen(
+        //           phoneView: phoneWiew,
+        //           phone: phone,
+        //         )));
+        // if (r1.statusCode == 200) {
+        //   dynamic json = r1.json();
+        //   r1.raiseForStatus();
+        //   print(r1.content());
+        //   isRegister = true;
+        //   phoneWiew = json["phone_view"];
+        //   if (isRegister && _value) {
+        //     setState(() {
+        //       phoneController.text = "";
+        //       _value = !_value;
+        //     });
+        //     isRegister = false;
+        //     Navigator.of(context).push(MaterialPageRoute(
+        //         settings: const RouteSettings(
+        //             name: RegisterVerifyIosScreen.routeName),
+        //         builder: (context) => RegisterVerifyIosScreen(
+        //               phoneView: phoneWiew,
+        //               phone: phone,
+        //             )));
+        //   }
+        // } else {
+        //   dynamic json = r1.json();
+        //   print(json['detail']);
+        //   Fluttertoast.showToast(
+        //       msg: json['detail'],
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       timeInSecForIosWeb: 2,
+        //       backgroundColor: Colors.grey,
+        //       textColor: Colors.white,
+        //       fontSize: 15.0);
+        //   print(json);
+        // }
+        // }
+        // });
+        // }
+        // We didn't ask for permission yet.
+        // } else {
+        //   var r1 = await Requests.post(url, body: map);
+
+        //   if (r1.statusCode == 200) {
+        //     dynamic json = r1.json();
+        //     r1.raiseForStatus();
+        //     print(r1.content());
+        //     isRegister = true;
+        //     phoneWiew = json["phone_view"];
+        //     if (isRegister && _value) {
+        //       setState(() {
+        //         phoneController.text = "";
+        //         _value = !_value;
+        //       });
+        //       isRegister = false;
+        //       Navigator.of(context).push(MaterialPageRoute(
+        //           settings:
+        //               const RouteSettings(name: RegisterVerifyScreen.routeName),
+        //           builder: (context) => RegisterVerifyScreen(
+        //                 phoneView: phoneWiew,
+        //                 phone: phone,
+        //               )));
+        //     }
+        //   } else {
+        //     dynamic json = r1.json();
+        //     print(json['detail']);
+        //     Fluttertoast.showToast(
+        //         msg: json['detail'],
+        //         toastLength: Toast.LENGTH_SHORT,
+        //         gravity: ToastGravity.BOTTOM,
+        //         timeInSecForIosWeb: 2,
+        //         backgroundColor: Colors.grey,
+        //         textColor: Colors.white,
+        //         fontSize: 15.0);
+        //     print(json);
+        //   }
+        // }
       } catch (e) {
         print(e);
       }

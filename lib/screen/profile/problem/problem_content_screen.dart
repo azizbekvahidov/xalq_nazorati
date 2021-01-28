@@ -72,7 +72,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
         refreshBells();
       });
     } else {
-      if (alertData == null) {
+      if (globals.cardAlert[widget.id] == null) {
         refreshBells();
         timers = Timer.periodic(Duration(seconds: 5), (Timer t) {
           refreshBells();
@@ -80,6 +80,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
       } else {
         timers?.cancel();
         alertData = globals.cardAlert[widget.id];
+        print(alertData['res']);
         _hasResult = alertData['res'] == null ? false : true;
         problemStatus = alertData["status"];
       }

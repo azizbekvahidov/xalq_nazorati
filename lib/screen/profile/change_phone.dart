@@ -5,7 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:requests/requests.dart';
-import 'package:sms/sms.dart';
+import 'package:sms_autofill/sms_autofill.dart';
+import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
+// import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,7 +24,7 @@ class ChangePhone extends StatefulWidget {
   _ChangePhoneState createState() => _ChangePhoneState();
 }
 
-class _ChangePhoneState extends State<ChangePhone> {
+class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   String _showTime = "03:00";
   Timer _timer;
   int _start = 180;
@@ -30,24 +32,31 @@ class _ChangePhoneState extends State<ChangePhone> {
   bool _value = false;
   final phoneController = TextEditingController();
 
-  final codeController = TextEditingController();
-  void getSMS() async {
-    // Create SMS Receiver Listener
-    SmsReceiver receiver = new SmsReceiver();
-    // msg has New Incoming Message
-    receiver.onSmsReceived.listen((SmsMessage msg) {
-      print(msg.address);
-      print(msg.body);
-      print(msg.date);
-      print(msg.isRead);
-      print(msg.sender);
-      print(msg.threadId);
-      print(msg.state);
-      final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
+  @override
+  void initState() {
+    super.initState();
+    // startTimer();
 
-      codeController.text = intValue.toString();
-    });
+    // getSMS();
   }
+
+  @override
+  void dispose() {
+    SmsAutoFill().unregisterListener();
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _listenForCode() async {
+    await SmsAutoFill().listenForCode.then((value) => codeUpdated());
+  }
+
+  @override
+  void codeUpdated() {
+    validate();
+  }
+
+  final codeController = TextEditingController();
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -126,6 +135,8 @@ class _ChangePhoneState extends State<ChangePhone> {
       sendMessage();
     } else if (_start == 180) {
       try {
+        String signature = await SmsRetrieved.getAppSignature();
+        print(signature);
         phone = "+998${phoneController.text}";
         phone = phone.replaceAll(new RegExp(r"\s+\b|\b\s"), "");
         var url =
@@ -134,6 +145,7 @@ class _ChangePhoneState extends State<ChangePhone> {
         Map map = {
           "phone": phone,
         };
+        if (signature != null) map.addAll({"passcode": signature});
         Map<String, String> headers = {
           "Authorization": "token ${globals.token}",
         };
@@ -144,7 +156,10 @@ class _ChangePhoneState extends State<ChangePhone> {
           var responseBody = r1.json();
           r1.raiseForStatus();
           startTimer();
-          _isSend = true;
+          listenForCode();
+          setState(() {
+            _isSend = true;
+          });
           // Navigator.of(context).pop();
         } else {
           var json = r1.json();
@@ -209,7 +224,9 @@ class _ChangePhoneState extends State<ChangePhone> {
 
   validate() {
     if (_isSend && codeController.text != "") {
-      _value = true;
+      setState(() {
+        _value = true;
+      });
     }
   }
 
@@ -250,8 +267,6 @@ class _ChangePhoneState extends State<ChangePhone> {
 
   @override
   Widget build(BuildContext context) {
-    var maskFormatter = new MaskTextInputFormatter(
-        mask: '__ ___ __ __', filter: {"_": RegExp(r'[0-9]')});
     final mediaQuery = MediaQuery.of(context);
     final appbar = CustomAppBar(
       title: "change_phone".tr().toString(),
@@ -294,13 +309,11 @@ class _ChangePhoneState extends State<ChangePhone> {
                                           myController: phoneController,
                                           textFocusNode: _phoneNode,
                                         ),
-                                        InkWell(
-                                          onTap: () {
+                                        FlatButton(
+                                          onPressed: () {
                                             sendMessage();
                                           },
                                           child: Container(
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: 10),
                                             width: mediaQuery.size.width,
                                             height: 40,
                                             decoration: BoxDecoration(
@@ -314,51 +327,125 @@ class _ChangePhoneState extends State<ChangePhone> {
                                                   width: 1),
                                             ),
                                             child: Center(
-                                                child: Text("get_code"
-                                                    .tr()
-                                                    .toString())),
+                                                child: Text(
+                                              "get_code".tr().toString(),
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontFamily: globals.font,
+                                                fontSize: 16,
+                                              ),
+                                            )),
                                           ),
                                         ),
-                                        MainText(
-                                            "check_code_title".tr().toString()),
-                                        DefaultInput(
-                                          inputType: TextInputType.number,
-                                          hint:
-                                              "check_code_hint".tr().toString(),
-                                          textController: codeController,
-                                          notifyParent: () {
-                                            validate();
-                                          },
-                                          textFocusNode: _codeNode,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              padding:
-                                                  EdgeInsets.only(left: 20),
-                                              width:
-                                                  mediaQuery.size.width * 0.85,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
+                                        _isSend
+                                            ? MainText("check_code_title"
+                                                .tr()
+                                                .toString())
+                                            : Container(),
+                                        _isSend
+                                            ? Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 10,
+                                                    horizontal: 20),
+                                                margin: EdgeInsets.symmetric(
+                                                    vertical: 10),
+                                                width: double.infinity,
+                                                height: 45,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xffF5F6F9),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          22.5),
+                                                  border: Border.all(
+                                                    color: Color.fromRGBO(
+                                                        178, 183, 208, 0.5),
+                                                    style: BorderStyle.solid,
+                                                    width: 0.5,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: (mediaQuery
+                                                                  .size.width -
+                                                              mediaQuery.padding
+                                                                  .left -
+                                                              mediaQuery.padding
+                                                                  .right) *
+                                                          0.71,
+                                                      child:
+                                                          TextFieldPinAutoFill(
+                                                        focusNode: _codeNode,
+                                                        currentCode:
+                                                            codeController.text,
+                                                        onCodeChanged: (val) {
+                                                          validate();
+                                                          print(val);
+                                                          codeController.text =
+                                                              val;
+                                                          // _listenForCode();
+                                                        },
+                                                        decoration: InputDecoration(
+                                                            counterText: "",
+                                                            disabledBorder:
+                                                                InputBorder
+                                                                    .none,
+                                                            enabledBorder:
+                                                                InputBorder
+                                                                    .none,
+                                                            focusColor: Colors
+                                                                .black,
+                                                            focusedBorder:
+                                                                InputBorder
+                                                                    .none,
+                                                            counterStyle:
+                                                                TextStyle(
+                                                                    color: Colors
+                                                                        .black)),
+                                                        // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+
+                                                        codeLength: 6,
+                                                        //code length, default 6
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container(),
+                                        _isSend
+                                            ? Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Text(
-                                                    _showTime,
-                                                    style: TextStyle(
-                                                      fontFamily: globals.font,
-                                                      fontSize: 18,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                  Container(
+                                                    padding: EdgeInsets.only(
+                                                        left: 20),
+                                                    width:
+                                                        mediaQuery.size.width *
+                                                            0.85,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        Text(
+                                                          _showTime,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                globals.font,
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ],
-                                              ),
-                                            ),
-                                          ],
-                                        )
+                                              )
+                                            : Container()
                                       ]),
                                 ),
                               ),
