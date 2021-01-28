@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -281,97 +282,116 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
                     padding: EdgeInsets.all(25),
                     child: Stack(
                       children: [
-                        KeyboardActions(
-                          isDialog: true,
-                          config: _buildConfig(context),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MainText("check_code_title".tr().toString()),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 20),
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                width: double.infinity,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: Color(0xffF5F6F9),
-                                  borderRadius: BorderRadius.circular(22.5),
-                                  border: Border.all(
-                                    color: Color.fromRGBO(178, 183, 208, 0.5),
-                                    style: BorderStyle.solid,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          0.71,
-                                      child: TextFieldPinAutoFill(
-                                        focusNode: codeNode,
-                                        currentCode: codeController.text,
-                                        onCodeChanged: (val) {
-                                          print(val);
-                                          codeController.text = val;
-                                          // _listenForCode();
-                                        },
-                                        decoration: InputDecoration(
-                                            counterText: "",
-                                            disabledBorder: InputBorder.none,
-                                            enabledBorder: InputBorder.none,
-                                            focusColor: Colors.black,
-                                            focusedBorder: InputBorder.none,
-                                            counterStyle:
-                                                TextStyle(color: Colors.black)),
-                                        // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
-
-                                        codeLength: 6,
-                                        //code length, default 6
-                                      ),
-                                    ),
-                                  ],
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MainText("check_code_title".tr().toString()),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              margin: EdgeInsets.symmetric(vertical: 10),
+                              width: double.infinity,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                color: Color(0xffF5F6F9),
+                                borderRadius: BorderRadius.circular(22.5),
+                                border: Border.all(
+                                  color: Color.fromRGBO(178, 183, 208, 0.5),
+                                  style: BorderStyle.solid,
+                                  width: 0.5,
                                 ),
                               ),
-                              // DefaultInput(
-                              //   hint: "check_code_hint".tr().toString(),
-                              //   textController: codeController,
-                              //   notifyParent: () {},
-                              //   inputType: TextInputType.number,
-                              // ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              child: Row(
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                    width: mediaQuery.size.width * 0.83,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          _showTime,
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWith * globals.fontSize18,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
+                                    width: (mediaQuery.size.width -
+                                            mediaQuery.padding.left -
+                                            mediaQuery.padding.right) *
+                                        0.71,
+                                    child: Platform.isIOS
+                                        ? TextField(
+                                            autofocus: true,
+                                            focusNode: codeNode,
+                                            controller: codeController,
+                                            // onCodeChanged: (val) {
+                                            //   print(val);
+                                            //   codeController.text = val;
+                                            //   // _listenForCode();
+                                            // },
+                                            decoration: InputDecoration(
+                                                counterText: "",
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                focusColor: Colors.black,
+                                                focusedBorder: InputBorder.none,
+                                                counterStyle: TextStyle(
+                                                    color: Colors.black)),
+                                            // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                            maxLength: 6,
+                                            // codeLength: 6,
+                                            //code length, default 6
+                                          )
+                                        : TextFieldPinAutoFill(
+                                            focusNode: codeNode,
+                                            currentCode: codeController.text,
+                                            onCodeChanged: (val) {
+                                              print(val);
+                                              codeController.text = val;
+                                              // _listenForCode();
+                                            },
+                                            decoration: InputDecoration(
+                                                counterText: "",
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                focusColor: Colors.black,
+                                                focusedBorder: InputBorder.none,
+                                                counterStyle: TextStyle(
+                                                    color: Colors.black)),
+                                            // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+
+                                            codeLength: 6,
+                                            //code length, default 6
                                           ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                                 ],
                               ),
-                              Text("$_smsCode"),
-                            ],
-                          ),
+                            ),
+                            // DefaultInput(
+                            //   hint: "check_code_hint".tr().toString(),
+                            //   textController: codeController,
+                            //   notifyParent: () {},
+                            //   inputType: TextInputType.number,
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  width: mediaQuery.size.width * 0.83,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        _showTime,
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text("$_smsCode"),
+                          ],
                         ),
                         Positioned(
                           child: Align(

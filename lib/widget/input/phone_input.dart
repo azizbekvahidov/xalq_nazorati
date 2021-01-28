@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -62,11 +63,15 @@ class _PhoneInputState extends State<PhoneInput> {
                     mediaQuery.padding.right) *
                 0.55,
             child: TextField(
+              autocorrect: false,
               focusNode: widget.textFocusNode,
-              inputFormatters: [maskFormatter],
+              // inputFormatters: [maskFormatter],
               controller: widget.myController,
+              onChanged: (v) {
+                print(v);
+              },
               maxLines: 1,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               decoration: InputDecoration.collapsed(
                   hintText: "tel_number_hint".tr().toString(),
                   hintStyle: Theme.of(context)
