@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -30,7 +31,8 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   int _start = 180;
   bool _isSend = false;
   bool _value = false;
-  final phoneController = TextEditingController();
+  final MaskedTextController phoneController = MaskedTextController(
+      mask: '00 000 00 00', translator: {"0": RegExp(r'[0-9]')});
 
   @override
   void initState() {

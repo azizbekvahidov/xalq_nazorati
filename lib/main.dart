@@ -231,7 +231,9 @@ class _MyHomePageState extends State<MyHomePage> {
       message['notification']['title'],
       message['notification']['body'],
       platformChannelSpecifics,
-      payload: message["data"]["problem_id"],
+      payload: Platform.isIOS
+          ? message["problem_id"]
+          : message["data"]["problem_id"],
     );
   }
 
@@ -345,31 +347,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        if (message["data"].containsKey("problem_id"))
-          displayNotification(message);
-        else {
-          displayNotificationNews(message);
+        if (message.containsKey("data")) {
+          if (message["data"].containsKey("problem_id"))
+            displayNotification(message);
+          else {
+            displayNotificationNews(message);
+          }
+        } else {
+          if (message.containsKey("problem_id"))
+            displayNotification(message);
+          else {
+            displayNotificationNews(message);
+          }
         }
       },
       onResume: (Map<String, dynamic> message) {
-        if (message["data"].containsKey("problem_id"))
+        if (Platform.isIOS) if (message.containsKey("problem_id"))
+          navService.push(MaterialPageRoute(builder: (_) {
+            return ProblemContentScreen(id: int.parse(message["problem_id"]));
+          }));
+        else if (message["data"].containsKey("problem_id"))
           navService.push(MaterialPageRoute(builder: (_) {
             return ProblemContentScreen(
                 id: int.parse(message["data"]["problem_id"]));
           }));
       },
       onLaunch: (Map<String, dynamic> message) {
-        if (message["data"].containsKey("problem_id"))
-          Timer(Duration(seconds: 3), () {
-            navService.push(MaterialPageRoute(builder: (_) {
-              return ProblemContentScreen(
-                  id: int.parse(message["data"]["problem_id"]));
-            }));
-          });
-        else if (message["data"].containsKey("update"))
-          Timer(Duration(seconds: 3), () {
-            customDialog(context, "txt");
-          });
+        if (Platform.isAndroid) {
+          if (message["data"].containsKey("problem_id"))
+            Timer(Duration(seconds: 3), () {
+              navService.push(MaterialPageRoute(builder: (_) {
+                return ProblemContentScreen(
+                    id: int.parse(message["data"]["problem_id"]));
+              }));
+            });
+        } else {
+          if (message.containsKey("problem_id"))
+            Timer(Duration(seconds: 3), () {
+              navService.push(MaterialPageRoute(builder: (_) {
+                return ProblemContentScreen(
+                    id: int.parse(message["problem_id"]));
+              }));
+            });
+        }
       },
       onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
     );
