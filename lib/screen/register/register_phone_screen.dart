@@ -43,6 +43,12 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     super.initState();
     _getAppSignature();
     getAppSignature();
+
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
   }
 
   _getAppSignature() async {
