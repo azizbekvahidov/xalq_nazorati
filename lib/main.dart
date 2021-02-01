@@ -219,39 +219,61 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   Future displayNotification(Map<String, dynamic> message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'channel-id', 'fcm', 'androidcoding.in',
-        importance: Importance.max, priority: Priority.high);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      message['notification']['title'],
-      message['notification']['body'],
-      platformChannelSpecifics,
-      payload: Platform.isIOS
-          ? message["problem_id"]
-          : message["data"]["problem_id"],
-    );
+    if (Platform.isIOS) {
+      print(message);
+      print(message["aps"]["alert"]['title']);
+      print(message["aps"]["alert"]['body']);
+      print(message['problem_id']);
+    }
+    try {
+      var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+          'channel-id', 'fcm', 'androidcoding.in',
+          importance: Importance.max, priority: Priority.high);
+      var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+      var platformChannelSpecifics = new NotificationDetails(
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        Platform.isIOS
+            ? message["aps"]['alert']['title']
+            : message['notification']['title'],
+        Platform.isIOS
+            ? message["aps"]['alert']['body']
+            : message['notification']['body'],
+        platformChannelSpecifics,
+        payload: Platform.isIOS
+            ? message["problem_id"]
+            : message["data"]["problem_id"],
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future displayNotificationNews(Map<String, dynamic> message) async {
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        'channel-id', 'fcm', 'androidcoding.in',
-        importance: Importance.max, priority: Priority.high);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      message['notification']['title'],
-      message['notification']['body'],
-      platformChannelSpecifics,
-      // payload: message["data"]["problem_id"],
-    );
+    try {
+      var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+          'channel-id', 'fcm', 'androidcoding.in',
+          importance: Importance.max, priority: Priority.high);
+      var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+      var platformChannelSpecifics = new NotificationDetails(
+          android: androidPlatformChannelSpecifics,
+          iOS: iOSPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        Platform.isIOS
+            ? message["aps"]['alert']['title']
+            : message['notification']['title'],
+        Platform.isIOS
+            ? message["aps"]['alert']['body']
+            : message['notification']['body'],
+        platformChannelSpecifics,
+        // payload: message["data"]["problem_id"],
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future onSelectNotification(String payload) async {
@@ -344,7 +366,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         if (message.containsKey("data")) {

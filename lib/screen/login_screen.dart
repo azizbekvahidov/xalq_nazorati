@@ -31,6 +31,18 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode phoneNode = FocusNode();
   FocusNode passNode = FocusNode();
   bool isLogin = false;
+
+  @override
+  @override
+  void initState() {
+    super.initState();
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
+  }
+
   void getLogin() async {
     // print(globals.deviceToken);
     SharedPreferences prefs = await SharedPreferences.getInstance();

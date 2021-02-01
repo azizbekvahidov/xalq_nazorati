@@ -120,7 +120,7 @@ class GetLoginDialog extends StatelessWidget {
                   child: Container(
                       width: width,
                       padding:
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
                         border: Border.all(

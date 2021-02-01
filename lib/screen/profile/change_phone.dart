@@ -38,7 +38,11 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   void initState() {
     super.initState();
     // startTimer();
-
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
     // getSMS();
   }
 

@@ -33,6 +33,18 @@ class _ForgotPassPhoneState extends State<ForgotPassPhone> {
   bool _value = false;
   String phoneWiew = "";
   bool isRegister = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
+  }
+
   void getCode() async {
     String signature = await SmsRetrieved.getAppSignature();
     print(signature);

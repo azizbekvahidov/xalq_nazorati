@@ -68,7 +68,7 @@ class _PhoneInputState extends State<PhoneInput> {
               // inputFormatters: [maskFormatter],
               controller: widget.myController,
               onChanged: (v) {
-                print(v);
+                // print(v);
               },
               maxLines: 1,
               keyboardType: TextInputType.phone,
