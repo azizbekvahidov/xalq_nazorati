@@ -247,7 +247,7 @@ class _InfoPageState extends State<InfoPage> {
                 padding: const EdgeInsets.symmetric(vertical: 40),
                 child: Center(
                   child: Text(
-                    "v1.0.1",
+                    "v1.0.2",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Color(0xff66676C),

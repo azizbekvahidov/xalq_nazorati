@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 
 enum ConnectionStatus { good, bad, disconnected }
+bool isLoad = false;
 String token = null;
 String lang = null;
 String country = null;
@@ -108,3 +109,4 @@ String internetStatus = "good_conn".tr().toString();
 String imgStatus = "assets/img/good_connection.svg";
 Color colorStatus = Color(0xff1AFE91);
 Timer connectTimer;
+bool isConnection = false;

@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+// import 'package:connectivity/connectivity.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/screen/no_connection.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
@@ -52,6 +56,12 @@ void main() async {
   ));
 }
 
+const SCREEN_BORDER_WIDTH = 3.0;
+
+const BACKGROUND_COLOR = const Color(0xffefcc19);
+final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
+
+final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
 void setErrorBuilder() {
   ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
     return Scaffold(
@@ -146,6 +156,7 @@ class MyApp extends StatelessWidget {
             RegisterPersonalDataScreen(),
         ChangePersonalData.routeName: (ctx) => ChangePersonalData(),
         HomePage.routeName: (ctx) => HomePage(),
+        NoConnection.routeName: (ctx) => NoConnection(),
         RulePage.routeName: (ctx) => RulePage(),
         MainPage.routeName: (ctx) => MainPage(),
       },
@@ -197,18 +208,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   getUser() async {
     try {
-      var url = '${globals.api_link}/users/profile';
-      Map<String, String> headers = {"Authorization": "token $_token"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        // dynamic json = response.json();
+      if (globals.isConnection) {
+        var url = '${globals.api_link}/users/profile';
+        Map<String, String> headers = {"Authorization": "token $_token"};
+        var response = await Requests.get(url, headers: headers);
+        if (response.statusCode == 200) {
+          // dynamic json = response.json();
 
-        globals.userData = response.json();
-        globals.token = _token;
-        print(globals.userData);
-      } else {
-        globals.token = null;
-        dynamic json = response.json();
+          globals.userData = response.json();
+          globals.token = _token;
+          print(globals.userData);
+        } else {
+          globals.token = null;
+          dynamic json = response.json();
+        }
       }
     } catch (e) {
       print(e);
@@ -219,12 +232,6 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   Future displayNotification(Map<String, dynamic> message) async {
-    if (Platform.isIOS) {
-      print(message);
-      print(message["aps"]["alert"]['title']);
-      print(message["aps"]["alert"]['body']);
-      print(message['problem_id']);
-    }
     try {
       var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
           'channel-id', 'fcm', 'androidcoding.in',
@@ -350,11 +357,41 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  StreamSubscription connectivitySubscription;
+
+  ConnectivityResult _previousResult;
+
   @override
   void initState() {
     super.initState();
     globals.device = Platform.isIOS ? "ios" : "android";
 
+    var listener =
+        DataConnectionChecker().onStatusChange.listen((status) async {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          // if (globals.isLoad) await navService.canPop();
+          globals.isConnection = true;
+          print("connected");
+          // customDialog(context);
+          break;
+        case DataConnectionStatus.disconnected:
+          globals.isConnection = false;
+          if (globals.isLoad)
+            await navService.push(MaterialPageRoute(builder: (_) {
+              return NoConnection();
+            }));
+          else
+            Timer(Duration(seconds: 2), () async {
+              await navService.push(MaterialPageRoute(builder: (_) {
+                return NoConnection();
+              }));
+            });
+
+          print("disconnected");
+          break;
+      }
+    });
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -426,39 +463,18 @@ class _MyHomePageState extends State<MyHomePage> {
       print(token);
     });
     getStringValuesSF();
-    // globals.startTimer();
-    // globals.connectTimer = Timer.periodic(Duration(seconds: 60), (Timer t) {
-    //   globals.startTimer();
-    // });
-    // var listener = DataConnectionChecker().onStatusChange.listen((status) {
-    //   switch (status) {
-    //     case DataConnectionStatus.connected:
-    //       print('Data connection is available.');
-    //       globals.startTimer();
 
-    //       // customDialog(context);
-    //       break;
-    //     case DataConnectionStatus.disconnected:
-    //       print('You are disconnected from the internet.');
-    //       // globals.connectTimer.cancel();
-    //       mainPageState.setState(() {
-    //         globals.internetStatus = "no_conn".tr().toString();
-    //         globals.imgStatus = "assets/img/no_connection.svg";
-    //         globals.colorStatus = Color(0xffF61010);
-    //       });
-    //       customDialog(context, "No internet");
-    //       break;
-    //   }
-    // });
     Timer(Duration(seconds: 2), () {
       if (_lang == null) {
         globals.lang = _lang;
         globals.country = _country;
+        globals.isLoad = true;
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LangScreen()));
       } else {
         globals.lang = _lang;
         globals.country = _country;
+        globals.isLoad = true;
         if (_token == null) {
           Navigator.pushReplacementNamed(context, HomePage.routeName);
         } else {
@@ -472,6 +488,28 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     });
+
+    // connectivitySubscription = Connectivity()
+    //     .onConnectivityChanged
+    //     .listen((ConnectivityResult connectivityResult) async {
+    //   if (connectivityResult == ConnectivityResult.none) {
+    //     print("no connection");
+    //     await navService.push(MaterialPageRoute(builder: (_) {
+    //       return NoConnection();
+    //     }));
+    //     // nav.currentState.push(
+    //     //     MaterialPageRoute(builder: (BuildContext _) => NoConnection()));
+    //   } else if (_previousResult == ConnectivityResult.none) {
+    //     print("connection");
+    //     // nav.currentState
+    //     //     .push(MaterialPageRoute(builder: (BuildContext _) => HomePage()));
+    //     await navService.push(MaterialPageRoute(builder: (_) {
+    //       return HomePage();
+    //     }));
+    //   }
+
+    //   _previousResult = connectivityResult;
+    // });
   }
 
   @override

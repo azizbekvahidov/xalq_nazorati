@@ -495,11 +495,11 @@ class _ProblemLocateState extends State<ProblemLocate>
   void _setLocation(var coords) async {
     try {
       await mapKitController.removePlacemark(_placemark);
-      var status = await Permission.location.status;
-      if (status.isUndetermined || status.isDenied) {
-        Permission.location.request();
-        // We didn't ask for permission yet.
-      }
+      // var status = await Permission.location.status;
+      // if (status.isUndetermined || status.isDenied) {
+      //   Permission.location.request();
+      //   // We didn't ask for permission yet.
+      // }
       _latitude = coords.latitude;
       _longitude = coords.longitude;
       Point _point = Point(latitude: _latitude, longitude: _longitude);
