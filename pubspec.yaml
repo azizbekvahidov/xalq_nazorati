@@ -79,6 +79,7 @@ dependencies:
   liquid_progress_indicator: ^0.3.2
   # internet_speed_test: ^1.1.2+1
   connectivity: ^2.0.2
+  connectivity_widget: 0.1.7
   keyboard_actions: ^3.3.1+1
   # data_connection_checker: ^0.3.4
   sms_otp_auto_verify: ^1.2.2
