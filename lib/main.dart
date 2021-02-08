@@ -9,6 +9,10 @@ import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:requests/requests.dart';
+
+import 'package:xalq_nazorati/errors/CustomReportHandler.dart';
+import 'package:xalq_nazorati/errors/CustomPageReportMode.dart';
+
 import 'package:xalq_nazorati/screen/no_connection.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
@@ -34,6 +38,7 @@ import './screen/register/register_phone_screen.dart';
 import './screen/login_screen.dart';
 import './screen/lang_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:catcher/catcher.dart';
 
 const periodicTask = "periodicTask";
 const simpleTaskKey = "simpleTask";
@@ -44,21 +49,42 @@ void main() async {
   // await Future.delayed(Duration(seconds: 30));
   // await listener.cancel();
   await Firebase.initializeApp();
-  runApp(EasyLocalization(
-    child: MyApp(),
-    path: "lang",
-    saveLocale: true,
-    supportedLocales: [
-      Locale('uz', 'UZ'),
-      Locale('ru', 'RU'),
-      Locale('en', 'US'),
+
+  /// Настройка для режима отладки, открывает страницу ошибки, выводит сообщение в консоль и вызывает [CustomReportHandler]
+  CatcherOptions debugOptions = CatcherOptions(
+    CustomPageReportMode(),
+    [
+      ConsoleHandler(),
+      CustomReportHandler(),
     ],
-  ));
+  );
+
+  /// Настройка для режима релиза, открывает страницу ошибки и вызывает [CustomReportHandler]
+  CatcherOptions releaseOptions = CatcherOptions(CustomPageReportMode(), [
+    CustomReportHandler(),
+  ]);
+
+  Catcher(
+    navigatorKey: NavigationService.navigationKey,
+    rootWidget: EasyLocalization(
+      child: MyApp(),
+      path: "lang",
+      saveLocale: true,
+      supportedLocales: [
+        Locale('uz', 'UZ'),
+        Locale('ru', 'RU'),
+        Locale('en', 'US'),
+      ],
+    ),
+    debugConfig: debugOptions,
+    releaseConfig: releaseOptions,
+  );
 }
 
 const SCREEN_BORDER_WIDTH = 3.0;
 
 const BACKGROUND_COLOR = const Color(0xffC8C8C8); //Color(0xffefcc19);
+
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
@@ -232,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   Future displayNotification(Map<String, dynamic> message) async {
-    print(message);
+
     try {
       var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
           'channel-id', 'fcm', 'androidcoding.in',
@@ -366,6 +392,32 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     globals.device = Platform.isIOS ? "ios" : "android";
+    var listener =
+        DataConnectionChecker().onStatusChange.listen((status) async {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          // if (globals.isLoad) await navService.canPop();
+          globals.isConnection = true;
+          print("connected");
+          // customDialog(context);
+          break;
+        case DataConnectionStatus.disconnected:
+          globals.isConnection = false;
+          if (globals.isLoad)
+            await navService.push(MaterialPageRoute(builder: (_) {
+              return NoConnection();
+            }));
+          else
+            Timer(Duration(seconds: 2), () async {
+              await navService.push(MaterialPageRoute(builder: (_) {
+                return NoConnection();
+              }));
+            });
+
+          print("disconnected");
+          break;
+      }
+    });
 
     var listener =
         DataConnectionChecker().onStatusChange.listen((status) async {
