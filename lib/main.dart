@@ -58,7 +58,7 @@ void main() async {
 
 const SCREEN_BORDER_WIDTH = 3.0;
 
-const BACKGROUND_COLOR = const Color(0xffefcc19);
+const BACKGROUND_COLOR = const Color(0xffC8C8C8); //Color(0xffefcc19);
 final RouteObserver<ModalRoute> routeObserver = RouteObserver<ModalRoute>();
 
 final GlobalKey<NavigatorState> nav = GlobalKey<NavigatorState>();
@@ -232,6 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   Future displayNotification(Map<String, dynamic> message) async {
+    print(message);
     try {
       var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
           'channel-id', 'fcm', 'androidcoding.in',

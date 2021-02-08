@@ -158,7 +158,7 @@ class SystemButtonGroup extends StatelessWidget {
               }),
         ),
         _Description(
-          text: "pause_resume",
+          text: "pause/resume",
           child: _Button(
               size: _SYSTEM_BUTTON_SIZE,
               color: _systemButtonColor,
@@ -172,7 +172,7 @@ class SystemButtonGroup extends StatelessWidget {
           child: _Button(
               size: _SYSTEM_BUTTON_SIZE,
               enableLongPress: false,
-              color: Colors.red,
+              color: Colors.orange,
               onTap: () {
                 Game.of(context).reset();
               }),

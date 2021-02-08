@@ -75,7 +75,7 @@ class _ProblemLocateState extends State<ProblemLocate>
   Placemark _placemark;
   Timer _timer;
   int problemId;
-
+  bool isUpload = false;
   FocusNode _streetNode = FocusNode();
   FocusNode _houseNode = FocusNode();
   FocusNode _apartNode = FocusNode();
@@ -310,11 +310,11 @@ class _ProblemLocateState extends State<ProblemLocate>
   }
 
   void timerStart() {
-    _timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
+    _timer = Timer.periodic(Duration(milliseconds: 400), (Timer t) {
       setState(() {
         _val += 1;
       });
-      if (_val == 100 && problemId != null) {
+      if (_val == 100 && problemId != null && isUpload) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -419,6 +419,7 @@ class _ProblemLocateState extends State<ProblemLocate>
         if (req.files.length != 0) {
           var res = await req.send();
           if (res.statusCode == 201) {
+            isUpload = true;
             setState(() {
               _val = 98;
             });
@@ -429,6 +430,7 @@ class _ProblemLocateState extends State<ProblemLocate>
             globals.userLocation = null;
           }
         } else {
+          isUpload = true;
           setState(() {
             _val = 98;
           });

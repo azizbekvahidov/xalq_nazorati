@@ -5,6 +5,8 @@ import 'package:xalq_nazorati/tetris/gamer/gamer.dart';
 import 'package:xalq_nazorati/tetris/gamer/keyboard.dart';
 import 'package:xalq_nazorati/tetris/material/audios.dart';
 import 'package:xalq_nazorati/tetris/panel/page_portrait.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/tetris/tetris.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
@@ -45,7 +47,7 @@ class _NoConnectionState extends State<NoConnection> {
                 children: [
                   Image.asset("assets/img/offline.png"),
                   Text(
-                    "Нет интернета .(",
+                    "no_internet".tr().toString(),
                     style: TextStyle(
                       color: Color(0xff66676C),
                       fontFamily: globals.font,
@@ -59,7 +61,7 @@ class _NoConnectionState extends State<NoConnection> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          "Чтобы скрасить \nожидание поиграйте",
+                          "play_game_till".tr().toString(),
                           style: TextStyle(
                             color: Color(0xff66676C),
                             fontFamily: globals.font,
@@ -79,7 +81,7 @@ class _NoConnectionState extends State<NoConnection> {
                   ),
                 ],
               ),
-              DefaultButton("Повторить", () {
+              DefaultButton("reload".tr().toString(), () {
                 if (globals.isConnection) {
                   Navigator.of(context).pop();
                 }
