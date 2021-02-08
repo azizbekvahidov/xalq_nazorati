@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -30,13 +32,18 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   int _start = 180;
   bool _isSend = false;
   bool _value = false;
-  final phoneController = TextEditingController();
+  final MaskedTextController phoneController = MaskedTextController(
+      mask: '00 000 00 00', translator: {"0": RegExp(r'[0-9]')});
 
   @override
   void initState() {
     super.initState();
     // startTimer();
-
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
     // getSMS();
   }
 
@@ -374,40 +381,80 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
                                                               mediaQuery.padding
                                                                   .right) *
                                                           0.71,
-                                                      child:
-                                                          TextFieldPinAutoFill(
-                                                        focusNode: _codeNode,
-                                                        currentCode:
-                                                            codeController.text,
-                                                        onCodeChanged: (val) {
-                                                          validate();
-                                                          print(val);
-                                                          codeController.text =
-                                                              val;
-                                                          // _listenForCode();
-                                                        },
-                                                        decoration: InputDecoration(
-                                                            counterText: "",
-                                                            disabledBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            enabledBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            focusColor: Colors
-                                                                .black,
-                                                            focusedBorder:
-                                                                InputBorder
-                                                                    .none,
-                                                            counterStyle:
-                                                                TextStyle(
-                                                                    color: Colors
-                                                                        .black)),
-                                                        // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                                      child: Platform.isIOS
+                                                          ? TextField(
+                                                              autofocus: true,
+                                                              focusNode:
+                                                                  _codeNode,
+                                                              controller:
+                                                                  codeController,
+                                                              // onCodeChanged: (val) {
+                                                              //   print(val);
+                                                              //   codeController.text = val;
+                                                              //   // _listenForCode();
+                                                              // },
+                                                              decoration: InputDecoration(
+                                                                  counterText:
+                                                                      "",
+                                                                  disabledBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  enabledBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  focusColor:
+                                                                      Colors
+                                                                          .black,
+                                                                  focusedBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  counterStyle:
+                                                                      TextStyle(
+                                                                          color:
+                                                                              Colors.black)),
+                                                              // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                                              maxLength: 6,
+                                                              // codeLength: 6,
+                                                              //code length, default 6
+                                                            )
+                                                          : TextFieldPinAutoFill(
+                                                              focusNode:
+                                                                  _codeNode,
+                                                              currentCode:
+                                                                  codeController
+                                                                      .text,
+                                                              onCodeChanged:
+                                                                  (val) {
+                                                                validate();
+                                                                print(val);
+                                                                codeController
+                                                                    .text = val;
+                                                                // _listenForCode();
+                                                              },
+                                                              decoration: InputDecoration(
+                                                                  counterText:
+                                                                      "",
+                                                                  disabledBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  enabledBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  focusColor:
+                                                                      Colors
+                                                                          .black,
+                                                                  focusedBorder:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  counterStyle:
+                                                                      TextStyle(
+                                                                          color:
+                                                                              Colors.black)),
+                                                              // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
 
-                                                        codeLength: 6,
-                                                        //code length, default 6
-                                                      ),
+                                                              codeLength: 6,
+                                                              //code length, default 6
+                                                            ),
                                                     ),
                                                   ],
                                                 ),

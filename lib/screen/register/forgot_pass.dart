@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -290,27 +291,52 @@ class _ForgotPassState extends State<ForgotPass> {
                                             mediaQuery.padding.left -
                                             mediaQuery.padding.right) *
                                         0.71,
-                                    child: TextFieldPinAutoFill(
-                                      focusNode: codeNode,
-                                      currentCode: codeController.text,
-                                      onCodeChanged: (val) {
-                                        print(val);
-                                        codeController.text = val;
-                                        // _listenForCode();
-                                      },
-                                      decoration: InputDecoration(
-                                          counterText: "",
-                                          disabledBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          focusColor: Colors.black,
-                                          focusedBorder: InputBorder.none,
-                                          counterStyle:
-                                              TextStyle(color: Colors.black)),
-                                      // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                    child: Platform.isIOS
+                                        ? TextField(
+                                            autofocus: true,
+                                            focusNode: codeNode,
+                                            controller: codeController,
+                                            // onCodeChanged: (val) {
+                                            //   print(val);
+                                            //   codeController.text = val;
+                                            //   // _listenForCode();
+                                            // },
+                                            decoration: InputDecoration(
+                                                counterText: "",
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                focusColor: Colors.black,
+                                                focusedBorder: InputBorder.none,
+                                                counterStyle: TextStyle(
+                                                    color: Colors.black)),
+                                            // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                            maxLength: 6,
+                                            // codeLength: 6,
+                                            //code length, default 6
+                                          )
+                                        : TextFieldPinAutoFill(
+                                            focusNode: codeNode,
+                                            currentCode: codeController.text,
+                                            onCodeChanged: (val) {
+                                              print(val);
+                                              codeController.text = val;
+                                              // _listenForCode();
+                                            },
+                                            decoration: InputDecoration(
+                                                counterText: "",
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                focusColor: Colors.black,
+                                                focusedBorder: InputBorder.none,
+                                                counterStyle: TextStyle(
+                                                    color: Colors.black)),
+                                            // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
 
-                                      codeLength: 6,
-                                      //code length, default 6
-                                    ),
+                                            codeLength: 6,
+                                            //code length, default 6
+                                          ),
                                   ),
                                 ],
                               ),

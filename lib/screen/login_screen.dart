@@ -1,3 +1,4 @@
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
@@ -24,11 +25,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final phoneController = TextEditingController();
+  final MaskedTextController phoneController = MaskedTextController(
+      mask: '00 000 00 00', translator: {"0": RegExp(r'[0-9]')});
   final passController = TextEditingController();
   FocusNode phoneNode = FocusNode();
   FocusNode passNode = FocusNode();
   bool isLogin = false;
+
+  @override
+  @override
+  void initState() {
+    super.initState();
+    phoneController.afterChange = (previous, next) {
+      if (previous.length < next.length) {
+        phoneController.moveCursorToEnd();
+      }
+    };
+  }
+
   void getLogin() async {
     // print(globals.deviceToken);
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -69,7 +69,8 @@ class _SupportInfoState extends State<SupportInfo> {
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 20),
+          padding:
+              EdgeInsets.only(left: width * 0.15, right: width * 0.15, top: 10),
           child: InkWell(
             onTap: () {
               launchUrl("tel://1055");

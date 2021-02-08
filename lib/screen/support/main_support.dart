@@ -65,7 +65,7 @@ class _MainSupportState extends State<MainSupport> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: width * 0.15, vertical: 30),
+                    horizontal: width * 0.12, vertical: 30),
                 child: InkWell(
                   onTap: () {
                     launchUrl("https://t.me/xalqnazorati_bot");
@@ -78,7 +78,7 @@ class _MainSupportState extends State<MainSupport> {
                       child: Text(
                         "send_notify".tr().toString(),
                         style: TextStyle(
-                            fontSize: width * globals.fontSize18,
+                            fontSize: width * globals.fontSize16,
                             fontWeight: FontWeight.w400,
                             fontFamily: globals.font,
                             color: Colors.white),

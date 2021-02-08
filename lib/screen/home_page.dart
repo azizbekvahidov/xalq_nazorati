@@ -67,28 +67,31 @@ class _HomePageState extends State<HomePage> {
 
   void refreshBells() async {
     try {
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications-by-state';
-      Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var cnt = 0;
-        var res = response.json();
+      if (globals.userData != null) {
+        var url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications-by-state';
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}"
+        };
+        var response = await Requests.get(url, headers: headers);
+        if (response.statusCode == 200) {
+          var cnt = 0;
+          var res = response.json();
 
-        cnt += res["processing"];
-        cnt += res["denied"];
-        cnt += res["confirmed"];
-        cnt += res["planned"];
-        if (cnt != 0)
-          isProblemNotify = true;
-        else
-          isProblemNotify = false;
+          cnt += res["processing"];
+          cnt += res["denied"];
+          cnt += res["confirmed"];
+          cnt += res["planned"];
+          if (cnt != 0)
+            isProblemNotify = true;
+          else
+            isProblemNotify = false;
+        }
+        setState(() {});
+        // String reply = await response.transform(utf8.decoder).join();
+
+        // var temp = parseProblems(reply);
       }
-      setState(() {});
-      // String reply = await response.transform(utf8.decoder).join();
-
-      // var temp = parseProblems(reply);
-
     } catch (e) {
       print(e);
     }
@@ -144,7 +147,7 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) {
           if (index == 1) {
-            if (globals.token == null) {
+            if (globals.userData == null) {
               customDialog(context);
             } else {
               setState(() {

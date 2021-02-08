@@ -26,6 +26,7 @@ class _CategoryCardState extends State<CategoryCard> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     var width = mediaQuery.size.width;
+    var dHeight = mediaQuery.size.height;
     final double cWidth = (mediaQuery.size.width -
             mediaQuery.padding.left -
             mediaQuery.padding.right) *
@@ -67,7 +68,7 @@ class _CategoryCardState extends State<CategoryCard> {
               // "assets/img/road.svg",
               // "${globals.site_link}${widget.img}",
               width: 45,
-              height: 45,
+              height: dHeight * 0.05,
             ),
             // SvgPicture.asset(img),
             Container(
@@ -76,7 +77,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: (width * globals.fontSize12),
+                  fontSize: (width * globals.fontSize10),
                   fontWeight: FontWeight.w500,
                   fontFamily: globals.font,
                 ),

@@ -136,7 +136,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                       ShadowBox(
                         child: ConstrainedBox(
                           constraints:
-                              BoxConstraints(minHeight: 420, maxHeight: 465),
+                              BoxConstraints(minHeight: 420, maxHeight: 490),
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: KeyboardActions(

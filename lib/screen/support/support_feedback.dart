@@ -51,7 +51,7 @@ class SupportFeedback extends StatelessWidget {
           },
           child: Container(
             padding:
-                EdgeInsets.symmetric(horizontal: width * 0.15, vertical: 20),
+                EdgeInsets.symmetric(horizontal: width * 0.12, vertical: 20),
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 18),
@@ -59,7 +59,7 @@ class SupportFeedback extends StatelessWidget {
               child: Text(
                 "send_notify".tr().toString(),
                 style: TextStyle(
-                    fontSize: width * globals.fontSize18,
+                    fontSize: width * globals.fontSize16,
                     fontWeight: FontWeight.w400,
                     fontFamily: globals.font,
                     color: Colors.white),

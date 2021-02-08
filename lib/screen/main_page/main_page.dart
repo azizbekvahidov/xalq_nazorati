@@ -234,9 +234,15 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  Timer timer;
+
   @override
   void initState() {
     super.initState();
+    getNotification();
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      getNotification();
+    });
     if (globals.categoryList == null) {
       _category = getCategory();
       globals.categoryList = _category;
@@ -572,7 +578,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    getNotification();
+    // getNotification();
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     return Scaffold(
