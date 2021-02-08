@@ -79,17 +79,18 @@ dependencies:
   liquid_progress_indicator: ^0.3.2
   # internet_speed_test: ^1.1.2+1
   connectivity: ^2.0.2
-  connectivity_widget: 0.1.7
   keyboard_actions: ^3.3.1+1
-  # data_connection_checker: ^0.3.4
+  data_connection_checker: ^0.3.4
   sms_otp_auto_verify: ^1.2.2
   skeleton_text: ^1.0.0
   # sms_retriever: ^0.0.2
   pull_to_refresh: ^1.6.3
   lazy_load_scrollview: ^1.2.0
+  is_lock_screen: ^1.0.0
+  overlay_support: ^0.0.4
+  soundpool: ^1.0.1
   # workmanager: ^0.2.3
-
-
+  catcher: ^0.4.1
   # sms:
   #   path: ./sms
 
@@ -197,10 +198,15 @@ flutter:
     - assets/img/news_archive.svg
     - assets/img/user_main.svg
     - assets/img/dont_men.svg
+    - assets/img/offline.png
+    - assets/img/play.svg
     
     - assets/img/no_connection.svg
     - assets/img/bad_connection.svg
     - assets/img/good_connection.svg
+
+    - assets/material.png
+    - assets/audios/
 
 
   #   - images/a_dot_ham.jpeg
