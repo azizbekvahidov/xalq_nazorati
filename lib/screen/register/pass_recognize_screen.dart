@@ -300,7 +300,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
                       child: KeyboardActions(
-                        isDialog: true,
+                        // isDialog: true,
                         config: _buildConfig(context),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

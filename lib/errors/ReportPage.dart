@@ -1,6 +1,7 @@
 import 'package:catcher/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/errors/CustomPageReportMode.dart';
+import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 /// Страница с выводом сообщения об ошибке
 class ReportPage extends StatefulWidget {
@@ -33,8 +34,20 @@ class _ReportPageState extends State<ReportPage> {
       appBar: AppBar(
         title: Text('Заголовок страницы ошибки'),
       ),
-      body: SafeArea(
-        child: Container(),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: SafeArea(
+          child: Column(
+            children: [
+              ShadowBox(
+                child: Text(widget.report.errorDetails.toString()),
+              ),
+              ShadowBox(
+                child: Text(widget.report.error.toString()),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

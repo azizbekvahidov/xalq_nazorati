@@ -141,7 +141,7 @@ class _ProblemDescState extends State<ProblemDesc> {
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: KeyboardActions(
                               disableScroll: true,
-                              isDialog: true,
+                              // isDialog: true,
                               config: _buildConfig(context),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

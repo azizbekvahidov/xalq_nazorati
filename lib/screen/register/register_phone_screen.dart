@@ -328,7 +328,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                     child: Stack(
                       children: [
                         KeyboardActions(
-                          isDialog: true,
+                          // isDialog: true,
                           config: _buildConfig(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

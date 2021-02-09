@@ -115,7 +115,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
           isSending = false;
           // _btn_message = "continue".tr().toString();
           _val = 0;
-          _timer.cancel();
+          _timer?.cancel();
           print(res);
         }
       }
@@ -137,7 +137,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -215,7 +215,7 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
                       ? mediaQuery.size.height
                       : mediaQuery.size.height * 0.8,
                   child: KeyboardActions(
-                    isDialog: true,
+                    // isDialog: true,
                     disableScroll: true,
                     config: _buildConfig(context),
                     child: Column(

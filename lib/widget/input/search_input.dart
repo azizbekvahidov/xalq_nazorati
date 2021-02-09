@@ -187,7 +187,7 @@ class _SearchtInputState extends State<SearchtInput> {
           ),
           KeyboardActions(
             disableScroll: true,
-            isDialog: true,
+            // isDialog: true,
             config: _buildConfig(context),
             child: Container(
               width: (mediaQuery.size.width -

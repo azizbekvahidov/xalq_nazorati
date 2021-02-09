@@ -209,7 +209,7 @@ class _ForgotPassState extends State<ForgotPass> {
                         child: Align(
                           alignment: Alignment.bottomLeft,
                           child: KeyboardActions(
-                            isDialog: true,
+                            // isDialog: true,
                             config: _buildConfig(context),
                             child: Container(
                               padding: EdgeInsets.only(bottom: 30, left: 25),

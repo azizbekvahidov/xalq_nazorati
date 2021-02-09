@@ -246,7 +246,7 @@ class _ForgotPassPhoneState extends State<ForgotPassPhone> {
                           alignment: Alignment.bottomLeft,
                           child: KeyboardActions(
                             disableScroll: true,
-                            isDialog: true,
+                            // isDialog: true,
                             config: _buildConfig(context),
                             child: Container(
                               padding: EdgeInsets.only(bottom: 30, left: 25),

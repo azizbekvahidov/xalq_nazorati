@@ -254,7 +254,7 @@ class _RegisterVerifyScreenState extends State<RegisterVerifyScreen> {
                     child: Stack(
                       children: [
                         KeyboardActions(
-                          isDialog: true,
+                          // isDialog: true,
                           config: _buildConfig(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

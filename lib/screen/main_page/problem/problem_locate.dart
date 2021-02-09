@@ -461,20 +461,24 @@ class _ProblemLocateState extends State<ProblemLocate>
   }
 
   setAddress(var addr, flatController, isChange) {
-    address =
-        "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
-    _latitude = double.tryParse(addr['latitude']);
-    _longitude = double.tryParse(addr['longitude']);
-    _isFlat = addr["with_flats"];
-    if (flatController.text != "") {
-      address += ", ${flatController.text}";
+    try {
+      address =
+          "${addr['community']['district']["name_${(globals.lang).tr().toString()}"]}, ${addr['street']["name_${(globals.lang).tr().toString()}"]}, ${addr['number']}";
+      _latitude = double.tryParse(addr['latitude']);
+      _longitude = double.tryParse(addr['longitude']);
+      _isFlat = addr["with_flats"];
+      if (flatController.text != "") {
+        address += ", ${flatController.text}";
+      }
+      address +=
+          ", ${addr['community']["name_${(globals.lang).tr().toString()}"]}";
+      if (isChange)
+        setState(() {
+          _valid = true;
+        });
+    } catch (e) {
+      print(e);
     }
-    address +=
-        ", ${addr['community']["name_${(globals.lang).tr().toString()}"]}";
-    if (isChange)
-      setState(() {
-        _valid = true;
-      });
   }
 
   void _getLocation() async {
@@ -705,7 +709,7 @@ class _ProblemLocateState extends State<ProblemLocate>
                     mediaQuery.padding.top),
             child: KeyboardActions(
               disableScroll: true,
-              isDialog: true,
+              // isDialog: true,
               config: _buildConfig(context),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -239,14 +239,10 @@ class _MyHomePageState extends State<MyHomePage> {
         Map<String, String> headers = {"Authorization": "token $_token"};
         var response = await Requests.get(url, headers: headers);
         if (response.statusCode == 200) {
-          // dynamic json = response.json();
-
           globals.userData = response.json();
           globals.token = _token;
-          print(globals.userData);
         } else {
           globals.token = null;
-          dynamic json = response.json();
         }
       }
     } catch (e) {
@@ -258,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       new FlutterLocalNotificationsPlugin();
   Future displayNotification(Map<String, dynamic> message) async {
-
     try {
       var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
           'channel-id', 'fcm', 'androidcoding.in',
@@ -419,32 +414,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
 
-    var listener =
-        DataConnectionChecker().onStatusChange.listen((status) async {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          // if (globals.isLoad) await navService.canPop();
-          globals.isConnection = true;
-          print("connected");
-          // customDialog(context);
-          break;
-        case DataConnectionStatus.disconnected:
-          globals.isConnection = false;
-          if (globals.isLoad)
-            await navService.push(MaterialPageRoute(builder: (_) {
-              return NoConnection();
-            }));
-          else
-            Timer(Duration(seconds: 2), () async {
-              await navService.push(MaterialPageRoute(builder: (_) {
-                return NoConnection();
-              }));
-            });
-
-          print("disconnected");
-          break;
-      }
-    });
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
 

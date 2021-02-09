@@ -192,7 +192,7 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
                   ),
                   child: KeyboardActions(
                     disableScroll: true,
-                    isDialog: true,
+                    // isDialog: true,
                     config: _buildConfig(context),
                     child: Padding(
                       padding: EdgeInsets.all(25),

@@ -364,7 +364,7 @@ class _RegisterPersonalDataScreenState
                       child: Container(
                         child: KeyboardActions(
                           disableScroll: true,
-                          isDialog: true,
+                          // isDialog: true,
                           config: _buildConfig(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -304,7 +304,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
                               child: Container(
                                 child: KeyboardActions(
                                   disableScroll: true,
-                                  isDialog: true,
+                                  // isDialog: true,
                                   config: _buildConfig(context),
                                   child: Column(
                                       crossAxisAlignment:

@@ -12,7 +12,13 @@ class CustomPageReportMode extends ReportMode {
 
   @override
   void requestAction(Report report, BuildContext context) {
-    _navigateToPageWidget(report, context);
+    print("error reporting =========> ${report.error.runtimeType}");
+    if (report.error is FlutterError ||
+        report.error is AssertionError ||
+        report.error is CastError) {
+    } else {
+      _navigateToPageWidget(report, context);
+    }
   }
 
   /// Переход на страницу с выбором варианта обработки ошибки
