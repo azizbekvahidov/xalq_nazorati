@@ -415,7 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings('@drawable/ic_stat_xalq_logo');
 
     var initializationSettingsIOS = new IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidRecieveLocalNotification);

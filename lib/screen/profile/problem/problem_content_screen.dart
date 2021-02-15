@@ -684,6 +684,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                 (problemStatus == "confirmed" ||
                                         problemStatus == "denied" ||
                                         problemStatus == "closed" ||
+                                        problemStatus == "planned" ||
                                         problemStatus == "canceled")
                                     ? Container()
                                     : Container(

@@ -11,6 +11,7 @@ import 'package:xalq_nazorati/models/result.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_decline_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_solved_rate_screen.dart';
+import 'package:xalq_nazorati/tetris/generated/i18n.dart';
 import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_widget.dart';
 import 'package:xalq_nazorati/widget/problems/problem_solve_desc.dart';
@@ -30,6 +31,11 @@ class SolveProblemScreen extends StatefulWidget {
 class _SolveProblemScreenState extends State<SolveProblemScreen> {
   ToFile to_file = ToFile();
   List files;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<Map<String, dynamic>> getProblem(var id) async {
     try {
       var url =
@@ -536,7 +542,8 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                     )
                   : widget.stat != "denied" &&
                           widget.stat != "closed" &&
-                          widget.stat != "canceled"
+                          widget.stat != "canceled" &&
+                          widget.stat != "planned"
                       ? Container(
                           height: mediaQuery.size.height * 0.8,
                           width: mediaQuery.size.width,
@@ -566,12 +573,29 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                         textAlign: TextAlign.center,
                       ),
                     )
-                  : Container();
-              print(widget.stat);
+                  : widget.stat == 'planned'
+                      ? Container(
+                          margin: EdgeInsets.only(top: 8),
+                          alignment: Alignment.center,
+                          width: dWidth,
+                          height: 50,
+                          color: Color(0xffC4C4C4),
+                          child: Text(
+                            "${widget.stat}_solve".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWidth * globals.fontSize18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : Container();
               var answers = Column(children: [
                 widget.stat == "denied" ||
                         widget.stat == "closed" ||
-                        widget.stat == "canceled"
+                        widget.stat == "canceled" ||
+                        widget.stat == 'planned'
                     ? widget.stat == "canceled"
                         ? ShadowBox(
                             child: Container(
@@ -608,25 +632,38 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                               ),
                             ),
                           )
-                        : res["moderator_log"] != null
+                        : widget.stat == "planned"
                             ? ShadowBox(
                                 child: ResContent(
-                                  titleCol:
-                                      "${globals.capitalize(res["moderator_log"]["moderator"]["last_name"])} ${globals.capitalize(res["moderator_log"]["moderator"]["first_name"])}",
-                                  dateCol:
-                                      "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["moderator_log"]['updated_at']).toString()))}",
-                                  positionCol: "moderator".tr().toString(),
-                                  contentCol: widget.stat == "denied" ||
-                                          widget.stat == "closed"
-                                      ? widget.stat == "closed"
-                                          ? res["problem"]
-                                              ["moderator_closing_reason"]
-                                          : res["problem"]
-                                              ["moderator_cancellation_reason"]
-                                      : "",
-                                ),
+                                    titleCol:
+                                        "${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["last_name"])} ${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["first_name"])}",
+                                    dateCol:
+                                        "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
+                                    positionCol:
+                                        "${res["problem"]["reason_of_moving_to_planned"]["executor"]["organization"]["api_title".tr().toString()]}, ${res["problem"]["reason_of_moving_to_planned"]["executor"]["district"]["name_" + globals.lang.tr().toString()]} ${res["problem"]["reason_of_moving_to_planned"]["executor"]["position"]["api_title".tr().toString()]}",
+                                    contentCol: res["problem"]
+                                            ["reason_of_moving_to_planned"]
+                                        ["reason"]),
                               )
-                            : Container()
+                            : res["moderator_log"] != null
+                                ? ShadowBox(
+                                    child: ResContent(
+                                      titleCol:
+                                          "${globals.capitalize(res["moderator_log"]["moderator"]["last_name"])} ${globals.capitalize(res["moderator_log"]["moderator"]["first_name"])}",
+                                      dateCol:
+                                          "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["moderator_log"]['updated_at']).toString()))}",
+                                      positionCol: "moderator".tr().toString(),
+                                      contentCol: widget.stat == "denied" ||
+                                              widget.stat == "closed"
+                                          ? widget.stat == "closed"
+                                              ? res["problem"]
+                                                  ["moderator_closing_reason"]
+                                              : res["problem"][
+                                                  "moderator_cancellation_reason"]
+                                          : "",
+                                    ),
+                                  )
+                                : Container()
                     : Container(),
                 res["problem"]["unsatisfactory_solution"] != null
                     ? ShadowBox(

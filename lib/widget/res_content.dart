@@ -25,6 +25,7 @@ class ResContent extends StatelessWidget {
             padding: EdgeInsets.only(left: 19, top: 5, right: 19, bottom: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,16 +45,19 @@ class ResContent extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                     ),
-                    Text(
-                      positionCol,
-                      style: TextStyle(
-                        fontFamily: globals.font,
-                        fontSize: dWidth * globals.fontSize12,
-                        fontWeight: FontWeight.w400,
-                        fontFeatures: [
-                          FontFeature.enable("pnum"),
-                          FontFeature.enable("lnum")
-                        ],
+                    Container(
+                      width: dWidth * 0.8 - 40,
+                      child: Text(
+                        positionCol,
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize12,
+                          fontWeight: FontWeight.w400,
+                          fontFeatures: [
+                            FontFeature.enable("pnum"),
+                            FontFeature.enable("lnum")
+                          ],
+                        ),
                       ),
                     ),
                   ],

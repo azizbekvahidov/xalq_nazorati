@@ -168,7 +168,7 @@ class _ProblemSolvedRateScreenState extends State<ProblemSolvedRateScreen> {
                     ? Container(
                         height: 400,
                         child: KeyboardActions(
-                          isDialog: true,
+                          // isDialog: true,
                           disableScroll: true,
                           config: _buildConfig(context),
                           child: Column(

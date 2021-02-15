@@ -134,7 +134,7 @@ class _ProblemSolvedDeclineScreenState
                 child: Container(
                   height: dHeight < 560 ? dHeight : dHeight * 0.8,
                   child: KeyboardActions(
-                    isDialog: true,
+                    // isDialog: true,
                     disableScroll: true,
                     config: _buildConfig(context),
                     child: Column(
