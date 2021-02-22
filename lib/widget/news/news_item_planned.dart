@@ -23,12 +23,14 @@ class NewsItemPlanned extends StatefulWidget {
 class _NewsItemPlannedState extends State<NewsItemPlanned> {
   @override
   Widget build(BuildContext context) {
+    print("inner-> ${widget.content}");
     DateFormat formatter = DateFormat('dd.MM.yyyy');
     String _publishDate = formatter.format(DateTime.parse(widget.publishDate));
-    var content = parse(widget.content);
     List<String> data = [];
-
-    data.add(content.getElementsByTagName("p")[0].innerHtml);
+    if (widget.content != null) {
+      var content = parse(widget.content);
+      data.add(content.getElementsByTagName("p")[0].innerHtml);
+    }
     final mediaQuery = MediaQuery.of(context);
     final double cWidth = (mediaQuery.size.width -
         mediaQuery.padding.left -
@@ -57,7 +59,10 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: FittedBox(
-                        fit: BoxFit.cover, child: Image.network(widget.img)),
+                        fit: BoxFit.cover,
+                        child: widget.img == null
+                            ? null
+                            : Image.network(widget.img)),
                   ),
                 ),
                 Container(
@@ -81,7 +86,7 @@ class _NewsItemPlannedState extends State<NewsItemPlanned> {
                       Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
-                          "${data[0]}",
+                          data.length != 0 ? "${data[0]}" : "",
                           maxLines: 3,
                           style: TextStyle(
                             fontFamily: globals.font,

@@ -61,12 +61,15 @@ void main() async {
 
   /// Настройка для режима релиза, открывает страницу ошибки и вызывает [CustomReportHandler]
   CatcherOptions releaseOptions = CatcherOptions(CustomPageReportMode(), [
+    ConsoleHandler(),
     CustomReportHandler(),
   ]);
 
-  Catcher(
-    navigatorKey: NavigationService.navigationKey,
-    rootWidget: EasyLocalization(
+  // Catcher(
+  //   navigatorKey: NavigationService.navigationKey,
+  //   rootWidget:
+  runApp(
+    EasyLocalization(
       child: MyApp(),
       path: "lang",
       saveLocale: true,
@@ -76,8 +79,8 @@ void main() async {
         Locale('en', 'US'),
       ],
     ),
-    debugConfig: debugOptions,
-    releaseConfig: releaseOptions,
+    // debugConfig: debugOptions,
+    // releaseConfig: releaseOptions,
   );
 }
 
