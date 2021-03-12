@@ -68,21 +68,45 @@ class _CustomDottedCircleContainerState
   }
 
   pickerCam() async {
-    // ignore: deprecated_member_use
-    File _img = await ImagePicker.pickImage(source: ImageSource.camera);
-    if (_img != null && globals.validateFile(_img)) {
-      // widget.image = _img;
-      print("take shot");
-      // await _getLocation();
-      final dir = await path_provider.getTemporaryDirectory();
+    var status = await Permission.camera.status;
+    print(status);
+    if (status.isUndetermined ||
+        status.isDenied ||
+        status.isPermanentlyDenied) {
+      Permission.camera.request();
 
-      final targetPath =
-          dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
-      _img = await testCompressAndGetFile(_img, targetPath);
-      setState(() {
-        globals.images.addAll({widget.img: _img});
-      });
+      File _img = await ImagePicker.pickImage(source: ImageSource.camera);
+      if (_img != null && globals.validateFile(_img)) {
+        // widget.image = _img;
+        print("take shot");
+        // await _getLocation();
+        final dir = await path_provider.getTemporaryDirectory();
+
+        final targetPath =
+            dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+        _img = await testCompressAndGetFile(_img, targetPath);
+        setState(() {
+          globals.images.addAll({widget.img: _img});
+        });
+      }
+      // We didn't ask for permission yet.
+    } else {
+      File _img = await ImagePicker.pickImage(source: ImageSource.camera);
+      if (_img != null && globals.validateFile(_img)) {
+        // widget.image = _img;
+        print("take shot");
+        // await _getLocation();
+        final dir = await path_provider.getTemporaryDirectory();
+
+        final targetPath =
+            dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+        _img = await testCompressAndGetFile(_img, targetPath);
+        setState(() {
+          globals.images.addAll({widget.img: _img});
+        });
+      }
     }
+    // ignore: deprecated_member_use
   }
 
   pickGallery() async {

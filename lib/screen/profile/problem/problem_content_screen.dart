@@ -205,6 +205,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
   DateFormat dateF = DateFormat('dd.MM.yyyy hh.mm');
   @override
   Widget build(BuildContext context) {
+    int hours;
     var mediaQuery = MediaQuery.of(context);
     var dWidth = mediaQuery.size.width;
     return SmartRefresher(
@@ -249,15 +250,18 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                 .difference(DateTime.now())
                 .inDays;
             if (days >= 0) deadline -= (86400 * days) * 1000;
-            int hours = DateTime.fromMillisecondsSinceEpoch(deadline)
+            hours = DateTime.fromMillisecondsSinceEpoch(deadline)
                 .difference(DateTime.now())
                 .inHours;
             if (hours >= 0) deadline -= (hours * 3600) * 1000;
             int minutes = DateTime.fromMillisecondsSinceEpoch(deadline)
                 .difference(DateTime.now())
                 .inMinutes;
-            _showTime =
-                "${days}${"d".tr().toString()}  : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
+            if (hours < 0)
+              _showTime = "expired".tr().toString();
+            else
+              _showTime =
+                  "${days}${"d".tr().toString()}  : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
             generateList(_data["file_1"]);
             generateList(_data["file_2"]);
             generateList(_data["file_3"]);
@@ -362,9 +366,10 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                           ),
                                           problemStatus == "not confirmed" ||
                                                   problemStatus == "processing"
-                                              ? BoxTextDefault(
-                                                  "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}",
-                                                )
+                                              ? hours >= 0
+                                                  ? BoxTextDefault(
+                                                      "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}")
+                                                  : BoxTextDefault("$_showTime")
                                               : Container(),
                                         ],
                                       ),

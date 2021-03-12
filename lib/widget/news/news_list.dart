@@ -18,16 +18,19 @@ class _NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     return Container(
-      height: height - 335,
+      height: widget.isMain ? null : height - 335,
       constraints: widget.isMain
           ? BoxConstraints(
-              maxHeight: 150.0 * widget.news.length,
-              minHeight: 120.0 * widget.news.length)
+              maxHeight: 170.0 * widget.news.length,
+              minHeight: 150.0 * widget.news.length,
+            )
           : null,
       // height: 141.0 * widget.news.length,
       child: ListView.builder(
         padding: EdgeInsets.all(0),
-        physics: BouncingScrollPhysics(),
+        physics: widget.isMain
+            ? NeverScrollableScrollPhysics()
+            : BouncingScrollPhysics(),
         itemCount: widget.news.length,
         itemBuilder: (content, index) {
           String title = widget.news[index]["api_title".tr().toString()];

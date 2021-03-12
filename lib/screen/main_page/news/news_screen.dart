@@ -23,7 +23,7 @@ class _NewsScreenState extends State<NewsScreen> {
   Color _txt3;
   final List<Widget> _children = [
     NewsBreakingScreen(),
-    NewsPlannedScreen(),
+    // NewsPlannedScreen(),
     NewsArchiveScreen(),
   ];
 
@@ -120,6 +120,45 @@ class _NewsScreenState extends State<NewsScreen> {
                         ],
                       ),
                     ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     _selectTab(1);
+                    //   },
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Container(
+                    //         // padding: EdgeInsets.symmetric(
+                    //         //     horizontal: width <= 360 ? 15 : 30),
+                    //         height: 50,
+                    //         width: 50,
+                    //         decoration: BoxDecoration(
+                    //           borderRadius: BorderRadius.circular(25),
+                    //           color: _bg2,
+                    //         ),
+                    //         alignment: Alignment.center,
+                    //         child: SvgPicture.asset(
+                    //           "assets/img/news_planned.svg",
+                    //           color: _txt2,
+                    //         ),
+                    //       ),
+                    //       Container(
+                    //         alignment: Alignment.center,
+                    //         padding: EdgeInsets.only(top: 10),
+                    //         child: Text(
+                    //           "planning".tr().toString(),
+                    //           style: TextStyle(
+                    //             color: Colors.black,
+                    //             fontFamily: globals.font,
+                    //             fontSize: width * globals.fontSize12,
+                    //             fontWeight: FontWeight.w600,
+                    //           ),
+                    //           textAlign: TextAlign.center,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     GestureDetector(
                       onTap: () {
                         _selectTab(1);
@@ -138,47 +177,8 @@ class _NewsScreenState extends State<NewsScreen> {
                             ),
                             alignment: Alignment.center,
                             child: SvgPicture.asset(
-                              "assets/img/news_planned.svg",
-                              color: _txt2,
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.only(top: 10),
-                            child: Text(
-                              "planning".tr().toString(),
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: globals.font,
-                                fontSize: width * globals.fontSize12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _selectTab(2);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // padding: EdgeInsets.symmetric(
-                            //     horizontal: width <= 360 ? 15 : 30),
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: _bg3,
-                            ),
-                            alignment: Alignment.center,
-                            child: SvgPicture.asset(
                               "assets/img/news_archive.svg",
-                              color: _txt3,
+                              color: _txt2,
                             ),
                           ),
                           Container(

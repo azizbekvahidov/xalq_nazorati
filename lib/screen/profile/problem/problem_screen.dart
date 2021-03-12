@@ -83,6 +83,8 @@ class _ProblemScreenState extends State<ProblemScreen> {
               // cardContentState.setState(() {
               //   globals.cardAlert[problem_id] = _problems[problem_id];
               // });
+            } else {
+              setState(() {});
             }
             globals.cardAlert[problem_id] = _problems[problem_id];
           }
@@ -133,7 +135,7 @@ class _ProblemScreenState extends State<ProblemScreen> {
               "event_cnt": 0,
               "res": null,
               "res_seen": true,
-              "status": "processing"
+              "status": res[i]["status"]
             }
           };
           _problems.addAll(elem);

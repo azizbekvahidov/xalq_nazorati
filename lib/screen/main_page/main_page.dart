@@ -15,6 +15,7 @@ import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
+import 'package:xalq_nazorati/widget/news_notify.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
 import '../../widget/input/search_input.dart';
@@ -872,6 +873,16 @@ class _MainPageState extends State<MainPage> {
                               }),
                         ],
                       ),
+                    ),
+                    Container(
+                      child: FutureBuilder(
+                          future: _news,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData && snapshot.data.length != 0
+                                ? NewsNotify(news: snapshot.data[0])
+                                : Container();
+                          }),
                     ),
                     Container(
                       child: AdvWidget(),

@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +13,7 @@ import 'package:requests/requests.dart';
 
 import 'package:xalq_nazorati/errors/CustomReportHandler.dart';
 import 'package:xalq_nazorati/errors/CustomPageReportMode.dart';
+import 'package:xalq_nazorati/methods/my_connect.dart';
 
 import 'package:xalq_nazorati/screen/no_connection.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
@@ -223,14 +225,20 @@ class _MyHomePageState extends State<MyHomePage> {
   getStringValuesSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
-    String stringValue = prefs.getString('lang');
-    String countryValue = prefs.getString('country');
-    String token = prefs.getString('userToken');
+    if (prefs.containsKey("lang")) {
+      String stringValue = prefs.getString('lang');
+      _lang = stringValue;
+    }
+    if (prefs.containsKey("country")) {
+      String countryValue = prefs.getString('country');
+      _country = countryValue;
+    }
+    if (prefs.containsKey("userToken")) {
+      String token = prefs.getString('userToken');
+      globals.token = token;
+      _token = token;
+    }
     // setState(() {
-    globals.token = token;
-    _lang = stringValue;
-    _token = token;
-    _country = countryValue;
     await getUser();
     // });
   }
@@ -382,40 +390,93 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  StreamSubscription connectivitySubscription;
+  ConnectivityResult connectivityResult = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   ConnectivityResult _previousResult;
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    print(result);
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        globals.isConnection = true;
+        print("connected");
+        break;
+      case ConnectivityResult.none:
+        print("no connection");
+        globals.isConnection = false;
+        if (globals.isLoad)
+          await navService.push(MaterialPageRoute(builder: (_) {
+            return NoConnection();
+          }));
+        else
+          Timer(Duration(seconds: 2), () async {
+            await navService.push(MaterialPageRoute(builder: (_) {
+              return NoConnection();
+            }));
+          });
+        break;
+    }
+    print(globals.isConnection);
+  }
 
   @override
   void initState() {
     super.initState();
     globals.device = Platform.isIOS ? "ios" : "android";
-    var listener =
-        DataConnectionChecker().onStatusChange.listen((status) async {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          // if (globals.isLoad) await navService.canPop();
-          globals.isConnection = true;
-          print("connected");
-          // customDialog(context);
-          break;
-        case DataConnectionStatus.disconnected:
-          globals.isConnection = false;
-          if (globals.isLoad)
-            await navService.push(MaterialPageRoute(builder: (_) {
-              return NoConnection();
-            }));
-          else
-            Timer(Duration(seconds: 2), () async {
-              await navService.push(MaterialPageRoute(builder: (_) {
-                return NoConnection();
-              }));
-            });
 
-          print("disconnected");
-          break;
-      }
-    });
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
+    // var listener =
+    //     DataConnectionChecker().onStatusChange.listen((status) async {
+    //   print(status);
+    //   switch (status) {
+    //     case DataConnectionStatus.connected:
+    //       // if (globals.isLoad) await navService.canPop();
+    //       globals.isConnection = true;
+    //       print("connected");
+    //       // customDialog(context);
+    //       break;
+    //     case DataConnectionStatus.disconnected:
+    //       globals.isConnection = false;
+    //       if (globals.isLoad)
+    //         await navService.push(MaterialPageRoute(builder: (_) {
+    //           return NoConnection();
+    //         }));
+    //       else
+    //         Timer(Duration(seconds: 2), () async {
+    //           await navService.push(MaterialPageRoute(builder: (_) {
+    //             return NoConnection();
+    //           }));
+    //         });
+
+    //       print("disconnected");
+    //       break;
+    //   }
+    // });
 
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@drawable/ic_stat_xalq_logo');
@@ -513,28 +574,6 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
     });
-
-    // connectivitySubscription = Connectivity()
-    //     .onConnectivityChanged
-    //     .listen((ConnectivityResult connectivityResult) async {
-    //   if (connectivityResult == ConnectivityResult.none) {
-    //     print("no connection");
-    //     await navService.push(MaterialPageRoute(builder: (_) {
-    //       return NoConnection();
-    //     }));
-    //     // nav.currentState.push(
-    //     //     MaterialPageRoute(builder: (BuildContext _) => NoConnection()));
-    //   } else if (_previousResult == ConnectivityResult.none) {
-    //     print("connection");
-    //     // nav.currentState
-    //     //     .push(MaterialPageRoute(builder: (BuildContext _) => HomePage()));
-    //     await navService.push(MaterialPageRoute(builder: (_) {
-    //       return HomePage();
-    //     }));
-    //   }
-
-    //   _previousResult = connectivityResult;
-    // });
   }
 
   @override

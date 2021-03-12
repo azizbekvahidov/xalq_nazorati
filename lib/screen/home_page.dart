@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
 
   void refreshBells() async {
     try {
-      if (globals.userData != null) {
+      if (globals.userData != null || globals.isConnection == true) {
         var url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications-by-state';
         Map<String, String> headers = {

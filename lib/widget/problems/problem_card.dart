@@ -61,12 +61,17 @@ class _ProblemCardState extends State<ProblemCard> {
     int hours = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())
         .inHours;
+    print(hours);
     if (hours >= 0) deadline -= (hours * 3600) * 1000;
     int minutes = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())
         .inMinutes;
-    _showTime =
-        "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
+    if (hours < 0)
+      _showTime = "expired".tr().toString();
+    else
+      _showTime =
+          "${days}${"d".tr().toString()} : ${hours}${"h".tr().toString()}"; // : ${minutes}${"m".tr().toString()}";
+
     bool _alert =
         widget.alert['notify'] == null ? false : widget.alert["notify"];
     var mediaQuery = MediaQuery.of(context);
@@ -149,8 +154,10 @@ class _ProblemCardState extends State<ProblemCard> {
                   ),
                   widget.alert["status"] == "not confirmed" ||
                           widget.alert["status"] == "processing"
-                      ? BoxTextDefault(
-                          "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}")
+                      ? hours >= 0
+                          ? BoxTextDefault(
+                              "${"before_timer".tr().toString()}$_showTime${"after_timer".tr().toString()}")
+                          : BoxTextDefault("$_showTime")
                       : Container(),
                 ],
               ),

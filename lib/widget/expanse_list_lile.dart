@@ -257,7 +257,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                       return snap.hasData
                           ? ConstrainedBox(
                               constraints: BoxConstraints(
-                                  maxHeight: 71.0 * snap.data.length,
+                                  maxHeight: 81.0 * snap.data.length,
                                   minHeight: 56.0),
                               child: ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
@@ -336,7 +336,7 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                           child: Container(
                                             margin: EdgeInsets.only(bottom: 8),
                                             alignment: Alignment.centerLeft,
-                                            height: 40,
+                                            height: 52,
                                             child: Text(
                                               snap.data[index]
                                                   ["api_title".tr().toString()],
@@ -350,7 +350,9 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                             ),
                                           ),
                                         ),
-                                        Divider(),
+                                        Divider(
+                                          height: 0,
+                                        ),
                                       ],
                                     ),
                                   );
