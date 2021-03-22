@@ -10,6 +10,7 @@ import 'package:xalq_nazorati/screen/home_page.dart';
 import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
+import 'package:xalq_nazorati/widget/quit_dialog.dart';
 import '../../widget/select_lang.dart';
 import '../../screen/profile/info_page.dart';
 import '../../screen/profile/profile_page.dart';
@@ -64,6 +65,32 @@ class _MainProfileState extends State<MainProfile> {
         });
   }
 
+  quitDialog(BuildContext context) {
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                color: Colors.white,
+              ),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.5,
+              padding: EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.05),
+              child: QuitDialog(),
+            ),
+          );
+        });
+  }
+
   Future<void> addStringToSF(String lang, String country) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);
@@ -79,30 +106,6 @@ class _MainProfileState extends State<MainProfile> {
   void initState() {
     super.initState();
     getStringValuesSF();
-  }
-
-  Future quitProfile() async {
-    var url =
-        '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/logout';
-    Map map = {
-      "fcm_token": globals.deviceToken,
-    };
-    Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-    var response = await Requests.post(
-      url,
-      headers: headers,
-      body: map,
-    );
-    // request.methodPost(map, url);
-    if (response.statusCode == 200) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('userToken', null);
-      globals.userData = null;
-      globals.token = null;
-    } else {
-      var responseBody = response.json();
-      print(responseBody);
-    }
   }
 
   @override
@@ -450,14 +453,7 @@ class _MainProfileState extends State<MainProfile> {
                                       ),
                                     ),
                                     onTap: () {
-                                      quitProfile().then((value) {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pushNamedAndRemoveUntil(
-                                                HomePage.routeName,
-                                                (Route<dynamic> route) =>
-                                                    false);
-                                      });
+                                      quitDialog(context);
                                     }),
                                 // Divider(),
                               ],

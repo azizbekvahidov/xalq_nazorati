@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -67,14 +68,51 @@ class _CustomDottedCircleContainerState
     return result;
   }
 
+  customDialog(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                        child: FlatButton(
+                      child: Text("link"),
+                      onPressed: () {
+                        SystemSettings.app();
+                      },
+                    )),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
   pickerCam() async {
     var status = await Permission.camera.status;
-    print(status);
-    if (status.isUndetermined ||
-        status.isDenied ||
-        status.isPermanentlyDenied) {
-      Permission.camera.request();
-
+    if (status.isUndetermined || status.isDenied) {
       File _img = await ImagePicker.pickImage(source: ImageSource.camera);
       if (_img != null && globals.validateFile(_img)) {
         // widget.image = _img;
@@ -90,6 +128,8 @@ class _CustomDottedCircleContainerState
         });
       }
       // We didn't ask for permission yet.
+    } else if (status.isPermanentlyDenied) {
+      customDialog(context);
     } else {
       File _img = await ImagePicker.pickImage(source: ImageSource.camera);
       if (_img != null && globals.validateFile(_img)) {
@@ -110,17 +150,41 @@ class _CustomDottedCircleContainerState
   }
 
   pickGallery() async {
-    File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (_img != null && globals.validateFile(_img)) {
-      // widget.image = _img;
+    var status = await Permission.accessMediaLocation.status;
+    if (status.isUndetermined || status.isDenied) {
+      Permission.accessMediaLocation.request();
+      status = await Permission.accessMediaLocation.status;
+      if (!status.isDenied && !status.isPermanentlyDenied) {
+        File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-      final dir = await path_provider.getTemporaryDirectory();
+        if (_img != null && globals.validateFile(_img)) {
+          // widget.image = _img;
 
-      final targetPath =
-          dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
-      _img = await testCompressAndGetFile(_img, targetPath);
-      globals.images.addAll({widget.img: _img});
-      setState(() {});
+          final dir = await path_provider.getTemporaryDirectory();
+
+          final targetPath =
+              dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+          _img = await testCompressAndGetFile(_img, targetPath);
+          globals.images.addAll({widget.img: _img});
+          setState(() {});
+        }
+      }
+    } else if (status.isPermanentlyDenied) {
+      customDialog(context);
+    } else {
+      File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+      if (_img != null && globals.validateFile(_img)) {
+        // widget.image = _img;
+
+        final dir = await path_provider.getTemporaryDirectory();
+
+        final targetPath =
+            dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+        _img = await testCompressAndGetFile(_img, targetPath);
+        globals.images.addAll({widget.img: _img});
+        setState(() {});
+      }
     }
   }
 

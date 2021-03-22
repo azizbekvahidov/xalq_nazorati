@@ -198,7 +198,7 @@
   "send":"Jo`natish",
   "reset":"Qayta tilkash",
   "problem_passport":"Muammo pasporti",
-  "problem_warning":"Xizmat hozirgi paytda sizning hududingizda mavjud emas.",
+  "problem_warning":"Ҳозирги пайтда ушбу хизмат сизнинг ҳудудингизда кўрсатилмайди.",
   "notifications":"Уведомления",
   "file":"fayl",
   "delayed_problems":"Kechiktirilgan muammolar",
@@ -287,6 +287,8 @@
   "reload":"Takrorlash",
   "view":"Ko`rish",
   "quick":"Тезкор:",
+  "are_you_sure_quit":"Siz haqiqatdan ham chiqmoqchimisiz?",
+  "quit":"Chiqish",
 
 
 

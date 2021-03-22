@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:xalq_nazorati/tetris/gamer/gamer.dart';
 import 'package:xalq_nazorati/tetris/gamer/keyboard.dart';
@@ -17,6 +21,38 @@ class NoConnection extends StatefulWidget {
 
   @override
   _NoConnectionState createState() => _NoConnectionState();
+}
+
+ConnectivityResult connectivityResult = ConnectivityResult.none;
+final Connectivity _connectivity = Connectivity();
+initConnectivity(context) async {
+  ConnectivityResult result;
+  // Platform messages may fail, so we use a try/catch PlatformException.
+  try {
+    result = await _connectivity.checkConnectivity();
+  } on PlatformException catch (e) {
+    print(e.toString());
+  }
+  Future<ConnectivityResult> res = _connectivity.checkConnectivity();
+  res.then((value) => _updateConnectionStatus(value, context));
+}
+
+Future<void> _updateConnectionStatus(ConnectivityResult result, context) async {
+  print(result);
+  switch (result) {
+    case ConnectivityResult.wifi:
+    case ConnectivityResult.mobile:
+      globals.isConnection = true;
+      print("connected");
+
+      if (globals.isConnection) {
+        Navigator.of(context).pop();
+      }
+      break;
+    case ConnectivityResult.none:
+      break;
+  }
+  print(globals.isConnection);
 }
 
 class _NoConnectionState extends State<NoConnection> {
@@ -82,9 +118,7 @@ class _NoConnectionState extends State<NoConnection> {
                 ],
               ),
               DefaultButton("reload".tr().toString(), () {
-                if (globals.isConnection) {
-                  Navigator.of(context).pop();
-                }
+                initConnectivity(context);
               }, Theme.of(context).primaryColor),
             ],
           ),

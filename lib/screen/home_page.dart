@@ -11,6 +11,7 @@ import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/profile/problem/main_problem_page.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
+import 'package:xalq_nazorati/screen/support/support.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'profile/main_profile.dart';
 import 'support/main_support.dart';
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _children = [
     MainPage(),
     MainProblemPage(),
-    MainSupport(),
+    Support(),
     MainProfile(),
   ];
   List<Color> _colors = [

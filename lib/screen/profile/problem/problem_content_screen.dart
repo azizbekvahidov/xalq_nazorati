@@ -202,7 +202,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
     if (img != null) imgList.add("${globals.site_link}$img");
   }
 
-  DateFormat dateF = DateFormat('dd.MM.yyyy hh.mm');
+  DateFormat dateF = DateFormat('dd.MM.yyyy HH.mm');
   @override
   Widget build(BuildContext context) {
     int hours;
@@ -431,7 +431,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "${_data["address"]}",
+                                            "${_data["address"].replaceAll(new RegExp(r"\s+"), " ")}",
                                             style: TextStyle(
                                               fontFamily: globals.font,
                                               fontSize:

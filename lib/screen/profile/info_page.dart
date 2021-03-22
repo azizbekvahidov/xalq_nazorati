@@ -226,13 +226,13 @@ class _InfoPageState extends State<InfoPage> {
                     //     "rate_app".tr().toString(), () {
                     //   _requestReview();
                     // }, true, null),
-                    IconCardList(
-                        "id",
-                        "assets/img/support_icon.svg",
-                        "technical_support".tr().toString(),
-                        Support(),
-                        true,
-                        null),
+                    // IconCardList(
+                    //     "id",
+                    //     "assets/img/support_icon.svg",
+                    //     "technical_support".tr().toString(),
+                    //     Support(),
+                    //     true,
+                    //     null),
                     IconCardList(
                         "id",
                         "assets/img/rule_icon.svg",

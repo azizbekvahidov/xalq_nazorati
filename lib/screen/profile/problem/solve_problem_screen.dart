@@ -435,7 +435,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                     ProblemSolveDesc("problem".tr().toString(),
                                         "${res["problem"]["subsubcategory"]["api_title".tr().toString()]}"),
                                     ProblemSolveDesc("place".tr().toString(),
-                                        "${res["problem"]["address"].replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("\r", " ")}, ${res["problem"]["note"] != null ? res["problem"]["note"] : ""}"),
+                                        "${res["problem"]["address"].replaceAll(new RegExp(r"\s+"), " ")}, ${res["problem"]["note"] != null ? res["problem"]["note"] : ""}"),
                                     ProblemSolveDesc(
                                       "solved_status".tr().toString(),
                                       "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(result['created_at']).toString()))}",
