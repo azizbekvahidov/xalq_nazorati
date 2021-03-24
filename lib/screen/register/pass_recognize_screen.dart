@@ -291,7 +291,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      height: 250,
+                      height: 270,
                       margin: EdgeInsets.only(top: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -300,6 +300,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                       width: double.infinity,
                       padding: EdgeInsets.all(20),
                       child: KeyboardActions(
+                        disableScroll: true,
                         // isDialog: true,
                         config: _buildConfig(context),
                         child: Column(

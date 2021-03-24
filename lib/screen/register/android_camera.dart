@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -71,13 +73,70 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
       DeviceOrientation.portraitDown,
     ]);
     _camera = CameraController(cameras[0], ResolutionPreset.high);
-    _camera.initialize().then((_) async {
-      await Future.delayed(Duration(milliseconds: 300));
-      await _camera.startImageStream(_process);
-      setState(() {
-        _cameraInitialized = true;
+    var status = await Permission.microphone.status;
+    var st = await Permission.values;
+    print(_camera.description);
+    if (status.isUndetermined || status.isDenied) {
+      _camera.initialize().then((_) async {
+        await Future.delayed(Duration(milliseconds: 300));
+        await _camera.startImageStream(_process);
+        setState(() {
+          _cameraInitialized = true;
+        });
       });
-    });
+    } else if (status.isPermanentlyDenied) {
+      customDialog(context);
+    } else {
+      _camera.initialize().then((_) async {
+        await Future.delayed(Duration(milliseconds: 300));
+        await _camera.startImageStream(_process);
+        setState(() {
+          _cameraInitialized = true;
+        });
+      });
+    }
+  }
+
+  customDialog(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                        child: FlatButton(
+                      child: Text("link"),
+                      onPressed: () {
+                        SystemSettings.app();
+                      },
+                    )),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   Future<Uint8List> convertImagetoPng(CameraImage image) async {

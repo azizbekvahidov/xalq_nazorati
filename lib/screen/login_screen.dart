@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -116,16 +117,26 @@ class _LoginScreenState extends State<LoginScreen> {
     // globals.userData = json.decode(reply);
   }
 
+  double logoScale = 0.35;
+  double contentScale = 0.65;
+
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
       keyboardBarColor: Colors.grey[200],
+      // keyboardSeparatorColor: Colors.grey,
       nextFocus: true,
       actions: [
         KeyboardActionsItem(focusNode: phoneNode, toolbarButtons: [
           (node) {
+            logoScale = 0.27;
+            contentScale = 0.73;
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              onTap: () {
+                node.unfocus();
+                logoScale = 0.35;
+                contentScale = 0.65;
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
@@ -135,8 +146,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ]),
         KeyboardActionsItem(focusNode: passNode, toolbarButtons: [
           (node) {
+            logoScale = 0.27;
+            contentScale = 0.73;
             return GestureDetector(
-              onTap: () => node.unfocus(),
+              dragStartBehavior: DragStartBehavior.down,
+              onTap: () {
+                node.unfocus();
+                logoScale = 0.35;
+                contentScale = 0.65;
+              },
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.close),
@@ -173,6 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.transparent,
         body: GestureDetector(
           onTap: () {
+            logoScale = 0.35;
+            contentScale = 0.65;
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: SingleChildScrollView(
@@ -187,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: Container(
                     color: Colors.transparent,
-                    height: dHeight * 0.35, //mediaQuery.size.height,
+                    height: dHeight * logoScale, //mediaQuery.size.height,
                     width: double.infinity,
                     child: Center(
                       child: SvgPicture.asset("assets/img/FrameW.svg"),
@@ -196,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: dHeight * 0.65,
+                  height: dHeight * contentScale,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -209,7 +229,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Stack(
                       children: [
                         KeyboardActions(
-                          // isDialog: true,
+                          enable: true,
+                          overscroll: 500.0,
+                          autoScroll: true,
                           config: _buildConfig(context),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

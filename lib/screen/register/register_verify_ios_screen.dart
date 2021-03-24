@@ -152,7 +152,9 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
   bool isSend = false;
   void verify() async {
     String code = codeController.text;
-
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        settings: const RouteSettings(name: PassRecognizeScreen.routeName),
+        builder: (context) => PassRecognizeScreen()));
     if (!isSend && code != "") {
       try {
         String url =
@@ -313,6 +315,18 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
                                             autofocus: true,
                                             focusNode: codeNode,
                                             controller: codeController,
+                                            onChanged: (val) {
+                                              print(val);
+                                              if (val.length == 6) {
+                                                setState(() {
+                                                  _value = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value = false;
+                                                });
+                                              }
+                                            },
                                             // onCodeChanged: (val) {
                                             //   print(val);
                                             //   codeController.text = val;
@@ -338,6 +352,15 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
                                             onCodeChanged: (val) {
                                               print(val);
                                               codeController.text = val;
+                                              if (val.length == 6) {
+                                                setState(() {
+                                                  _value = true;
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  _value = false;
+                                                });
+                                              }
                                               // _listenForCode();
                                             },
                                             decoration: InputDecoration(
@@ -401,13 +424,21 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  DefaultButton(
-                                    "continue".tr().toString(),
-                                    () {
-                                      verify();
-                                    },
-                                    Theme.of(context).primaryColor,
-                                  ),
+                                  _value
+                                      ? DefaultButton(
+                                          "continue".tr().toString(),
+                                          () {
+                                            verify();
+                                          },
+                                          Theme.of(context).primaryColor,
+                                        )
+                                      : DefaultButton(
+                                          "continue".tr().toString(),
+                                          () {
+                                            verify();
+                                          },
+                                          Color(0xffB2B7D0),
+                                        ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
