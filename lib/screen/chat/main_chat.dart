@@ -10,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,6 +22,7 @@ import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/chat_box.dart';
 import 'package:xalq_nazorati/widget/full_screen.dart';
+import 'package:xalq_nazorati/widget/permission_modal.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_view.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
@@ -133,7 +137,6 @@ class _MainChatState extends State<MainChat> {
       targetPath,
       quality: 80,
     );
-
     return result;
   }
 
@@ -501,46 +504,180 @@ class _MainChatState extends State<MainChat> {
     );
   }
 
-  Future pickedFile() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles();
+  // Future pickedFile() async {
+  //   FilePickerResult result =
+  //       await FilePicker.platform.pickFiles(type: FileType.image);
 
-    if (result != null &&
-        globals.validateFile(File(result.files.single.path))) {
-      PlatformFile file = result.files.first;
-      if (file.extension == "jpg" ||
-          file.extension == "png" ||
-          file.extension == "jpeg") {
-        _file = File(result.files.single.path);
-        final dir = await path_provider.getTemporaryDirectory();
+  //   if (result != null &&
+  //       globals.validateFile(File(result.files.single.path))) {
+  //     PlatformFile file = result.files.first;
+  //     if (file.extension == "jpg" ||
+  //         file.extension == "png" ||
+  //         file.extension == "jpeg") {
+  //       _file = File(result.files.single.path);
+  //       final dir = await path_provider.getTemporaryDirectory();
 
-        final targetPath =
-            dir.absolute.path + "/${Time()}${_file.path.split("/").last}";
+  //       final targetPath =
+  //           dir.absolute.path + "/${Time()}${_file.path.split("/").last}";
 
-        _file = await testCompressAndGetFile(_file, targetPath);
-        sendMessage();
-      } else if (file.extension == "pdf") {
-        _file = File(result.files.single.path);
-        sendMessage();
+  //       _file = await testCompressAndGetFile(_file, targetPath);
+  //       sendMessage();
+  //     } else if (file.extension == "pdf") {
+  //       _file = File(result.files.single.path);
+  //       sendMessage();
+  //     } else {
+  //       Fluttertoast.showToast(
+  //           msg: "file_warning".tr().toString(),
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.BOTTOM,
+  //           timeInSecForIosWeb: 2,
+  //           backgroundColor: Colors.grey,
+  //           textColor: Colors.white,
+  //           fontSize: 15.0);
+  //     }
+  //   } else {
+  //     Fluttertoast.showToast(
+  //         msg: "file_warning".tr().toString(),
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         timeInSecForIosWeb: 2,
+  //         backgroundColor: Colors.grey,
+  //         textColor: Colors.white,
+  //         fontSize: 15.0);
+  //   }
+  // }
+
+  pickedFile() async {
+    if (Platform.isAndroid) {
+      var status = await Permission.accessMediaLocation.status;
+      if (status.isUndetermined || status.isDenied) {
+        Permission.accessMediaLocation.request();
+        status = await Permission.accessMediaLocation.status;
+        if (!status.isDenied && !status.isPermanentlyDenied) {
+          File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+          if (_img != null && globals.validateFile(_img)) {
+            // widget.image = _img;
+
+            final dir = await path_provider.getTemporaryDirectory();
+
+            final targetPath =
+                dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+
+            _file = await testCompressAndGetFile(_img, targetPath);
+
+            sendMessage();
+          } else {
+            Fluttertoast.showToast(
+                msg: "file_warning".tr().toString(),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 15.0);
+          }
+        }
+      } else if (status.isPermanentlyDenied) {
+        customDialog(context);
       } else {
-        Fluttertoast.showToast(
-            msg: "file_warning".tr().toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 15.0);
+        File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+        if (_img != null && globals.validateFile(_img)) {
+          // widget.image = _img;
+
+          final dir = await path_provider.getTemporaryDirectory();
+
+          final targetPath =
+              dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+
+          _file = await testCompressAndGetFile(_img, targetPath);
+          sendMessage();
+        }
       }
-    } else {
-      Fluttertoast.showToast(
-          msg: "file_warning".tr().toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+    } else if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      if (status.isUndetermined) {
+        Permission.accessMediaLocation.request();
+        status = await Permission.accessMediaLocation.status;
+        if (!status.isDenied && !status.isPermanentlyDenied) {
+          File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+          if (_img != null && globals.validateFile(_img)) {
+            // widget.image = _img;
+
+            final dir = await path_provider.getTemporaryDirectory();
+
+            final targetPath =
+                dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+
+            _file = await testCompressAndGetFile(_img, targetPath);
+
+            sendMessage();
+          } else {
+            Fluttertoast.showToast(
+                msg: "file_warning".tr().toString(),
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 2,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 15.0);
+          }
+        }
+      } else if (status.isPermanentlyDenied || status.isDenied) {
+        customDialog(context);
+      } else {
+        File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+        if (_img != null && globals.validateFile(_img)) {
+          // widget.image = _img;
+
+          final dir = await path_provider.getTemporaryDirectory();
+
+          final targetPath =
+              dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+
+          _file = await testCompressAndGetFile(_img, targetPath);
+          sendMessage();
+        }
+      }
     }
+  }
+
+  customDialog(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: PermissionModal()),
+                ),
+              );
+            },
+          );
+        });
   }
 
   bool _textActive = false;

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mrz_scanner/flutter_mrz_scanner.dart';
@@ -50,7 +52,49 @@ class _CameraScreenState extends State<CameraScreen> {
     super.dispose();
   }
 
-  void _onControllerCreated(MRZController controller) {
+  customDialog(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                        child: FlatButton(
+                      child: Text("link"),
+                      onPressed: () {
+                        SystemSettings.app();
+                      },
+                    )),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  void _onControllerCreated(MRZController controller) async {
     this.controller = controller;
 
     controller.onParsed = (result) async {
@@ -60,6 +104,7 @@ class _CameraScreenState extends State<CameraScreen> {
         Navigator.pop(context, result);
       }
     };
+
     controller.onError = (error) => {
           showDialog<void>(
               context: context,
@@ -78,7 +123,15 @@ class _CameraScreenState extends State<CameraScreen> {
                     ],
                   )))
         };
-    controller.startPreview();
+    var status = await Permission.camera.status;
+    print(status);
+    if (status.isUndetermined) {
+      controller.startPreview();
+    } else if (status.isDenied) {
+      customDialog(context);
+    } else {
+      controller.startPreview();
+    }
   }
 
   @override

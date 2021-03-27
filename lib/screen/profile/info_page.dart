@@ -138,7 +138,7 @@ class _InfoPageState extends State<InfoPage> {
                                             text: TextSpan(
                                               text: "share_app".tr().toString(),
                                               style: TextStyle(
-                                                fontFamily: "Gilroy",
+                                                fontFamily: globals.font,
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:
@@ -195,7 +195,7 @@ class _InfoPageState extends State<InfoPage> {
                                             text: TextSpan(
                                               text: "rate_app".tr().toString(),
                                               style: TextStyle(
-                                                fontFamily: "Gilroy",
+                                                fontFamily: globals.font,
                                                 color: Color(0xff050505),
                                                 fontWeight: FontWeight.w600,
                                                 fontSize:

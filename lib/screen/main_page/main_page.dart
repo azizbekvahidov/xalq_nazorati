@@ -79,6 +79,7 @@ class _MainPageState extends State<MainPage> {
       return reply;
     } catch (e) {
       // stopTimer(connectTimer);
+      // customAlert(context);
       print("category => $e");
     }
   }
@@ -532,6 +533,63 @@ class _MainPageState extends State<MainPage> {
                                       )
                                     : Container();
                               }),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  customAlert(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.03,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "alert".tr().toString(),
+                            style: Theme.of(context).textTheme.display2,
+                          ),
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              "ok".tr().toString(),
+                              style: Theme.of(context).textTheme.display2,
+                            ),
+                          )
                         ],
                       ),
                     ),

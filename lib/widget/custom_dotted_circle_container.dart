@@ -11,6 +11,7 @@ import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:xalq_nazorati/widget/permission_modal.dart';
 import '../widget/default_button.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -55,7 +56,6 @@ class _CustomDottedCircleContainerState
   }
 
   Future<File> testCompressAndGetFile(File file, String targetPath) async {
-    print("testCompressAndGetFile");
     final result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
@@ -89,19 +89,13 @@ class _CustomDottedCircleContainerState
                     color: Colors.white,
                   ),
                   width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   padding: EdgeInsets.symmetric(
                       vertical: MediaQuery.of(context).size.height * 0.03,
                       horizontal: MediaQuery.of(context).size.width * 0.05),
                   child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
-                    child: Container(
-                        child: FlatButton(
-                      child: Text("link"),
-                      onPressed: () {
-                        SystemSettings.app();
-                      },
-                    )),
+                    child: PermissionModal(),
                   ),
                 ),
               );
@@ -150,11 +144,29 @@ class _CustomDottedCircleContainerState
   }
 
   pickGallery() async {
-    var status = await Permission.accessMediaLocation.status;
-    if (status.isUndetermined || status.isDenied) {
-      Permission.accessMediaLocation.request();
-      status = await Permission.accessMediaLocation.status;
-      if (!status.isDenied && !status.isPermanentlyDenied) {
+    if (Platform.isAndroid) {
+      var status = await Permission.accessMediaLocation.status;
+      if (status.isUndetermined || status.isDenied) {
+        Permission.accessMediaLocation.request();
+        status = await Permission.accessMediaLocation.status;
+        if (!status.isDenied && !status.isPermanentlyDenied) {
+          File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+          if (_img != null && globals.validateFile(_img)) {
+            // widget.image = _img;
+
+            final dir = await path_provider.getTemporaryDirectory();
+
+            final targetPath =
+                dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+            _img = await testCompressAndGetFile(_img, targetPath);
+            globals.images.addAll({widget.img: _img});
+            setState(() {});
+          }
+        }
+      } else if (status.isPermanentlyDenied) {
+        customDialog(context);
+      } else {
         File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
 
         if (_img != null && globals.validateFile(_img)) {
@@ -169,21 +181,42 @@ class _CustomDottedCircleContainerState
           setState(() {});
         }
       }
-    } else if (status.isPermanentlyDenied) {
-      customDialog(context);
-    } else {
-      File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+    } else if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      if (status.isUndetermined) {
+        Permission.accessMediaLocation.request();
+        status = await Permission.accessMediaLocation.status;
+        if (!status.isDenied && !status.isPermanentlyDenied) {
+          File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-      if (_img != null && globals.validateFile(_img)) {
-        // widget.image = _img;
+          if (_img != null && globals.validateFile(_img)) {
+            // widget.image = _img;
 
-        final dir = await path_provider.getTemporaryDirectory();
+            final dir = await path_provider.getTemporaryDirectory();
 
-        final targetPath =
-            dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
-        _img = await testCompressAndGetFile(_img, targetPath);
-        globals.images.addAll({widget.img: _img});
-        setState(() {});
+            final targetPath =
+                dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+            _img = await testCompressAndGetFile(_img, targetPath);
+            globals.images.addAll({widget.img: _img});
+            setState(() {});
+          }
+        }
+      } else if (status.isPermanentlyDenied || status.isDenied) {
+        customDialog(context);
+      } else {
+        File _img = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+        if (_img != null && globals.validateFile(_img)) {
+          // widget.image = _img;
+
+          final dir = await path_provider.getTemporaryDirectory();
+
+          final targetPath =
+              dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+          _img = await testCompressAndGetFile(_img, targetPath);
+          globals.images.addAll({widget.img: _img});
+          setState(() {});
+        }
       }
     }
   }
