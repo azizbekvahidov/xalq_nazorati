@@ -152,9 +152,6 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
   bool isSend = false;
   void verify() async {
     String code = codeController.text;
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        settings: const RouteSettings(name: PassRecognizeScreen.routeName),
-        builder: (context) => PassRecognizeScreen()));
     if (!isSend && code != "") {
       try {
         String url =

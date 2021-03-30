@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,6 +12,7 @@ import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:xalq_nazorati/widget/custom_modal.dart';
 import 'package:xalq_nazorati/widget/permission_modal.dart';
 import '../widget/default_button.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -82,49 +84,30 @@ class _CustomDottedCircleContainerState
             Animation secondaryAnimation) {
           return StatefulBuilder(
             builder: (context, StateSetter setState) {
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  padding: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.03,
-                      horizontal: MediaQuery.of(context).size.width * 0.05),
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: PermissionModal(),
-                  ),
-                ),
+              return CustomModal(
+                widthAxis: 0.85,
+                heightAxis: 0.32,
               );
             },
           );
         });
   }
 
-  pickerCam() async {
-    var status = await Permission.camera.status;
-    if (status.isUndetermined || status.isDenied) {
-      File _img = await ImagePicker.pickImage(source: ImageSource.camera);
-      if (_img != null && globals.validateFile(_img)) {
-        // widget.image = _img;
-        print("take shot");
-        // await _getLocation();
-        final dir = await path_provider.getTemporaryDirectory();
-
-        final targetPath =
-            dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
-        _img = await testCompressAndGetFile(_img, targetPath);
-        setState(() {
-          globals.images.addAll({widget.img: _img});
-        });
-      }
-      // We didn't ask for permission yet.
-    } else if (status.isPermanentlyDenied) {
-      customDialog(context);
-    } else {
+  _permissionRequest() async {
+    final permissionValidator = EasyPermissionValidator(
+      context: context,
+      appName: 'warning'.tr().toString(),
+      customDialog: CustomModal(
+        widthAxis: 0.85,
+        heightAxis: 0.32,
+      ),
+      appNameColor: Colors.black,
+      cancelText: 'cancel'.tr().toString(),
+      enableLocationMessage: 'permission_text'.tr().toString(),
+      goToSettingsText: 'go_settings'.tr().toString(),
+    );
+    var result = await permissionValidator.camera();
+    if (result) {
       File _img = await ImagePicker.pickImage(source: ImageSource.camera);
       if (_img != null && globals.validateFile(_img)) {
         // widget.image = _img;
@@ -140,6 +123,32 @@ class _CustomDottedCircleContainerState
         });
       }
     }
+  }
+
+  pickerCam() async {
+    _permissionRequest();
+    // var status = await Permission.camera.status;
+    // if (status.isUndetermined || status.isDenied) {
+    //
+    //   // We didn't ask for permission yet.
+    // } else if (status.isPermanentlyDenied) {
+    //   customDialog(context);
+    // } else {
+    //   File _img = await ImagePicker.pickImage(source: ImageSource.camera);
+    //   if (_img != null && globals.validateFile(_img)) {
+    //     // widget.image = _img;
+    //     print("take shot");
+    //     // await _getLocation();
+    //     final dir = await path_provider.getTemporaryDirectory();
+
+    //     final targetPath =
+    //         dir.absolute.path + "/${Time()}${_img.path.split("/").last}";
+    //     _img = await testCompressAndGetFile(_img, targetPath);
+    //     setState(() {
+    //       globals.images.addAll({widget.img: _img});
+    //     });
+    //   }
+    // }
     // ignore: deprecated_member_use
   }
 

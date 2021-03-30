@@ -13,53 +13,111 @@ class PermissionModal extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: "permission_text".tr().toString(),
-                style: TextStyle(
-                  fontFamily: globals.font,
-                  fontSize: dWidth * globals.fontSize16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600,
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "warning".tr().toString(),
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontSize: dWidth * globals.fontSize20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "permission_text".tr().toString(),
+                  style: TextStyle(
+                    fontFamily: globals.font,
+                    fontSize: dWidth * globals.fontSize16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Padding(padding: EdgeInsets.only(top: 20)),
         Column(
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: FlatButton(
-                child: Container(
-                    width: dWidth,
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: Theme.of(context).primaryColor,
-                      border: Border.all(
-                        style: BorderStyle.solid,
-                        color: Theme.of(context).primaryColor,
-                        width: 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: FlatButton(
+                    child: Container(
+                        // width: dWidth,
+                        // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                        // decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(25),
+                        // color: Theme.of(context).primaryColor,
+                        // border: Border.all(
+                        //   style: BorderStyle.solid,
+                        //   color: Theme.of(context).primaryColor,
+                        //   width: 1,
+                        // ),
+                        // ),
+                        child: Center(
+                      child: Text(
+                        "cancel".tr().toString(),
+                        style: TextStyle(
+                          fontSize: dWidth * globals.fontSize16,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    child: Center(
+                    )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      // Navigator.pop(context, true);
+                    },
+                  ),
+                ),
+                Container(
+                  child: FlatButton(
+                    child: Container(
+                        // width: dWidth,
+                        // padding: EdgeInsets.symmetric(vertical: 10, horizontal: 35),
+                        // decoration: BoxDecoration(
+                        // borderRadius: BorderRadius.circular(25),
+                        // color: Theme.of(context).primaryColor,
+                        // border: Border.all(
+                        //   style: BorderStyle.solid,
+                        //   color: Theme.of(context).primaryColor,
+                        //   width: 1,
+                        // ),
+                        // ),
+                        child: Center(
                       child: Text(
                         "go_settings".tr().toString(),
                         style: TextStyle(
-                            fontSize: dWidth * globals.fontSize16,
-                            color: Colors.white),
+                          fontSize: dWidth * globals.fontSize16,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     )),
-                onPressed: () {
-                  SystemSettings.app();
-                  // Navigator.pop(context, true);
-                },
-              ),
+                    onPressed: () {
+                      SystemSettings.app();
+                      // Navigator.pop(context, true);
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
         ),

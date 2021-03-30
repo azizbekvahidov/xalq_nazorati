@@ -17,7 +17,7 @@ class BrikSize extends InheritedWidget {
   final Size size;
 
   static BrikSize of(BuildContext context) {
-    final brikSize = context.inheritFromWidgetOfExactType(BrikSize) as BrikSize;
+    final brikSize = context.dependOnInheritedWidgetOfExactType<BrikSize>();
     assert(brikSize != null, "....");
     return brikSize;
   }
@@ -48,8 +48,8 @@ class Brik extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.all(0.05 * width),
         padding: EdgeInsets.all(0.1 * width),
-        decoration:
-            BoxDecoration(border: Border.all(width: 0.10 * width, color: color)),
+        decoration: BoxDecoration(
+            border: Border.all(width: 0.10 * width, color: color)),
         child: Container(
           color: color,
         ),

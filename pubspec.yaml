@@ -37,7 +37,7 @@ dependencies:
   custom_navigator: 
     git:
         url: https://github.com/kjawadDeveloper/Custom-navigator.git 
-  permission_handler: ^5.0.1+1
+  permission_handler: ^5.0.1+2
   shared_preferences: ^0.5.10
   easy_localization: ^2.3.3
   geolocator: ^6.0.0+4
@@ -92,6 +92,7 @@ dependencies:
   # workmanager: ^0.2.3
   catcher: ^0.4.1
   system_settings: ^1.0.1
+  easy_permission_validator: ^2.0.1
   
   # sms:
   #   path: ./sms

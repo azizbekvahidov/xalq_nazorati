@@ -21,6 +21,7 @@ import 'package:xalq_nazorati/models/chatMessage.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/chat_box.dart';
+import 'package:xalq_nazorati/widget/custom_modal.dart';
 import 'package:xalq_nazorati/widget/full_screen.dart';
 import 'package:xalq_nazorati/widget/permission_modal.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_view.dart';
@@ -659,21 +660,9 @@ class _MainChatState extends State<MainChat> {
             Animation secondaryAnimation) {
           return StatefulBuilder(
             builder: (context, StateSetter setState) {
-              return Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  padding: EdgeInsets.symmetric(
-                      vertical: MediaQuery.of(context).size.height * 0.03,
-                      horizontal: MediaQuery.of(context).size.width * 0.05),
-                  child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: PermissionModal()),
-                ),
+              return CustomModal(
+                widthAxis: 0.85,
+                heightAxis: 0.32,
               );
             },
           );

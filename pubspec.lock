@@ -262,6 +262,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.3"
+  easy_permission_validator:
+    dependency: "direct main"
+    description:
+      name: easy_permission_validator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   equatable:
     dependency: transitive
     description:
@@ -855,14 +862,14 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1+1"
+    version: "5.1.0+2"
   permission_handler_platform_interface:
     dependency: transitive
     description:
       name: permission_handler_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   petitparser:
     dependency: transitive
     description:
