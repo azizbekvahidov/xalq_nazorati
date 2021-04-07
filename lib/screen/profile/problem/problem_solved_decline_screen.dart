@@ -3,13 +3,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
-import 'package:xalq_nazorati/screen/home_page.dart';
-import 'package:xalq_nazorati/screen/profile/main_profile.dart';
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
@@ -36,6 +33,7 @@ class _ProblemSolvedDeclineScreenState
   var dataSended = false;
   bool _value = false;
   bool isSending = false;
+  Helper helper = new Helper();
   Future sendData() async {
     String desc = descController.text;
 
@@ -70,14 +68,7 @@ class _ProblemSolvedDeclineScreenState
           });
         }
       } catch (e) {
-        Fluttertoast.showToast(
-            msg: e.toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 15.0);
+        helper.getToast(e.toString());
       }
     }
   }

@@ -2,19 +2,15 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass.dart';
-import 'package:xalq_nazorati/screen/rule_page.dart';
 import 'package:xalq_nazorati/widget/input/pass_input.dart';
 import '../login_screen.dart';
-import 'register_verify_screen.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 import '../../widget/input/phone_input.dart';
@@ -31,6 +27,7 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
   final pass2Controller = TextEditingController();
   bool _value = false;
   bool isRegister = false;
+  Helper helper = new Helper();
   void getCode() async {
     if (passController.text != "" && pass2Controller.text != "") {
       try {
@@ -51,16 +48,7 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
               builder: (context) => LoginScreen()));
         } else {
           dynamic json = r1.json();
-          print(json['detail']);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
-          print(json);
+          helper.getToast(json['detail']);
         }
       } catch (e) {
         print(e);

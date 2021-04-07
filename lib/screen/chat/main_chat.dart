@@ -9,13 +9,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/chatMessage.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
@@ -42,7 +42,7 @@ class _MainChatState extends State<MainChat> {
   List<ChatMessage> _data;
   File _file = null;
   bool _isHide = false;
-
+  Helper helper = new Helper();
   @override
   void initState() {
     super.initState();
@@ -505,49 +505,6 @@ class _MainChatState extends State<MainChat> {
     );
   }
 
-  // Future pickedFile() async {
-  //   FilePickerResult result =
-  //       await FilePicker.platform.pickFiles(type: FileType.image);
-
-  //   if (result != null &&
-  //       globals.validateFile(File(result.files.single.path))) {
-  //     PlatformFile file = result.files.first;
-  //     if (file.extension == "jpg" ||
-  //         file.extension == "png" ||
-  //         file.extension == "jpeg") {
-  //       _file = File(result.files.single.path);
-  //       final dir = await path_provider.getTemporaryDirectory();
-
-  //       final targetPath =
-  //           dir.absolute.path + "/${Time()}${_file.path.split("/").last}";
-
-  //       _file = await testCompressAndGetFile(_file, targetPath);
-  //       sendMessage();
-  //     } else if (file.extension == "pdf") {
-  //       _file = File(result.files.single.path);
-  //       sendMessage();
-  //     } else {
-  //       Fluttertoast.showToast(
-  //           msg: "file_warning".tr().toString(),
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 2,
-  //           backgroundColor: Colors.grey,
-  //           textColor: Colors.white,
-  //           fontSize: 15.0);
-  //     }
-  //   } else {
-  //     Fluttertoast.showToast(
-  //         msg: "file_warning".tr().toString(),
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: Colors.grey,
-  //         textColor: Colors.white,
-  //         fontSize: 15.0);
-  //   }
-  // }
-
   pickedFile() async {
     if (Platform.isAndroid) {
       var status = await Permission.accessMediaLocation.status;
@@ -569,14 +526,7 @@ class _MainChatState extends State<MainChat> {
 
             sendMessage();
           } else {
-            Fluttertoast.showToast(
-                msg: "file_warning".tr().toString(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 15.0);
+            helper.getToast("file_warning".tr().toString());
           }
         }
       } else if (status.isPermanentlyDenied) {
@@ -616,14 +566,7 @@ class _MainChatState extends State<MainChat> {
 
             sendMessage();
           } else {
-            Fluttertoast.showToast(
-                msg: "file_warning".tr().toString(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 15.0);
+            helper.getToast("file_warning".tr().toString());
           }
         }
       } else if (status.isPermanentlyDenied || status.isDenied) {

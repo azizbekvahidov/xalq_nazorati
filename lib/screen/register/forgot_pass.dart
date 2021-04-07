@@ -4,16 +4,14 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 // import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/register/forgot_pass_recover.dart';
-import 'pass_recognize_screen.dart';
-import '../../widget/input/default_input.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 
@@ -33,6 +31,7 @@ class _ForgotPassState extends State<ForgotPass> {
   Timer _timer;
   final codeController = TextEditingController();
   int _start = 180;
+  Helper helper = new Helper();
 
   // void getSMS() async {
   //   // Create SMS Receiver Listener
@@ -128,15 +127,7 @@ class _ForgotPassState extends State<ForgotPass> {
               builder: (context) => ForgotPassRecover()));
         } else {
           dynamic json = r1.json();
-          print(json["detail"]);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
+          helper.getToast(json["detail"]);
         }
       } catch (e) {
         print(e);

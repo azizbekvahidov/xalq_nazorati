@@ -667,7 +667,25 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                               ],
                             ),
                           ),
-                          ShadowBox(
+                          Container(
+                            margin: EdgeInsets.only(top: 15),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color(0xffD5D8E5), width: 0.5),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.03),
+                                  spreadRadius: 0,
+                                  blurRadius: 10,
+                                  offset: Offset(
+                                      4, 6), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            width: double.infinity,
+                            padding: EdgeInsets.only(top: 10),
                             child: Column(
                               children: [
                                 CustomCardList(
@@ -682,7 +700,13 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                   "subcat2",
                                   "messages".tr().toString(),
                                   MainChat(_data["id"], problemStatus),
-                                  true,
+                                  (problemStatus == "confirmed" ||
+                                          problemStatus == "denied" ||
+                                          problemStatus == "closed" ||
+                                          problemStatus == "planned" ||
+                                          problemStatus == "canceled")
+                                      ? false
+                                      : true,
                                   "${alertData['chat_cnt']}",
                                   alertData['chat_cnt'] != 0 ? true : false,
                                 ),
@@ -768,23 +792,160 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                                 );
                                               },
                                             ),
-                                            Divider(),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 10))
                                           ],
                                         ),
                                       ),
                                 _hasResult
-                                    ? CustomCardList(
-                                        "subcat2",
-                                        "result".tr().toString(),
-                                        SolveProblemScreen(
-                                          status: _status,
-                                          id: _data["id"],
-                                          stat: problemStatus,
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        width:
+                                                            (mediaQuery.size
+                                                                        .width -
+                                                                    mediaQuery
+                                                                        .padding
+                                                                        .left -
+                                                                    mediaQuery
+                                                                        .padding
+                                                                        .right) *
+                                                                0.82,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                                child: RichText(
+                                                              text: TextSpan(
+                                                                text: "result"
+                                                                    .tr()
+                                                                    .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      globals
+                                                                          .font,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: mediaQuery
+                                                                          .size
+                                                                          .width *
+                                                                      globals
+                                                                          .fontSize18,
+                                                                ),
+                                                              ),
+                                                            )),
+                                                            Container(
+                                                              child: !alertData[
+                                                                      "res_seen"]
+                                                                  ? Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          left:
+                                                                              10),
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              10),
+                                                                          color:
+                                                                              Colors.red),
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      width: 20,
+                                                                      height:
+                                                                          20,
+                                                                      // padding: EdgeInsets.symmetric(
+                                                                      //     vertical: 2, horizontal: 7),
+                                                                      child:
+                                                                          Text(
+                                                                        "1",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontFamily:
+                                                                              globals.font,
+                                                                          fontSize:
+                                                                              mediaQuery.size.width * globals.fontSize10,
+                                                                          fontFeatures: [
+                                                                            FontFeature.enable("pnum"),
+                                                                            FontFeature.enable("lnum")
+                                                                          ],
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      ),
+                                                                    )
+                                                                  : Container(),
+                                                            ),
+                                                          ],
+                                                        )),
+                                                    Container(
+                                                      child: Icon(
+                                                        Icons.arrow_forward_ios,
+                                                        size: 15,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                if (globals.token != null) {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return SolveProblemScreen(
+                                                          status: _status,
+                                                          id: _data["id"],
+                                                          stat: problemStatus,
+                                                        );
+                                                      },
+                                                    ),
+                                                  ).then((value) {
+                                                    setState(() {});
+                                                  });
+                                                } else {}
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                        false,
-                                        "1",
-                                        !alertData["res_seen"],
                                       )
+                                    // CustomCardList(
+                                    //     "subcat2",
+                                    //     "result".tr().toString(),
+                                    //     SolveProblemScreen(
+                                    //       status: _status,
+                                    //       id: _data["id"],
+                                    //       stat: problemStatus,
+                                    //     ),
+                                    //     true,
+                                    //     "1",
+                                    //     !alertData["res_seen"],
+                                    //   )
                                     : Container(),
                               ],
                             ),

@@ -1,23 +1,16 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
-import 'package:xalq_nazorati/models/addresses.dart';
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
-import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/input/pass_input.dart';
-import '../rule_page.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import '../../widget/shadow_box.dart';
 import '../../widget/default_button.dart';
-import '../../widget/input/default_input.dart';
 import '../../widget/text/main_text.dart';
 
 class RegisterPersonalDataScreen extends StatefulWidget {
@@ -38,7 +31,7 @@ class _RegisterPersonalDataScreenState
   bool _value = false;
   String address = "";
   Map bigData = {};
-
+  Helper helper = new Helper();
   Future sendData() async {
     String email = emailController.text;
 
@@ -67,28 +60,14 @@ class _RegisterPersonalDataScreenState
           Map<String, dynamic> res = json['detail'];
           print(json);
           res.forEach((key, value) {
-            Fluttertoast.showToast(
-                msg: res[key][0],
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 15.0);
+            helper.getToast(res[key][0]);
           });
         }
       } catch (e) {
         print(e);
       }
     } else {
-      Fluttertoast.showToast(
-          msg: "fill_personal_data".tr().toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast("fill_personal_data".tr().toString());
     }
   }
 
@@ -121,14 +100,7 @@ class _RegisterPersonalDataScreenState
       isLogin = true;
     } else {
       Map<String, dynamic> responseBody = response.json();
-      Fluttertoast.showToast(
-          msg: responseBody['message'],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast(responseBody['message']);
     }
 
     if (isLogin)
@@ -153,14 +125,7 @@ class _RegisterPersonalDataScreenState
     } else {
       globals.token = null;
       dynamic json = response.json();
-      Fluttertoast.showToast(
-          msg: json['detail'],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast(json['detail']);
     }
     // String reply = await response.transform(utf8.decoder).join();
     // print(response.statusCode);

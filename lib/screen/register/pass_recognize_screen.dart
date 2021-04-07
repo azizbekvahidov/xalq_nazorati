@@ -5,18 +5,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
-import 'package:xalq_nazorati/screen/register/android_camera.dart';
-import 'package:xalq_nazorati/screen/register/camera_page.dart';
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/register/pas_recognize_notify.dart';
 import '../../widget/app_bar/custom_appBar.dart';
 import './pas_recognized_screen.dart';
 import '../../widget/default_button.dart';
-import '../../widget/input/default_input.dart';
 import '../../widget/text/main_text.dart';
 
 class PassRecognizeScreen extends StatefulWidget {
@@ -48,6 +45,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
 
   bool _value = false;
   bool isError = false;
+  Helper helper = new Helper();
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
@@ -117,15 +115,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
         ));
       } else {
         var json = r1.json();
-        print(json);
-        Fluttertoast.showToast(
-            msg: json['data']['detail'],
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 15.0);
+        helper.getToast(json['data']['detail']);
       }
     }
   }

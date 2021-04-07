@@ -4,12 +4,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'pass_recognize_screen.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
@@ -34,6 +34,7 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
   final codeController = TextEditingController();
   int _start = 180;
   FocusNode codeNode = FocusNode();
+  Helper helper = new Helper();
   PinDecoration _decoration = UnderlineDecoration(
     colorBuilder: PinListenColorBuilder(Colors.cyan, Colors.green),
     gapSpace: 0,
@@ -170,15 +171,7 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
               builder: (context) => PassRecognizeScreen()));
         } else {
           dynamic json = r1.json();
-          print(json["detail"]);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
+          helper.getToast(json["detail"]);
         }
       } catch (e) {
         print(e);

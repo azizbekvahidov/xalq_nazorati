@@ -144,7 +144,17 @@ class _CustomCardListState extends State<CustomCardList> {
               }
             },
           ),
-          if (widget.divider) Divider(),
+          (widget.divider)
+              ? Column(
+                  children: [
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    Divider(
+                      height: 0,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                  ],
+                )
+              : Padding(padding: EdgeInsets.only(bottom: 10)),
         ],
       ),
     );

@@ -3,13 +3,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/home_page.dart';
-import 'package:xalq_nazorati/screen/profile/main_profile.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';

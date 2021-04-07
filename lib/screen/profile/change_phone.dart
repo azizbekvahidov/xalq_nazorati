@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:requests/requests.dart';
@@ -11,6 +10,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 // import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
@@ -34,7 +34,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   bool _value = false;
   final MaskedTextController phoneController = MaskedTextController(
       mask: '00 000 00 00', translator: {"0": RegExp(r'[0-9]')});
-
+  Helper helper = new Helper();
   @override
   void initState() {
     super.initState();
@@ -88,52 +88,6 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
     );
   }
 
-  // Future changeProfile() async {
-  //   try {
-  //     // String email = emailController.text;
-  //     String code = "${codeController.text}";
-  //     if (code != "") {
-  //       changePhone(code);
-  //     }
-  //     if (address != "" || email != "") {
-  //       var url =
-  //           '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/profile';
-
-  //       Map<String, String> map = {};
-  //       if (address != '') map.addAll({"address_str": address});
-  //       if (email != '') map.addAll({"email": email});
-  //       Map<String, String> headers = {
-  //         "Authorization": "token ${globals.token}",
-  //       };
-  //       // var req = await http.put(Uri.parse(url), headers: headers, body: map);
-  //       var r1 =
-  //           await Requests.put(url, body: map, headers: headers, verify: false);
-  //       print(r1.json());
-  //       if (r1.statusCode == 200) {
-  //         r1.raiseForStatus();
-  //         Map<String, dynamic> reply = await r1.json();
-
-  //         globals.userData = reply;
-  //         print(reply["address_str"]);
-  //         Navigator.of(context).pop();
-  //       } else {
-  //         print(json);
-  //       }
-  //     } else {
-  //       Fluttertoast.showToast(
-  //           msg: "fill_personal_data".tr().toString(),
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           timeInSecForIosWeb: 2,
-  //           backgroundColor: Colors.grey,
-  //           textColor: Colors.white,
-  //           fontSize: 15.0);
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   String phone = "";
 
   Future sendMessage() async {
@@ -173,14 +127,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
           Map<String, dynamic> res = json['detail'];
           print(json);
           res.forEach((key, value) {
-            Fluttertoast.showToast(
-                msg: res[key][0],
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 2,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 15.0);
+            helper.getToast(res[key][0]);
           });
         }
       } catch (e) {
@@ -215,14 +162,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
       } else {
         print(r1.content());
         Map<String, dynamic> responseBody = r1.json();
-        Fluttertoast.showToast(
-            msg: responseBody['detail'],
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 15.0);
+        helper.getToast(responseBody['detail']);
       }
     } catch (e) {
       print(e);

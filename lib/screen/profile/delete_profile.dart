@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
-import 'package:xalq_nazorati/screen/login_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
@@ -23,6 +22,7 @@ class DeleteProfile extends StatefulWidget {
 class _DeleteProfileState extends State<DeleteProfile> {
   var descController = TextEditingController();
   bool _value = false;
+  Helper helper = new Helper();
 
   Future deleteProfile() async {
     String desc = descController.text;
@@ -48,27 +48,13 @@ class _DeleteProfileState extends State<DeleteProfile> {
         } else {
           dynamic json = r1.json();
           print(json["detail"]);
-          Fluttertoast.showToast(
-              msg: json['detail'],
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 2,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 15.0);
+          helper.getToast(json["detail"]);
         }
       } catch (ex) {
         print(ex);
       }
     } else {
-      Fluttertoast.showToast(
-          msg: "reason".tr().toString(),
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast("reason".tr().toString());
     }
   }
 

@@ -3,19 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:easy_localization/easy_localization.dart';
 // import 'package:sms/sms.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
-import 'package:xalq_nazorati/widget/input/default_input.dart';
-import 'package:xalq_nazorati/widget/input/phone_input.dart';
-import 'package:xalq_nazorati/widget/text/main_text.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
 class ChangePersonalData extends StatefulWidget {
@@ -30,6 +26,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
   String address;
   bool _value = false;
   Map<String, dynamic> bigData = {};
+  Helper helper = new Helper();
 
   final codeController = TextEditingController();
 
@@ -81,14 +78,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
           print(res);
         }
       } else {
-        Fluttertoast.showToast(
-            msg: "fill_personal_data".tr().toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 15.0);
+        helper.getToast("fill_personal_data".tr().toString());
       }
     } catch (e) {
       print(e);

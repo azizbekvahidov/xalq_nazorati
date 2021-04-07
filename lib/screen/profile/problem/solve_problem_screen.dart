@@ -16,6 +16,7 @@ import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
 import 'package:xalq_nazorati/widget/problems/pdf_widget.dart';
 import 'package:xalq_nazorati/widget/problems/problem_solve_desc.dart';
 import 'package:xalq_nazorati/widget/res_content.dart';
+import 'package:xalq_nazorati/widget/success_box.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/shadow_box.dart';
 
@@ -557,13 +558,8 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                       res["problem"]["unsatisfactory_solution"] != null ||
                       res["moderator_log"] != null ||
                       res["problem"]["user_cancellation_reason"] != null
-                  ? Container(
-                      margin: EdgeInsets.only(top: 8),
-                      alignment: Alignment.center,
-                      width: dWidth,
-                      height: 50,
-                      color: Color(0xffC4C4C4),
-                      child: Text(
+                  ? SuccessBox(
+                      children: Text(
                         "${widget.stat}_solve".tr().toString(),
                         style: TextStyle(
                           fontFamily: globals.font,

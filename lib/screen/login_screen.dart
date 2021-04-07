@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import '../methods/helper.dart';
 
 import 'package:flutter/material.dart';
 
@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode phoneNode = FocusNode();
   FocusNode passNode = FocusNode();
   bool isLogin = false;
+  Helper helper = new Helper();
 
   @override
   @override
@@ -75,14 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLogin = true;
     } else {
       Map<String, dynamic> responseBody = response.json();
-      Fluttertoast.showToast(
-          msg: responseBody['message'],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast(responseBody['message']);
     }
 
     if (isLogin)
@@ -103,14 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       globals.token = null;
       dynamic json = response.json();
-      Fluttertoast.showToast(
-          msg: json['detail'],
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 15.0);
+      helper.getToast(json['detail']);
     }
     // String reply = await response.transform(utf8.decoder).join();
     // print(response.statusCode);
