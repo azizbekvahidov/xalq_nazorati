@@ -16,7 +16,7 @@ class SuccessBox extends StatelessWidget {
         ),
       ),
       margin: EdgeInsets.only(top: 8),
-      padding: EdgeInsets.symmetric(vertical: 15),
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       alignment: Alignment.center,
       width: dWidth,
       child: children,

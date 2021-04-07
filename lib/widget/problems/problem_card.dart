@@ -61,7 +61,6 @@ class _ProblemCardState extends State<ProblemCard> {
     int hours = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())
         .inHours;
-    print(hours);
     if (hours >= 0) deadline -= (hours * 3600) * 1000;
     int minutes = DateTime.fromMillisecondsSinceEpoch(deadline)
         .difference(DateTime.now())

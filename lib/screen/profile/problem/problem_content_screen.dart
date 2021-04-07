@@ -80,7 +80,7 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
       } else {
         timers?.cancel();
         alertData = globals.cardAlert[widget.id];
-        print(alertData['res']);
+
         _hasResult = alertData['res'] == null ? false : true;
         problemStatus = alertData["status"];
       }

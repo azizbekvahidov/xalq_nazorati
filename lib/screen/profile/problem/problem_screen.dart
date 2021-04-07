@@ -172,7 +172,6 @@ class _ProblemScreenState extends State<ProblemScreen> {
         break;
     }
     try {
-      print(_loadMore);
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await Requests.get(_loadMore, headers: headers);
 

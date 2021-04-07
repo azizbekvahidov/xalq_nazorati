@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/methods/to_file.dart';
@@ -32,6 +33,7 @@ class SolveProblemScreen extends StatefulWidget {
 class _SolveProblemScreenState extends State<SolveProblemScreen> {
   ToFile to_file = ToFile();
   List files;
+  DateTime time;
   @override
   void initState() {
     super.initState();
@@ -47,6 +49,10 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       // String reply = await response.transform(utf8.decoder).join();
       // var temp = response.json();
       var res = response.json(); //parseProblems(response.content());
+      var deadline = DateTime.parse(res["result"]["updated_at"]);
+
+      time = (deadline.add(Duration(days: 7)));
+
       if (res["result"] != null) {
         url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/check';
@@ -558,25 +564,58 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                       res["problem"]["unsatisfactory_solution"] != null ||
                       res["moderator_log"] != null ||
                       res["problem"]["user_cancellation_reason"] != null
-                  ? SuccessBox(
-                      children: Text(
-                        "${widget.stat}_solve".tr().toString(),
-                        style: TextStyle(
-                          fontFamily: globals.font,
-                          fontSize: dWidth * globals.fontSize18,
-                          fontWeight: FontWeight.w600,
+                  ? Column(
+                      children: [
+                        SuccessBox(
+                          children: Text(
+                            "${widget.stat}_solve".tr().toString(),
+                            style: TextStyle(
+                              fontFamily: globals.font,
+                              fontSize: dWidth * globals.fontSize18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                        (widget.status == "info")
+                            ? SuccessBox(
+                                children: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/img/info.svg",
+                                      height: 36,
+                                    ),
+                                    Padding(padding: EdgeInsets.only(left: 10)),
+                                    Container(
+                                      width: dWidth * 0.77,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text:
+                                              "${"start_solved_info".tr().toString()}\"${dateF.format(time)}\"${"end_solved_info".tr().toString()}",
+                                          style: TextStyle(
+                                            fontFamily: globals.font,
+                                            color: Color(0xff050505),
+                                            fontSize:
+                                                dWidth * globals.fontSize18,
+                                            fontWeight: FontWeight.w600,
+                                            fontFeatures: [
+                                              FontFeature.enable("pnum"),
+                                              FontFeature.enable("lnum")
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                      ],
                     )
                   : widget.stat == 'planned'
-                      ? Container(
-                          margin: EdgeInsets.only(top: 8),
-                          alignment: Alignment.center,
-                          width: dWidth,
-                          height: 50,
-                          color: Color(0xffC4C4C4),
-                          child: Text(
+                      ? SuccessBox(
+                          children: Text(
                             "${widget.stat}_solve".tr().toString(),
                             style: TextStyle(
                               fontFamily: globals.font,
