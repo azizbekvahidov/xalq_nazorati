@@ -39,7 +39,7 @@ class _ProblemDescState extends State<ProblemDesc> {
   @override
   void initState() {
     super.initState();
-
+    print(widget.id);
     // getPermission();
   }
 

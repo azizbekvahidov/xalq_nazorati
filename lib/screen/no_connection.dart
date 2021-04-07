@@ -81,14 +81,32 @@ class _NoConnectionState extends State<NoConnection> {
             children: [
               Column(
                 children: [
-                  Image.asset("assets/img/offline.png"),
+                  Padding(padding: EdgeInsets.only(top: 20)),
                   Text(
                     "no_internet".tr().toString(),
                     style: TextStyle(
-                      color: Color(0xff66676C),
+                      color: Color(0xff415095),
                       fontFamily: globals.font,
-                      fontSize: dWidth * globals.fontSize24,
+                      fontWeight: FontWeight.w600,
+                      fontSize: dWidth * globals.fontSize22,
                     ),
+                  ),
+                  Stack(
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: Image.asset(
+                          "assets/img/offline_bg.png",
+                          width: dWidth * 0.9,
+                        ),
+                      ),
+                      Positioned(
+                        child: SvgPicture.asset(
+                          "assets/img/offline.svg",
+                          width: dWidth,
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 35),
@@ -104,17 +122,20 @@ class _NoConnectionState extends State<NoConnection> {
                             fontSize: dWidth * globals.fontSize16,
                           ),
                         ),
-                        InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (BuildContext ctx) {
-                                return Tetris();
-                              }));
-                            },
-                            child: SvgPicture.asset("assets/img/play.svg"))
                       ],
                     ),
                   ),
+                  InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext ctx) {
+                          return Tetris();
+                        }));
+                      },
+                      child: SvgPicture.asset(
+                        "assets/img/play.svg",
+                        height: 38,
+                      ))
                 ],
               ),
               DefaultButton("reload".tr().toString(), () {

@@ -201,7 +201,8 @@ flutter:
     - assets/img/news_archive.svg
     - assets/img/user_main.svg
     - assets/img/dont_men.svg
-    - assets/img/offline.png
+    - assets/img/offline.svg
+    - assets/img/offline_bg.png
     - assets/img/play.svg
     
     - assets/img/no_connection.svg
