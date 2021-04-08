@@ -171,7 +171,7 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
               builder: (context) => PassRecognizeScreen()));
         } else {
           dynamic json = r1.json();
-          helper.getToast(json["detail"]);
+          helper.getToast(json["detail"], context);
         }
       } catch (e) {
         print(e);

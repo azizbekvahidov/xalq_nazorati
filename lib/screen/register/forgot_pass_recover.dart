@@ -48,7 +48,7 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
               builder: (context) => LoginScreen()));
         } else {
           dynamic json = r1.json();
-          helper.getToast(json['detail']);
+          helper.getToast(json['detail'], context);
         }
       } catch (e) {
         print(e);

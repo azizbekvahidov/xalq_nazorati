@@ -115,7 +115,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
         ));
       } else {
         var json = r1.json();
-        helper.getToast(json['data']['detail']);
+        helper.getToast(json['data']['detail'], context);
       }
     }
   }

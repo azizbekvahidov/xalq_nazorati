@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLogin = true;
     } else {
       Map<String, dynamic> responseBody = response.json();
-      helper.getToast(responseBody['message']);
+      helper.getToast(responseBody['message'], context);
     }
 
     if (isLogin)
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       globals.token = null;
       dynamic json = response.json();
-      helper.getToast(json['detail']);
+      helper.getToast(json['detail'], context);
     }
     // String reply = await response.transform(utf8.decoder).join();
     // print(response.statusCode);

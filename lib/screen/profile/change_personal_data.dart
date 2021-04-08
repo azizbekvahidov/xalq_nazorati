@@ -78,7 +78,7 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
           print(res);
         }
       } else {
-        helper.getToast("fill_personal_data".tr().toString());
+        helper.getToast("fill_personal_data".tr().toString(), context);
       }
     } catch (e) {
       print(e);

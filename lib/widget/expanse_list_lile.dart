@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/screen/main_page/problem/check_problem_category.dart';
+import 'package:xalq_nazorati/screen/main_page/problem/how_it_works.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 import 'package:xalq_nazorati/widget/custom_expansion_tile.dart' as custom;
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
@@ -270,24 +271,18 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            print(widget.data["id"]);
                                             if (globals.token != null) {
                                               // customWarningDialog(context);
-                                              if (snap.data[index]["id"] ==
-                                                      102 ||
-                                                  snap.data[index]["id"] ==
-                                                      35 ||
-                                                  snap.data[index]["id"] ==
-                                                      99 ||
-                                                  widget.data["id"] == 66 ||
-                                                  widget.data["id"] == 80) {
+                                              if (snap.data[index]
+                                                      ["how_it_works"] !=
+                                                  null) {
                                                 Navigator.of(context,
                                                         rootNavigator: true)
                                                     .push(
                                                   MaterialPageRoute(
                                                     builder:
                                                         (BuildContext context) {
-                                                      return CheckProblemCategory(
+                                                      return HowItWorks(
                                                           id: snap.data[index]
                                                               ["id"],
                                                           title: snap
@@ -296,8 +291,11 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                                   .tr()
                                                                   .toString()],
                                                           category_id: widget
-                                                                  .data[
-                                                              "category"]["id"],
+                                                                  .data["category"]
+                                                              ["id"],
+                                                          content: snap
+                                                                  .data[index][
+                                                              "how_it_works_${globals.lang.tr().toString()}"],
                                                           subcategoryId:
                                                               widget.data["id"],
                                                           breadcrumbs:
@@ -307,27 +305,65 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                   // ModalRoute.withName(HomePage.routeName),
                                                 ).then(onGoBack);
                                               } else {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .push(
-                                                  MaterialPageRoute(
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return ProblemDesc(
-                                                          snap.data[index]
-                                                              ["id"],
-                                                          snap.data[index][
-                                                              "api_title"
-                                                                  .tr()
-                                                                  .toString()],
-                                                          widget.data[
-                                                              "category"]["id"],
-                                                          widget.data["id"],
-                                                          breadCrumbs);
-                                                    },
-                                                  ),
-                                                  // ModalRoute.withName(HomePage.routeName),
-                                                ).then(onGoBack);
+                                                if (snap.data[index]["id"] ==
+                                                        102 ||
+                                                    snap.data[index]["id"] ==
+                                                        35 ||
+                                                    snap.data[index]["id"] ==
+                                                        99 ||
+                                                    widget.data["id"] == 66 ||
+                                                    widget.data["id"] == 80) {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return CheckProblemCategory(
+                                                            id: snap.data[index]
+                                                                ["id"],
+                                                            title: snap
+                                                                    .data[index]
+                                                                ["api_title"
+                                                                    .tr()
+                                                                    .toString()],
+                                                            category_id: widget
+                                                                        .data[
+                                                                    "category"]
+                                                                ["id"],
+                                                            subcategoryId:
+                                                                widget
+                                                                    .data["id"],
+                                                            breadcrumbs:
+                                                                breadCrumbs);
+                                                      },
+                                                    ),
+                                                    // ModalRoute.withName(HomePage.routeName),
+                                                  ).then(onGoBack);
+                                                } else {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .push(
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return ProblemDesc(
+                                                            snap.data[index]
+                                                                ["id"],
+                                                            snap.data[index][
+                                                                "api_title"
+                                                                    .tr()
+                                                                    .toString()],
+                                                            widget.data[
+                                                                    "category"]
+                                                                ["id"],
+                                                            widget.data["id"],
+                                                            breadCrumbs);
+                                                      },
+                                                    ),
+                                                    // ModalRoute.withName(HomePage.routeName),
+                                                  ).then(onGoBack);
+                                                }
                                               }
                                             } else {
                                               customDialog(context);

@@ -127,7 +127,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
           Map<String, dynamic> res = json['detail'];
           print(json);
           res.forEach((key, value) {
-            helper.getToast(res[key][0]);
+            helper.getToast(res[key][0], context);
           });
         }
       } catch (e) {
@@ -162,7 +162,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
       } else {
         print(r1.content());
         Map<String, dynamic> responseBody = r1.json();
-        helper.getToast(responseBody['detail']);
+        helper.getToast(responseBody['detail'], context);
       }
     } catch (e) {
       print(e);

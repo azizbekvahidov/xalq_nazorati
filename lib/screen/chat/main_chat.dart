@@ -526,7 +526,7 @@ class _MainChatState extends State<MainChat> {
 
             sendMessage();
           } else {
-            helper.getToast("file_warning".tr().toString());
+            helper.getToast("file_warning".tr().toString(), context);
           }
         }
       } else if (status.isPermanentlyDenied) {
@@ -566,7 +566,7 @@ class _MainChatState extends State<MainChat> {
 
             sendMessage();
           } else {
-            helper.getToast("file_warning".tr().toString());
+            helper.getToast("file_warning".tr().toString(), context);
           }
         }
       } else if (status.isPermanentlyDenied || status.isDenied) {

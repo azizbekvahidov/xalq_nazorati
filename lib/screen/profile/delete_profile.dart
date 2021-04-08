@@ -48,13 +48,13 @@ class _DeleteProfileState extends State<DeleteProfile> {
         } else {
           dynamic json = r1.json();
           print(json["detail"]);
-          helper.getToast(json["detail"]);
+          helper.getToast(json["detail"], context);
         }
       } catch (ex) {
         print(ex);
       }
     } else {
-      helper.getToast("reason".tr().toString());
+      helper.getToast("reason".tr().toString(), context);
     }
   }
 

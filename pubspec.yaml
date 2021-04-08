@@ -93,6 +93,7 @@ dependencies:
   catcher: ^0.4.1
   system_settings: ^1.0.1
   easy_permission_validator: ^2.0.1
+  toast: ^0.1.5
   
   # sms:
   #   path: ./sms

@@ -70,7 +70,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       Map<String, dynamic> res = json['detail'];
       print(json);
       res.forEach((key, value) {
-        helper.getToast(res[key][0]);
+        helper.getToast(res[key][0], context);
       });
     }
   }

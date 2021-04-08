@@ -82,7 +82,7 @@ class _ForgotPassPhoneState extends State<ForgotPassPhone> {
         } else {
           dynamic json = r1.json();
           print(json['detail']);
-          helper.getToast(json['detail']);
+          helper.getToast(json['detail'], context);
           print(json);
         }
       } catch (e) {

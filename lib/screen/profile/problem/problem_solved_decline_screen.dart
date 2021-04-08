@@ -68,7 +68,7 @@ class _ProblemSolvedDeclineScreenState
           });
         }
       } catch (e) {
-        helper.getToast(e.toString());
+        helper.getToast(e.toString(), context);
       }
     }
   }

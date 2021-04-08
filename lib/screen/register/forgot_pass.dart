@@ -127,7 +127,7 @@ class _ForgotPassState extends State<ForgotPass> {
               builder: (context) => ForgotPassRecover()));
         } else {
           dynamic json = r1.json();
-          helper.getToast(json["detail"]);
+          helper.getToast(json["detail"], context);
         }
       } catch (e) {
         print(e);

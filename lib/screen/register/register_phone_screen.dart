@@ -108,7 +108,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
           }
         } else {
           dynamic json = r1.json();
-          helper.getToast(json['detail']);
+          helper.getToast(json['detail'], context);
         }
       } catch (e) {
         print(e);
