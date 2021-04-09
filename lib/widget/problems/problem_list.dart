@@ -25,6 +25,8 @@ class _ProblemListState extends State<ProblemList> {
       itemCount: widget.data.length,
       itemBuilder: (BuildContext ctx, index) {
         var _list = widget.alertList;
+        Map<dynamic, dynamic> alerts = _list[widget.data[index]["id"]];
+
         // print(_list);
         return ProblemCard(
           status: widget.status,

@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/search-category.dart';
 import 'package:xalq_nazorati/screen/main_page/category_screen.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/check_problem_category.dart';
+import 'package:xalq_nazorati/screen/main_page/problem/how_it_works.dart';
 import 'package:xalq_nazorati/screen/main_page/problem/problem_desc.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 
@@ -123,8 +124,9 @@ class _SearchtInputState extends State<SearchtInput> {
             "name": list["subsubcategories"][i]["api_title".tr().toString()],
             "id": list["subsubcategories"][i]["id"],
             "type": "subsubcategories",
-            "category_id": list["subsubcategories"][i]["subcategory"]
-                ["category"]["id"],
+            "category_id": list["subsubcategories"][i]["subcategory"],
+            "how_it_works": list["subsubcategories"][i]
+                ["how_it_works_${globals.lang.tr().toString()}"],
             "subcategory_id": list["subsubcategories"][i]["subcategory"]["id"],
             "breadcrumbs":
                 "${list["subsubcategories"][i]["subcategory"]["category"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["subcategory"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["api_title".tr().toString()]}",
@@ -268,37 +270,55 @@ class _SearchtInputState extends State<SearchtInput> {
                       if (suggestion["type"] == "subsubcategories") {
                         searchController.text = "";
                         if (globals.token != null) {
-                          print(suggestion);
-                          if (suggestion["id"] == 102 ||
-                              suggestion["id"] == 35 ||
-                              suggestion["id"] == 99) {
+                          if (suggestion["how_it_works"] != null) {
                             Navigator.of(context, rootNavigator: true).push(
                               MaterialPageRoute(
                                 builder: (BuildContext context) {
-                                  return CheckProblemCategory(
-                                      id: suggestion["id"],
-                                      title: suggestion["name"],
-                                      category_id: suggestion["category_id"],
-                                      subcategoryId:
-                                          suggestion["subcategory_id"],
-                                      breadcrumbs: suggestion["breadcrumbs"]);
+                                  return HowItWorks(
+                                    id: suggestion["id"],
+                                    title: suggestion["name"],
+                                    category_id: suggestion["category_id"]
+                                        ["id"],
+                                    subcategoryId: suggestion["subcategory_id"],
+                                    breadcrumbs: suggestion["breadcrumbs"],
+                                    content: suggestion["how_it_works"],
+                                  );
                                 },
                               ),
                               // ModalRoute.withName(HomePage.routeName),
                             ).then(onGoBack);
                           } else {
-                            Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return ProblemDesc(
-                                      suggestion["id"],
-                                      suggestion["name"],
-                                      suggestion["category_id"],
-                                      suggestion["subcategory_id"],
-                                      suggestion["breadcrumbs"]);
-                                },
-                              ),
-                            ).then(onGoBack);
+                            if (suggestion["id"] == 102 ||
+                                suggestion["id"] == 35 ||
+                                suggestion["id"] == 99) {
+                              Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return CheckProblemCategory(
+                                        id: suggestion["id"],
+                                        title: suggestion["name"],
+                                        category_id: suggestion["category_id"],
+                                        subcategoryId:
+                                            suggestion["subcategory_id"],
+                                        breadcrumbs: suggestion["breadcrumbs"]);
+                                  },
+                                ),
+                                // ModalRoute.withName(HomePage.routeName),
+                              ).then(onGoBack);
+                            } else {
+                              Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return ProblemDesc(
+                                        suggestion["id"],
+                                        suggestion["name"],
+                                        suggestion["category_id"],
+                                        suggestion["subcategory_id"],
+                                        suggestion["breadcrumbs"]);
+                                  },
+                                ),
+                              ).then(onGoBack);
+                            }
                           }
                         } else {
                           customDialog(context);

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:requests/requests.dart';
+import 'package:xalq_nazorati/screen/profile/problem/open_problem_screen.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
+import 'package:xalq_nazorati/screen/profile/problem/problem_screen_custom.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/custom_card_list.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
@@ -78,10 +80,10 @@ class _MainProblemPageState extends State<MainProblemPage> {
                   CustomCardList(
                     "subcat1",
                     "unresolved".tr().toString(),
-                    ProblemScreen(
+                    ProblemScreenCustom(
                         title: "unresolved".tr().toString(), status: "warning"),
                     true,
-                    "$isProcessing",
+                    "${isProcessing + isPlanned}",
                     isProcessing != 0 ? true : false,
                   ),
                   CustomCardList(
@@ -99,20 +101,20 @@ class _MainProblemPageState extends State<MainProblemPage> {
                     ProblemScreen(
                         title: "take_off_problems".tr().toString(),
                         status: "danger"),
-                    true,
+                    false,
                     "$isDenied",
                     isDenied != 0 ? true : false,
                   ),
-                  CustomCardList(
-                    "subcat4",
-                    "delayed_problems".tr().toString(),
-                    ProblemScreen(
-                        title: "delayed_problems".tr().toString(),
-                        status: "delayed"),
-                    false,
-                    "$isPlanned",
-                    isPlanned != 0 ? true : false,
-                  ),
+                  // CustomCardList(
+                  //   "subcat4",
+                  //   "delayed_problems".tr().toString(),
+                  //   ProblemScreen(
+                  //       title: "delayed_problems".tr().toString(),
+                  //       status: "delayed"),
+                  //   false,
+                  //   "$isPlanned",
+                  //   isPlanned != 0 ? true : false,
+                  // ),
                 ],
               ),
             ),
