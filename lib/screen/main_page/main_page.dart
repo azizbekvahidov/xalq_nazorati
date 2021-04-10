@@ -15,6 +15,7 @@ import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
+import 'package:xalq_nazorati/widget/news/news_list_main.dart';
 import 'package:xalq_nazorati/widget/news_notify.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_warning.dart';
@@ -290,7 +291,7 @@ class _MainPageState extends State<MainPage> {
 
   Future getNews() async {
     try {
-      var url = '${globals.api_link}/news?limit=3';
+      var url = '${globals.api_link}/news';
 
       // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
 
@@ -975,13 +976,19 @@ class _MainPageState extends State<MainPage> {
                                     ),
                                   );
                                 },
-                                child: Text(
-                                  "show_all".tr().toString(),
-                                  style: TextStyle(
-                                      fontFamily: globals.font,
-                                      color: Color(0xff66676C),
-                                      fontSize: dWidth * globals.fontSize12,
-                                      fontWeight: FontWeight.w500),
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: Color(0xffF6F6F6),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Text(
+                                    "show_all".tr().toString(),
+                                    style: TextStyle(
+                                        fontFamily: globals.font,
+                                        color: Color(0xff66676C),
+                                        fontSize: dWidth * globals.fontSize12,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ),
                             ],
@@ -993,7 +1000,7 @@ class _MainPageState extends State<MainPage> {
                                 builder: (context, snapshot) {
                                   if (snapshot.hasError) print(snapshot.error);
                                   return snapshot.hasData
-                                      ? NewsList(
+                                      ? NewsListMain(
                                           news: snapshot.data,
                                           breaking: true,
                                           isMain: true,

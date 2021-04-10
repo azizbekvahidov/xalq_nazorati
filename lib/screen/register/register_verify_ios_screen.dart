@@ -45,24 +45,6 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
     // validate();
   }
 
-  // void getSMS() async {
-  //   // Create SMS Receiver Listener
-  //   SmsReceiver receiver = new SmsReceiver();
-  //   // msg has New Incoming Message
-  //   receiver.onSmsReceived.listen((SmsMessage msg) {
-  //     print(msg.address);
-  //     print(msg.body);
-  //     print(msg.date);
-  //     print(msg.isRead);
-  //     print(msg.sender);
-  //     print(msg.threadId);
-  //     print(msg.state);
-  //     final intValue = int.parse(msg.body.replaceAll(RegExp('[^0-9]'), ''));
-
-  //     codeController.text = intValue.toString();
-  //   });
-  // }
-
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
@@ -91,7 +73,6 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
     super.initState();
     startTimer();
     _listenForCode();
-
     // getSMS();
   }
 
@@ -152,31 +133,34 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
 
   bool isSend = false;
   void verify() async {
-    String code = codeController.text;
-    if (!isSend && code != "") {
-      try {
-        String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
-        Map map = {"code": int.parse(code)};
-        // String url = '${globals.api_link}/users/get-phone';
-        var r1 = await Requests.post(url,
-            body: map, verify: false, persistCookies: true);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+        settings: const RouteSettings(name: PassRecognizeScreen.routeName),
+        builder: (context) => PassRecognizeScreen()));
+    // String code = codeController.text;
+    // if (!isSend && code != "") {
+    //   try {
+    //     String url =
+    //         '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
+    //     Map map = {"code": int.parse(code)};
+    //     // String url = '${globals.api_link}/users/get-phone';
+    //     var r1 = await Requests.post(url,
+    //         body: map, verify: false, persistCookies: true);
 
-        if (r1.statusCode == 200) isSend = true;
-        if (isSend) {
-          globals.tempPhone = widget.phone;
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              settings:
-                  const RouteSettings(name: PassRecognizeScreen.routeName),
-              builder: (context) => PassRecognizeScreen()));
-        } else {
-          dynamic json = r1.json();
-          helper.getToast(json["detail"], context);
-        }
-      } catch (e) {
-        print(e);
-      }
-    }
+    //     if (r1.statusCode == 200) isSend = true;
+    //     if (isSend) {
+    //       globals.tempPhone = widget.phone;
+    //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //           settings:
+    //               const RouteSettings(name: PassRecognizeScreen.routeName),
+    //           builder: (context) => PassRecognizeScreen()));
+    //     } else {
+    //       dynamic json = r1.json();
+    //       helper.getToast(json["detail"], context);
+    //     }
+    //   } catch (e) {
+    //     print(e);
+    //   }
+    // }
   }
 
   @override
@@ -396,6 +380,10 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
                                           fontSize: dWith * globals.fontSize18,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500,
+                                          fontFeatures: [
+                                            FontFeature.enable("pnum"),
+                                            FontFeature.enable("lnum")
+                                          ],
                                         ),
                                       ),
                                     ],
