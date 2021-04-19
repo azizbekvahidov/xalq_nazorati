@@ -49,10 +49,11 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       // String reply = await response.transform(utf8.decoder).join();
       // var temp = response.json();
       var res = response.json(); //parseProblems(response.content());
-      var deadline = DateTime.parse(res["result"]["updated_at"]);
+      if (widget.stat == "info") {
+        var deadline = DateTime.parse(res["result"]["updated_at"]);
 
-      time = (deadline.add(Duration(days: 7)));
-
+        time = (deadline.add(Duration(days: 7)));
+      }
       if (res["result"] != null) {
         url =
             '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/check';

@@ -424,11 +424,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case ConnectivityResult.none:
         print("no connection");
         globals.isConnection = false;
-        if (globals.isLoad)
-          await navService.push(MaterialPageRoute(builder: (_) {
-            return NoConnection();
-          }));
-        else
+        if (globals.isLoad) {
+          if (!globals.isOpenNoConnection)
+            await navService.push(MaterialPageRoute(builder: (_) {
+              return NoConnection();
+            }));
+        } else
           Timer(Duration(seconds: 2), () async {
             await navService.push(MaterialPageRoute(builder: (_) {
               return NoConnection();

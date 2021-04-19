@@ -43,6 +43,7 @@ Future<void> _updateConnectionStatus(ConnectivityResult result, context) async {
     case ConnectivityResult.wifi:
     case ConnectivityResult.mobile:
       globals.isConnection = true;
+      globals.isOpenNoConnection = false;
       print("connected");
 
       if (globals.isConnection) {
@@ -60,6 +61,7 @@ class _NoConnectionState extends State<NoConnection> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    globals.isOpenNoConnection = true;
   }
 
   @override

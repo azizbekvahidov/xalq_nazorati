@@ -35,6 +35,7 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
   Color _txt1;
   Color _bg2;
   Color _txt2;
+  bool _onLoad = false;
   String _problem_status = "warning";
   bool isInfo = true;
   final List<Widget> _children = [
@@ -50,9 +51,8 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
   ];
 
   void _selectTab(index) {
-    setState(() {
-      _problemList = null;
-    });
+    _problemList;
+    setState(() {});
     setState(() {
       _index = index;
       isRequest = false;
@@ -190,6 +190,7 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
         globals.cardAlert = _problems;
         refreshBells();
         isRequest = true;
+        _onLoad = true;
       }
       return res;
     } catch (e) {
@@ -276,6 +277,9 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          setState(() {
+                            _onLoad = false;
+                          });
                           _selectTab(0);
                         },
                         child: Container(
@@ -301,6 +305,9 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          setState(() {
+                            _onLoad = false;
+                          });
                           _selectTab(1);
                         },
                         child: Container(
@@ -328,113 +335,127 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
               ),
             ),
             SingleChildScrollView(
-              child: Column(
-                children: [
-                  (_problem_status == 'delayed')
-                      ? SuccessBox(
-                          children: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/img/info.svg",
-                                height: 24,
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 10)),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    isInfo = !isInfo;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(top: 4),
-                                  width: width * 0.77,
-                                  child: RichText(
-                                    text: TextSpan(
-                                      text: isInfo
-                                          ? "Что за секция?"
-                                          : "Проблемы, устранение которых невозможно в рамках текущего бюджета, либо в короткие сроки и зависит от особых обстоятельств (доп. финансирование, календарный план, время года, спец. разрешения на ведение работ)",
-                                      style: TextStyle(
-                                        fontFamily: globals.font,
-                                        color: Color(0xff050505),
-                                        fontSize: width * globals.fontSize14,
-                                        fontWeight: FontWeight.w600,
-                                        fontFeatures: [
-                                          FontFeature.enable("pnum"),
-                                          FontFeature.enable("lnum")
-                                        ],
-                                      ),
+              child: _onLoad
+                  ? Column(
+                      children: [
+                        (_problem_status == 'delayed')
+                            ? SuccessBox(
+                                children: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/img/info.svg",
+                                      height: 24,
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : Container(),
-                  Container(
-                    height: dHeight <= 560
-                        ? dHeight -
-                            ((_problem_status != 'delayed')
-                                ? 160
-                                : isInfo
-                                    ? 210
-                                    : 300)
-                        : dHeight -
-                            ((_problem_status != 'delayed')
-                                ? 230
-                                : isInfo
-                                    ? 280
-                                    : 370),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 0),
-                      child: LazyLoadScrollView(
-                        onEndOfPage: () {
-                          if (_loadMore != null)
-                            setState(() {
-                              _problemList = loadMore();
-                            });
-                        },
-                        child: FutureBuilder(
-                          future: _problemList,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError) print(snapshot.error);
-                            return snapshot.hasData
-                                ? ProblemList(
-                                    data: snapshot.data,
-                                    title: widget.title == null
-                                        ? "unresolved".tr().toString()
-                                        : widget.title,
-                                    status: _problem_status == null
-                                        ? "warning"
-                                        : _problem_status,
-                                    alertList: _problems,
-                                  )
-                                : ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: 5,
-                                    itemBuilder: (BuildContext ctx, index) {
-                                      // print(_list);
-                                      return SkeletonAnimation(
-                                        child: ShadowBox(
-                                          bgColor:
-                                              Color.fromRGBO(49, 59, 108, 0.1),
-                                          child: Container(
-                                            height: 50,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 19, vertical: 15),
+                                    Padding(padding: EdgeInsets.only(left: 10)),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          isInfo = !isInfo;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(top: 4),
+                                        width: width * 0.77,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            text: isInfo
+                                                ? "delayed_info".tr().toString()
+                                                : "delayed_desc"
+                                                    .tr()
+                                                    .toString(),
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              color: Color(0xff050505),
+                                              fontSize:
+                                                  width * globals.fontSize14,
+                                              fontWeight: FontWeight.w600,
+                                              fontFeatures: [
+                                                FontFeature.enable("pnum"),
+                                                FontFeature.enable("lnum")
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      );
-                                    },
-                                  );
-                          },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        Container(
+                          height: dHeight <= 560
+                              ? dHeight -
+                                  ((_problem_status != 'delayed')
+                                      ? 160
+                                      : isInfo
+                                          ? 210
+                                          : 300)
+                              : dHeight -
+                                  ((_problem_status != 'delayed')
+                                      ? 270
+                                      : isInfo
+                                          ? 331
+                                          : 482),
+                          child: Container(
+                            padding: EdgeInsets.only(top: 0),
+                            child: LazyLoadScrollView(
+                              onEndOfPage: () {
+                                if (_loadMore != null)
+                                  setState(() {
+                                    _problemList = loadMore();
+                                  });
+                              },
+                              child: _problemList != null
+                                  ? FutureBuilder(
+                                      future: _problemList,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError)
+                                          print(snapshot.error);
+                                        return snapshot.hasData
+                                            ? ProblemList(
+                                                data: snapshot.data,
+                                                title: widget.title == null
+                                                    ? "unresolved"
+                                                        .tr()
+                                                        .toString()
+                                                    : widget.title,
+                                                status: _problem_status == null
+                                                    ? "warning"
+                                                    : _problem_status,
+                                                alertList: _problems,
+                                              )
+                                            : ListView.builder(
+                                                physics:
+                                                    BouncingScrollPhysics(),
+                                                itemCount: 5,
+                                                itemBuilder:
+                                                    (BuildContext ctx, index) {
+                                                  // print(_list);
+                                                  return SkeletonAnimation(
+                                                    child: ShadowBox(
+                                                      bgColor: Color.fromRGBO(
+                                                          49, 59, 108, 0.1),
+                                                      child: Container(
+                                                        height: 50,
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 19,
+                                                                vertical: 15),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                      },
+                                    )
+                                  : Container(),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                      ],
+                    )
+                  : Container(),
             ),
           ],
         ),

@@ -57,7 +57,7 @@ class _SelectLangState extends State<SelectLang> {
               'Русский',
               style: TextStyle(
                 color: Color(0xff050505),
-                fontFamily: "Gilroy",
+                fontFamily: globals.font,
                 fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),
@@ -76,7 +76,7 @@ class _SelectLangState extends State<SelectLang> {
               'O‘zbekcha',
               style: TextStyle(
                 color: Color(0xff050505),
-                fontFamily: "Gilroy",
+                fontFamily: globals.font,
                 fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),
@@ -95,7 +95,7 @@ class _SelectLangState extends State<SelectLang> {
               'Ўзбекча',
               style: TextStyle(
                 color: Color(0xff050505),
-                fontFamily: "Gilroy",
+                fontFamily: globals.font,
                 fontSize: dWidth * globals.fontSize18,
                 fontWeight: FontWeight.w600,
               ),

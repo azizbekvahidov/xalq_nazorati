@@ -94,6 +94,7 @@ dependencies:
   system_settings: ^1.0.1
   easy_permission_validator: ^2.0.1
   toast: ^0.1.5
+  flutter_rounded_date_picker: ^1.0.5+1
   
   # sms:
   #   path: ./sms
@@ -209,6 +210,7 @@ flutter:
     - assets/img/no_connection.svg
     - assets/img/bad_connection.svg
     - assets/img/good_connection.svg
+    - assets/img/calendar_logo.svg
 
     - assets/material.png
     - assets/audios/

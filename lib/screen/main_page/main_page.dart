@@ -955,44 +955,6 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "today".tr().toString().replaceAll("\n", " "),
-                                style: TextStyle(
-                                    fontFamily: globals.font,
-                                    color: Color(0xff313B6C),
-                                    fontSize: dWidth * globals.fontSize18,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                        return NewsScreen();
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: Color(0xffF6F6F6),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(
-                                    "show_all".tr().toString(),
-                                    style: TextStyle(
-                                        fontFamily: globals.font,
-                                        color: Color(0xff66676C),
-                                        fontSize: dWidth * globals.fontSize12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                           Container(
                             padding: EdgeInsets.only(top: 20),
                             child: FutureBuilder(

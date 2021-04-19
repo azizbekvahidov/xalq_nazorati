@@ -53,8 +53,8 @@
     "resend":"Qayta yuborish",
 
     "identity_user":"Foydalanuvchining identifikasiyasi",
-    "pnfl":"JShShIR",
-    "enter_pnfl":"JShShIRni kiriting",
+    "pnfl":"Seriya va passport raqami yoki karta Id raqami",
+    "enter_pnfl":"Seriya va nomer",
     "pas_series_title":"Pasport seriyasi va raqami",
     "pas_series_hint":"Pasport seriyasi va raqamini kiriting",
     "personal_data_use_agree":"Shaxsiy ma'lumotlarimdan foydalanishga roziman",
@@ -236,9 +236,9 @@
   "enter_flat":"Xonadon raqamini kiriting",
   "get_code":"Kodni olish",
   "not_found":"Hech narsa topilmadi",
-  "pass_warning_head":"Pasportda JSHSHIRni qanday topish mumkin?",
-  "pass_warning_bottom":"Jismoniy shaxsning shaxsiy identifikatsiya raqami",
-  "pass_warning_number":" (14ta raqam)",
+  "pass_warning_head":"Karta Seriya ID raqami?",
+  "pass_warning_bottom":"Karta Seriya ID raqami",
+  "pass_warning_number":" (9 SIMVOL)",
   "camera_error":"Sizda matnni tanish \nbilan muammmo bor!",
   "to_result":"Muammini ko'rib chiqish uchun Natijalarga o'ting",
   "not_actual_decision":"Siz muammoni aktual emas deb topdingiz",
@@ -295,7 +295,9 @@
   "start_solved_info":"Harakatlar ",
   "end_solved_info":"gacha amalga oshirilmasa, Muammo bartaraf etilgan hisoblanadi",
   "in_proccess":"Jarayonda",
-  "delayed":"Kechiktirilgan",
+  "delayed":"Rejalashtirilayotgan",
+  "delayed_info":"Bu o‘zi qanday bo‘lim?",
+  "delayed_desc":"Biz ushbu muammoni hozirgi vaqtda hal qila olmasligimiz sababli Sizning Xabaringiz bu yerga joylashtirildi. Hal qilish o‘ziga xos vaziyatlar (byudjet yo‘qligi, ob-havo to‘g‘ri kelmasligi, ta’mirlash ishlari jadvali) bog‘liq. Bu biz sizning muammoingiz haqida unutdik degani emas. O‘ziga xos vaziyatlar hal bo‘lsa, biz sizning muammoingizni hal qilamiz va tasdiqlashingiz uchun sizga xabar beramiz.  ",
 
 
 

@@ -125,7 +125,7 @@ class _SupportState extends State<Support> {
               ),
               SingleChildScrollView(
                 child: Container(
-                  height: dHeight <= 560 ? dHeight - 160 : dHeight - 230,
+                  height: dHeight <= 560 ? dHeight - 160 : dHeight - 290,
                   child: _children[_index],
                 ),
               ),

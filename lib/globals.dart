@@ -110,3 +110,4 @@ String imgStatus = "assets/img/good_connection.svg";
 Color colorStatus = Color(0xff1AFE91);
 Timer connectTimer;
 bool isConnection = false;
+bool isOpenNoConnection = false;
