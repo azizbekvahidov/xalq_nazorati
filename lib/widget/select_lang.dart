@@ -20,6 +20,7 @@ class _SelectLangState extends State<SelectLang> {
   @override
   void initState() {
     super.initState();
+    print(widget.lang);
     _lang = widget.lang;
   }
 
@@ -100,7 +101,7 @@ class _SelectLangState extends State<SelectLang> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            value: "en",
+            value: "uz_cyrl",
             groupValue: _lang,
             onChanged: (value) {
               setState(() {
@@ -136,13 +137,14 @@ class _SelectLangState extends State<SelectLang> {
                     case 'ru':
                       country = 'RU';
                       break;
-                    case 'en':
-                      country = 'US';
+                    case 'uz_cyrl':
+                      country = 'UZ';
                       break;
                   }
-                  EasyLocalization.of(context).locale = Locale(_lang, country);
+                  EasyLocalization.of(context).locale =
+                      Locale(_lang == "uz_cyrl" ? "ru" : _lang, country);
                   Navigator.pop(context);
-                  widget.callBack(_lang, country);
+                  widget.callBack(_lang == "uz_cyrl" ? "ru" : _lang, country);
                 } else {
                   var responseBody = response.json();
                   print(responseBody);
@@ -156,13 +158,14 @@ class _SelectLangState extends State<SelectLang> {
                   case 'ru':
                     country = 'RU';
                     break;
-                  case 'en':
-                    country = 'US';
+                  case 'uz_cyrl':
+                    country = 'UZ';
                     break;
                 }
-                EasyLocalization.of(context).locale = Locale(_lang, country);
+                EasyLocalization.of(context).locale =
+                    Locale(_lang == "uz_cyrl" ? "ru" : _lang, country);
                 Navigator.pop(context);
-                widget.callBack(_lang, country);
+                widget.callBack(_lang == "uz_cyrl" ? "ru" : _lang, country);
               }
             }, Theme.of(context).primaryColor),
           ),

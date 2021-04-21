@@ -130,6 +130,7 @@ class _SearchtInputState extends State<SearchtInput> {
             "subcategory_id": list["subsubcategories"][i]["subcategory"]["id"],
             "breadcrumbs":
                 "${list["subsubcategories"][i]["subcategory"]["category"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["subcategory"]["api_title".tr().toString()]} → ${list["subsubcategories"][i]["api_title".tr().toString()]}",
+            "photo_required": list["subsubcategories"][i]["photo_required"]
           }
         ]);
       }
@@ -282,6 +283,8 @@ class _SearchtInputState extends State<SearchtInput> {
                                     subcategoryId: suggestion["subcategory_id"],
                                     breadcrumbs: suggestion["breadcrumbs"],
                                     content: suggestion["how_it_works"],
+                                    photo_required:
+                                        suggestion["photo_required"],
                                   );
                                 },
                               ),
@@ -295,12 +298,16 @@ class _SearchtInputState extends State<SearchtInput> {
                                 MaterialPageRoute(
                                   builder: (BuildContext context) {
                                     return CheckProblemCategory(
-                                        id: suggestion["id"],
-                                        title: suggestion["name"],
-                                        category_id: suggestion["category_id"],
-                                        subcategoryId:
-                                            suggestion["subcategory_id"],
-                                        breadcrumbs: suggestion["breadcrumbs"]);
+                                      id: suggestion["id"],
+                                      title: suggestion["name"],
+                                      category_id: suggestion["category_id"]
+                                          ["id"],
+                                      subcategoryId:
+                                          suggestion["subcategory_id"],
+                                      breadcrumbs: suggestion["breadcrumbs"],
+                                      photo_required:
+                                          suggestion["photo_required"],
+                                    );
                                   },
                                 ),
                                 // ModalRoute.withName(HomePage.routeName),
@@ -312,9 +319,10 @@ class _SearchtInputState extends State<SearchtInput> {
                                     return ProblemDesc(
                                         suggestion["id"],
                                         suggestion["name"],
-                                        suggestion["category_id"],
+                                        suggestion["category_id"]["id"],
                                         suggestion["subcategory_id"],
-                                        suggestion["breadcrumbs"]);
+                                        suggestion["breadcrumbs"],
+                                        suggestion["photo_required"]);
                                   },
                                 ),
                               ).then(onGoBack);

@@ -283,23 +283,26 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                     builder:
                                                         (BuildContext context) {
                                                       return HowItWorks(
-                                                          id: snap.data[index]
-                                                              ["id"],
-                                                          title: snap
-                                                                  .data[index][
-                                                              "api_title"
-                                                                  .tr()
-                                                                  .toString()],
-                                                          category_id: widget
-                                                                  .data["category"]
-                                                              ["id"],
-                                                          content: snap
-                                                                  .data[index][
-                                                              "how_it_works_${globals.lang.tr().toString()}"],
-                                                          subcategoryId:
-                                                              widget.data["id"],
-                                                          breadcrumbs:
-                                                              breadCrumbs);
+                                                        id: snap.data[index]
+                                                            ["id"],
+                                                        title: snap.data[index][
+                                                            "api_title"
+                                                                .tr()
+                                                                .toString()],
+                                                        category_id: widget
+                                                                .data[
+                                                            "category"]["id"],
+                                                        content: snap
+                                                                .data[index][
+                                                            "how_it_works_${globals.lang.tr().toString()}"],
+                                                        subcategoryId:
+                                                            widget.data["id"],
+                                                        breadcrumbs:
+                                                            breadCrumbs,
+                                                        photo_required: snap
+                                                                .data[index]
+                                                            ["photo_required"],
+                                                      );
                                                     },
                                                   ),
                                                   // ModalRoute.withName(HomePage.routeName),
@@ -320,22 +323,24 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                       builder: (BuildContext
                                                           context) {
                                                         return CheckProblemCategory(
-                                                            id: snap.data[index]
-                                                                ["id"],
-                                                            title: snap
-                                                                    .data[index]
-                                                                ["api_title"
-                                                                    .tr()
-                                                                    .toString()],
-                                                            category_id: widget
-                                                                        .data[
-                                                                    "category"]
-                                                                ["id"],
-                                                            subcategoryId:
-                                                                widget
-                                                                    .data["id"],
-                                                            breadcrumbs:
-                                                                breadCrumbs);
+                                                          id: snap.data[index]
+                                                              ["id"],
+                                                          title: snap
+                                                                  .data[index][
+                                                              "api_title"
+                                                                  .tr()
+                                                                  .toString()],
+                                                          category_id: widget
+                                                                  .data[
+                                                              "category"]["id"],
+                                                          subcategoryId:
+                                                              widget.data["id"],
+                                                          breadcrumbs:
+                                                              breadCrumbs,
+                                                          photo_required: snap
+                                                                  .data[index][
+                                                              "photo_required"],
+                                                        );
                                                       },
                                                     ),
                                                     // ModalRoute.withName(HomePage.routeName),
@@ -348,17 +353,19 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                                       builder: (BuildContext
                                                           context) {
                                                         return ProblemDesc(
-                                                            snap.data[index]
-                                                                ["id"],
-                                                            snap.data[index][
-                                                                "api_title"
-                                                                    .tr()
-                                                                    .toString()],
-                                                            widget.data[
-                                                                    "category"]
-                                                                ["id"],
-                                                            widget.data["id"],
-                                                            breadCrumbs);
+                                                          snap.data[index]
+                                                              ["id"],
+                                                          snap.data[index][
+                                                              "api_title"
+                                                                  .tr()
+                                                                  .toString()],
+                                                          widget.data[
+                                                              "category"]["id"],
+                                                          widget.data["id"],
+                                                          breadCrumbs,
+                                                          snap.data[index][
+                                                              "photo_required"],
+                                                        );
                                                       },
                                                     ),
                                                     // ModalRoute.withName(HomePage.routeName),

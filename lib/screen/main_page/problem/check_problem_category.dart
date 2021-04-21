@@ -12,12 +12,14 @@ class CheckProblemCategory extends StatefulWidget {
   final int category_id;
   final int subcategoryId;
   final String breadcrumbs;
+  final bool photo_required;
   CheckProblemCategory(
       {this.id,
       this.title,
       this.category_id,
       this.subcategoryId,
       this.breadcrumbs,
+      this.photo_required,
       Key key})
       : super(key: key);
 
@@ -80,11 +82,13 @@ class _CheckProblemCategoryState extends State<CheckProblemCategory> {
                               MaterialPageRoute(
                                 builder: (BuildContext context) {
                                   return ProblemDesc(
-                                      widget.id,
-                                      widget.title,
-                                      widget.category_id,
-                                      widget.subcategoryId,
-                                      widget.breadcrumbs);
+                                    widget.id,
+                                    widget.title,
+                                    widget.category_id,
+                                    widget.subcategoryId,
+                                    widget.breadcrumbs,
+                                    widget.photo_required,
+                                  );
                                 },
                               ),
                               // ModalRoute.withName(HomePage.routeName),
@@ -147,11 +151,13 @@ class _CheckProblemCategoryState extends State<CheckProblemCategory> {
                             MaterialPageRoute(
                               builder: (BuildContext context) {
                                 return ProblemDesc(
-                                    widget.id,
-                                    widget.title,
-                                    widget.category_id,
-                                    widget.subcategoryId,
-                                    widget.breadcrumbs);
+                                  widget.id,
+                                  widget.title,
+                                  widget.category_id,
+                                  widget.subcategoryId,
+                                  widget.breadcrumbs,
+                                  widget.photo_required,
+                                );
                               },
                             ),
                             // ModalRoute.withName(HomePage.routeName),

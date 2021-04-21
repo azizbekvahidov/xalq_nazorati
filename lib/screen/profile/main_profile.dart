@@ -36,6 +36,10 @@ class _MainProfileState extends State<MainProfile> {
     setState(() {
       _lang = stringValue;
       _country = stringC;
+      print("$_lang => $_country");
+      if (_lang == "ru" && _country == "UZ") {
+        _lang = 'uz_cyrl';
+      }
     });
   }
 
@@ -94,7 +98,7 @@ class _MainProfileState extends State<MainProfile> {
   Future<void> addStringToSF(String lang, String country) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);
-    prefs.setString('country', _country);
+    prefs.setString('country', country);
     globals.lang = lang;
     setState(() {
       _lang = lang;

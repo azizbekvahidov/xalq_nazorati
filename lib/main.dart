@@ -76,7 +76,7 @@ void main() async {
       supportedLocales: [
         Locale('uz', 'UZ'),
         Locale('ru', 'RU'),
-        Locale('en', 'US'),
+        Locale('ru', 'UZ'),
       ],
     ),
     // debugConfig: debugOptions,

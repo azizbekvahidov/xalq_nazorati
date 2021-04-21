@@ -220,8 +220,8 @@ class _LangScreenState extends State<LangScreen> {
                     onPressed: () {
                       btn = 2;
                       setState(() {});
-                      addStringToSF("en", "US");
-                      EasyLocalization.of(context).locale = Locale("en", "US");
+                      addStringToSF("ru", "UZ");
+                      EasyLocalization.of(context).locale = Locale("ru", "UZ");
                       Navigator.of(context)
                           .pushReplacementNamed(HomePage.routeName);
                     },

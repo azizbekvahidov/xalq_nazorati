@@ -22,8 +22,10 @@ class CustomDottedCircleContainer extends StatefulWidget {
   final double boxSize;
   File image;
   final String img;
+  Function checkVal;
 
-  CustomDottedCircleContainer(this.boxSize, this.image, this.img);
+  CustomDottedCircleContainer(
+      this.boxSize, this.image, this.img, this.checkVal);
   @override
   _CustomDottedCircleContainerState createState() =>
       _CustomDottedCircleContainerState();

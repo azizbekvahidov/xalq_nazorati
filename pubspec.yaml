@@ -140,7 +140,7 @@ flutter:
     #localozation files
     - lang/uz-UZ.json
     - lang/ru-RU.json
-    - lang/en-US.json
+    - lang/ru-UZ.json
     # image in app
     - assets/img/logo.svg
     - assets/img/Frame.svg

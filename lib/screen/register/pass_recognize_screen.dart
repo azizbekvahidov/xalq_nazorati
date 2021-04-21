@@ -48,6 +48,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
 
   bool _value = false;
   bool isError = false;
+  String selectedDate;
   Helper helper = new Helper();
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     return KeyboardActionsConfig(
@@ -86,9 +87,11 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
     String calendar = calendarController.text;
     // String seriesNum = seriesNumController.text;
     if (_value && pnfl != "" && calendar != "") {
+      // String url =
+      //     '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
       String url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
-      Map map = {"pinpp": pnfl, 'document': "$calendar"};
+          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/retrieve-data';
+      Map map = {"document": pnfl, 'dob': "$selectedDate"};
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,
           body: map, verify: false, persistCookies: true);
@@ -239,35 +242,29 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   }
 
   calendarDialog() async {
-    String _lang = "";
-    String _country = "";
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Return String
-    if (prefs.containsKey("lang")) {
-      String stringValue = prefs.getString('lang');
-      _lang = stringValue;
-    }
-    if (prefs.containsKey("country")) {
-      String countryValue = prefs.getString('country');
-      _country = countryValue;
-    }
-    if (_lang == "en") _lang = "uz";
-    if (_country == "US") _country = "UZ";
     CupertinoRoundedDatePicker.show(
       context,
       fontFamily: globals.font,
+      locale: Locale("ru"),
       textColor: Colors.black,
       background: Colors.white,
+      // locale: Locale("ru"),
       borderRadius: 16,
-      locale: Locale("uz_Cyrl", "UZ"),
+      //locale: "ru",//Locale(_lang == "en" ? "ru" : _lang),
       initialDatePickerMode: CupertinoDatePickerMode.date,
+      initialDate: calendarController.text == ""
+          ? DateTime.now()
+          : DateTime.tryParse(selectedDate),
       minimumYear: 1930,
       maximumYear: DateTime.now().year,
       onDateTimeChanged: (newDateTime) {
+        validate();
+        DateFormat dFormat = DateFormat('yyyy-MM-dd');
         DateFormat month = DateFormat('MMMM');
         DateFormat dateF = DateFormat('dd, yyyy');
         calendarController.text =
             "${month.format(newDateTime).tr().toString()} ${dateF.format(newDateTime)}";
+        selectedDate = dFormat.format(newDateTime).toString();
         // if (newDateTime != null &&
         //     newDateTime != selectedDate)
         //   setState(() {
@@ -371,6 +368,9 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                                                   mediaQuery.padding.right) *
                                               ((dWith <= 360) ? 0.75 : 0.7),
                                           child: TextField(
+                                            inputFormatters: [
+                                              UpperCaseTextFormatter()
+                                            ],
                                             focusNode: passpnflNode,
                                             onChanged: (value) {
                                               validate();

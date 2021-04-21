@@ -21,8 +21,9 @@ class ProblemDesc extends StatefulWidget {
   final int categoryId;
   final int subcategoryId;
   final String breadCrumbs;
+  final bool photo_required;
   ProblemDesc(this.id, this.title, this.categoryId, this.subcategoryId,
-      this.breadCrumbs);
+      this.breadCrumbs, this.photo_required);
   @override
   _ProblemDescState createState() => _ProblemDescState();
 }
@@ -35,11 +36,9 @@ class _ProblemDescState extends State<ProblemDesc> {
   var descController = TextEditingController();
   bool _value = false;
   FocusNode descNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
-    print(widget.id);
     // getPermission();
   }
 
@@ -94,10 +93,22 @@ class _ProblemDescState extends State<ProblemDesc> {
   checkChange() {
     String descValue = descController.text;
     setState(() {
-      if (descValue != "")
-        _value = true;
-      else
-        _value = false;
+      if (widget.photo_required) {
+        if ((globals.images["file1"] == null ||
+                globals.images["file2"] == null ||
+                globals.images["file3"] == null ||
+                globals.images["file4"] == null) &&
+            descValue != "") {
+          _value = true;
+        } else {
+          _value = false;
+        }
+      } else {
+        if (descValue != "")
+          _value = true;
+        else
+          _value = false;
+      }
     });
   }
 
@@ -196,23 +207,23 @@ class _ProblemDescState extends State<ProblemDesc> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        CustomDottedCircleContainer(
-                                            size, image1, "file1"),
+                                        CustomDottedCircleContainer(size,
+                                            image1, "file1", checkChange()),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(
-                                            size, image2, "file2"),
+                                        CustomDottedCircleContainer(size,
+                                            image2, "file2", checkChange()),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(
-                                            size, image3, "file3"),
+                                        CustomDottedCircleContainer(size,
+                                            image3, "file3", checkChange()),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(
-                                            size, image4, "file4"),
+                                        CustomDottedCircleContainer(size,
+                                            image4, "file4", checkChange()),
                                       ],
                                     ),
                                   ),
