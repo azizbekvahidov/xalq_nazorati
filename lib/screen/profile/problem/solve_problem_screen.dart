@@ -65,6 +65,19 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
         }
       }
 
+      if (res["problem"]["reason_of_moving_to_planned"] != null) {
+        url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/results/check';
+        Map<String, dynamic> data = {
+          "id": res["problem"]["reason_of_moving_to_planned"]["id"]
+        };
+        var resp = await Requests.post(url, body: data, headers: headers);
+        if (resp.statusCode == 200) {
+          globals.cardAlert[widget.id]["res_seen"] = false;
+          globals.checkCardAler(widget.id);
+        }
+      }
+
       // String reply = await response.transform(utf8.decoder).join();
       // var temp = response.json();
       return res;
@@ -679,7 +692,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                       "${res["problem"]["reason_of_moving_to_planned"]["executor"]["organization"]["api_title".tr().toString()]}, ${res["problem"]["reason_of_moving_to_planned"]["executor"]["district"]["name_" + globals.lang.tr().toString()]} ${res["problem"]["reason_of_moving_to_planned"]["executor"]["position"]["api_title".tr().toString()]}",
                                   contentCol: res["problem"]
                                       ["reason_of_moving_to_planned"]["reason"],
-                                  files: analyzeImages(res["problem"]
+                                  files: analyzeFiles(res["problem"]
                                       ["reason_of_moving_to_planned"]),
                                 ),
                               )
