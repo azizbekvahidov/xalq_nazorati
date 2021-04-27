@@ -271,10 +271,12 @@ class _ExpanseListTileState extends State<ExpanseListTile> {
                                       children: [
                                         InkWell(
                                           onTap: () {
+                                            print(snap.data[index][
+                                                "how_it_works_${globals.lang.tr().toString()}"]);
                                             if (globals.token != null) {
                                               // customWarningDialog(context);
-                                              if (snap.data[index]
-                                                      ["how_it_works"] !=
+                                              if (snap.data[index][
+                                                      "how_it_works_${globals.lang.tr().toString()}"] !=
                                                   null) {
                                                 Navigator.of(context,
                                                         rootNavigator: true)

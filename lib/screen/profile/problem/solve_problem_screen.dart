@@ -671,15 +671,17 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                         : widget.stat == "planned"
                             ? ShadowBox(
                                 child: ResContent(
-                                    titleCol:
-                                        "${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["last_name"])} ${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["first_name"])}",
-                                    dateCol:
-                                        "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
-                                    positionCol:
-                                        "${res["problem"]["reason_of_moving_to_planned"]["executor"]["organization"]["api_title".tr().toString()]}, ${res["problem"]["reason_of_moving_to_planned"]["executor"]["district"]["name_" + globals.lang.tr().toString()]} ${res["problem"]["reason_of_moving_to_planned"]["executor"]["position"]["api_title".tr().toString()]}",
-                                    contentCol: res["problem"]
-                                            ["reason_of_moving_to_planned"]
-                                        ["reason"]),
+                                  titleCol:
+                                      "${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["last_name"])} ${globals.capitalize(res["problem"]["reason_of_moving_to_planned"]["executor"]["user"]["first_name"])}",
+                                  dateCol:
+                                      "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
+                                  positionCol:
+                                      "${res["problem"]["reason_of_moving_to_planned"]["executor"]["organization"]["api_title".tr().toString()]}, ${res["problem"]["reason_of_moving_to_planned"]["executor"]["district"]["name_" + globals.lang.tr().toString()]} ${res["problem"]["reason_of_moving_to_planned"]["executor"]["position"]["api_title".tr().toString()]}",
+                                  contentCol: res["problem"]
+                                      ["reason_of_moving_to_planned"]["reason"],
+                                  files: analyzeImages(res["problem"]
+                                      ["reason_of_moving_to_planned"]),
+                                ),
                               )
                             : res["moderator_log"] != null
                                 ? ShadowBox(

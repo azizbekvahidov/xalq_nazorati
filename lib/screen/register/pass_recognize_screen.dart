@@ -40,11 +40,16 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   final pnflController = TextEditingController();
   final calendarController = TextEditingController();
+  final seriesNumController = TextEditingController();
+  final seriesController = TextEditingController();
+
   // final seriesNumController = TextEditingController();
 
   // FocusNode passSeriesNode = FocusNode();
   FocusNode passBirthNode = FocusNode();
   FocusNode passpnflNode = FocusNode();
+  FocusNode passSeriesNode = FocusNode();
+  FocusNode passNumNode = FocusNode();
 
   bool _value = false;
   bool isError = false;
@@ -56,7 +61,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
       keyboardBarColor: Colors.grey[200],
       nextFocus: true,
       actions: [
-        KeyboardActionsItem(focusNode: passpnflNode, toolbarButtons: [
+        KeyboardActionsItem(focusNode: passSeriesNode, toolbarButtons: [
           (node) {
             return GestureDetector(
               onTap: () => node.unfocus(),
@@ -67,31 +72,44 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
             );
           }
         ]),
-        // KeyboardActionsItem(focusNode: passBirthNode, toolbarButtons: [
-        //   (node) {
-        //     return GestureDetector(
-        //       onTap: () => node.unfocus(),
-        //       child: Padding(
-        //         padding: EdgeInsets.all(8.0),
-        //         child: Icon(Icons.close),
-        //       ),
-        //     );
-        //   }
-        // ]),
+        KeyboardActionsItem(focusNode: passNumNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
+        KeyboardActionsItem(focusNode: passBirthNode, toolbarButtons: [
+          (node) {
+            return GestureDetector(
+              onTap: () => node.unfocus(),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+            );
+          }
+        ]),
       ],
     );
   }
 
   Future sendData() async {
-    String pnfl = pnflController.text;
+    String series = seriesController.text;
+    String seriesNum = seriesNumController.text;
     String calendar = calendarController.text;
     // String seriesNum = seriesNumController.text;
-    if (_value && pnfl != "" && calendar != "") {
+    if (_value && series != "" && seriesNum != "" && calendar != "") {
       // String url =
       //     '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
       String url =
           '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/retrieve-data';
-      Map map = {"document": pnfl, 'dob': "$selectedDate"};
+      Map map = {"document": "$series$seriesNum", 'dob': "$selectedDate"};
+
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,
           body: map, verify: false, persistCookies: true);
@@ -116,7 +134,9 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   }
 
   validate() {
-    if (calendarController.text != "" && pnflController.text != "") {
+    if (calendarController.text != "" &&
+        seriesController.text != "" &&
+        seriesNumController.text != "") {
       print("true");
       setState(() {
         _value = true;
@@ -244,7 +264,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   calendarDialog() async {
     CupertinoRoundedDatePicker.show(
       context,
-      fontFamily: globals.font,
+      // fontFamily: globals.font,
       locale: Locale("ru"),
       textColor: Colors.black,
       background: Colors.white,
@@ -278,6 +298,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
+    print(dWith);
     final dHeight = mediaQuery.size.height;
     final PreferredSizeWidget appBar =
         CustomAppBar(title: "identity_user".tr().toString());
@@ -332,91 +353,153 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MainText("pnfl".tr().toString()),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                    margin: EdgeInsets.symmetric(vertical: 10),
-                                    width: (dWith <= 360)
-                                        ? dWith * 0.80
-                                        : dWith * 0.89,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffF5F6F9),
-                                      borderRadius: BorderRadius.circular(22.5),
-                                      border: Border.all(
-                                        color:
-                                            Color.fromRGBO(178, 183, 208, 0.5),
-                                        style: BorderStyle.solid,
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Container(
-                                          margin:
-                                              EdgeInsets.symmetric(vertical: 3),
-                                          width: (mediaQuery.size.width -
-                                                  mediaQuery.padding.left -
-                                                  mediaQuery.padding.right) *
-                                              ((dWith <= 360) ? 0.75 : 0.7),
-                                          child: TextField(
-                                            inputFormatters: [
-                                              UpperCaseTextFormatter()
-                                            ],
-                                            focusNode: passpnflNode,
-                                            onChanged: (value) {
-                                              validate();
-                                            },
-                                            controller: pnflController,
-                                            maxLines: 1,
-                                            maxLength: 14,
-                                            buildCounter: (BuildContext context,
-                                                    {int currentLength,
-                                                    int maxLength,
-                                                    bool isFocused}) =>
-                                                null,
-                                            keyboardType: TextInputType.text,
-                                            decoration: InputDecoration(
-                                              contentPadding: EdgeInsets.only(
-                                                  top: 0, bottom: 10),
-                                              border: InputBorder.none,
-                                              hintText:
-                                                  "enter_pnfl".tr().toString(),
-                                              hintStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .display1
-                                                  .copyWith(
-                                                      fontSize: dWith *
-                                                          globals.fontSize16),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            customDialog(context);
-                                          },
-                                          child: Container(
-                                            width: 45,
-                                            height: 45,
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                  "assets/img/ques.svg"),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width: (dWith <= 360)
+                                      ? dWith * 0.14
+                                      : dWith * 0.16,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffF5F6F9),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(22.5),
+                                        bottomLeft: Radius.circular(22.5)),
+                                    border: Border.all(
+                                      color: Color.fromRGBO(178, 183, 208, 0.5),
+                                      style: BorderStyle.solid,
+                                      width: 0.5,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 3),
+                                        width: (mediaQuery.size.width -
+                                                mediaQuery.padding.left -
+                                                mediaQuery.padding.right) *
+                                            ((dWith <= 360) ? 0.08 : 0.08),
+                                        child: TextField(
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[a-zA-Z]")),
+                                            UpperCaseTextFormatter(),
+                                          ],
+                                          focusNode: passSeriesNode,
+                                          onChanged: (value) {
+                                            validate();
+                                          },
+                                          controller: seriesNumController,
+                                          maxLines: 1,
+                                          maxLength: 2,
+                                          buildCounter: (BuildContext context,
+                                                  {int currentLength,
+                                                  int maxLength,
+                                                  bool isFocused}) =>
+                                              null,
+                                          keyboardType: TextInputType.text,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                                top: 0, bottom: 10),
+                                            border: InputBorder.none,
+                                            hintText: "AA",
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .display1
+                                                .copyWith(
+                                                    fontSize: dWith *
+                                                        globals.fontSize16),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.only(right: 10)),
+                                Container(
+                                  padding: EdgeInsets.only(left: 20),
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width: (dWith <= 360)
+                                      ? dWith * 0.67
+                                      : dWith * 0.70,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffF5F6F9),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(22.5),
+                                        bottomRight: Radius.circular(22.5)),
+                                    border: Border.all(
+                                      color: Color.fromRGBO(178, 183, 208, 0.5),
+                                      style: BorderStyle.solid,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        margin:
+                                            EdgeInsets.symmetric(vertical: 3),
+                                        width: (mediaQuery.size.width -
+                                                mediaQuery.padding.left -
+                                                mediaQuery.padding.right) *
+                                            ((dWith <= 360) ? 0.42 : 0.42),
+                                        child: TextField(
+                                          focusNode: passNumNode,
+                                          onChanged: (value) {
+                                            validate();
+                                          },
+                                          controller: seriesController,
+                                          maxLines: 1,
+                                          maxLength: 7,
+                                          buildCounter: (BuildContext context,
+                                                  {int currentLength,
+                                                  int maxLength,
+                                                  bool isFocused}) =>
+                                              null,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(
+                                                top: 0, bottom: 10),
+                                            border: InputBorder.none,
+                                            hintText: "1234567",
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .display1
+                                                .copyWith(
+                                                    fontSize: dWith *
+                                                        globals.fontSize16),
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          customDialog(context);
+                                        },
+                                        child: Container(
+                                          width: 45,
+                                          height: 45,
+                                          child: Center(
+                                            child: SvgPicture.asset(
+                                                "assets/img/ques.svg"),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             MainText("birthday".tr().toString()),
                             Container(

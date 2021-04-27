@@ -99,7 +99,7 @@ class _MainProfileState extends State<MainProfile> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);
     prefs.setString('country', country);
-    globals.lang = lang;
+    globals.lang = (lang == "ru" && country == "UZ") ? "uz_cyrl" : lang;
     setState(() {
       _lang = lang;
       _country = country;
@@ -234,7 +234,9 @@ class _MainProfileState extends State<MainProfile> {
                                           ),
                                           RichText(
                                             text: TextSpan(
-                                              text: "profile".tr().toString(),
+                                              text: "personal_data"
+                                                  .tr()
+                                                  .toString(),
                                               style: TextStyle(
                                                 fontFamily: globals.font,
                                                 color: Color(0xff050505),

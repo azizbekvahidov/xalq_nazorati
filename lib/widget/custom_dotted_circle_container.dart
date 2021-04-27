@@ -23,9 +23,10 @@ class CustomDottedCircleContainer extends StatefulWidget {
   File image;
   final String img;
   Function checkVal;
+  bool validate;
 
   CustomDottedCircleContainer(
-      this.boxSize, this.image, this.img, this.checkVal);
+      this.boxSize, this.image, this.img, this.checkVal, this.validate);
   @override
   _CustomDottedCircleContainerState createState() =>
       _CustomDottedCircleContainerState();
@@ -34,6 +35,7 @@ class CustomDottedCircleContainer extends StatefulWidget {
 class _CustomDottedCircleContainerState
     extends State<CustomDottedCircleContainer> {
   bool accessDenied;
+  bool loaded = true;
 
   // Future<PermissionStatus> _getPermission(perm) async {
   //   PermissionStatus permission =
@@ -125,6 +127,8 @@ class _CustomDottedCircleContainerState
         });
       }
     }
+    loaded = widget.checkVal();
+    setState(() {});
   }
 
   pickerCam() async {
@@ -230,6 +234,8 @@ class _CustomDottedCircleContainerState
         }
       }
     }
+    loaded = widget.checkVal();
+    setState(() {});
   }
 
   @override
@@ -331,7 +337,9 @@ class _CustomDottedCircleContainerState
               borderType: BorderType.RRect,
               radius: Radius.circular(widget.boxSize / 2),
               dashPattern: [12, 7],
-              color: Color.fromRGBO(103, 105, 108, 0.5),
+              color: widget.validate
+                  ? Color.fromRGBO(103, 105, 108, 0.5)
+                  : Colors.red,
               strokeWidth: 2,
               child: ClipRRect(
                 borderRadius:
@@ -340,7 +348,9 @@ class _CustomDottedCircleContainerState
                   padding: EdgeInsets.all(22),
                   child: SvgPicture.asset(
                     "assets/img/plus_icon.svg",
-                    color: Color.fromRGBO(49, 59, 108, 0.5),
+                    color: widget.validate
+                        ? Color.fromRGBO(49, 59, 108, 0.5)
+                        : Colors.red,
                   ),
                   width: widget.boxSize,
                   height: widget.boxSize,

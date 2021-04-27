@@ -133,34 +133,34 @@ class _RegisterVerifyIosScreenState extends State<RegisterVerifyIosScreen>
 
   bool isSend = false;
   void verify() async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-        settings: const RouteSettings(name: PassRecognizeScreen.routeName),
-        builder: (context) => PassRecognizeScreen()));
-    // String code = codeController.text;
-    // if (!isSend && code != "") {
-    //   try {
-    //     String url =
-    //         '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
-    //     Map map = {"code": int.parse(code)};
-    //     // String url = '${globals.api_link}/users/get-phone';
-    //     var r1 = await Requests.post(url,
-    //         body: map, verify: false, persistCookies: true);
+    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //     settings: const RouteSettings(name: PassRecognizeScreen.routeName),
+    //     builder: (context) => PassRecognizeScreen()));
+    String code = codeController.text;
+    if (!isSend && code != "") {
+      try {
+        String url =
+            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-confirm';
+        Map map = {"code": int.parse(code)};
+        // String url = '${globals.api_link}/users/get-phone';
+        var r1 = await Requests.post(url,
+            body: map, verify: false, persistCookies: true);
 
-    //     if (r1.statusCode == 200) isSend = true;
-    //     if (isSend) {
-    //       globals.tempPhone = widget.phone;
-    //       Navigator.of(context).pushReplacement(MaterialPageRoute(
-    //           settings:
-    //               const RouteSettings(name: PassRecognizeScreen.routeName),
-    //           builder: (context) => PassRecognizeScreen()));
-    //     } else {
-    //       dynamic json = r1.json();
-    //       helper.getToast(json["detail"], context);
-    //     }
-    //   } catch (e) {
-    //     print(e);
-    //   }
-    // }
+        if (r1.statusCode == 200) isSend = true;
+        if (isSend) {
+          globals.tempPhone = widget.phone;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              settings:
+                  const RouteSettings(name: PassRecognizeScreen.routeName),
+              builder: (context) => PassRecognizeScreen()));
+        } else {
+          dynamic json = r1.json();
+          helper.getToast(json["detail"], context);
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   @override

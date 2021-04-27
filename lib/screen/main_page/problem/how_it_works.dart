@@ -37,7 +37,6 @@ class _HowItWorksState extends State<HowItWorks> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.id);
   }
 
   bool pressAction = false;

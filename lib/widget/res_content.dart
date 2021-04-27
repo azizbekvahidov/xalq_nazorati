@@ -3,15 +3,22 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/widget/problems/image_carousel.dart';
 
 class ResContent extends StatelessWidget {
   final String titleCol;
   final String dateCol;
   final String contentCol;
   final String positionCol;
+  final List files;
 
   const ResContent(
-      {this.titleCol, this.dateCol, this.positionCol, this.contentCol, Key key})
+      {this.titleCol,
+      this.dateCol,
+      this.positionCol,
+      this.contentCol,
+      this.files,
+      Key key})
       : super(key: key);
 
   @override
@@ -104,7 +111,7 @@ class ResContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Описание",
+                  "description".tr().toString(),
                   style: TextStyle(
                     fontFamily: globals.font,
                     fontSize: dWidth * globals.fontSize12,
@@ -125,6 +132,31 @@ class ResContent extends StatelessWidget {
               ],
             ),
           ),
+          files == null
+              ? Container()
+              : Container(
+                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "picked_files".tr().toString(),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: dWidth * globals.fontSize12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: ImageCarousel(
+                          "",
+                          files,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
         ],
       ),
     );

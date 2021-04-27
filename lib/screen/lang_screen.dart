@@ -14,7 +14,7 @@ class LangScreen extends StatefulWidget {
 class _LangScreenState extends State<LangScreen> {
   int btn = 0;
   addStringToSF(String lang, String country) async {
-    globals.lang = lang;
+    globals.lang = (lang == "ru" && country == "UZ") ? "uz_cyrl" : lang;
     globals.country = country;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('lang', lang);

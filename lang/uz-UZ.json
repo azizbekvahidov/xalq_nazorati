@@ -97,7 +97,7 @@
     "closed": "Moderator tomonidan yopildi",
     "ru": "ru",
     "uz": "uz",
-    "en": "oz",
+    "uz_cyrl": "oz",
     "api_title": "title_uz",
     "api_content": "content_uz",
     "about": "Ilova haqida",
@@ -295,12 +295,13 @@
   "start_solved_info":"Harakatlar ",
   "end_solved_info":"gacha amalga oshirilmasa, Muammo bartaraf etilgan hisoblanadi",
   "in_proccess":"Jarayonda",
-  "delayed":"Rejalashtirilayotgan",
+  "delayed":"Rejalashtirilmoqda",
   "delayed_info":"Bu o‘zi qanday bo‘lim?",
-  "delayed_desc":"Biz ushbu muammoni hozirgi vaqtda hal qila olmasligimiz sababli Sizning Xabaringiz bu yerga joylashtirildi. Hal qilish o‘ziga xos vaziyatlar (byudjet yo‘qligi, ob-havo to‘g‘ri kelmasligi, ta’mirlash ishlari jadvali) bog‘liq. Bu biz sizning muammoingiz haqida unutdik degani emas. O‘ziga xos vaziyatlar hal bo‘lsa, biz sizning muammoingizni hal qilamiz va tasdiqlashingiz uchun sizga xabar beramiz.  ",
-
-
-
+  "delayed_desc":"Ushbu muammoni tezkor xal etish imkoni yo‘qligi sababli Sizning xabaringiz shu yerga joylashtirildi. Muammoni xal etish o‘ziga xos vaziyatlarga (byudjetda mablag‘ yo‘qligi, ob-havoning to‘g‘ri kelmasligi, ta’mirlash ishlari jadvali) bog‘liq. Bu esa Cizning muammoingiz haqida unutdik degani emas. O‘ziga xos vaziyatlar hal bo‘lsa, sizning muammoningizni hal etiladi hamda tasdiqlashingiz uchun sizga xabar yuboriladi.",
+  "upload_danger":"Suratni yuklash majburiy",
+  "personal_data":"Shaxsiy ma’lumorlar",
+  "description":"Tavsif",
+  "picked_files":"Ilova qilingan fayl",
 
 
 

@@ -35,10 +35,12 @@ class _ProblemDescState extends State<ProblemDesc> {
   File image4;
   var descController = TextEditingController();
   bool _value = false;
+  bool _loadPhoto = true;
   FocusNode descNode = FocusNode();
   @override
   void initState() {
     super.initState();
+    if (widget.photo_required) _loadPhoto = false;
     // getPermission();
   }
 
@@ -86,36 +88,50 @@ class _ProblemDescState extends State<ProblemDesc> {
         "file3": null,
         "file4": null,
       });
+      if (widget.photo_required) {
+        _value = false;
+        _loadPhoto = false;
+      }
       globals.userLocation = null;
     });
   }
 
   checkChange() {
     String descValue = descController.text;
-    setState(() {
-      if (widget.photo_required) {
-        if ((globals.images["file1"] == null ||
-                globals.images["file2"] == null ||
-                globals.images["file3"] == null ||
-                globals.images["file4"] == null) &&
-            descValue != "") {
-          _value = true;
-        } else {
-          _value = false;
-        }
+    if (widget.photo_required) {
+      if ((globals.images["file1"] != null ||
+              globals.images["file2"] != null ||
+              globals.images["file3"] != null ||
+              globals.images["file4"] != null) &&
+          descValue != "") {
+        _loadPhoto = true;
+        _value = true;
       } else {
-        if (descValue != "")
-          _value = true;
-        else
-          _value = false;
+        if ((globals.images["file1"] == null &&
+            globals.images["file2"] == null &&
+            globals.images["file3"] == null &&
+            globals.images["file4"] == null)) {
+          _loadPhoto = false;
+        } else {
+          _loadPhoto = true;
+        }
+        _value = false;
       }
-    });
+    } else {
+      if (descValue != "")
+        _value = true;
+      else
+        _value = false;
+    }
+    setState(() {});
+    return _loadPhoto;
   }
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     var dWidth = mediaQuery.size.width;
+    var dHeight = mediaQuery.size.height;
 
     final size = (mediaQuery.size.width -
                 mediaQuery.padding.left -
@@ -132,7 +148,7 @@ class _ProblemDescState extends State<ProblemDesc> {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: AlwaysScrollableScrollPhysics(),
           child: Container(
             // height: mediaQuery.size.height < 560
             //     ? mediaQuery.size.height
@@ -145,9 +161,10 @@ class _ProblemDescState extends State<ProblemDesc> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShadowBox(
-                        child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minHeight: 420, maxHeight: 490),
+                        child: Container(
+                          height: !_loadPhoto
+                              ? (dHeight > 600 ? 480 : 450)
+                              : (dHeight > 600 ? 440 : 420),
                           child: Container(
                             padding: EdgeInsets.symmetric(horizontal: 20),
                             child: KeyboardActions(
@@ -207,26 +224,74 @@ class _ProblemDescState extends State<ProblemDesc> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        CustomDottedCircleContainer(size,
-                                            image1, "file1", checkChange()),
+                                        CustomDottedCircleContainer(
+                                            size,
+                                            image1,
+                                            "file1",
+                                            checkChange,
+                                            _loadPhoto),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(size,
-                                            image2, "file2", checkChange()),
+                                        CustomDottedCircleContainer(
+                                            size,
+                                            image2,
+                                            "file2",
+                                            checkChange,
+                                            _loadPhoto),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(size,
-                                            image3, "file3", checkChange()),
+                                        CustomDottedCircleContainer(
+                                            size,
+                                            image3,
+                                            "file3",
+                                            checkChange,
+                                            _loadPhoto),
                                         Padding(
                                           padding: EdgeInsets.only(left: 10),
                                         ),
-                                        CustomDottedCircleContainer(size,
-                                            image4, "file4", checkChange()),
+                                        CustomDottedCircleContainer(
+                                            size,
+                                            image4,
+                                            "file4",
+                                            checkChange,
+                                            _loadPhoto),
                                       ],
                                     ),
                                   ),
+                                  !_loadPhoto
+                                      ? Container(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: SvgPicture.asset(
+                                                  "assets/img/warning.svg",
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 9,
+                                                child: Text(
+                                                  "upload_danger"
+                                                      .tr()
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                      color: Color(0xffFF0000),
+                                                      fontSize: 12,
+                                                      fontFamily: globals.font),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:

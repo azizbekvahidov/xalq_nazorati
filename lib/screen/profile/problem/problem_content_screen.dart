@@ -801,10 +801,9 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                 _hasResult
                                     ? Container(
                                         decoration: BoxDecoration(
-                                            color:
-                                                Theme.of(context).primaryColor,
+                                            color: Color(0xff50E3C6),
                                             borderRadius:
-                                                BorderRadius.circular(10)),
+                                                BorderRadius.circular(0)),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
