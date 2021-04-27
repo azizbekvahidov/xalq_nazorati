@@ -108,7 +108,7 @@ class _PassRecognizeScreenState extends State<PassRecognizeScreen> {
       //     '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/data-from-cep';
       String url =
           '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/retrieve-data';
-      Map map = {"document": "$series$seriesNum", 'dob': "$selectedDate"};
+      Map map = {"document": "$seriesNum$series", 'dob': "$selectedDate"};
 
       // String url = '${globals.api_link}/users/get-phone';
       var r1 = await Requests.post(url,

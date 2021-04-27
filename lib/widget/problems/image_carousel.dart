@@ -69,7 +69,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                               Border.all(color: Theme.of(context).primaryColor),
                         ),
                         child: Icon(
-                          Icons.arrow_back_ios,
+                          Icons.arrow_back_ios_outlined,
                           size: 10,
                           color: Theme.of(context).primaryColor,
                         ),
