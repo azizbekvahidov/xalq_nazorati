@@ -63,6 +63,9 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
           globals.cardAlert[widget.id]["res_seen"] = false;
           globals.checkCardAler(widget.id);
         }
+        var deadline = DateTime.parse(res["result"]["updated_at"]);
+
+        time = (deadline.add(Duration(days: 7)));
       }
 
       if (res["problem"]["reason_of_moving_to_planned"] != null) {
@@ -241,6 +244,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
               var executors = result != null ? res['problem']['closed_by'] : {};
               List _files = result != null ? analyzeFiles(result) : [];
               List _images = res != null ? analyzeImages(res["problem"]) : [];
+              print(res["moderator_log"]);
               var res_widget = result != null
                   ? Column(
                       children: [
@@ -716,19 +720,19 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
                                   )
                                 : Container()
                     : Container(),
-                res["problem"]["unsatisfactory_solution"] != null
-                    ? ShadowBox(
-                        child: ResContent(
-                          titleCol:
-                              "${globals.capitalize(res["problem"]["user"]['last_name'])} ${globals.capitalize(res["problem"]["user"]['first_name'])}",
-                          dateCol:
-                              "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
-                          positionCol: "liver".tr().toString(),
-                          contentCol: res["problem"]["unsatisfactory_solution"]
-                              ["reason"],
-                        ),
-                      )
-                    : Container(),
+                // res["problem"]["unsatisfactory_solution"] != null
+                //     ? ShadowBox(
+                //         child: ResContent(
+                //           titleCol:
+                //               "${globals.capitalize(res["problem"]["user"]['last_name'])} ${globals.capitalize(res["problem"]["user"]['first_name'])}",
+                //           dateCol:
+                //               "${dateF.format(DateTime.parse(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parseUTC(res["problem"]['updated_at']).toString()))}",
+                //           positionCol: "liver".tr().toString(),
+                //           contentCol: res["problem"]["unsatisfactory_solution"]
+                //               ["reason"],
+                //         ),
+                //       )
+                //     : Container(),
               ]);
 
               _widget = Column(

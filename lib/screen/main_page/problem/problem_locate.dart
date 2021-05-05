@@ -690,6 +690,7 @@ class _ProblemLocateState extends State<ProblemLocate>
   // final _key = GlobalKey<GoogleMapStateBase>();
   @override
   Widget build(BuildContext context) {
+    print(widget.categoryId);
     final mediaQuery = MediaQuery.of(context);
     var dWidth = MediaQuery.of(context).size.width;
     var appBar = CustomAppBar(title: "where_is_problem".tr().toString());

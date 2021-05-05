@@ -24,7 +24,6 @@ class ResContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(files[0]);
     var dWidth = MediaQuery.of(context).size.width;
     return Container(
       child: Column(
@@ -149,32 +148,37 @@ class ResContent extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      files[1].length != 0
-                          ? Container(
-                              height: 80,
-                              child: GridView.builder(
-                                padding: EdgeInsets.all(0),
-                                physics: NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    new SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 4,
-                                ),
-                                itemCount: files[1].length,
-                                itemBuilder: (BuildContext ctx, index) {
-                                  return PdfWidget(files[1][index], "");
-                                },
-                              ),
-                            )
-                          : Container(),
-                      files[0].length != 0
-                          ? Container(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: ImageCarousel(
-                                "",
-                                files[0],
-                              ),
-                            )
+                      files.length != 0
+                          ? Column(children: [
+                              files[1].length != 0
+                                  ? Container(
+                                      height: 80,
+                                      child: GridView.builder(
+                                        padding: EdgeInsets.all(0),
+                                        physics: NeverScrollableScrollPhysics(),
+                                        gridDelegate:
+                                            new SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 4,
+                                        ),
+                                        itemCount: files[1].length,
+                                        itemBuilder: (BuildContext ctx, index) {
+                                          return PdfWidget(files[1][index], "");
+                                        },
+                                      ),
+                                    )
+                                  : Container(),
+                              files[0].length != 0
+                                  ? Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: ImageCarousel(
+                                        "",
+                                        files[0],
+                                      ),
+                                    )
+                                  : Container(),
+                            ])
                           : Container(),
                     ],
                   ),

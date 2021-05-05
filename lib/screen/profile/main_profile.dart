@@ -334,7 +334,9 @@ class _MainProfileState extends State<MainProfile> {
                                   backgroundColor: Colors.transparent,
                                   context: context,
                                   builder: (context) => SelectLang(
-                                      lang: _lang, callBack: addStringToSF));
+                                      lang: _lang,
+                                      callBack: addStringToSF,
+                                      country: _country));
                             },
                           ),
                           Divider(),

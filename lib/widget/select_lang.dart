@@ -9,7 +9,8 @@ typedef void MyFormCallback(String result, String result2);
 class SelectLang extends StatefulWidget {
   final MyFormCallback callBack;
   final String lang;
-  SelectLang({this.lang, this.callBack});
+  final String country;
+  SelectLang({this.lang, this.callBack, this.country});
   @override
   _SelectLangState createState() => _SelectLangState();
 }
@@ -20,8 +21,11 @@ class _SelectLangState extends State<SelectLang> {
   @override
   void initState() {
     super.initState();
-    print(widget.lang);
-    _lang = widget.lang;
+    if (widget.country == "UZ" && widget.lang == "ru") {
+      _lang = "uz_cyrl";
+    } else {
+      _lang = widget.lang;
+    }
   }
 
   @override

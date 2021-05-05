@@ -297,11 +297,12 @@ class _SearchtInputState extends State<SearchtInput> {
                               Navigator.of(context, rootNavigator: true).push(
                                 MaterialPageRoute(
                                   builder: (BuildContext context) {
+                                    print(suggestion);
                                     return CheckProblemCategory(
                                       id: suggestion["id"],
                                       title: suggestion["name"],
                                       category_id: suggestion["category_id"]
-                                          ["id"],
+                                          ["category"]["id"],
                                       subcategoryId:
                                           suggestion["subcategory_id"],
                                       breadcrumbs: suggestion["breadcrumbs"],
