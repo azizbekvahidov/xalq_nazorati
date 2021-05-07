@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -85,6 +84,54 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
         problemStatus = alertData["status"];
       }
     }
+  }
+
+  customDialog(BuildContext context) {
+    var dWidth = MediaQuery.of(context).size.width;
+    return showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Center(
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.05,
+                      horizontal: MediaQuery.of(context).size.width * 0.05),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "result_notify".tr().toString(),
+                          style: TextStyle(
+                            fontFamily: globals.font,
+                            fontSize: dWidth * globals.fontSize16,
+                            decoration: TextDecoration.none,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        )),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   void _onRefresh() async {
@@ -933,19 +980,136 @@ class _ProblemContentScreenState extends State<ProblemContentScreen> {
                                           ],
                                         ),
                                       )
-                                    // CustomCardList(
-                                    //     "subcat2",
-                                    //     "result".tr().toString(),
-                                    //     SolveProblemScreen(
-                                    //       status: _status,
-                                    //       id: _data["id"],
-                                    //       stat: problemStatus,
-                                    //     ),
-                                    //     true,
-                                    //     "1",
-                                    //     !alertData["res_seen"],
-                                    //   )
-                                    : Container(),
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Divider(
+                                                  height: 0,
+                                                ),
+                                              ],
+                                            ),
+                                            InkWell(
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 20,
+                                                    horizontal: 20),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                        width:
+                                                            (mediaQuery.size
+                                                                        .width -
+                                                                    mediaQuery
+                                                                        .padding
+                                                                        .left -
+                                                                    mediaQuery
+                                                                        .padding
+                                                                        .right) *
+                                                                0.82,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                                child: RichText(
+                                                              text: TextSpan(
+                                                                text: "result"
+                                                                    .tr()
+                                                                    .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      globals
+                                                                          .font,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          24,
+                                                                          24,
+                                                                          0.4),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontSize: mediaQuery
+                                                                          .size
+                                                                          .width *
+                                                                      globals
+                                                                          .fontSize18,
+                                                                ),
+                                                              ),
+                                                            )),
+                                                            Container(
+                                                              child: !alertData[
+                                                                      "res_seen"]
+                                                                  ? Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          left:
+                                                                              10),
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              10),
+                                                                          color:
+                                                                              Colors.red),
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .center,
+                                                                      width: 20,
+                                                                      height:
+                                                                          20,
+                                                                      // padding: EdgeInsets.symmetric(
+                                                                      //     vertical: 2, horizontal: 7),
+                                                                      child:
+                                                                          Text(
+                                                                        "1",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          fontFamily:
+                                                                              globals.font,
+                                                                          fontSize:
+                                                                              mediaQuery.size.width * globals.fontSize10,
+                                                                          fontFeatures: [
+                                                                            FontFeature.enable("pnum"),
+                                                                            FontFeature.enable("lnum")
+                                                                          ],
+                                                                        ),
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      ),
+                                                                    )
+                                                                  : Container(),
+                                                            ),
+                                                          ],
+                                                        )),
+                                                    Container(
+                                                      child: Icon(
+                                                        Icons.arrow_forward_ios,
+                                                        size: 15,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                customDialog(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                               ],
                             ),
                           ),
