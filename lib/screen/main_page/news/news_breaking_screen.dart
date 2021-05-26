@@ -1,23 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/models/news.dart';
 import 'package:xalq_nazorati/widget/news/news_list.dart';
 
+_NewsBreakingScreenState newsBreakingScreenState;
+
 class NewsBreakingScreen extends StatefulWidget {
   @override
-  _NewsBreakingScreenState createState() => _NewsBreakingScreenState();
+  _NewsBreakingScreenState createState() {
+    newsBreakingScreenState = _NewsBreakingScreenState();
+    return newsBreakingScreenState;
+  }
 }
 
 class _NewsBreakingScreenState extends State<NewsBreakingScreen> {
   Future<List> getNews() async {
-    var url = '${globals.api_link}/news?category=breaking';
+    var connect = new DioConnection();
+    Map<String, String> headers = {};
+    var response = await connect.getHttp(
+        '/news?category=breaking', newsBreakingScreenState, headers);
 
-    var response = await Requests.get(url);
-
-    var reply = response.json();
+    var reply = response["result"];
     return reply["results"];
   }
 

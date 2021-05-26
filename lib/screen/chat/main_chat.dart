@@ -15,6 +15,7 @@ import 'package:system_settings/system_settings.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/models/chatMessage.dart';
@@ -114,7 +115,7 @@ class _MainChatState extends State<MainChat> {
           '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/check-message?message_id=${id}';
       HttpGet request = HttpGet();
       var response = await request.methodGet(url);
-      if (response.statusCode == 200) {
+      if (response["statusCode"] == 200) {
         globals.cardAlert[widget.id]["chat_cnt"] = 0;
         globals.checkCardAler(widget.id);
       }
@@ -629,105 +630,115 @@ class _MainChatState extends State<MainChat> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "messages".tr().toString(),
-        centerTitle: true,
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Container(
-          height: mediaQuery.size.height * 0.9,
-          child: Stack(
-            children: [
-              Positioned(
-                bottom: _isHide ? 20 : 85,
-                child: Container(
-                  width: mediaQuery.size.width,
-                  child: generateList(context),
-                ),
-              ),
-              (_isHide)
-                  ? Container()
-                  : Positioned(
-                      bottom: 30,
-                      child: Container(
-                        width: mediaQuery.size.width,
-                        child: Container(
-                          height: 55,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _textActive
-                                  ? Color(0xff1ABC9C)
-                                  : Color.fromRGBO(178, 183, 208, 0.5),
-                              width: 1,
-                            ),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(27.5),
-                          ),
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  pickedFile();
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: SvgPicture.asset(
-                                    "assets/img/file_icon.svg",
-                                    color: _textActive
-                                        ? Color(0xff000000)
-                                        : Color.fromRGBO(49, 59, 108, 0.4),
-                                  ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: "messages".tr().toString(),
+            centerTitle: true,
+          ),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: Container(
+              height: mediaQuery.size.height * 0.9,
+              child: Stack(
+                children: [
+                  Positioned(
+                    bottom: _isHide ? 20 : 85,
+                    child: Container(
+                      width: mediaQuery.size.width,
+                      child: generateList(context),
+                    ),
+                  ),
+                  (_isHide)
+                      ? Container()
+                      : Positioned(
+                          bottom: 30,
+                          child: Container(
+                            width: mediaQuery.size.width,
+                            child: Container(
+                              height: 55,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: _textActive
+                                      ? Color(0xff1ABC9C)
+                                      : Color.fromRGBO(178, 183, 208, 0.5),
+                                  width: 1,
                                 ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(27.5),
                               ),
-                              Container(
-                                  width: (mediaQuery.size.width - 40) * 0.60,
-                                  child: TextField(
-                                    onSubmitted: (value) {
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      pickedFile();
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 10),
+                                      child: SvgPicture.asset(
+                                        "assets/img/file_icon.svg",
+                                        color: _textActive
+                                            ? Color(0xff000000)
+                                            : Color.fromRGBO(49, 59, 108, 0.4),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                      width:
+                                          (mediaQuery.size.width - 40) * 0.60,
+                                      child: TextField(
+                                        onSubmitted: (value) {
+                                          sendMessage();
+                                        },
+                                        onChanged: (value) {
+                                          changeText(value);
+                                        },
+                                        controller: messageController,
+                                        decoration: InputDecoration.collapsed(
+                                          hintText:
+                                              "enter_message".tr().toString(),
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .copyWith(
+                                                  fontSize:
+                                                      mediaQuery.size.width *
+                                                          globals.fontSize18),
+                                        ),
+                                      )),
+                                  InkWell(
+                                    onTap: () {
                                       sendMessage();
                                     },
-                                    onChanged: (value) {
-                                      changeText(value);
-                                    },
-                                    controller: messageController,
-                                    decoration: InputDecoration.collapsed(
-                                      hintText: "enter_message".tr().toString(),
-                                      hintStyle: Theme.of(context)
-                                          .textTheme
-                                          .display1
-                                          .copyWith(
-                                              fontSize: mediaQuery.size.width *
-                                                  globals.fontSize18),
+                                    child: Container(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: SvgPicture.asset(
+                                        "assets/img/send_icon.svg",
+                                        color: _textActive
+                                            ? Color.fromRGBO(26, 188, 156, 1)
+                                            : Color.fromRGBO(49, 59, 108, 0.4),
+                                      ),
                                     ),
-                                  )),
-                              InkWell(
-                                onTap: () {
-                                  sendMessage();
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: SvgPicture.asset(
-                                    "assets/img/send_icon.svg",
-                                    color: _textActive
-                                        ? Color.fromRGBO(26, 188, 156, 1)
-                                        : Color.fromRGBO(49, 59, 108, 0.4),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

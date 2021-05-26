@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:requests/requests.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
@@ -13,12 +14,16 @@ import '../../widget/shadow_box.dart';
 import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 
+_RegisterPersonalDataScreenState registerPersonalDataScreenState;
+
 class RegisterPersonalDataScreen extends StatefulWidget {
   static const routeName = "/register-personal-data";
 
   @override
-  _RegisterPersonalDataScreenState createState() =>
-      _RegisterPersonalDataScreenState();
+  _RegisterPersonalDataScreenState createState() {
+    registerPersonalDataScreenState = _RegisterPersonalDataScreenState();
+    return registerPersonalDataScreenState;
+  }
 }
 
 class _RegisterPersonalDataScreenState
@@ -49,14 +54,16 @@ class _RegisterPersonalDataScreenState
           'agreement': _value,
         };
         map.addAll(bigData);
-        // String url = '${globals.api_link}/users/get-phone';
-        var r1 = await Requests.post(url,
-            body: map, verify: false, persistCookies: true);
+        var connect = new DioConnection();
 
-        if (r1.statusCode == 201) {
+        Map<String, String> headers = {};
+        var response = await connect.postCoockieHttp(
+            '/users/signup', registerPersonalDataScreenState, headers, map);
+
+        if (response["statusCode"] == 201) {
           getLogin();
         } else {
-          var json = r1.json();
+          var json = response["result"];
           Map<String, dynamic> res = json['detail'];
           print(json);
           res.forEach((key, value) {
@@ -76,8 +83,6 @@ class _RegisterPersonalDataScreenState
     prefs.setString('userToken', null);
     String phone = globals.tempPhone;
     String pass = passController.text;
-    var url =
-        '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signin';
     Map map = {
       "phone": phone,
       "password": pass,
@@ -85,21 +90,22 @@ class _RegisterPersonalDataScreenState
       "device_type": globals.device,
       "lang": globals.lang.tr().toString(),
     };
-    var response = await Requests.post(
-      url,
-      body: map,
-    );
+    var connect = new DioConnection();
+    Map<String, String> headers = {};
+    var response = await connect.postHttp(
+        'api/users/signin', registerPersonalDataScreenState, headers, map);
+
     // request.methodPost(map, url);
-    if (response.statusCode == 200) {
+    if (response["statusCode"] == 200) {
       // Map<String,dynamic> reply = response.json();
 
-      Map<String, dynamic> responseBody = response.json();
+      Map<String, dynamic> responseBody = response["result"];
       addStringToSF(responseBody["token"]);
       globals.token = responseBody["token"];
       await getUser();
       isLogin = true;
     } else {
-      Map<String, dynamic> responseBody = response.json();
+      Map<String, dynamic> responseBody = response["result"];
       helper.getToast(responseBody['message'], context);
     }
 
@@ -113,18 +119,19 @@ class _RegisterPersonalDataScreenState
   }
 
   getUser() async {
-    var url = '${globals.api_link}/users/profile';
+    var connect = new DioConnection();
     Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+    var response = await connect.getHttp(
+        '/users/profile', registerPersonalDataScreenState, headers);
 
-    var response = await Requests.get(url, headers: headers);
-    if (response.statusCode == 200) {
+    if (response["statusCode"] == 200) {
       // dynamic json = response.json();
 
-      globals.userData = response.json();
+      globals.userData = response["result"];
       print(globals.userData);
     } else {
       globals.token = null;
-      dynamic json = response.json();
+      dynamic json = response["result"];
       helper.getToast(json['detail'], context);
     }
     // String reply = await response.transform(utf8.decoder).join();
@@ -305,215 +312,132 @@ class _RegisterPersonalDataScreenState
     final mediaQuery = MediaQuery.of(context);
     final dWith = mediaQuery.size.width;
     print(dWith);
-    return Scaffold(
-      backgroundColor: Color(0xffF5F6F9),
-      appBar: appbar,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Container(
-          constraints: BoxConstraints.expand(),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Color(0xffF5F6F9),
+          appBar: appbar,
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
             child: Container(
-              // height: mediaQuery.size.height < 560
-              //     ? mediaQuery.size.height
-              //     : mediaQuery.size.height * 0.8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ShadowBox(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Container(
-                        child: KeyboardActions(
-                          disableScroll: true,
-                          // isDialog: true,
-                          config: _buildConfig(context),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "set_fact_address".tr().toString(),
-                                style: TextStyle(
-                                  fontFamily: globals.font,
-                                  fontSize: dWith * globals.fontSize16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  customDialog(context);
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 5),
-                                  child: Text(
-                                    "why_fact_address".tr().toString(),
+              constraints: BoxConstraints.expand(),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  // height: mediaQuery.size.height < 560
+                  //     ? mediaQuery.size.height
+                  //     : mediaQuery.size.height * 0.8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ShadowBox(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Container(
+                            child: KeyboardActions(
+                              disableScroll: true,
+                              // isDialog: true,
+                              config: _buildConfig(context),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "set_fact_address".tr().toString(),
                                     style: TextStyle(
                                       fontFamily: globals.font,
-                                      fontSize: dWith * globals.fontSize10,
+                                      fontSize: dWith * globals.fontSize16,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xff0AB394),
                                     ),
                                   ),
+                                  InkWell(
+                                    onTap: () {
+                                      customDialog(context);
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 5),
+                                      child: Text(
+                                        "why_fact_address".tr().toString(),
+                                        style: TextStyle(
+                                          fontFamily: globals.font,
+                                          fontSize: dWith * globals.fontSize10,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xff0AB394),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  AddressSearch(
+                                    setAddress: setAddress,
+                                    isFlat: true,
+                                    streetNode: _streetNode,
+                                    houseNode: _houseNode,
+                                    apartNode: _apartNode,
+                                  ),
+                                  MainText("${"pass_title".tr().toString()}*"),
+                                  PassInput(
+                                    hint: "come_up_pass_hint".tr().toString(),
+                                    passController: passController,
+                                    notifyParent: () {
+                                      validate();
+                                    },
+                                    textFocusNode: _passNode,
+                                  ),
+                                  MainText(
+                                      "${"confirm_pass_title".tr().toString()}*"),
+                                  PassInput(
+                                    hint: "confirm_pass_hint".tr().toString(),
+                                    passController: repassController,
+                                    notifyParent: () {
+                                      validate();
+                                    },
+                                    textFocusNode: _repassNode,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                child: Align(
+                                  alignment: FractionalOffset.bottomCenter,
+                                  child: !_value
+                                      ? DefaultButton(
+                                          "continue".tr().toString(),
+                                          () {},
+                                          Color(0xffB2B7D0),
+                                        )
+                                      : DefaultButton(
+                                          "continue".tr().toString(), () {
+                                          sendData().then((value) {
+                                            setState(() {
+                                              _value = !_value;
+                                            });
+                                          });
+                                        }, Theme.of(context).primaryColor),
                                 ),
                               ),
-                              AddressSearch(
-                                setAddress: setAddress,
-                                isFlat: true,
-                                streetNode: _streetNode,
-                                houseNode: _houseNode,
-                                apartNode: _apartNode,
-                              ),
-
-                              MainText("${"pass_title".tr().toString()}*"),
-                              PassInput(
-                                hint: "come_up_pass_hint".tr().toString(),
-                                passController: passController,
-                                notifyParent: () {
-                                  validate();
-                                },
-                                textFocusNode: _passNode,
-                              ),
-                              MainText(
-                                  "${"confirm_pass_title".tr().toString()}*"),
-                              PassInput(
-                                hint: "confirm_pass_hint".tr().toString(),
-                                passController: repassController,
-                                notifyParent: () {
-                                  validate();
-                                },
-                                textFocusNode: _repassNode,
-                              ),
-                              // Padding(
-                              //   padding: EdgeInsets.only(top: 10),
-                              // ),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     InkWell(
-                              //       onTap: () {
-                              //         setState(() {
-                              //           _value = !_value;
-                              //         });
-                              //       },
-                              //       child: Container(
-                              //         decoration: BoxDecoration(
-                              //             border: Border.all(
-                              //                 width: 2,
-                              //                 style: BorderStyle.solid,
-                              //                 color:
-                              //                     Theme.of(context).primaryColor),
-                              //             shape: BoxShape.circle,
-                              //             color: _value
-                              //                 ? Theme.of(context).primaryColor
-                              //                 : Colors.transparent),
-                              //         child: Padding(
-                              //           padding: const EdgeInsets.all(5.0),
-                              //           child: _value
-                              //               ? Icon(
-                              //                   Icons.check,
-                              //                   size: 15.0,
-                              //                   color: Colors.white,
-                              //                 )
-                              //               : Icon(
-                              //                   Icons.check_box_outline_blank,
-                              //                   size: 15.0,
-                              //                   color: Colors.transparent,
-                              //                 ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     Container(
-                              //       padding: EdgeInsets.only(left: 20),
-                              //       width: mediaQuery.size.width * 0.76,
-                              //       child: RichText(
-                              //         text: TextSpan(
-                              //           children: [
-                              //             TextSpan(
-                              //               text: "agree_agreements_start"
-                              //                   .tr()
-                              //                   .toString(),
-                              //               style: TextStyle(
-                              //                 fontFamily: globals.font,
-                              //                 fontSize: dWith * globals.fontSize12,
-                              //                 color: Colors.black,
-                              //                 fontWeight: FontWeight.normal,
-                              //               ),
-                              //             ),
-                              //             TextSpan(
-                              //               recognizer: TapGestureRecognizer()
-                              //                 ..onTap = () {
-                              //                   Navigator.pushNamed(
-                              //                       context, RulePage.routeName);
-                              //                 },
-                              //               text: "agreement".tr().toString(),
-                              //               style: TextStyle(
-                              //                 decoration: TextDecoration.underline,
-                              //                 fontFamily: globals.font,
-                              //                 fontSize: dWith * globals.fontSize12,
-                              //                 color: Theme.of(context).primaryColor,
-                              //                 fontWeight: FontWeight.normal,
-                              //               ),
-                              //             ),
-                              //             TextSpan(
-                              //               text: "agree_agreements_end"
-                              //                   .tr()
-                              //                   .toString(),
-                              //               style: TextStyle(
-                              //                 fontFamily: globals.font,
-                              //                 fontSize: 12,
-                              //                 color: Colors.black,
-                              //                 fontWeight: FontWeight.normal,
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // )
                             ],
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child: Align(
-                              alignment: FractionalOffset.bottomCenter,
-                              child: !_value
-                                  ? DefaultButton(
-                                      "continue".tr().toString(),
-                                      () {},
-                                      Color(0xffB2B7D0),
-                                    )
-                                  : DefaultButton("continue".tr().toString(),
-                                      () {
-                                      sendData().then((value) {
-                                        setState(() {
-                                          _value = !_value;
-                                        });
-                                      });
-                                    }, Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

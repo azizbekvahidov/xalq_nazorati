@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-// import 'package:connectivity/connectivity.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:no_context_navigation/no_context_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:requests/requests.dart';
 
 import 'package:xalq_nazorati/errors/CustomReportHandler.dart';
 import 'package:xalq_nazorati/errors/CustomPageReportMode.dart';
-import 'package:xalq_nazorati/methods/my_connect.dart';
 
 import 'package:xalq_nazorati/screen/no_connection.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
@@ -99,7 +97,12 @@ void setErrorBuilder() {
   };
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // setErrorBuilder();
@@ -388,94 +391,10 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  ConnectivityResult connectivityResult = ConnectivityResult.none;
-  final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-
-  ConnectivityResult _previousResult;
-
-  Future<void> initConnectivity() async {
-    ConnectivityResult result;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
-      print(e.toString());
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) {
-      return Future.value(null);
-    }
-
-    return _updateConnectionStatus(result);
-  }
-
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    print(result);
-    switch (result) {
-      case ConnectivityResult.wifi:
-      case ConnectivityResult.mobile:
-        globals.isConnection = true;
-        print("connected");
-        break;
-      case ConnectivityResult.none:
-        print("no connection");
-        globals.isConnection = false;
-        if (globals.isLoad) {
-          if (!globals.isOpenNoConnection)
-            await navService.push(MaterialPageRoute(builder: (_) {
-              return NoConnection();
-            }));
-        } else
-          Timer(Duration(seconds: 2), () async {
-            await navService.push(MaterialPageRoute(builder: (_) {
-              return NoConnection();
-            }));
-          });
-        break;
-    }
-    print(globals.isConnection);
-  }
-
   @override
   void initState() {
     super.initState();
     globals.device = Platform.isIOS ? "ios" : "android";
-
-    initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-
-    // var listener =
-    //     DataConnectionChecker().onStatusChange.listen((status) async {
-    //   print(status);
-    //   switch (status) {
-    //     case DataConnectionStatus.connected:
-    //       // if (globals.isLoad) await navService.canPop();
-    //       globals.isConnection = true;
-    //       print("connected");
-    //       // customDialog(context);
-    //       break;
-    //     case DataConnectionStatus.disconnected:
-    //       globals.isConnection = false;
-    //       if (globals.isLoad)
-    //         await navService.push(MaterialPageRoute(builder: (_) {
-    //           return NoConnection();
-    //         }));
-    //       else
-    //         Timer(Duration(seconds: 2), () async {
-    //           await navService.push(MaterialPageRoute(builder: (_) {
-    //             return NoConnection();
-    //           }));
-    //         });
-
-    //       print("disconnected");
-    //       break;
-    //   }
-    // });
 
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@drawable/ic_stat_xalq_logo');

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/models/problem_info.dart';
@@ -12,11 +13,16 @@ import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/problems/problem_status-card.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 
+_ProblemStatusScreenState problemStatusScreenState;
+
 class ProblemStatusScreen extends StatefulWidget {
   final int id;
   ProblemStatusScreen(this.id);
   @override
-  _ProblemStatusScreenState createState() => _ProblemStatusScreenState();
+  _ProblemStatusScreenState createState() {
+    problemStatusScreenState = _ProblemStatusScreenState();
+    return problemStatusScreenState;
+  }
 }
 
 class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
@@ -39,12 +45,12 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
 
   Future<List> getStatus() async {
     try {
-      var url = '${globals.api_link}/problems/event-log/${widget.id}';
-      HttpGet request = HttpGet();
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response = await connect.getHttp(
+          '/problems/event-log/${widget.id}', cardContentState, headers);
 
-      var reply = response.json();
+      var reply = response['result'];
       reply.firstWhere((element) {
         checkMessage(element["id"]);
         return true;
@@ -57,13 +63,14 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
 
   void refreshChat() async {
     try {
-      var url =
-          '${globals.api_link}/problems/refresh-event-log?problem_id=${widget.id}';
-      HttpGet request = HttpGet();
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response = await connect.getHttp(
+          '/problems/refresh-event-log?problem_id=${widget.id}',
+          cardContentState,
+          headers);
 
-      var reply = response.json();
+      var reply = response["result"];
 
       reply.lastWhere((element) {
         checkMessage(element["id"]);
@@ -106,47 +113,52 @@ class _ProblemStatusScreenState extends State<ProblemStatusScreen> {
       title: "problem_status".tr().toString(),
       centerTitle: true,
     );
-    return Scaffold(
-      appBar: appbar,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  padding: EdgeInsets.only(top: 25, left: 19),
-                  child: Text(
-                    "problem_status".tr().toString(),
-                    style: TextStyle(
-                      fontFamily: globals.font,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    ),
-                  )),
-              ShadowBox(
-                child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: FutureBuilder(
-                      future: getStatus(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) print(snapshot.error);
-                        _data = snapshot.data;
-                        return snapshot.hasData
-                            ? ProblemStatusCard(
-                                _data, appbar.preferredSize.height)
-                            : Center(
-                                child: Text("Loading".tr().toString()),
-                              );
-                      },
-                    )),
-              )
-            ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: appbar,
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      padding: EdgeInsets.only(top: 25, left: 19),
+                      child: Text(
+                        "problem_status".tr().toString(),
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      )),
+                  ShadowBox(
+                    child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: FutureBuilder(
+                          future: getStatus(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            _data = snapshot.data;
+                            return snapshot.hasData
+                                ? ProblemStatusCard(
+                                    _data, appbar.preferredSize.height)
+                                : Center(
+                                    child: Text("Loading".tr().toString()),
+                                  );
+                          },
+                        )),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

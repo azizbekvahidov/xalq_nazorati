@@ -8,21 +8,27 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:requests/requests.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/models/problems.dart';
-import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/problems/problem_list.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 import 'package:xalq_nazorati/widget/success_box.dart';
 
+_ProblemScreenCustomState problemScreenCustomState;
+
 class ProblemScreenCustom extends StatefulWidget {
   final String title;
   final String status;
   ProblemScreenCustom({this.title, this.status});
+
   @override
-  _ProblemScreenCustomState createState() => _ProblemScreenCustomState();
+  _ProblemScreenCustomState createState() {
+    problemScreenCustomState = _ProblemScreenCustomState();
+    return problemScreenCustomState;
+  }
 }
 
 class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
@@ -100,13 +106,15 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
         _list += "$key";
         if (i != _problems.length) _list += ",";
       });
-
-      var url =
-          '${globals.api_link}/problems/refresh-problem?problem_ids=$_list';
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var res = response.json();
+      var response = await connect.getHttp(
+          '/problems/refresh-problem?problem_ids=$_list',
+          problemScreenCustomState,
+          headers);
+
+      if (response["statusCode"] == 200) {
+        var res = response['result'];
 
         if (res.length != 0) {
           for (var i = 0; i < res.length; i++) {
@@ -165,11 +173,12 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
         break;
     }
     try {
-      var url = '${globals.api_link}/problems/list/$_type?limit=20';
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response = await connect.getHttp(
+          '/problems/list/$_type?limit=20', problemScreenCustomState, headers);
 
-      var reply = response.json();
+      var reply = response["result"];
       _loadMore = reply['next'];
       var res = reply["results"];
       _results.addAll(res);
@@ -254,212 +263,227 @@ class _ProblemScreenCustomState extends State<ProblemScreenCustom> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var dHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: CustomAppBar(
-        title:
-            widget.title == null ? "unresolved".tr().toString() : widget.title,
-        centerTitle: true,
-      ),
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: widget.title == null
+                ? "unresolved".tr().toString()
+                : widget.title,
+            centerTitle: true,
+          ),
+          body: Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _onLoad = false;
-                          });
-                          _selectTab(0);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: _bg1,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "in_proccess".tr().toString(),
-                            style: TextStyle(
-                              color: _txt1,
-                              fontFamily: globals.font,
-                              fontSize: width * globals.fontSize16,
-                            ),
-                          ),
-                        ),
-                      ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(top: 20),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _onLoad = false;
-                          });
-                          _selectTab(1);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: _bg2,
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "delayed".tr().toString(),
-                            style: TextStyle(
-                              color: _txt2,
-                              fontFamily: globals.font,
-                              fontSize: width * globals.fontSize16,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _onLoad = false;
+                              });
+                              _selectTab(0);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: _bg1,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "in_proccess".tr().toString(),
+                                style: TextStyle(
+                                  color: _txt1,
+                                  fontFamily: globals.font,
+                                  fontSize: width * globals.fontSize16,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _onLoad = false;
+                              });
+                              _selectTab(1);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 20),
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: _bg2,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "delayed".tr().toString(),
+                                style: TextStyle(
+                                  color: _txt2,
+                                  fontFamily: globals.font,
+                                  fontSize: width * globals.fontSize16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
                     ],
                   ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              child: _onLoad
-                  ? Column(
-                      children: [
-                        (_problem_status == 'delayed')
-                            ? SuccessBox(
-                                children: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/img/info.svg",
-                                      height: 24,
-                                    ),
-                                    Padding(padding: EdgeInsets.only(left: 10)),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          isInfo = !isInfo;
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.only(top: 4),
-                                        width: width * 0.77,
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: isInfo
-                                                ? "delayed_info".tr().toString()
-                                                : "delayed_desc"
-                                                    .tr()
-                                                    .toString(),
-                                            style: TextStyle(
-                                              fontFamily: globals.font,
-                                              color: Color(0xff050505),
-                                              fontSize:
-                                                  width * globals.fontSize14,
-                                              fontWeight: FontWeight.w600,
-                                              fontFeatures: [
-                                                FontFeature.enable("pnum"),
-                                                FontFeature.enable("lnum")
-                                              ],
+                ),
+                SingleChildScrollView(
+                  child: _onLoad
+                      ? Column(
+                          children: [
+                            (_problem_status == 'delayed')
+                                ? SuccessBox(
+                                    children: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/img/info.svg",
+                                          height: 24,
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(left: 10)),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              isInfo = !isInfo;
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.only(top: 4),
+                                            width: width * 0.77,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                text: isInfo
+                                                    ? "delayed_info"
+                                                        .tr()
+                                                        .toString()
+                                                    : "delayed_desc"
+                                                        .tr()
+                                                        .toString(),
+                                                style: TextStyle(
+                                                  fontFamily: globals.font,
+                                                  color: Color(0xff050505),
+                                                  fontSize: width *
+                                                      globals.fontSize14,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFeatures: [
+                                                    FontFeature.enable("pnum"),
+                                                    FontFeature.enable("lnum")
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Container(),
-                        Container(
-                          height: dHeight <= 560
-                              ? dHeight -
-                                  ((_problem_status != 'delayed')
-                                      ? 160
-                                      : isInfo
-                                          ? 210
-                                          : 300)
-                              : dHeight -
-                                  ((_problem_status != 'delayed')
-                                      ? 270
-                                      : isInfo
-                                          ? 331
-                                          : 482),
-                          child: Container(
-                            padding: EdgeInsets.only(top: 0),
-                            child: LazyLoadScrollView(
-                              onEndOfPage: () {
-                                if (_loadMore != null)
-                                  setState(() {
-                                    _problemList = loadMore();
-                                  });
-                              },
-                              child: _problemList != null
-                                  ? FutureBuilder(
-                                      future: _problemList,
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError)
-                                          print(snapshot.error);
-                                        return snapshot.hasData
-                                            ? ProblemList(
-                                                data: snapshot.data,
-                                                title: widget.title == null
-                                                    ? "unresolved"
-                                                        .tr()
-                                                        .toString()
-                                                    : widget.title,
-                                                status: _problem_status == null
-                                                    ? "warning"
-                                                    : _problem_status,
-                                                alertList: _problems,
-                                              )
-                                            : ListView.builder(
-                                                physics:
-                                                    BouncingScrollPhysics(),
-                                                itemCount: 5,
-                                                itemBuilder:
-                                                    (BuildContext ctx, index) {
-                                                  // print(_list);
-                                                  return SkeletonAnimation(
-                                                    child: ShadowBox(
-                                                      bgColor: Color.fromRGBO(
-                                                          49, 59, 108, 0.1),
-                                                      child: Container(
-                                                        height: 50,
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 19,
-                                                                vertical: 15),
-                                                      ),
-                                                    ),
+                                  )
+                                : Container(),
+                            Container(
+                              height: dHeight <= 560
+                                  ? dHeight -
+                                      ((_problem_status != 'delayed')
+                                          ? 160
+                                          : isInfo
+                                              ? 210
+                                              : 300)
+                                  : dHeight -
+                                      ((_problem_status != 'delayed')
+                                          ? 270
+                                          : isInfo
+                                              ? 331
+                                              : 482),
+                              child: Container(
+                                padding: EdgeInsets.only(top: 0),
+                                child: LazyLoadScrollView(
+                                  onEndOfPage: () {
+                                    if (_loadMore != null)
+                                      setState(() {
+                                        _problemList = loadMore();
+                                      });
+                                  },
+                                  child: _problemList != null
+                                      ? FutureBuilder(
+                                          future: _problemList,
+                                          builder: (context, snapshot) {
+                                            if (snapshot.hasError)
+                                              print(snapshot.error);
+                                            return snapshot.hasData
+                                                ? ProblemList(
+                                                    data: snapshot.data,
+                                                    title: widget.title == null
+                                                        ? "unresolved"
+                                                            .tr()
+                                                            .toString()
+                                                        : widget.title,
+                                                    status:
+                                                        _problem_status == null
+                                                            ? "warning"
+                                                            : _problem_status,
+                                                    alertList: _problems,
+                                                  )
+                                                : ListView.builder(
+                                                    physics:
+                                                        BouncingScrollPhysics(),
+                                                    itemCount: 5,
+                                                    itemBuilder:
+                                                        (BuildContext ctx,
+                                                            index) {
+                                                      // print(_list);
+                                                      return SkeletonAnimation(
+                                                        child: ShadowBox(
+                                                          bgColor:
+                                                              Color.fromRGBO(49,
+                                                                  59, 108, 0.1),
+                                                          child: Container(
+                                                            height: 50,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        19,
+                                                                    vertical:
+                                                                        15),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
-                                                },
-                                              );
-                                      },
-                                    )
-                                  : Container(),
+                                          },
+                                        )
+                                      : Container(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(),
+                          ],
+                        )
+                      : Container(),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

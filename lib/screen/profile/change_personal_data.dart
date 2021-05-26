@@ -8,6 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 // import 'package:sms/sms.dart';
 import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/address_search.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
@@ -180,93 +181,101 @@ class _ChangePersonalDataState extends State<ChangePersonalData> {
       title: "change_address".tr().toString(),
       centerTitle: true,
     );
-    return Scaffold(
-      backgroundColor: Color(0xffF5F6F9),
-      appBar: appbar,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: SingleChildScrollView(
-          controller: scrollController,
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ShadowBox(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Container(
-                            child: KeyboardActions(
-                              disableScroll: true,
-                              // isDialog: true,
-                              config: _buildConfig(context),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AddressSearch(
-                                    setAddress: setAddress,
-                                    isFlat: true,
-                                    ischange: _value,
-                                    streetNode: _streetNode,
-                                    houseNode: _houseNode,
-                                    apartNode: _apartNode,
-                                  ),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Color(0xffF5F6F9),
+          appBar: appbar,
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SingleChildScrollView(
+              controller: scrollController,
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ShadowBox(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Container(
+                                child: KeyboardActions(
+                                  disableScroll: true,
+                                  // isDialog: true,
+                                  config: _buildConfig(context),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      AddressSearch(
+                                        setAddress: setAddress,
+                                        isFlat: true,
+                                        ischange: _value,
+                                        streetNode: _streetNode,
+                                        houseNode: _houseNode,
+                                        apartNode: _apartNode,
+                                      ),
 
-                                  // MainText("email_title".tr().toString()),
-                                  // DefaultInput(
-                                  //   hint: "email_hint".tr().toString(),
-                                  //   textController: emailController,
-                                  //   notifyParent: checkChange,
-                                  // ),
-                                ],
+                                      // MainText("email_title".tr().toString()),
+                                      // DefaultInput(
+                                      //   hint: "email_hint".tr().toString(),
+                                      //   textController: emailController,
+                                      //   notifyParent: checkChange,
+                                      // ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: EdgeInsets.all(38),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              child: Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: !_value
+                                    ? DefaultButton(
+                                        "change".tr().toString(),
+                                        () {},
+                                        Color(0xffB2B7D0),
+                                      )
+                                    : DefaultButton("change".tr().toString(),
+                                        () {
+                                        changeProfile();
+                                        // setState(() {
+                                        //   _value = !_value;
+                                        // });
+                                        // Navigator.of(context)
+                                        //     .pushNamed(PasRecognizedScreen.routeName);
+                                      }, Theme.of(context).primaryColor),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.all(38),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: !_value
-                                ? DefaultButton(
-                                    "change".tr().toString(),
-                                    () {},
-                                    Color(0xffB2B7D0),
-                                  )
-                                : DefaultButton("change".tr().toString(), () {
-                                    changeProfile();
-                                    // setState(() {
-                                    //   _value = !_value;
-                                    // });
-                                    // Navigator.of(context)
-                                    //     .pushNamed(PasRecognizedScreen.routeName);
-                                  }, Theme.of(context).primaryColor),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

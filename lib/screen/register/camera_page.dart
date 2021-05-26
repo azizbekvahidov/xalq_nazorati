@@ -7,6 +7,7 @@ import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_mrz_scanner/flutter_mrz_scanner.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import 'package:xalq_nazorati/widget/custom_modal.dart';
 import '../../widget/app_bar/custom_appBar.dart';
@@ -118,54 +119,61 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Container(
-        child: Stack(children: [
-          MRZScanner(onControllerCreated: _onControllerCreated),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-            ),
-          ),
-          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            PnflScanAppbar(
-              title: 'pnfl_scan'.tr().toString(),
-              textColor: Colors.white,
-            ),
-            Container(
-              child: Center(
-                child: Text(
-                  "$cnt",
-                  style: TextStyle(
-                      color: Color(0xffE70C0C),
-                      fontSize: 60,
-                      fontWeight: FontWeight.w600),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.black,
+          body: Container(
+            child: Stack(children: [
+              MRZScanner(onControllerCreated: _onControllerCreated),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(5)),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(38),
-              child: Text("camera_put_data_right".tr().toString(),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .title
-                      .apply(color: Colors.white)),
-            )
-          ])
-        ]),
-      ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PnflScanAppbar(
+                      title: 'pnfl_scan'.tr().toString(),
+                      textColor: Colors.white,
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "$cnt",
+                          style: TextStyle(
+                              color: Color(0xffE70C0C),
+                              fontSize: 60,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(38),
+                      child: Text("camera_put_data_right".tr().toString(),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .apply(color: Colors.white)),
+                    )
+                  ])
+            ]),
+          ),
+        ),
+        CheckConnection(),
+      ],
     );
   }
 }
