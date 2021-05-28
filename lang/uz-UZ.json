@@ -283,6 +283,7 @@
   "bad_conn":"Internet yomon",
   "user_address_warning":"Profilga o'ting va yashash manzilingizni kiriting",
   "no_internet":"Siz internetga ulanmagansiz :(",
+  "no_server":"Server bilan aloqa yoq",
   "play_game_till":"Tetris vaqti keldi ....",
   "reload":"Takrorlash",
   "view":"Ko`rish",

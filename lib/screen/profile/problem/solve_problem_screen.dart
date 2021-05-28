@@ -48,7 +48,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await connect.getHttp(
-          '/api/problems/problem/$id', solveProblemScreenState, headers);
+          '/problems/problem/$id', solveProblemScreenState, headers);
 
       var res = response["result"]; //parseProblems(response.content());
       if (widget.stat == "info") {
@@ -59,7 +59,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
       if (res["result"] != null) {
         Map<String, dynamic> data = {"id": res["result"]["id"]};
         var resp = await connect.postHttp(
-            '/api/results/check', solveProblemScreenState, headers, data);
+            '/results/check', solveProblemScreenState, headers, data);
         if (resp["statusCode"] == 200) {
           globals.cardAlert[widget.id]["res_seen"] = false;
           globals.checkCardAler(widget.id);
@@ -74,7 +74,7 @@ class _SolveProblemScreenState extends State<SolveProblemScreen> {
           "id": res["problem"]["reason_of_moving_to_planned"]["id"]
         };
         var resp = await connect.postHttp(
-            '/api/results/check', solveProblemScreenState, headers, data);
+            '/results/check', solveProblemScreenState, headers, data);
         if (resp["statusCode"] == 200) {
           globals.cardAlert[widget.id]["res_seen"] = false;
           globals.checkCardAler(widget.id);

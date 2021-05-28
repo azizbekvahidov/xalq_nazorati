@@ -888,7 +888,6 @@ class _AddressSearchState extends State<AddressSearch> {
             ],
           ),
         ),
-        CheckConnection(),
       ],
     );
   }

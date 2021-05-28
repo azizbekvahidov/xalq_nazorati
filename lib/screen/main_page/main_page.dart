@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
 
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await connect.getHttp(
-          '/api/problems/notifications/count', mainPageState, headers);
+          '/problems/notifications/count', mainPageState, headers);
       if (response["statusCode"] == 200) {
         var reply = response["result"];
         setState(() {
@@ -118,7 +118,7 @@ class _MainPageState extends State<MainPage> {
       Map<String, String> data = {"id": id.toString()};
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await connect.postHttp(
-          '/api/problems/notifications/check', mainPageState, headers, data);
+          '/problems/notifications/check', mainPageState, headers, data);
 
       if (response["statusCode"] == 201) {
         var reply = response["result"];
@@ -139,7 +139,7 @@ class _MainPageState extends State<MainPage> {
 
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await connect.getHttp(
-          '/api/problems/notifications', mainPageState, headers);
+          '/problems/notifications', mainPageState, headers);
       if (response['statusCode'] == 200) {
         var reply = response["result"];
         return reply;
@@ -160,9 +160,9 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     getNotification();
-    // timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
-    //   getNotification();
-    // });
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      getNotification();
+    });
     if (globals.categoryList == null) {
       _category = getCategory();
       globals.categoryList = _category;
@@ -311,6 +311,21 @@ class _MainPageState extends State<MainPage> {
                                                       builder: (BuildContext
                                                           context) {
                                                         var route;
+                                                        Map<int, dynamic> elem =
+                                                            {
+                                                          snapshot.data[index]
+                                                              ["problem_id"]: {
+                                                            "notify": false,
+                                                            "chat_cnt": 0,
+                                                            "event_cnt": 0,
+                                                            "res": null,
+                                                            "res_seen": true,
+                                                            "status":
+                                                                "processing"
+                                                          }
+                                                        };
+                                                        globals.cardAlert
+                                                            .addAll(elem);
                                                         route = ProblemContentScreen(
                                                             id: snapshot
                                                                     .data[index]

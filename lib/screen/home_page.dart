@@ -21,7 +21,10 @@ class HomePage extends StatefulWidget {
   static const routeName = "/home-page";
   HomePage({Key key}) : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() {
+    homePageState = _HomePageState();
+    return homePageState;
+  }
 }
 
 class _HomePageState extends State<HomePage> {
@@ -74,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           "Authorization": "token ${globals.token}"
         };
         var response = await connect.getHttp(
-            '/api/problems/notifications-by-state', homePageState, headers);
+            '/problems/notifications-by-state', homePageState, headers);
 
         if (response["statusCode"] == 200) {
           var cnt = 0;

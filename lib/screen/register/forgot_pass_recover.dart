@@ -40,8 +40,8 @@ class _ForgotPassRecoverState extends State<ForgotPassRecover> {
         Map<String, String> headers = {};
 
         var connect = new DioConnection();
-        var response = await connect.postHttp('/api/users/recover-password',
-            forgotPassRecoverState, headers, map);
+        var response = await connect.postHttp(
+            '/users/recover-password', forgotPassRecoverState, headers, map);
 
         if (response["statusCode"] == 200) {
           isRegister = true;

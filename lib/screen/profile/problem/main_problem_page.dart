@@ -17,7 +17,10 @@ class MainProblemPage extends StatefulWidget {
   MainProblemPage({Key key}) : super(key: key);
 
   @override
-  _MainProblemPageState createState() => _MainProblemPageState();
+  _MainProblemPageState createState() {
+    mainProblemState = _MainProblemPageState();
+    return mainProblemState;
+  }
 }
 
 class _MainProblemPageState extends State<MainProblemPage> {
@@ -47,7 +50,7 @@ class _MainProblemPageState extends State<MainProblemPage> {
       var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
       var response = await connect.getHttp(
-          '/api/problems/notifications-by-state', mainProblemState, headers);
+          '/problems/notifications-by-state', mainProblemState, headers);
       if (response["statusCode"] == 200) {
         var res = response["result"];
         isConfirmed = res["confirmed"];

@@ -85,7 +85,7 @@ class _CheckConnectionState extends State<CheckConnection> {
   @override
   Widget build(BuildContext context) {
     var dWidth = MediaQuery.of(context).size.width;
-    return !globals.isConnection
+    return !globals.isConnection || !globals.isServerConnection
         ? Positioned(
             top: 50,
             child: Container(
@@ -104,7 +104,9 @@ class _CheckConnectionState extends State<CheckConnection> {
               alignment: Alignment.center,
               child: Text(
                 // "${globals.internetStatus}",
-                "test_notify".tr().toString(),
+                !globals.isConnection
+                    ? "no_internet".tr().toString()
+                    : "no_server".tr().toString(),
                 style: TextStyle(
                     fontFamily: globals.font,
                     color: Color(0xffE31C1C),
