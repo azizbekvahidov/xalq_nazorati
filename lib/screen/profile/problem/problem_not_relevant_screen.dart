@@ -8,6 +8,7 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/screen/home_page.dart';
 import '../../../widget/app_bar/custom_appBar.dart';
 import '../../../widget/custom_dotted_circle_container.dart';
@@ -68,45 +69,9 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
         req.headers.addAll({"Authorization": "token ${globals.token}"});
         req.fields.addAll({"problem_id": "${widget.id}"});
         req.fields.addAll({"reason": "${descController.text}"});
-        // if (globals.images['file1'] != null) {
-        //   String _fileName = globals.images['file1'].path;
-        //   req.files.add(http.MultipartFile(
-        //       "file1",
-        //       globals.images['file1'].readAsBytes().asStream(),
-        //       globals.images['file1'].lengthSync(),
-        //       filename: _fileName.split('/').last));
-        // }
-        // if (globals.images['file2'] != null) {
-        //   String _fileName = globals.images['file2'].path;
-        //   req.files.add(http.MultipartFile(
-        //       "file2",
-        //       globals.images['file2'].readAsBytes().asStream(),
-        //       globals.images['file2'].lengthSync(),
-        //       filename: _fileName.split('/').last));
-        // }
-        // if (globals.images['file3'] != null) {
-        //   String _fileName = globals.images['file3'].path;
-        //   req.files.add(http.MultipartFile(
-        //       "file3",
-        //       globals.images['file3'].readAsBytes().asStream(),
-        //       globals.images['file3'].lengthSync(),
-        //       filename: _fileName.split('/').last));
-        // }
-        // if (globals.images['file4'] != null) {
-        //   String _fileName = globals.images['file4'].path;
-        //   req.files.add(http.MultipartFile(
-        //       "file4",
-        //       globals.images['file4'].readAsBytes().asStream(),
-        //       globals.images['file4'].lengthSync(),
-        //       filename: _fileName.split('/').last));
-        // }
         var res = await req.send();
 
         if (res.statusCode == 200) {
-          // globals.images['file1'] = null;
-          // globals.images['file2'] = null;
-          // globals.images['file3'] = null;
-          // globals.images['file4'] = null;
           isSending = false;
           setState(() {
             _val = 98;
@@ -185,134 +150,144 @@ class _ProblemNotRelevantScreenState extends State<ProblemNotRelevantScreen> {
             4 -
         25;
     print(widget.status);
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "problem_not_actual".tr().toString(),
-        centerTitle: true,
-      ),
-      body: widget.status == "completed"
-          ? Center(
-              child: Text(
-                widget.status == "completed"
-                    ? "to_result".tr().toString()
-                    : "not_actual_decision".tr().toString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: globals.font,
-                  fontWeight: FontWeight.w700,
-                  fontSize: dWidth * globals.fontSize24,
-                ),
-              ),
-            )
-          : GestureDetector(
-              onTap: () {
-                FocusScope.of(context).requestFocus(new FocusNode());
-              },
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Container(
-                  height: mediaQuery.size.height < 560
-                      ? mediaQuery.size.height
-                      : mediaQuery.size.height * 0.8,
-                  child: KeyboardActions(
-                    // isDialog: true,
-                    disableScroll: true,
-                    config: _buildConfig(context),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ShadowBox(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MainText(
-                                          "problem_describe".tr().toString()),
-                                      TextareaInput(
-                                        descNode: descNode,
-                                        hint: "problem_describe_hint"
-                                            .tr()
-                                            .toString(),
-                                        textareaController: descController,
-                                        notifyParent: checkChange,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: "problem_not_actual".tr().toString(),
+            centerTitle: true,
+          ),
+          body: widget.status == "completed"
+              ? Center(
+                  child: Text(
+                    widget.status == "completed"
+                        ? "to_result".tr().toString()
+                        : "not_actual_decision".tr().toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: globals.font,
+                      fontWeight: FontWeight.w700,
+                      fontSize: dWidth * globals.fontSize24,
+                    ),
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                  },
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                      height: mediaQuery.size.height < 560
+                          ? mediaQuery.size.height
+                          : mediaQuery.size.height * 0.8,
+                      child: KeyboardActions(
+                        // isDialog: true,
+                        disableScroll: true,
+                        config: _buildConfig(context),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ShadowBox(
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MainText("problem_describe"
+                                              .tr()
+                                              .toString()),
+                                          TextareaInput(
+                                            descNode: descNode,
+                                            hint: "problem_describe_hint"
+                                                .tr()
+                                                .toString(),
+                                            textareaController: descController,
+                                            notifyParent: checkChange,
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: Align(
-                                    alignment: FractionalOffset.bottomCenter,
-                                    child: isSending
-                                        ? Center(
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 50.0,
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15.0),
-                                              child:
-                                                  LiquidLinearProgressIndicator(
-                                                value: _val / 100,
-                                                backgroundColor:
-                                                    Color(0xffB2B7D0),
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                        Theme.of(context)
-                                                            .primaryColor),
-                                                borderRadius: 25.0,
-                                                center: Text(
-                                                  "${_val}",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20.0,
-                                                    fontWeight: FontWeight.bold,
+                            ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Align(
+                                        alignment:
+                                            FractionalOffset.bottomCenter,
+                                        child: isSending
+                                            ? Center(
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  height: 50.0,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15.0),
+                                                  child:
+                                                      LiquidLinearProgressIndicator(
+                                                    value: _val / 100,
+                                                    backgroundColor:
+                                                        Color(0xffB2B7D0),
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            Theme.of(context)
+                                                                .primaryColor),
+                                                    borderRadius: 25.0,
+                                                    center: Text(
+                                                      "${_val}",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                          )
-                                        : _value != true
-                                            ? DefaultButton(
-                                                "send".tr().toString(),
-                                                () {},
-                                                Color(0xffB2B7D0),
                                               )
-                                            : DefaultButton(
-                                                "send".tr().toString(), () {
-                                                insertData();
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //     builder: (BuildContext context) {
-                                                //   return ProblemLocate(
-                                                //       descController.text, widget.id);
-                                                // }));
-                                              },
-                                                Theme.of(context).primaryColor),
-                                  ),
+                                            : _value != true
+                                                ? DefaultButton(
+                                                    "send".tr().toString(),
+                                                    () {},
+                                                    Color(0xffB2B7D0),
+                                                  )
+                                                : DefaultButton(
+                                                    "send".tr().toString(), () {
+                                                    insertData();
+                                                    // Navigator.of(context).push(MaterialPageRoute(
+                                                    //     builder: (BuildContext context) {
+                                                    //   return ProblemLocate(
+                                                    //       descController.text, widget.id);
+                                                    // }));
+                                                  },
+                                                    Theme.of(context)
+                                                        .primaryColor),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
+        ),
+        CheckConnection(),
+      ],
     );
   }
 }

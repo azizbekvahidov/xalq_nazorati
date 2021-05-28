@@ -4,26 +4,29 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:requests/requests.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
-// import 'package:sms/sms.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:xalq_nazorati/widget/default_button.dart';
-import 'package:xalq_nazorati/widget/input/default_input.dart';
 import 'package:xalq_nazorati/widget/input/phone_input.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
+
+_ChangePhoneState changePhoneState;
 
 class ChangePhone extends StatefulWidget {
   ChangePhone({Key key}) : super(key: key);
 
   @override
-  _ChangePhoneState createState() => _ChangePhoneState();
+  _ChangePhoneState createState() {
+    changePhoneState = _ChangePhoneState();
+    return changePhoneState;
+  }
 }
 
 class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
@@ -106,16 +109,17 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
         Map map = {
           "phone": phone,
         };
-        if (signature != null) map.addAll({"passcode": signature});
-        Map<String, String> headers = {
-          "Authorization": "token ${globals.token}",
-        };
-        var r1 = await Requests.post(url,
-            body: map, headers: headers, verify: false);
+        var connect = new DioConnection();
 
-        if (r1.statusCode == 200) {
-          var responseBody = r1.json();
-          r1.raiseForStatus();
+        Map<String, String> headers = {
+          "Authorization": "token ${globals.token}"
+        };
+        var response = await connect.postCoockieHttp(
+            '/users/change-phone', changePhoneState, headers, map);
+        if (signature != null) map.addAll({"passcode": signature});
+
+        if (response["statusCode"] == 200) {
+          var responseBody = response["result"];
           startTimer();
           listenForCode();
           setState(() {
@@ -123,7 +127,7 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
           });
           // Navigator.of(context).pop();
         } else {
-          var json = r1.json();
+          var json = response["result"];
           Map<String, dynamic> res = json['detail'];
           print(json);
           res.forEach((key, value) {
@@ -139,29 +143,25 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
   Future changePhone() async {
     var code = codeController.text;
     try {
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/code-validation';
-
       Map map = {
         "code": code,
       };
       Map<String, String> headers = {
         "Authorization": "token ${globals.token}",
       };
-      var r1 =
-          await Requests.post(url, body: map, headers: headers, verify: false);
+      var connect = new DioConnection();
 
-      if (r1.statusCode == 200) {
-        print(r1.content());
-        r1.raiseForStatus();
+      var response = await connect.postCoockieHttp(
+          '/users/code-validation', changePhoneState, headers, map);
+
+      if (response["statusCode"] == 200) {
         _timer.cancel();
         setState(() {
           globals.userData["phone"] = phone;
         });
         Navigator.pop(context, phone);
       } else {
-        print(r1.content());
-        Map<String, dynamic> responseBody = r1.json();
+        Map<String, dynamic> responseBody = response["result"];
         helper.getToast(responseBody['detail'], context);
       }
     } catch (e) {
@@ -219,260 +219,278 @@ class _ChangePhoneState extends State<ChangePhone> with CodeAutoFill {
       title: "change_phone".tr().toString(),
       centerTitle: true,
     );
-    return Scaffold(
-      backgroundColor: Color(0xffF5F6F9),
-      appBar: appbar,
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          ShadowBox(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: Container(
-                                child: KeyboardActions(
-                                  disableScroll: true,
-                                  // isDialog: true,
-                                  config: _buildConfig(context),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        MainText(
-                                            "tel_number_title".tr().toString()),
-                                        PhoneInput(
-                                          myController: phoneController,
-                                          textFocusNode: _phoneNode,
-                                        ),
-                                        FlatButton(
-                                          onPressed: () {
-                                            sendMessage();
-                                          },
-                                          child: Container(
-                                            width: mediaQuery.size.width,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              color: Color.fromRGBO(
-                                                  26, 188, 156, 0.1),
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                  width: 1),
-                                            ),
-                                            child: Center(
-                                                child: Text(
-                                              "get_code".tr().toString(),
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontFamily: globals.font,
-                                                fontSize: 16,
-                                              ),
-                                            )),
-                                          ),
-                                        ),
-                                        _isSend
-                                            ? MainText("check_code_title"
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Color(0xffF5F6F9),
+          appBar: appbar,
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ShadowBox(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Container(
+                                    child: KeyboardActions(
+                                      disableScroll: true,
+                                      // isDialog: true,
+                                      config: _buildConfig(context),
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            MainText("tel_number_title"
                                                 .tr()
-                                                .toString())
-                                            : Container(),
-                                        _isSend
-                                            ? Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 10,
-                                                    horizontal: 20),
-                                                margin: EdgeInsets.symmetric(
-                                                    vertical: 10),
-                                                width: double.infinity,
-                                                height: 45,
+                                                .toString()),
+                                            PhoneInput(
+                                              myController: phoneController,
+                                              textFocusNode: _phoneNode,
+                                            ),
+                                            FlatButton(
+                                              onPressed: () {
+                                                sendMessage();
+                                              },
+                                              child: Container(
+                                                width: mediaQuery.size.width,
+                                                height: 40,
                                                 decoration: BoxDecoration(
-                                                  color: Color(0xffF5F6F9),
+                                                  color: Color.fromRGBO(
+                                                      26, 188, 156, 0.1),
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          22.5),
+                                                      BorderRadius.circular(20),
                                                   border: Border.all(
-                                                    color: Color.fromRGBO(
-                                                        178, 183, 208, 0.5),
-                                                    style: BorderStyle.solid,
-                                                    width: 0.5,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                      width: 1),
+                                                ),
+                                                child: Center(
+                                                    child: Text(
+                                                  "get_code".tr().toString(),
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColor,
+                                                    fontFamily: globals.font,
+                                                    fontSize: 16,
                                                   ),
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      width: (mediaQuery
-                                                                  .size.width -
-                                                              mediaQuery.padding
-                                                                  .left -
-                                                              mediaQuery.padding
-                                                                  .right) *
-                                                          0.71,
-                                                      child: Platform.isIOS
-                                                          ? TextField(
-                                                              autofocus: true,
-                                                              focusNode:
-                                                                  _codeNode,
-                                                              controller:
-                                                                  codeController,
-                                                              // onCodeChanged: (val) {
-                                                              //   print(val);
-                                                              //   codeController.text = val;
-                                                              //   // _listenForCode();
-                                                              // },
-                                                              decoration: InputDecoration(
-                                                                  counterText:
-                                                                      "",
-                                                                  disabledBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  enabledBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  focusColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  focusedBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  counterStyle:
-                                                                      TextStyle(
-                                                                          color:
-                                                                              Colors.black)),
-                                                              // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
-                                                              maxLength: 6,
-                                                              // codeLength: 6,
-                                                              //code length, default 6
-                                                            )
-                                                          : TextFieldPinAutoFill(
-                                                              focusNode:
-                                                                  _codeNode,
-                                                              currentCode:
-                                                                  codeController
-                                                                      .text,
-                                                              onCodeChanged:
-                                                                  (val) {
-                                                                validate();
-                                                                print(val);
-                                                                codeController
-                                                                    .text = val;
-                                                                // _listenForCode();
-                                                              },
-                                                              decoration: InputDecoration(
-                                                                  counterText:
-                                                                      "",
-                                                                  disabledBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  enabledBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  focusColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  focusedBorder:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  counterStyle:
-                                                                      TextStyle(
-                                                                          color:
-                                                                              Colors.black)),
-                                                              // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
-
-                                                              codeLength: 6,
-                                                              //code length, default 6
-                                                            ),
+                                                )),
+                                              ),
+                                            ),
+                                            _isSend
+                                                ? MainText("check_code_title"
+                                                    .tr()
+                                                    .toString())
+                                                : Container(),
+                                            _isSend
+                                                ? Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10,
+                                                            horizontal: 20),
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10),
+                                                    width: double.infinity,
+                                                    height: 45,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xffF5F6F9),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22.5),
+                                                      border: Border.all(
+                                                        color: Color.fromRGBO(
+                                                            178, 183, 208, 0.5),
+                                                        style:
+                                                            BorderStyle.solid,
+                                                        width: 0.5,
+                                                      ),
                                                     ),
-                                                  ],
-                                                ),
-                                              )
-                                            : Container(),
-                                        _isSend
-                                            ? Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                        left: 20),
-                                                    width:
-                                                        mediaQuery.size.width *
-                                                            0.85,
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
+                                                    child: Row(
                                                       children: [
-                                                        Text(
-                                                          _showTime,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                globals.font,
-                                                            fontSize: 18,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
+                                                        Container(
+                                                          width: (mediaQuery
+                                                                      .size
+                                                                      .width -
+                                                                  mediaQuery
+                                                                      .padding
+                                                                      .left -
+                                                                  mediaQuery
+                                                                      .padding
+                                                                      .right) *
+                                                              0.71,
+                                                          child: Platform.isIOS
+                                                              ? TextField(
+                                                                  autofocus:
+                                                                      true,
+                                                                  focusNode:
+                                                                      _codeNode,
+                                                                  controller:
+                                                                      codeController,
+                                                                  // onCodeChanged: (val) {
+                                                                  //   print(val);
+                                                                  //   codeController.text = val;
+                                                                  //   // _listenForCode();
+                                                                  // },
+                                                                  decoration: InputDecoration(
+                                                                      counterText:
+                                                                          "",
+                                                                      disabledBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      enabledBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      focusColor:
+                                                                          Colors
+                                                                              .black,
+                                                                      focusedBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      counterStyle:
+                                                                          TextStyle(
+                                                                              color: Colors.black)),
+                                                                  // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+                                                                  maxLength: 6,
+                                                                  // codeLength: 6,
+                                                                  //code length, default 6
+                                                                )
+                                                              : TextFieldPinAutoFill(
+                                                                  focusNode:
+                                                                      _codeNode,
+                                                                  currentCode:
+                                                                      codeController
+                                                                          .text,
+                                                                  onCodeChanged:
+                                                                      (val) {
+                                                                    validate();
+                                                                    print(val);
+                                                                    codeController
+                                                                            .text =
+                                                                        val;
+                                                                    // _listenForCode();
+                                                                  },
+                                                                  decoration: InputDecoration(
+                                                                      counterText:
+                                                                          "",
+                                                                      disabledBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      enabledBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      focusColor:
+                                                                          Colors
+                                                                              .black,
+                                                                      focusedBorder:
+                                                                          InputBorder
+                                                                              .none,
+                                                                      counterStyle:
+                                                                          TextStyle(
+                                                                              color: Colors.black)),
+                                                                  // UnderlineDecoration, BoxLooseDecoration or BoxTightDecoration see https://github.com/TinoGuo/pin_input_text_field for more info,
+
+                                                                  codeLength: 6,
+                                                                  //code length, default 6
+                                                                ),
                                                         ),
                                                       ],
                                                     ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Container()
-                                      ]),
+                                                  )
+                                                : Container(),
+                                            _isSend
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 20),
+                                                        width: mediaQuery
+                                                                .size.width *
+                                                            0.85,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Text(
+                                                              _showTime,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    globals
+                                                                        .font,
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Container()
+                                          ]),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ]),
-                  ),
-                  Container(
-                    child: Padding(
-                      padding: EdgeInsets.all(38),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child: Align(
-                              alignment: FractionalOffset.bottomCenter,
-                              child: !_value
-                                  ? DefaultButton(
-                                      "change".tr().toString(),
-                                      () {},
-                                      Color(0xffB2B7D0),
-                                    )
-                                  : DefaultButton("change".tr().toString(), () {
-                                      changePhone();
-                                      // changeProfile();
-                                      // setState(() {
-                                      //   _value = !_value;
-                                      // });
-                                      // Navigator.of(context)
-                                      //     .pushNamed(PasRecognizedScreen.routeName);
-                                    }, Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ],
+                            ]),
                       ),
-                    ),
-                  ),
-                ]),
+                      Container(
+                        child: Padding(
+                          padding: EdgeInsets.all(38),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                child: Align(
+                                  alignment: FractionalOffset.bottomCenter,
+                                  child: !_value
+                                      ? DefaultButton(
+                                          "change".tr().toString(),
+                                          () {},
+                                          Color(0xffB2B7D0),
+                                        )
+                                      : DefaultButton("change".tr().toString(),
+                                          () {
+                                          changePhone();
+                                          // changeProfile();
+                                          // setState(() {
+                                          //   _value = !_value;
+                                          // });
+                                          // Navigator.of(context)
+                                          //     .pushNamed(PasRecognizedScreen.routeName);
+                                        }, Theme.of(context).primaryColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

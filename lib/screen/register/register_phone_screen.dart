@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:requests/requests.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
-// import 'package:sms_retriever/sms_retriever.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/screen/register/register_verify_ios_screen.dart';
 import 'package:xalq_nazorati/screen/rule_page.dart';
@@ -17,11 +17,16 @@ import '../../widget/default_button.dart';
 import '../../widget/text/main_text.dart';
 import '../../widget/input/phone_input.dart';
 
+_RegisterPhoneScreenState registerPhoneScreenState;
+
 class RegisterPhoneScreen extends StatefulWidget {
   static const routeName = "/register-phone";
 
   @override
-  _RegisterPhoneScreenState createState() => _RegisterPhoneScreenState();
+  _RegisterPhoneScreenState createState() {
+    registerPhoneScreenState = _RegisterPhoneScreenState();
+    return registerPhoneScreenState;
+  }
 }
 
 class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
@@ -76,19 +81,16 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
 
     if (!isRegister && phone != "") {
       try {
-        String url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/users/signup-code';
         Map map = {"phone": phone};
 
-        // var status = await Permission.sms.status;
-        // if (status.isUndetermined || status.isDenied) {
-        // if (Platform.isIOS) {
         if (signature != null) map.addAll({"passcode": signature});
-        var r1 = await Requests.post(url, body: map);
-        if (r1.statusCode == 200) {
-          dynamic json = r1.json();
-          r1.raiseForStatus();
-          print(r1.content());
+        var connect = new DioConnection();
+
+        Map<String, String> headers = {};
+        var response = await connect.postHttp(
+            '/users/signup-code', registerPhoneScreenState, headers, map);
+        if (response["statusCode"] == 200) {
+          dynamic json = response["result"];
           isRegister = true;
           phoneWiew = json["phone_view"];
           if (isRegister && _value) {
@@ -107,7 +109,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
                     )));
           }
         } else {
-          dynamic json = r1.json();
+          dynamic json = response["result"];
           helper.getToast(json['detail'], context);
         }
       } catch (e) {
@@ -147,266 +149,277 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
       elevation: 0.0,
       iconTheme: IconThemeData(color: Colors.white),
     );
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xff12B79B),
-            Color(0xff00AC8A),
-          ],
-        ),
-      ),
-      child: Scaffold(
-        appBar: appBar,
-        backgroundColor: Colors.transparent,
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                Container(
-                  color: Colors.transparent,
-                  height: dHeight * 0.3 -
-                      appBar.preferredSize.height, //mediaQuery.size.height,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            padding: EdgeInsets.only(bottom: 30, left: 25),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "sign_ups".tr().toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: dWidth * globals.fontSize26,
-                                    fontFamily: globals.font,
-                                  ),
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xff12B79B),
+                Color(0xff00AC8A),
+              ],
+            ),
+          ),
+          child: Scaffold(
+            appBar: appBar,
+            backgroundColor: Colors.transparent,
+            body: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.transparent,
+                      height: dHeight * 0.3 -
+                          appBar.preferredSize.height, //mediaQuery.size.height,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Container(
+                                padding: EdgeInsets.only(bottom: 30, left: 25),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "sign_ups".tr().toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: dWidth * globals.fontSize26,
+                                        fontFamily: globals.font,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                    ),
+                                    Text(
+                                      "reg_title_desc".tr().toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: dWidth * globals.fontSize18,
+                                        fontFamily: globals.font,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                ),
-                                Text(
-                                  "reg_title_desc".tr().toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: dWidth * globals.fontSize18,
-                                    fontFamily: globals.font,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: mediaQuery.size.height - dHeight * 0.3,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: mediaQuery.size.height - dHeight * 0.3,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(25),
-                    child: Stack(
-                      children: [
-                        KeyboardActions(
-                          // isDialog: true,
-                          config: _buildConfig(context),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MainText("tel_number_title".tr().toString()),
-                              PhoneInput(
-                                myController: phoneController,
-                                textFocusNode: phoneNode,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _value = !_value;
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 2,
-                                              style: BorderStyle.solid,
-                                              color: Theme.of(context)
-                                                  .primaryColor),
-                                          shape: BoxShape.circle,
-                                          color: _value
-                                              ? Theme.of(context).primaryColor
-                                              : Colors.transparent),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: _value
-                                            ? Icon(
-                                                Icons.check,
-                                                size: 15.0,
-                                                color: Colors.white,
-                                              )
-                                            : Icon(
-                                                Icons.check_box_outline_blank,
-                                                size: 15.0,
-                                                color: Colors.transparent,
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(left: 20),
-                                    width: mediaQuery.size.width * 0.75,
-                                    child: RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: "reg_offer_aggreement_start"
-                                                .tr()
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontFamily: globals.font,
-                                              fontSize:
-                                                  dWidth * globals.fontSize12,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            recognizer: TapGestureRecognizer()
-                                              ..onTap = () {
-                                                Navigator.pushNamed(context,
-                                                    RulePage.routeName);
-                                              },
-                                            text: "offer".tr().toString(),
-                                            style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              fontFamily: globals.font,
-                                              fontSize:
-                                                  dWidth * globals.fontSize12,
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: "reg_offer_aggreement_end"
-                                                .tr()
-                                                .toString(),
-                                            style: TextStyle(
-                                              fontFamily: globals.font,
-                                              fontSize:
-                                                  dWidth * globals.fontSize12,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          child: Align(
-                            alignment: FractionalOffset.bottomCenter,
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 30),
+                      child: Padding(
+                        padding: EdgeInsets.all(25),
+                        child: Stack(
+                          children: [
+                            KeyboardActions(
+                              // isDialog: true,
+                              config: _buildConfig(context),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  !_value
-                                      ? DefaultButton(
-                                          "sign_up".tr().toString(),
-                                          () {},
-                                          Color(0xffB2B7D0),
-                                        )
-                                      : DefaultButton(
-                                          "sign_up".tr().toString(),
-                                          () {
-                                            getCode();
-                                            // Navigator.of(context).pushNamed(
-                                            //     RegisterVerifyScreen.routeName);
-                                          },
-                                          Theme.of(context).primaryColor,
-                                        ),
+                                  MainText("tel_number_title".tr().toString()),
+                                  PhoneInput(
+                                    myController: phoneController,
+                                    textFocusNode: phoneNode,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 10),
+                                  ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        "accaunt_question2".tr().toString(),
-                                        style: TextStyle(
-                                          fontFamily: globals.font,
-                                          fontSize: dWidth * globals.fontSize14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushNamedAndRemoveUntil(
-                                                  LoginScreen.routeName,
-                                                  (Route<dynamic> route) =>
-                                                      false);
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _value = !_value;
+                                          });
                                         },
-                                        child: Text(
-                                          "log_in".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            fontSize:
-                                                dWidth * globals.fontSize14,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.w600,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  style: BorderStyle.solid,
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              shape: BoxShape.circle,
+                                              color: _value
+                                                  ? Theme.of(context)
+                                                      .primaryColor
+                                                  : Colors.transparent),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: _value
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 15.0,
+                                                    color: Colors.white,
+                                                  )
+                                                : Icon(
+                                                    Icons
+                                                        .check_box_outline_blank,
+                                                    size: 15.0,
+                                                    color: Colors.transparent,
+                                                  ),
                                           ),
                                         ),
-                                      )
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 20),
+                                        width: mediaQuery.size.width * 0.75,
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    "reg_offer_aggreement_start"
+                                                        .tr()
+                                                        .toString(),
+                                                style: TextStyle(
+                                                  fontFamily: globals.font,
+                                                  fontSize: dWidth *
+                                                      globals.fontSize12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        Navigator.pushNamed(
+                                                            context,
+                                                            RulePage.routeName);
+                                                      },
+                                                text: "offer".tr().toString(),
+                                                style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontFamily: globals.font,
+                                                  fontSize: dWidth *
+                                                      globals.fontSize12,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "reg_offer_aggreement_end"
+                                                    .tr()
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontFamily: globals.font,
+                                                  fontSize: dWidth *
+                                                      globals.fontSize12,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
                             ),
-                          ),
+                            Positioned(
+                              child: Align(
+                                alignment: FractionalOffset.bottomCenter,
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 30),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      !_value
+                                          ? DefaultButton(
+                                              "sign_up".tr().toString(),
+                                              () {},
+                                              Color(0xffB2B7D0),
+                                            )
+                                          : DefaultButton(
+                                              "sign_up".tr().toString(),
+                                              () {
+                                                getCode();
+                                                // Navigator.of(context).pushNamed(
+                                                //     RegisterVerifyScreen.routeName);
+                                              },
+                                              Theme.of(context).primaryColor,
+                                            ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "accaunt_question2".tr().toString(),
+                                            style: TextStyle(
+                                              fontFamily: globals.font,
+                                              fontSize:
+                                                  dWidth * globals.fontSize14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushNamedAndRemoveUntil(
+                                                      LoginScreen.routeName,
+                                                      (Route<dynamic> route) =>
+                                                          false);
+                                            },
+                                            child: Text(
+                                              "log_in".tr().toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                fontSize:
+                                                    dWidth * globals.fontSize14,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

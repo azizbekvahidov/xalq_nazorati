@@ -4,13 +4,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/helper.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/input/textarea_input.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
 import 'package:xalq_nazorati/widget/text/main_text.dart';
+
+_ProblemSolvedDeclineScreenState problemSolvedDeclineScreenState;
 
 class ProblemSolvedDeclineScreen extends StatefulWidget {
   final int id;
@@ -21,8 +24,10 @@ class ProblemSolvedDeclineScreen extends StatefulWidget {
   ProblemSolvedDeclineScreen(this.id, this.executorName, this.executorAvatar,
       this.executorId, this.position);
   @override
-  _ProblemSolvedDeclineScreenState createState() =>
-      _ProblemSolvedDeclineScreenState();
+  _ProblemSolvedDeclineScreenState createState() {
+    problemSolvedDeclineScreenState = _ProblemSolvedDeclineScreenState();
+    return problemSolvedDeclineScreenState;
+  }
 }
 
 class _ProblemSolvedDeclineScreenState
@@ -48,11 +53,13 @@ class _ProblemSolvedDeclineScreenState
           "problem_id": widget.id,
           "reason": "$desc",
         };
-        var response = await Requests.post(url, body: data, headers: headers);
+        var connect = new DioConnection();
+        var response = await connect.postHttp(
+            '/problems/deny', problemSolvedDeclineScreenState, headers, data);
         print("sended");
         // String reply = await response.transform(utf8.decoder).join();
         // var temp = response.json();
-        if (response.statusCode == 201) {
+        if (response["statusCode"] == 201) {
           print("sended2");
           // var res = response.json(); //parseProblems(response.content());
           isSending = false;
@@ -110,179 +117,160 @@ class _ProblemSolvedDeclineScreenState
   Widget build(BuildContext context) {
     var dWidth = MediaQuery.of(context).size.width;
     var dHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "decline_result".tr().toString(),
-        centerTitle: true,
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: !dataSended
-            ? SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Container(
-                  height: dHeight < 560 ? dHeight : dHeight * 0.8,
-                  child: KeyboardActions(
-                    // isDialog: true,
-                    disableScroll: true,
-                    config: _buildConfig(context),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ShadowBox(
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MainText(
-                                          "problem_describe".tr().toString()),
-                                      TextareaInput(
-                                        descNode: descNode,
-                                        hint: "problem_describe_hint"
-                                            .tr()
-                                            .toString(),
-                                        textareaController: descController,
-                                        notifyParent: checkChange,
-                                        maxCnt: 100,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  child: Align(
-                                    alignment: FractionalOffset.bottomCenter,
-                                    child:
-                                        /*!_value
-                                  ? DefaultButton(
-                                      "Продолжить",
-                                      () {},
-                                      Color(0xffB2B7D0),
-                                    )
-                                  : */
-                                        Container(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: "decline_result".tr().toString(),
+            centerTitle: true,
+          ),
+          body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: !dataSended
+                ? SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                      height: dHeight < 560 ? dHeight : dHeight * 0.8,
+                      child: KeyboardActions(
+                        // isDialog: true,
+                        disableScroll: true,
+                        config: _buildConfig(context),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ShadowBox(
+                                    child: Container(
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 19),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: _value
-                                            ? FlatButton(
-                                                color:
-                                                    globals.activeButtonColor,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(34),
-                                                ),
-                                                onPressed: () {
-                                                  sendData();
-                                                },
-                                                child: Text(
-                                                  "send".tr().toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .button
-                                                      .copyWith(
-                                                          fontSize: dWidth *
-                                                              globals
-                                                                  .fontSize18),
-                                                ),
-                                              )
-                                            : FlatButton(
-                                                onPressed: () {},
-                                                color:
-                                                    globals.deactiveButtonColor,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(34),
-                                                ),
-                                                child: Text(
-                                                  "send".tr().toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .button
-                                                      .copyWith(
-                                                          fontSize: dWidth *
-                                                              globals
-                                                                  .fontSize18),
-                                                ),
-                                              ),
+                                          EdgeInsets.symmetric(horizontal: 20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MainText("problem_describe"
+                                              .tr()
+                                              .toString()),
+                                          TextareaInput(
+                                            descNode: descNode,
+                                            hint: "problem_describe_hint"
+                                                .tr()
+                                                .toString(),
+                                            textareaController: descController,
+                                            notifyParent: checkChange,
+                                            maxCnt: 100,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                            Container(
+                              child: Padding(
+                                padding: EdgeInsets.all(15),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      child: Align(
+                                        alignment:
+                                            FractionalOffset.bottomCenter,
+                                        child:
+                                            /*!_value
+                                      ? DefaultButton(
+                                          "Продолжить",
+                                          () {},
+                                          Color(0xffB2B7D0),
+                                        )
+                                      : */
+                                            Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 19),
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            height: 50,
+                                            child: _value
+                                                ? FlatButton(
+                                                    color: globals
+                                                        .activeButtonColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              34),
+                                                    ),
+                                                    onPressed: () {
+                                                      sendData();
+                                                    },
+                                                    child: Text(
+                                                      "send".tr().toString(),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .button
+                                                          .copyWith(
+                                                              fontSize: dWidth *
+                                                                  globals
+                                                                      .fontSize18),
+                                                    ),
+                                                  )
+                                                : FlatButton(
+                                                    onPressed: () {},
+                                                    color: globals
+                                                        .deactiveButtonColor,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              34),
+                                                    ),
+                                                    child: Text(
+                                                      "send".tr().toString(),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .button
+                                                          .copyWith(
+                                                              fontSize: dWidth *
+                                                                  globals
+                                                                      .fontSize18),
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "your_message_sended".tr().toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: globals.font,
+                          fontWeight: FontWeight.w700,
+                          fontSize: dWidth * globals.fontSize22,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            // SingleChildScrollView(
-            //   child: ShadowBox(
-            //     child: Container(
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.center,
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Container(
-            //                   padding: EdgeInsets.symmetric(horizontal: 19),
-            //                   child: MainText(
-            //                       "${"problem_describe".tr().toString()}*")),
-            //               Container(
-            //                   padding: EdgeInsets.only(
-            //                       left: 19, right: 19, bottom: 20),
-            //                   child: TextareaInput(
-            //                     hint: "problem_describe_hint".tr().toString(),
-            //                     textareaController: descController,
-            //                     notifyParent: checkChange,
-            //                     maxCnt: 100,
-            //                   )),
-
-            //             ],
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // )
-            : Center(
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "your_message_sended".tr().toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: globals.font,
-                      fontWeight: FontWeight.w700,
-                      fontSize: dWidth * globals.fontSize22,
-                    ),
-                  ),
-                ),
-              ),
-      ),
+          ),
+        ),
+        CheckConnection(),
+      ],
     );
   }
 }

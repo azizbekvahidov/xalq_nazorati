@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
 
 class SupportFeedback extends StatelessWidget {
   var descController = TextEditingController();
@@ -17,67 +18,72 @@ class SupportFeedback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
       children: [
-        Container(
-          child: Column(
-            children: [
-              Container(
-                child: Image.asset(
-                  "assets/img/support.png",
-                  width: width * 0.4,
-                ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  Container(
+                    child: Image.asset(
+                      "assets/img/support.png",
+                      width: width * 0.4,
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 35, right: 22, left: 22),
+                    child: Text(
+                      "send_to_bot_message".tr().toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xff313B6C),
+                        fontSize: width * globals.fontSize18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: globals.font,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 35, right: 22, left: 22),
-                child: Text(
-                  "send_to_bot_message".tr().toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xff313B6C),
-                    fontSize: width * globals.fontSize18,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: globals.font,
+            ),
+            InkWell(
+              onTap: () {
+                launchUrl("https://t.me/xalqnazorati_bot");
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: width * 0.12, vertical: 20),
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(horizontal: 18),
+                  height: 50,
+                  child: Text(
+                    "send_notify".tr().toString(),
+                    style: TextStyle(
+                        fontSize: width * globals.fontSize16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: globals.font,
+                        color: Colors.white),
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xff12B79B),
+                        Color(0xff00AC8A),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
-        InkWell(
-          onTap: () {
-            launchUrl("https://t.me/xalqnazorati_bot");
-          },
-          child: Container(
-            padding:
-                EdgeInsets.symmetric(horizontal: width * 0.12, vertical: 20),
-            child: Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(horizontal: 18),
-              height: 50,
-              child: Text(
-                "send_notify".tr().toString(),
-                style: TextStyle(
-                    fontSize: width * globals.fontSize16,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: globals.font,
-                    color: Colors.white),
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xff12B79B),
-                    Color(0xff00AC8A),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        )
       ],
     );
   }

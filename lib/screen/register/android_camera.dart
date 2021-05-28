@@ -10,6 +10,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:system_settings/system_settings.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/widget/app_bar/pnfl_scan_appBar.dart';
 import 'package:xalq_nazorati/widget/custom_modal.dart';
 import '../../widget/app_bar/custom_appBar.dart';
@@ -257,79 +258,86 @@ class _AndroidCameraPageState extends State<AndroidCameraPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final deviceRatio = size.width / size.height;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        child: Stack(children: [
-          _cameraInitialized
-              ? CameraPreview(_camera)
-              :
-              // Transform.scale(
-              //   scale: _camera.value.aspectRatio / deviceRatio,
-              //   child: AspectRatio(
-              //   aspectRatio: _camera.value.aspectRatio,
-              //   child: CameraPreview(_camera)),
-              // ) :
-              Container(),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-            ),
-          ),
-          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            PnflScanAppbar(
-              title: "pnfl_scan".tr().toString(),
-              textColor: Colors.white,
-            ),
-            Container(
-              child: Center(
-                child: Text(
-                  "$cnt",
-                  style: TextStyle(
-                      color: Color(0xffE70C0C),
-                      fontSize: 60,
-                      fontWeight: FontWeight.w600),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.white,
+          body: Container(
+            child: Stack(children: [
+              _cameraInitialized
+                  ? CameraPreview(_camera)
+                  :
+                  // Transform.scale(
+                  //   scale: _camera.value.aspectRatio / deviceRatio,
+                  //   child: AspectRatio(
+                  //   aspectRatio: _camera.value.aspectRatio,
+                  //   child: CameraPreview(_camera)),
+                  // ) :
+                  Container(),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(5)),
-            ),
-            // _hasFlashlight
-            //     ? Center(
-            //         child: InkWell(
-            //             onTap: () {
-            //               if (_flash) {
-            //                 Flashlight.lightOff();
-            //               } else {
-            //                 Flashlight.lightOn();
-            //               }
-            //               _flash = !_flash;
-            //             },
-            //             child: Container(
-            //               child: Text("flash"),
-            //             )),
-            //       )
-            //     : Container(),
-            Padding(
-              padding: const EdgeInsets.all(38),
-              child: Text("camera_put_data_right".tr().toString(),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context)
-                      .textTheme
-                      .title
-                      .apply(color: Colors.white)),
-            ),
-          ]),
-        ]),
-      ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    PnflScanAppbar(
+                      title: "pnfl_scan".tr().toString(),
+                      textColor: Colors.white,
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          "$cnt",
+                          style: TextStyle(
+                              color: Color(0xffE70C0C),
+                              fontSize: 60,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      margin: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    // _hasFlashlight
+                    //     ? Center(
+                    //         child: InkWell(
+                    //             onTap: () {
+                    //               if (_flash) {
+                    //                 Flashlight.lightOff();
+                    //               } else {
+                    //                 Flashlight.lightOn();
+                    //               }
+                    //               _flash = !_flash;
+                    //             },
+                    //             child: Container(
+                    //               child: Text("flash"),
+                    //             )),
+                    //       )
+                    //     : Container(),
+                    Padding(
+                      padding: const EdgeInsets.all(38),
+                      child: Text("camera_put_data_right".tr().toString(),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .apply(color: Colors.white)),
+                    ),
+                  ]),
+            ]),
+          ),
+        ),
+        CheckConnection(),
+      ],
     );
   }
 }

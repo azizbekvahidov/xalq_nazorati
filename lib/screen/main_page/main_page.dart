@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:requests/requests.dart';
 import 'package:skeleton_text/skeleton_text.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:xalq_nazorati/screen/main_page/news/news_screen.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/adv_widget.dart';
 import 'package:xalq_nazorati/widget/category/category_list.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
-import 'package:xalq_nazorati/widget/news/news_list.dart';
 import 'package:xalq_nazorati/widget/news/news_list_main.dart';
 import 'package:xalq_nazorati/widget/news_notify.dart';
 import 'package:xalq_nazorati/widget/problems/box_text_default.dart';
@@ -67,15 +65,18 @@ class _MainPageState extends State<MainPage> {
 
   Future getCategory() async {
     try {
-      var url = '${globals.api_link}/problems/categories';
-      var response = await Requests.get(url);
+      var connect = new DioConnection();
+      Map<String, String> headers = {};
+      var response =
+          await connect.getHttp('/problems/categories', mainPageState, headers);
 
-      if (response.statusCode == 200) {
+      var reply;
+      if (response["statusCode"] == 200) {
+        reply = response["result"];
         // stopTimer();
       } else {
         // stopTimer();
       }
-      var reply = response.json();
 
       return reply;
     } catch (e) {
@@ -89,106 +90,20 @@ class _MainPageState extends State<MainPage> {
   List notifyList = [];
   var _newNotifyList;
 
-  Future getSignalStrength() async {
-    try {
-      final res = await InternetAddress.lookup('dns.google',
-          type: InternetAddressType.IPv4);
-      if (res.isNotEmpty && res[0].rawAddress.isNotEmpty) {
-        if (!_loadingConnection) {
-          _loadingConnection = true;
-          int count = 5;
-          int ms = 0;
-          for (int i = 0; i < count; i++) {
-            final time = DateTime.now();
-            try {
-              await Requests.get('https://dns.google', timeoutSeconds: 2);
-              ms += DateTime.now().millisecondsSinceEpoch -
-                  time.millisecondsSinceEpoch;
-            } catch (ex) {}
-          }
-          // 500 - based on average speed (0-400) is good
-          final total = ms / count;
-          print('average response time: ${total}');
-          if (total > 600) {
-            setState(() {
-              globals.connectionStatus = globals.ConnectionStatus.bad;
-            });
-          } else if (total == 0) {
-            setState(() {
-              globals.connectionStatus = globals.ConnectionStatus.disconnected;
-            });
-          } else {
-            setState(() {
-              globals.connectionStatus = globals.ConnectionStatus.good;
-            });
-          }
-          _loadingConnection = false;
-        }
-        // you can use it to check speed also but it not working correctly because of servers
-        // final internetSpeedTest = InternetSpeedTest();
-        // if (!_loadingConnection) {
-        //   _loadingConnection = true;
-        //   try {
-        //     internetSpeedTest.startDownloadTesting(
-        //       onDone: (double transferRate, SpeedUnit unit) {
-        //         mainPageState.setState(() {
-        //           print(transferRate);
-        //           print(unit);
-        //           if (transferRate < 1.4) {
-        //             setState(() {
-        //               globals.connectionStatus = globals.ConnectionStatus.bad;
-        //             });
-        //           } else {
-        //             setState(() {
-        //               globals.connectionStatus = globals.ConnectionStatus.good;
-        //             });
-        //           }
-        //         });
-        //       },
-        //       onProgress: (double percent, double transferRate, SpeedUnit unit) {
-        //       },
-        //       onError: (String errorMessage, String speedTestError) {
-        //         setState(() {
-        //           globals.connectionStatus = globals.ConnectionStatus.bad;
-        //         });
-        //       },
-        //       testServer: "http://ipv4.scaleway.testdebit.info/1k.iso",
-        //       fileSize: 1,
-        //     );
-        //   } catch (e) {
-        //     setState(() {
-        //       globals.connectionStatus = globals.ConnectionStatus.bad;
-        //     });
-        //   }
-        //   _loadingConnection = false;
-        // }
-      } else {
-        setState(() {
-          globals.connectionStatus = globals.ConnectionStatus.disconnected;
-        });
-      }
-    } catch (ex) {
-      // setState(() {
-      //   globals.connectionStatus = globals.ConnectionStatus.disconnected;
-      // });
-    }
-  }
-
   getNotification() async {
     try {
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/count';
+      var connect = new DioConnection();
 
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var reply = response.json();
+      var response = await connect.getHttp(
+          '/problems/notifications/count', mainPageState, headers);
+      if (response["statusCode"] == 200) {
+        var reply = response["result"];
         setState(() {
           notificationCnt = reply["count"];
         });
       } else {
-        var reply = response.json();
+        var reply = response["result"];
         print(reply);
       }
     } catch (e) {
@@ -198,18 +113,19 @@ class _MainPageState extends State<MainPage> {
 
   checkNotification(var id) async {
     try {
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications/check';
+      var connect = new DioConnection();
+
       Map<String, String> data = {"id": id.toString()};
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      var response = await connect.postHttp(
+          '/problems/notifications/check', mainPageState, headers, data);
 
-      var response = await Requests.post(url, headers: headers, body: data);
-      if (response.statusCode == 201) {
-        var reply = response.json();
+      if (response["statusCode"] == 201) {
+        var reply = response["result"];
         getNotification();
         setState(() {});
       } else {
-        var reply = response.json();
+        var reply = response["result"];
         print(reply);
       }
     } catch (e) {
@@ -219,17 +135,18 @@ class _MainPageState extends State<MainPage> {
 
   getNotificationList() async {
     try {
+      var connect = new DioConnection();
+
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var url =
-          '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications';
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var reply = response.json();
+      var response = await connect.getHttp(
+          '/problems/notifications', mainPageState, headers);
+      if (response['statusCode'] == 200) {
+        var reply = response["result"];
         return reply;
-      } else if (response.statusCode == 500)
+      } else if (response["statusCode"] == 500)
         print("500");
       else {
-        var reply = response.json();
+        var reply = response["result"];
         print(reply);
       }
     } catch (e) {
@@ -274,15 +191,17 @@ class _MainPageState extends State<MainPage> {
 
   getUser() async {
     try {
-      var url = '${globals.api_link}/users/profile';
+      var connect = new DioConnection();
+
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
+      var response =
+          await connect.getHttp('/users/profile', mainPageState, headers);
+      if (response["statusCode"] == 200) {
         // dynamic json = response.json();
 
-        globals.userData = response.json();
+        globals.userData = response["result"];
       } else {
-        dynamic json = response.json();
+        dynamic json = response["result"];
       }
     } catch (e) {
       print("user => $e");
@@ -291,30 +210,17 @@ class _MainPageState extends State<MainPage> {
 
   Future getNews() async {
     try {
-      var url = '${globals.api_link}/news';
+      var connect = new DioConnection();
 
-      // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
+      Map<String, String> headers = {};
+      var response = await connect.getHttp('/news', mainPageState, headers);
 
-      var response = await Requests.get(url);
-
-      var reply = response.json();
+      var reply = response["result"];
       return reply["results"];
     } catch (e) {
       print("news => $e");
     }
   }
-
-  // List<Categories> parseCategory(String responseBody) {
-  //   final parsed = (json.decode(responseBody).cast<Map<String, dynamic>>());
-
-  //   return parsed.map<Categories>((json) => Categories.fromJson(json)).toList();
-  // }
-
-  // List<News> parseNews(var responseBody) {
-  //   final parsed = json.decode(responseBody).cast<dynamic>();
-  //   var res = parsed.map<News>((json) => News.fromJson(json)).toList();
-  //   return res;
-  // }
 
   customDialog(BuildContext context) {
     _newNotifyList = getNotificationList();
@@ -405,6 +311,21 @@ class _MainPageState extends State<MainPage> {
                                                       builder: (BuildContext
                                                           context) {
                                                         var route;
+                                                        Map<int, dynamic> elem =
+                                                            {
+                                                          snapshot.data[index]
+                                                              ["problem_id"]: {
+                                                            "notify": false,
+                                                            "chat_cnt": 0,
+                                                            "event_cnt": 0,
+                                                            "res": null,
+                                                            "res_seen": true,
+                                                            "status":
+                                                                "processing"
+                                                          }
+                                                        };
+                                                        globals.cardAlert
+                                                            .addAll(elem);
                                                         route = ProblemContentScreen(
                                                             id: snapshot
                                                                     .data[index]
@@ -980,25 +901,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            // Positioned(
-            //     bottom: 0,
-            //     child: Container(
-            //       width: MediaQuery.of(context).size.width,
-            //       color: Theme.of(context).primaryColor,
-            //       height: 40,
-            //       alignment: Alignment.center,
-            //       child: Text(
-            //         // "${globals.internetStatus}",
-            //         "test_notify".tr().toString(),
-            //         style: TextStyle(
-            //             fontFamily: globals.font,
-            //             color: Colors.white,
-            //             fontSize: dWidth *
-            //                 globals
-            //                     .fontSize16, //(mediaQuery.size.width < 360) ? 14 : 16,
-            //             fontWeight: FontWeight.w500),
-            //       ),
-            //     )),
+            CheckConnection(),
           ],
         ),
       ),

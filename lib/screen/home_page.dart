@@ -1,27 +1,30 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:requests/requests.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:custom_navigator/custom_navigation.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/methods/http_get.dart';
 import 'package:xalq_nazorati/screen/profile/problem/main_problem_page.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
-import 'package:xalq_nazorati/screen/profile/problem/problem_screen.dart';
 import 'package:xalq_nazorati/screen/support/support.dart';
 import 'package:xalq_nazorati/widget/get_login_dialog.dart';
 import 'profile/main_profile.dart';
-import 'support/main_support.dart';
 import 'main_page/main_page.dart';
+
+_HomePageState homePageState;
 
 class HomePage extends StatefulWidget {
   static const routeName = "/home-page";
   HomePage({Key key}) : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() {
+    homePageState = _HomePageState();
+    return homePageState;
+  }
 }
 
 class _HomePageState extends State<HomePage> {
@@ -69,15 +72,16 @@ class _HomePageState extends State<HomePage> {
   void refreshBells() async {
     try {
       if (globals.userData != null || globals.isConnection == true) {
-        var url =
-            '${globals.site_link}/${(globals.lang).tr().toString()}/api/problems/notifications-by-state';
+        var connect = new DioConnection();
         Map<String, String> headers = {
           "Authorization": "token ${globals.token}"
         };
-        var response = await Requests.get(url, headers: headers);
-        if (response.statusCode == 200) {
+        var response = await connect.getHttp(
+            '/problems/notifications-by-state', homePageState, headers);
+
+        if (response["statusCode"] == 200) {
           var cnt = 0;
-          var res = response.json();
+          var res = response["result"];
 
           cnt += res["processing"];
           cnt += res["denied"];

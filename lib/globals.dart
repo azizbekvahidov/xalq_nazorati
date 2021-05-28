@@ -12,13 +12,14 @@ import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart
 enum ConnectionStatus { good, bad, disconnected }
 bool isLoad = false;
 String token = null;
+String addressToken = '156d860c1900e489b21bf6ef55b75957974e514c';
 String lang = null;
 String country = null;
-String api_link = "https://new.xalqnazorati.uz/ru/api";
-String site_link = "https://new.xalqnazorati.uz";
+// String api_link = "https://new.xalqnazorati.uz/ru/api";
+// String site_link = "https://new.xalqnazorati.uz";
 
-// String api_link = "https://test.xalqnazorati.uz/ru/api";
-// String site_link = "https://test.xalqnazorati.uz";
+String api_link = "https://test.xalqnazorati.uz/ru/api";
+String site_link = "https://test.xalqnazorati.uz";
 Map<String, dynamic> userData;
 String font = "Raleway";
 Color activeButtonColor = Color(0xff00AC8A);
@@ -110,4 +111,5 @@ String imgStatus = "assets/img/good_connection.svg";
 Color colorStatus = Color(0xff1AFE91);
 Timer connectTimer;
 bool isConnection = false;
+bool isServerConnection = false;
 bool isOpenNoConnection = false;

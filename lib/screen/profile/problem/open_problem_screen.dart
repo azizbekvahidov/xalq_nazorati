@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/screen/profile/problem/problem_screen_custom.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -59,88 +60,93 @@ class _OpenProblemScreenState extends State<OpenProblemScreen> {
     var width = MediaQuery.of(context).size.width;
     var dHeight = MediaQuery.of(context).size.height;
     return Container(
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: "unresolved".tr().toString(),
-          centerTitle: true,
-        ),
-        body: Container(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
+        children: [
+          Scaffold(
+            appBar: CustomAppBar(
+              title: "unresolved".tr().toString(),
+              centerTitle: true,
+            ),
+            body: Container(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            _selectTab(0);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: _bg1,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "in_proccess".tr().toString(),
-                              style: TextStyle(
-                                color: _txt1,
-                                fontFamily: globals.font,
-                                fontSize: width * globals.fontSize16,
-                              ),
-                            ),
-                          ),
-                        ),
                         Padding(
-                          padding: EdgeInsets.only(left: 20),
+                          padding: EdgeInsets.only(top: 20),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            _selectTab(1);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: _bg2,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              "delayed".tr().toString(),
-                              style: TextStyle(
-                                color: _txt2,
-                                fontFamily: globals.font,
-                                fontSize: width * globals.fontSize16,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _selectTab(0);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: _bg1,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "in_proccess".tr().toString(),
+                                  style: TextStyle(
+                                    color: _txt1,
+                                    fontFamily: globals.font,
+                                    fontSize: width * globals.fontSize16,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 20),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                _selectTab(1);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color: _bg2,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "delayed".tr().toString(),
+                                  style: TextStyle(
+                                    color: _txt2,
+                                    fontFamily: globals.font,
+                                    fontSize: width * globals.fontSize16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        Padding(padding: EdgeInsets.only(top: 10)),
                       ],
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10)),
-                  ],
-                ),
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                      height: dHeight <= 560 ? dHeight - 160 : dHeight - 230,
+                      child: _children[_index],
+                    ),
+                  ),
+                ],
               ),
-              SingleChildScrollView(
-                child: Container(
-                  height: dHeight <= 560 ? dHeight - 160 : dHeight - 230,
-                  child: _children[_index],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          CheckConnection(),
+        ],
       ),
     );
   }

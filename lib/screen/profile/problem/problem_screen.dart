@@ -6,20 +6,25 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:requests/requests.dart';
 import 'package:skeleton_text/skeleton_text.dart';
-import 'package:xalq_nazorati/methods/http_get.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:xalq_nazorati/models/problems.dart';
-import 'package:xalq_nazorati/screen/profile/problem/problem_content_screen.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/problems/problem_list.dart';
 import 'package:xalq_nazorati/widget/shadow_box.dart';
+
+_ProblemScreenState problemScreenState;
 
 class ProblemScreen extends StatefulWidget {
   final String title;
   final String status;
   ProblemScreen({this.title, this.status});
   @override
-  _ProblemScreenState createState() => _ProblemScreenState();
+  _ProblemScreenState createState() {
+    problemScreenState = _ProblemScreenState();
+    return problemScreenState;
+  }
 }
 
 class _ProblemScreenState extends State<ProblemScreen> {
@@ -54,12 +59,15 @@ class _ProblemScreenState extends State<ProblemScreen> {
         if (i != _problems.length) _list += ",";
       });
 
-      var url =
-          '${globals.api_link}/problems/refresh-problem?problem_ids=$_list';
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
-      if (response.statusCode == 200) {
-        var res = response.json();
+      var response = await connect.getHttp(
+          '/problems/refresh-problem?problem_ids=$_list',
+          problemScreenState,
+          headers);
+
+      if (response["statusCode"] == 200) {
+        var res = response["result"];
 
         if (res.length != 0) {
           for (var i = 0; i < res.length; i++) {
@@ -118,11 +126,12 @@ class _ProblemScreenState extends State<ProblemScreen> {
         break;
     }
     try {
-      var url = '${globals.api_link}/problems/list/$_type?limit=20';
+      var connect = new DioConnection();
       Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-      var response = await Requests.get(url, headers: headers);
+      var response = await connect.getHttp(
+          '/problems/list/$_type?limit=20', problemScreenState, headers);
 
-      var reply = response.json();
+      var reply = response["result"];
       _loadMore = reply['next'];
       var res = reply["results"];
       _results.addAll(res);
@@ -204,55 +213,62 @@ class _ProblemScreenState extends State<ProblemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title:
-            widget.title == null ? "unresolved".tr().toString() : widget.title,
-        centerTitle: true,
-      ),
-      body: Container(
-        padding: EdgeInsets.only(top: 15),
-        child: LazyLoadScrollView(
-          onEndOfPage: () {
-            if (_loadMore != null)
-              setState(() {
-                _problemList = loadMore();
-              });
-          },
-          child: FutureBuilder(
-            future: _problemList,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) print(snapshot.error);
-              return snapshot.hasData
-                  ? ProblemList(
-                      data: snapshot.data,
-                      title: widget.title == null
-                          ? "unresolved".tr().toString()
-                          : widget.title,
-                      status: widget.status == null ? "warning" : widget.status,
-                      alertList: _problems,
-                    )
-                  : ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (BuildContext ctx, index) {
-                        // print(_list);
-                        return SkeletonAnimation(
-                          child: ShadowBox(
-                            bgColor: Color.fromRGBO(49, 59, 108, 0.1),
-                            child: Container(
-                              height: 50,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 19, vertical: 15),
-                            ),
-                          ),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: widget.title == null
+                ? "unresolved".tr().toString()
+                : widget.title,
+            centerTitle: true,
+          ),
+          body: Container(
+            padding: EdgeInsets.only(top: 15),
+            child: LazyLoadScrollView(
+              onEndOfPage: () {
+                if (_loadMore != null)
+                  setState(() {
+                    _problemList = loadMore();
+                  });
+              },
+              child: FutureBuilder(
+                future: _problemList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? ProblemList(
+                          data: snapshot.data,
+                          title: widget.title == null
+                              ? "unresolved".tr().toString()
+                              : widget.title,
+                          status:
+                              widget.status == null ? "warning" : widget.status,
+                          alertList: _problems,
+                        )
+                      : ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          itemCount: 5,
+                          itemBuilder: (BuildContext ctx, index) {
+                            // print(_list);
+                            return SkeletonAnimation(
+                              child: ShadowBox(
+                                bgColor: Color.fromRGBO(49, 59, 108, 0.1),
+                                child: Container(
+                                  height: 50,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 19, vertical: 15),
+                                ),
+                              ),
+                            );
+                          },
                         );
-                      },
-                    );
-            },
+                },
+              ),
+            ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

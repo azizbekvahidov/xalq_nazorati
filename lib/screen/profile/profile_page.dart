@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:xalq_nazorati/methods/check_connection.dart';
 import 'package:xalq_nazorati/screen/profile/change_password.dart';
 import 'package:xalq_nazorati/screen/profile/change_personal_data.dart';
 import 'package:xalq_nazorati/screen/profile/change_phone.dart';
@@ -81,266 +82,286 @@ class _ProfilePageState extends State<ProfilePage> {
     String birthDate = globals.userData['birth_date'] == null
         ? ""
         : formatter.format(DateTime.parse(globals.userData['birth_date']));
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "profile".tr().toString(),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShadowBox(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      CardList(
-                          "name".tr().toString(),
-                          capitalize(
-                              "${globals.userData['first_name'] ?? ""}")),
-                      CardList("surname".tr().toString(),
-                          capitalize("${globals.userData['last_name'] ?? ""}")),
-                      CardList(
-                          "lastname".tr().toString(),
-                          capitalize(
-                              "${globals.userData['patronymic'] ?? ""}")),
-                      CardList("birthday".tr().toString(), "${birthDate}"),
-                      CardList(
-                          "gender".tr().toString(),
-                          "${globals.userData['gender'] ?? ""}"
-                              .tr()
-                              .toString()),
-                      CardList("fact_accress".tr().toString(), _user_address),
-                      CardList("tel_number_hint".tr().toString(), _user_phone),
-                    ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: CustomAppBar(
+            title: "profile".tr().toString(),
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShadowBox(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          CardList(
+                              "name".tr().toString(),
+                              capitalize(
+                                  "${globals.userData['first_name'] ?? ""}")),
+                          CardList(
+                              "surname".tr().toString(),
+                              capitalize(
+                                  "${globals.userData['last_name'] ?? ""}")),
+                          CardList(
+                              "lastname".tr().toString(),
+                              capitalize(
+                                  "${globals.userData['patronymic'] ?? ""}")),
+                          CardList("birthday".tr().toString(), "${birthDate}"),
+                          CardList(
+                              "gender".tr().toString(),
+                              "${globals.userData['gender'] ?? ""}"
+                                  .tr()
+                                  .toString()),
+                          CardList(
+                              "fact_accress".tr().toString(), _user_address),
+                          CardList(
+                              "tel_number_hint".tr().toString(), _user_phone),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  ShadowBox(
+                    child: Column(
+                      children: [
+                        // CustomCardList("id", "Изменить личные данные", null, true),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: (mediaQuery.size.width -
+                                                  mediaQuery.padding.left -
+                                                  mediaQuery.padding.right) *
+                                              0.82,
+                                          child: Container(
+                                              child: RichText(
+                                            text: TextSpan(
+                                              text: "change_address"
+                                                  .tr()
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                color: Color(0xff050505),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize:
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
+                                              ),
+                                            ),
+                                          ))),
+                                      Container(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () async {
+                                  if (globals.token != null) {
+                                    var res = await Navigator.of(context,
+                                            rootNavigator: true)
+                                        .push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return ChangePersonalData();
+                                        },
+                                      ),
+                                    );
+                                    if (res != null) {
+                                      setState(() {
+                                        _user_address = res;
+                                      });
+                                    }
+                                  } else {
+                                    customDialog(context);
+                                  }
+                                },
+                              ),
+                              Divider(),
+                            ],
+                          ),
+                        ),
+                        // CustomCardList(
+                        //   "id",
+                        //   "change_pass".tr().toString(),
+                        //   ChangePassword(),
+                        //   true,
+                        //   "",
+                        //   false,
+                        // ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: (mediaQuery.size.width -
+                                                  mediaQuery.padding.left -
+                                                  mediaQuery.padding.right) *
+                                              0.82,
+                                          child: Container(
+                                              child: RichText(
+                                            text: TextSpan(
+                                              text:
+                                                  "change_pass".tr().toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                color: Color(0xff050505),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize:
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
+                                              ),
+                                            ),
+                                          ))),
+                                      Container(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () async {
+                                  if (globals.token != null) {
+                                    await Navigator.of(context,
+                                            rootNavigator: true)
+                                        .push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return ChangePassword();
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    customDialog(context);
+                                  }
+                                },
+                              ),
+                              Divider(),
+                              // Divider(),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          width: (mediaQuery.size.width -
+                                                  mediaQuery.padding.left -
+                                                  mediaQuery.padding.right) *
+                                              0.82,
+                                          child: Container(
+                                              child: RichText(
+                                            text: TextSpan(
+                                              text: "change_phone"
+                                                  .tr()
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontFamily: globals.font,
+                                                color: Color(0xff050505),
+                                                fontWeight: FontWeight.w600,
+                                                fontSize:
+                                                    mediaQuery.size.width *
+                                                        globals.fontSize18,
+                                              ),
+                                            ),
+                                          ))),
+                                      Container(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onTap: () async {
+                                  if (globals.token != null) {
+                                    var res = await Navigator.of(context,
+                                            rootNavigator: true)
+                                        .push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return ChangePhone();
+                                        },
+                                      ),
+                                    );
+                                    if (res != null) {
+                                      setState(() {
+                                        _user_phone = res;
+                                      });
+                                    }
+                                  } else {
+                                    customDialog(context);
+                                  }
+                                },
+                              ),
+                              // Divider(),
+                            ],
+                          ),
+                        ),
+                        // CustomCardList(
+                        //   "id",
+                        //   "delete_profile".tr().toString(),
+                        //   DeleteProfile(),
+                        //   false,
+                        //   "",
+                        //   false,
+                        // ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(15),
+                  )
+                ],
               ),
-              ShadowBox(
-                child: Column(
-                  children: [
-                    // CustomCardList("id", "Изменить личные данные", null, true),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          0.82,
-                                      child: Container(
-                                          child: RichText(
-                                        text: TextSpan(
-                                          text:
-                                              "change_address".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            color: Color(0xff050505),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: mediaQuery.size.width *
-                                                globals.fontSize18,
-                                          ),
-                                        ),
-                                      ))),
-                                  Container(
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () async {
-                              if (globals.token != null) {
-                                var res = await Navigator.of(context,
-                                        rootNavigator: true)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ChangePersonalData();
-                                    },
-                                  ),
-                                );
-                                if (res != null) {
-                                  setState(() {
-                                    _user_address = res;
-                                  });
-                                }
-                              } else {
-                                customDialog(context);
-                              }
-                            },
-                          ),
-                          Divider(),
-                        ],
-                      ),
-                    ),
-                    // CustomCardList(
-                    //   "id",
-                    //   "change_pass".tr().toString(),
-                    //   ChangePassword(),
-                    //   true,
-                    //   "",
-                    //   false,
-                    // ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          0.82,
-                                      child: Container(
-                                          child: RichText(
-                                        text: TextSpan(
-                                          text: "change_pass".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            color: Color(0xff050505),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: mediaQuery.size.width *
-                                                globals.fontSize18,
-                                          ),
-                                        ),
-                                      ))),
-                                  Container(
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () async {
-                              if (globals.token != null) {
-                                await Navigator.of(context, rootNavigator: true)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ChangePassword();
-                                    },
-                                  ),
-                                );
-                              } else {
-                                customDialog(context);
-                              }
-                            },
-                          ),
-                          Divider(),
-                          // Divider(),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                      width: (mediaQuery.size.width -
-                                              mediaQuery.padding.left -
-                                              mediaQuery.padding.right) *
-                                          0.82,
-                                      child: Container(
-                                          child: RichText(
-                                        text: TextSpan(
-                                          text: "change_phone".tr().toString(),
-                                          style: TextStyle(
-                                            fontFamily: globals.font,
-                                            color: Color(0xff050505),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: mediaQuery.size.width *
-                                                globals.fontSize18,
-                                          ),
-                                        ),
-                                      ))),
-                                  Container(
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            onTap: () async {
-                              if (globals.token != null) {
-                                var res = await Navigator.of(context,
-                                        rootNavigator: true)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return ChangePhone();
-                                    },
-                                  ),
-                                );
-                                if (res != null) {
-                                  setState(() {
-                                    _user_phone = res;
-                                  });
-                                }
-                              } else {
-                                customDialog(context);
-                              }
-                            },
-                          ),
-                          // Divider(),
-                        ],
-                      ),
-                    ),
-                    // CustomCardList(
-                    //   "id",
-                    //   "delete_profile".tr().toString(),
-                    //   DeleteProfile(),
-                    //   false,
-                    //   "",
-                    //   false,
-                    // ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(15),
-              )
-            ],
+            ),
           ),
         ),
-      ),
+        CheckConnection(),
+      ],
     );
   }
 }

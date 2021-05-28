@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:requests/requests.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:xalq_nazorati/globals.dart' as globals;
+import 'package:xalq_nazorati/methods/check_connection.dart';
+import 'package:xalq_nazorati/methods/dio_connection.dart';
 import 'package:xalq_nazorati/models/sub_category.dart';
-import 'package:xalq_nazorati/widget/category/sub_categories_list.dart';
 import 'package:xalq_nazorati/widget/app_bar/custom_appBar.dart';
 import 'package:xalq_nazorati/widget/expanse_list_lile.dart';
-import 'package:xalq_nazorati/widget/shadow_box.dart';
-import 'package:easy_localization/easy_localization.dart';
+
+_CategoryScreenState categoryScreenState;
 
 class CategoryScreen extends StatefulWidget {
   static const routeName = "/category-screen";
@@ -24,7 +21,10 @@ class CategoryScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CategoryScreenState createState() => _CategoryScreenState();
+  _CategoryScreenState createState() {
+    categoryScreenState = _CategoryScreenState();
+    return categoryScreenState;
+  }
 }
 
 class _CategoryScreenState extends State<CategoryScreen>
@@ -36,13 +36,12 @@ class _CategoryScreenState extends State<CategoryScreen>
   Future<dynamic> _subCategories;
 
   Future<List> getCategory() async {
-    var url = '${globals.api_link}/problems/subcategories/${widget.id}';
+    var connect = new DioConnection();
+    Map<String, String> headers = {};
+    var response = await connect.getHttp(
+        '/problems/subcategories/${widget.id}', categoryScreenState, headers);
 
-    // Map<String, String> headers = {"Authorization": "token ${globals.token}"};
-
-    var response = await Requests.get(url);
-
-    var reply = response.json();
+    var reply = response["result"];
 
     return reply;
   }
@@ -108,60 +107,67 @@ class _CategoryScreenState extends State<CategoryScreen>
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffF5F6F9),
-        appBar: CustomAppBar(
-          title: widget.title,
-          centerTitle: true,
-        ),
-        body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Container(
-            height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 15),
-                  child: FutureBuilder(
-                      future: _subCategories,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) print(snapshot.error);
-                        return snapshot.hasData
-                            ? Container(
-                                height: mediaQuery.size.height * 0.78,
-                                child: ScrollablePositionedList.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (context, index) {
-                                    if (widget.subcategoryId != null) {
-                                      if (snapshot.data[index]["id"] ==
-                                          widget.subcategoryId) {
-                                        _index = index;
-                                        // print(index);
-                                        // itemScrollController.jumpTo(
-                                        //     index: index);
-                                      }
-                                    }
-                                    return ExpanseListTile(
-                                      data: snapshot.data[index],
-                                      subcategoryId: widget.subcategoryId,
-                                      category_title: widget.title,
-                                    );
-                                  },
-                                  itemScrollController: itemScrollController,
-                                  itemPositionsListener: itemPositionsListener,
-                                ),
-                              )
-                            : Center(
-                                child: Text("Loading"),
-                              );
-                      }),
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Color(0xffF5F6F9),
+            appBar: CustomAppBar(
+              title: widget.title,
+              centerTitle: true,
+            ),
+            body: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Container(
+                height: mediaQuery.size.height - mediaQuery.size.height * 0.12,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 15),
+                      child: FutureBuilder(
+                          future: _subCategories,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) print(snapshot.error);
+                            return snapshot.hasData
+                                ? Container(
+                                    height: mediaQuery.size.height * 0.78,
+                                    child: ScrollablePositionedList.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        if (widget.subcategoryId != null) {
+                                          if (snapshot.data[index]["id"] ==
+                                              widget.subcategoryId) {
+                                            _index = index;
+                                            // print(index);
+                                            // itemScrollController.jumpTo(
+                                            //     index: index);
+                                          }
+                                        }
+                                        return ExpanseListTile(
+                                          data: snapshot.data[index],
+                                          subcategoryId: widget.subcategoryId,
+                                          category_title: widget.title,
+                                        );
+                                      },
+                                      itemScrollController:
+                                          itemScrollController,
+                                      itemPositionsListener:
+                                          itemPositionsListener,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text("Loading"),
+                                  );
+                          }),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+          CheckConnection(),
+        ],
       ),
     );
   }
